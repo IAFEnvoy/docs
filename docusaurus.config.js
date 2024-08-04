@@ -77,7 +77,7 @@ const config = {
             position: 'left',
             label: 'Tutorials',
             items: [
-              { to: '/docs/tutorial', label: 'Mixin（中文）' },
+              { to: '/docs/tutorial/mixin', label: 'Mixin（中文）' },
             ]
           },
           {
