@@ -113,10 +113,14 @@ const config = {
           {
             title: 'Docs',
             items: [
-              // {
-              //   label: 'Tutorial',
-              //   to: '/docs/intro',
-              // },
+              {
+                label: 'FAQ',
+                to: '/docs/faq',
+              },
+              {
+                label: 'Mod Informations',
+                to: '/docs/info',
+              },
             ],
           },
           {
