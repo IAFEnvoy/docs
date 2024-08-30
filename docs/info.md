@@ -15,6 +15,7 @@
 | Rainimator Mod | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/rainimatormod) | [Modrinth](https://modrinth.com/mod/rainimatormod) | Rainimator动画同人 |
 | Annoying Villagers | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/annoying-villagers) | [Modrinth](https://modrinth.com/mod/annoyingvillagers) | 烦人的村民动画同人 |
 | Songs of War |  |  | 战争之歌动画同人 |
+| Early Loading Bar |  |  | 添加Fabric窗口显示前加载条 |
 
 ## 中英文对照
 
@@ -33,6 +34,7 @@
 | Rainimator Mod | Rainimator | Rainimator同人Mod |
 | Annoying Villagers | 烦人的村民 | 烦人的村民同人Mod |
 | Songs of War | 战争之歌 | 战争之歌同人Mod |
+| Early Loading Bar | 提前加载条 |  |
 
 ## 开发元数据
 
@@ -51,3 +53,4 @@
 | Rainimator Mod | `rainimator` | `dev.rainimator.mod` |
 | Annoying Villagers | `annoying_villagers` | `com.iafenvoy.annoyingvillagers` |
 | Songs of War | `sow` | `com.iafenvoy.sow` |
+| Early Loading Bar | `early_loading_bar` | `com.iafenvoy.elb` |
