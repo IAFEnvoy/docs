@@ -1,3 +1,10 @@
+---
+order: 1
+group: 
+  title: FAQ
+  order: 0
+---
+
 # FAQ
 
 ## XXX Mod还会继续做吗？

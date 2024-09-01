@@ -1,21 +1,29 @@
-# 部分Mod信息对照表
+---
+order: 1
+group: 
+  title: Mod信息对照表
+  order: 0
+---
+
+# Mod信息对照表
 
 ## 下载链接/Mod功能
 
-| 英文名 | Curseforge | Modrinth | 功能 |
+| 英文名 | CurseForge | Modrinth | 功能 |
 |:-|:-|:-|:-|
-| Think Before Drop | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/think-before-drop) | [Modrinth](https://modrinth.com/mod/thinkbeforedrop) | 防止丢出贵重物品 |
-| Jupiter | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jupiter) | [Modrinth](https://modrinth.com/mod/jupiter) | 可自动同步的配置库 |
-| Uranus | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/uranus) | [Modrinth](https://modrinth.com/mod/uranus) | 功能库+`Citadel`动画部分移植 |
-| Neptune | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/neptune-lib) | [Modrinth](https://modrinth.com/mod/neptune) | 功能库+动画常见内容（阵营等） |
-| IceAndFire Fabric | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/iceandfire-fabric) | [Modrinth](https://modrinth.com/mod/iceandfire-fabric) | 冰火传说Fabric移植 |
-| Avaritia Reborn | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/avaritiareborn) | [Modrinth](https://modrinth.com/mod/avaritiareborn) | 无尽贪婪的高版本Fabric移植 |
-| Netherite Extension | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/netherite-extension) | [Modrinth](https://modrinth.com/mod/netheriteextension) | 下界合金拓展的Forge/Fabric移植 |
-| Ice And Fire Patcher | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/ice-and-fire-patcher) | [Modrinth](https://modrinth.com/mod/iaf-patcher) | 修复一些冰火传说严重卡顿的bug |
-| Rainimator Mod | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/rainimatormod) | [Modrinth](https://modrinth.com/mod/rainimatormod) | Rainimator动画同人 |
-| Annoying Villagers | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/annoying-villagers) | [Modrinth](https://modrinth.com/mod/annoyingvillagers) | 烦人的村民动画同人 |
-| Songs of War |  |  | 战争之歌动画同人 |
-| Early Loading Bar |  |  | 添加Fabric窗口显示前加载条 |
+| Think Before Drop | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/think-before-drop) | [Modrinth](https://modrinth.com/mod/thinkbeforedrop) | 防止丢出贵重物品 |
+| Jupiter | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/jupiter) | [Modrinth](https://modrinth.com/mod/jupiter) | 可自动同步的配置库 |
+| Uranus | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/uranus) | [Modrinth](https://modrinth.com/mod/uranus) | 功能库+`Citadel`动画部分移植 |
+| Neptune | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/neptune-lib) | [Modrinth](https://modrinth.com/mod/neptune) | 功能库+动画常见内容（阵营等） |
+| IceAndFire Fabric | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/iceandfire-fabric) | [Modrinth](https://modrinth.com/mod/iceandfire-fabric) | 冰火传说Fabric移植 |
+| Avaritia Reborn | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/avaritiareborn) | [Modrinth](https://modrinth.com/mod/avaritiareborn) | 无尽贪婪的高版本Fabric移植 |
+| Netherite Extension | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/netherite-extension) | [Modrinth](https://modrinth.com/mod/netheriteextension) | 下界合金拓展的Forge/Fabric移植 |
+| Ice And Fire Patcher | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ice-and-fire-patcher) | [Modrinth](https://modrinth.com/mod/iaf-patcher) | 修复一些冰火传说严重卡顿的bug |
+| Rainimator Mod | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/rainimatormod) | [Modrinth](https://modrinth.com/mod/rainimatormod) | Rainimator动画同人 |
+| Annoying Villagers | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/annoying-villagers) | [Modrinth](https://modrinth.com/mod/annoyingvillagers) | 烦人的村民动画同人 |
+| Songs of War | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/songs-of-war) | [Modrinth](https://modrinth.com/mod/songs-of-war) | 战争之歌动画同人 |
+| Early Loading Bar | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/early-loading-bar) |  | 添加Fabric窗口显示前加载条 |
+| Title Screen Mobs | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/title-screen-mobs) | [Modrinth](https://modrinth.com/mod/title-screen-mobs) | 在主界面渲染玩家和生物 |
 
 ## 中英文对照
 
@@ -35,6 +43,25 @@
 | Annoying Villagers | 烦人的村民 | 烦人的村民同人Mod |
 | Songs of War | 战争之歌 | 战争之歌同人Mod |
 | Early Loading Bar | 提前加载条 |  |
+| Title Screen Mobs | 主界面怪物 | 主界面生物渲染 |
+
+## 版本支持
+
+| 英文名 | Fabric | Forge | NeoForge |
+|:-|:-|:-|
+| Think Before Drop | `1.16-1.21` | `1.16.x`,`1.18-1.20.1` | `1.20.1`,`1.21` |
+| Jupiter | `1.20.1` | `1.20.1` | `1.20.1` |
+| Uranus | `1.20.1` |  |  |
+| Neptune | `1.20.1` | `1.20.1` | `1.20.1` |
+| IceAndFire Fabric | `1.20.1` |  |  |
+| Avaritia Reborn | `1.20.1` |  |  |
+| Netherite Extension | `1.19.4`,`1.20.1` |  |  |
+| Ice And Fire Patcher |  | `1.20.1` | `1.20.1` |
+| Rainimator Mod | `1.20.1` | `1.20.1` | `1.20.1` |
+| Annoying Villagers | `1.20.1` | `1.20.1` | `1.20.1` |
+| Songs of War | `1.20.1` | `1.20.1` | `1.20.1` |
+| Early Loading Bar | `1.14+` |  |  |
+| Title Screen Mobs | `1.19.2`,`1.19.4`,`1.20.1`,`1.20.4`,`1.20.6`,`1.21` | `1.19.2`,`1.19.4`,`1.20.1` | `1.20.1`,`1.20.4`,`1.20.6`,`1.21` |
 
 ## 开发元数据
 
@@ -54,3 +81,4 @@
 | Annoying Villagers | `annoying_villagers` | `com.iafenvoy.annoyingvillagers` |
 | Songs of War | `sow` | `com.iafenvoy.sow` |
 | Early Loading Bar | `early_loading_bar` | `com.iafenvoy.elb` |
+| Title Screen Mobs | `title_screen_mobs` | `com.iafenvoy.tsm` |
