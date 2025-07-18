@@ -16,5 +16,6 @@ import { Entry } from '@site/src/components/Cards';
         <Entry link="/docs/library/uranus" name="Uranus" content="Animation engine provider and more utilities for Fabric."/>
         <Entry link="/docs/mod/avaritia-reborn" name="Avaritia Reborn" content="The fabric version of Avaritia Mod."/>
         <Entry link="/docs/mod/rainimator-mod" name="Rainimator Mod" content="Secondary creation of Rainimator Minecraft Animation."/>
+		<Entry link="/docs/mod/ice-and-fire-ce" name="Ice And Fire: Community Edition" content="Fork of the popular Ice And Fire mod for Fabric, NeoForge and Forge, aimed at fixing bugs and implementing features, wanted by the community."/>
     </div>
 </section>
