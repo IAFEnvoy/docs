@@ -22,6 +22,8 @@ group:
 | Rainimator Mod | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/rainimatormod) | [Modrinth](https://modrinth.com/mod/rainimatormod) | Rainimator动画同人 |
 | Annoying Villagers | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/annoying-villagers) | [Modrinth](https://modrinth.com/mod/annoyingvillagers) | 烦人的村民动画同人 |
 | Songs of War | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/songs-of-war) | [Modrinth](https://modrinth.com/mod/songs-of-war) | 战争之歌动画同人 |
+| Songs of Origins | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/songs-of-origins) | [Modrinth](https://modrinth.com/mod/songs-of-origins) | 战争之歌和起源的联动 |
+| Songs of Power | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/songs-of-power) | [Modrinth](https://modrinth.com/mod/songs-of-power) | 还原歌之力 |
 | Early Loading Bar | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/early-loading-bar) |  | 添加Fabric窗口显示前加载条 |
 | Title Screen Mobs | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/title-screen-mobs) | [Modrinth](https://modrinth.com/mod/title-screen-mobs) | 在主界面渲染玩家和生物 |
 
@@ -39,9 +41,11 @@ group:
 | Avaritia Reborn | 无尽贪婪重生 | 无尽贪婪：复兴 |
 | Netherite Extension | 下界合金拓展 | 下界合金拓展续作 |
 | Ice And Fire Patcher | 冰火传说修补器 | 冰火传说随意修复 |
-| Rainimator Mod | Rainimator | Rainimator同人Mod |
-| Annoying Villagers | 烦人的村民 | 烦人的村民同人Mod |
-| Songs of War | 战争之歌 | 战争之歌同人Mod |
+| Rainimator Mod | Rainimator | Rainimator |
+| Annoying Villagers | 烦人的村民 | 烦人的村民 |
+| Songs of War | 战争之歌 | 战争之歌 |
+| Songs of Origins | 起源之歌 | 战争之歌：起源 |
+| Songs of Power | 力量之歌 | 战争之歌：歌之力 |
 | Early Loading Bar | 提前加载条 |  |
 | Title Screen Mobs | 主界面怪物 | 主界面生物渲染 |
 
@@ -60,6 +64,8 @@ group:
 | Rainimator Mod | `1.20.1` | `1.20.1` | `1.20.1` |
 | Annoying Villagers | `1.20.1` | `1.20.1` | `1.20.1` |
 | Songs of War | `1.20.1` | `1.20.1` | `1.20.1` |
+| Songs of Origins | `1.20.1` |  |  |
+| Songs of Origins | `1.20.1` |  |  |
 | Early Loading Bar | `1.14+` |  |  |
 | Title Screen Mobs | `1.19.2`,`1.19.4`,`1.20.1`,<br></br>`1.20.4`,`1.20.6`,`1.21` | `1.19.2`,`1.19.4`,`1.20.1` | `1.20.1`,`1.20.4`,<br></br>`1.20.6`,`1.21` |
 
@@ -80,5 +86,7 @@ group:
 | Rainimator Mod | `rainimator` | `dev.rainimator.mod` |
 | Annoying Villagers | `annoying_villagers` | `com.iafenvoy.annoyingvillagers` |
 | Songs of War | `sow` | `com.iafenvoy.sow` |
+| Songs of Origins | `songs_of_origins` | `com.iafenvoy.soo` |
+| Songs of Power | `sop` | `com.iafenvoy.sop` |
 | Early Loading Bar | `early_loading_bar` | `com.iafenvoy.elb` |
 | Title Screen Mobs | `title_screen_mobs` | `com.iafenvoy.tsm` |
