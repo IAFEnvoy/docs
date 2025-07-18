@@ -98,10 +98,11 @@ const config = {
             items: [
               { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn' },
               { to: '/docs/mod/rainimator-mod', label: 'Rainimator Mod' },
+              { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
             ]
           },
           {
-            href: 'https://github.com/IAFEnvoy',
+            href: 'https://github.com/IAFEnvoy/docs',
             label: 'GitHub',
             position: 'right',
           },
@@ -118,8 +119,8 @@ const config = {
                 to: '/docs/faq',
               },
               {
-                label: 'Mod Informations',
-                to: '/docs/info',
+                label: 'Mod List',
+                to: 'https://mods.iafenvoy.com/',
               },
             ],
           },
@@ -150,10 +151,6 @@ const config = {
               {
                 label: 'Status Page',
                 href: 'https://iafenvoy.online',
-              },
-              {
-                label: 'Maven (Deprecated)',
-                href: 'https://maven.iafenvoy.com',
               },
             ],
           },
