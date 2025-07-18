@@ -1,0 +1,3 @@
+[submodule "docs/mod/ice-and-fire-ce"]
+	path = docs/mod/ice-and-fire-ce
+	url = https://github.com/IAFEnvoy/IAF-Docs.git
