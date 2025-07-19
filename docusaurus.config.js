@@ -1,9 +1,3 @@
-// @ts-check
-// `@type` JSDoc annotations allow editor autocompletion and type checking
-// (when paired with `@ts-check`).
-// There are various equivalent ways to declare your Docusaurus config.
-// See: https://docusaurus.io/docs/api/docusaurus-config
-
 import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
@@ -12,16 +6,10 @@ const config = {
   tagline: 'Dinosaurs are cool',
   favicon: 'img/favicon.webp',
 
-  // Set the production url of your site here
   url: 'https://docs.iafenvoy.com/',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'IAFEnvoy', // Usually your GitHub org/user name.
-  projectName: 'docs', // Usually your repo name.
+  organizationName: 'IAFEnvoy',
+  projectName: 'docs',
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -41,17 +29,6 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // editUrl:
-          //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -85,7 +62,6 @@ const config = {
             position: 'left',
             label: 'Libraries',
             items: [
-              { to: '/docs/library/annotation-lib', label: 'Annotation Lib (Deprecated)' },
               { to: '/docs/library/jupiter', label: 'Jupiter' },
               { to: '/docs/library/neptune', label: 'Neptune' },
               { to: '/docs/library/uranus', label: 'Uranus' },
@@ -96,9 +72,20 @@ const config = {
             position: 'left',
             label: 'Mods',
             items: [
-              { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn' },
-              { to: '/docs/mod/rainimator-mod', label: 'Rainimator Mod' },
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
+              { to: '/docs/mod/avaritia', label: 'Avaritia Series' },
+              { to: '/docs/mod/mobs-banner', label: 'Mobs Banner' },
+              { to: '/docs/mod/tameable', label: 'Tameable' },
+              { to: '/docs/mod/rainimator-mod', label: 'Rainimator Mod' },
+            ]
+          },
+          {
+            type: 'dropdown',
+            position: 'left',
+            label: 'Deprecated',
+            items: [
+              { to: '/docs/library/annotation-lib', label: 'Annotation Lib (Deprecated)' },
+              { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn (Deprecated)' },
             ]
           },
           {
