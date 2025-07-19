@@ -10,7 +10,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 const config = {
   title: 'IAFEnvoy\'s Docs',
   tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.webp',
 
   // Set the production url of your site here
   url: 'https://docs.iafenvoy.com/',
@@ -68,8 +68,8 @@ const config = {
       navbar: {
         title: 'IAFEnvoy\'s Docs',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Logo',
+          src: 'img/favicon.webp',
         },
         items: [
           {

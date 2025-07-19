@@ -48,3 +48,44 @@
   font-weight: 700;
   margin-bottom: .25rem
 }
+
+.error-container {
+  text-align: center;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+}
+
+.error-img {
+  max-width: 300px;
+  margin-bottom: 1.5rem;
+}
+
+.error-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.error-text {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.back-btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #45a049;
+}
+
