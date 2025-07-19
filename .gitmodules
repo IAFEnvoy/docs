@@ -1,3 +1,6 @@
 [submodule "docs/mod/ice-and-fire-ce"]
 	path = docs/mod/ice-and-fire-ce
 	url = https://github.com/IAFEnvoy/IAF-Docs.git
+[submodule "docs/mod/avaritia"]
+	path = docs/mod/avaritia
+	url = https://github.com/Nova-Committee/Avaritia-Docs.git
