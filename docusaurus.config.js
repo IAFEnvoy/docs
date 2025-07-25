@@ -109,6 +109,10 @@ const config = {
                 label: 'Mod List',
                 to: 'https://mods.iafenvoy.com/',
               },
+              {
+                label: "Checklist Before Report",
+                to: '/docs/checklist',
+              },
             ],
           },
           {
