@@ -24,4 +24,4 @@ Please check before you report bugs or ideas. Also don't make your messages in a
 
 - `Epic Fight`
 - `owo-lib`
-- `Moon Light`
+- `Moonlight`
