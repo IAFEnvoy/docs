@@ -29,8 +29,6 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          showLastUpdateAuthor: true,
-          showLastUpdateTime: true
         },
         theme: {
           customCss: './src/css/custom.css',
