@@ -4,7 +4,7 @@ title: Welcome to IAFEnvoy's Documentations!
 
 # <div style={{textAlign:"center"}}>Welcome to IAFEnvoy's Documentations!</div>
 
-<img alt="banner" src="/img/banner.webp" style={{width:'50%',left:'25%',position:'relative'}}/>
+<img alt="banner" src="/img/banner.webp" style={{width:'70%',left:'15%',position:'relative'}}/>
 
 This is the documentation site for the mods I creates or participate in.
 
