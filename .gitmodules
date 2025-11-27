@@ -4,3 +4,7 @@
 [submodule "docs/mod/avaritia"]
 	path = docs/mod/avaritia
 	url = https://github.com/Nova-Committee/Avaritia-Docs.git
+[submodule "docs/mod/origins"]
+	path = docs/mod/origins
+	url = https://github.com/IAFEnvoy/Origins-Docs.git
+	branch = main
