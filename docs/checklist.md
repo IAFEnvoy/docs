@@ -20,8 +20,12 @@ Please check before you report bugs or ideas. Also don't make your messages in a
 
 `YSM` is close source and partly written with C++. I have no idea and reason to make integration.
 
-## Remove the low capability mods listed below
+## Remove following mods if you unsure whether they cause issues.
+
+**These mods is not in our support list.**
 
 - `Epic Fight`
 - `owo-lib`
 - `Moonlight`
+- `FTB xxx`
+- `REI`
