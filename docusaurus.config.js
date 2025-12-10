@@ -12,7 +12,13 @@ const config = {
   projectName: 'docs',
 
   onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn'
+    },
+    mermaid: true,
+  },
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -38,12 +44,15 @@ const config = {
       }),
     ],
   ],
-
+  themes: [
+    '@docusaurus/theme-mermaid',
+    '@saucelabs/theme-github-codeblock',
+  ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/social-card.webp',
       navbar: {
         title: 'IAFEnvoy\'s Docs',
         logo: {
@@ -154,6 +163,11 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        additionalLanguages: ['java'],
+      },
+      codeblock: {
+        showGithubLink: true,
+        githubLinkLabel: 'View on GitHub'
       },
     }),
 };
