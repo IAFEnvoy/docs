@@ -96,8 +96,8 @@ const config = {
             position: 'left',
             label: 'Deprecated',
             items: [
-              { to: '/docs/library/annotation-lib', label: 'Annotation Lib (Deprecated)' },
-              { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn (Deprecated)' },
+              { to: '/docs/library/annotation-lib', label: 'Annotation Lib' },
+              { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn' },
             ]
           },
           {
