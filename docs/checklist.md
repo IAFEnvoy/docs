@@ -6,7 +6,7 @@ title: Checklist Before Report
 
 Please check before you report bugs or ideas. Also don't make your messages in a mess when the GitHub issue provide you a template.
 
-**Note: We only support 1.16+ on (Neo)Forge and Fabric.**
+**Note: We only support 1.18+ on (Neo)Forge and Fabric.**
 
 ## Removed `Optifine`
 
@@ -24,8 +24,7 @@ Please check before you report bugs or ideas. Also don't make your messages in a
 
 **These mods is not in our support list.**
 
-- `Epic Fight`
-- `owo-lib`
-- `Moonlight`
-- `FTB xxx`
-- `REI`
+- `Epic Fight` & `Better Combat`: These two mods make massive change to combat system and their code are almost unreadable. I don't want to make any compat with them.
+- `owo-lib`: Mods depend on this library usually conflict with each other and print issues from a completely unrelated mod.
+- `Moonlight`: This mod usually cause issues, report to them first unless you are sure issues are caused by my mods.
+- `REI`: Code and APIs are in a mess.
