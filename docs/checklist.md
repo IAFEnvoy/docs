@@ -8,6 +8,10 @@ Please check before you report bugs or ideas. Also don't make your messages in a
 
 **Note: We only support 1.18+ on (Neo)Forge and Fabric.**
 
+## No AIGC long-winded discourse
+
+You can use AI to summarize your issue, but **DO NOT** use AI to generate a long text. I will close such issues without any explainations since I don't want to waste my time.
+
 ## Removed `Optifine`
 
 `Optifine`, or `Optif**k`, is an outdated shader loader and always cause conflicts. Please use `Iris` or `Oculus` instead.
