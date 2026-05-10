@@ -18,5 +18,6 @@ import { Entry } from '@site/src/components/Cards';
     <div class="projectsContainer" style={{display:'grid',gridTemplateColumns: '1fr 1fr'}}>
 		<Entry link="/docs/mod/ice-and-fire-ce" name="Ice And Fire: Community Edition" content="Fork of the popular Ice And Fire mod for Fabric, NeoForge and Forge, aimed at fixing bugs and implementing features, wanted by the community."/>
         <Entry link="/docs/library/jupiter" name="Jupiter" content="A powerful, auto sync config library."/>
+        <Entry link="/docs/mod/origins" name="Origins (NeoForge)" content="Fully rewrite and neoforged Origins Mod"/>
     </div>
 </section>
