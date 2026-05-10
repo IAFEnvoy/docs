@@ -83,7 +83,6 @@ const config = {
             position: 'left',
             label: 'Mods',
             items: [
-              { to: '/docs/mod/avaritia', label: 'Avaritia Series' },
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
               { to: '/docs/mod/mobs-banner', label: 'Mobs Banner' },
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
