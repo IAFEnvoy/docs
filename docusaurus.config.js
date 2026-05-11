@@ -90,7 +90,6 @@ const config = {
         ],
       },
     ],
-    '@docusaurus/plugin-sitemap',
     "@cmfcmf/docusaurus-search-local",
   ],
   themeConfig:
