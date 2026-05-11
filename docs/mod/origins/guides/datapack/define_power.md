@@ -89,8 +89,6 @@ Add the power ID to corresponding origin's `powers` List or tag:
 }
 ```
 
-Run `/reload` and test it in-game.
-
 ## Step 5 — Polish
 
 Add badges, refine the condition, or make the power toggleable. Here is the final version with badges:

@@ -109,11 +109,11 @@ A **Text Component** is Minecraft's rich text format used for messages, tooltips
 }
 ```
 
-For full documentation, see [Minecraft Wiki: Raw JSON text format](https://minecraft.wiki/w/Raw_JSON_text_format).
+For full documentation, see [Minecraft Wiki: Text component format](https://minecraft.wiki/w/Text_component_format).
 
 ---
 
-:::note 
+:::tip 
 In this mod, if you use a simple string where a Text Component is expected, it will be automatically converted to a Translatable Text Component with the string as the translation key. 
 
 For example, `"message": "origins.gui.choose_origin.title"` is equivalent to:

@@ -1,0 +1,16 @@
+{
+  "name": "IAFEnvoy's Docs",
+  "short_name": "IAFDocs",
+  "description": "Documentation for IAFEnvoy's Minecraft mods and libraries",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    {
+      "src": "img/favicon.webp",
+      "sizes": "any",
+      "type": "image/webp"
+    }
+  ]
+}

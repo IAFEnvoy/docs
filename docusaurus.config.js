@@ -34,9 +34,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          sidebarPath: './sidebars.js',
-          showLastUpdateAuthor: true,
-          showLastUpdateTime: true
+          sidebarPath: './sidebars.js'
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -47,6 +45,53 @@ const config = {
   themes: [
     '@docusaurus/theme-mermaid',
     '@saucelabs/theme-github-codeblock',
+  ],
+  plugins: [
+    [
+      '@docusaurus/plugin-pwa',
+      {
+        debug: false,
+        offlineModeActivationStrategies: [
+          'appInstalled',
+          'standalone',
+          'queryString',
+        ],
+        pwaHead: [
+          {
+            tagName: 'link',
+            rel: 'icon',
+            href: '/img/favicon.webp',
+          },
+          {
+            tagName: 'link',
+            rel: 'manifest',
+            href: '/manifest.json',
+          },
+          {
+            tagName: 'meta',
+            name: 'theme-color',
+            content: '#1a1a1a',
+          },
+          {
+            tagName: 'meta',
+            name: 'apple-mobile-web-app-capable',
+            content: 'yes',
+          },
+          {
+            tagName: 'meta',
+            name: 'apple-mobile-web-app-status-bar-style',
+            content: '#1a1a1a',
+          },
+          {
+            tagName: 'meta',
+            name: 'apple-mobile-web-app-title',
+            content: "IAFEnvoy's Docs",
+          },
+        ],
+      },
+    ],
+    '@docusaurus/plugin-sitemap',
+    "@cmfcmf/docusaurus-search-local",
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -84,10 +129,8 @@ const config = {
             label: 'Mods',
             items: [
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
-              { to: '/docs/mod/mobs-banner', label: 'Mobs Banner' },
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
               { to: '/docs/mod/rainimator-mod', label: 'Rainimator Mod' },
-              { to: '/docs/mod/tameable', label: 'Tameable' },
             ]
           },
           {
@@ -97,6 +140,8 @@ const config = {
             items: [
               { to: '/docs/library/annotation-lib', label: 'Annotation Lib' },
               { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn' },
+              { to: '/docs/mod/mobs-banner', label: 'Mobs Banner' },
+              { to: '/docs/mod/tameable', label: 'Tameable' },
             ]
           },
           {
