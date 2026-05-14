@@ -207,12 +207,6 @@ This example will check if brightness is 0.5 or lower (light level of 11 or belo
 
 ### `origins:collided_horizontally`
 
-:::danger May not be implemented
-
-This condition type may not exist in the current version. Verify against the source code.
-
-:::
-
 Checks if the entity is colliding horizontally with a wall.
 
 _No additional fields._

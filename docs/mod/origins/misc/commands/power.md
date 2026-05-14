@@ -4,7 +4,7 @@ The `/power` command can be used to grant powers, revoke powers, and check if an
 
 ### Syntax
 
-#### `power grant <target> <power> [<source>]`
+#### `power <target> grant <power> [<source>]`
 
 Grant a power to the specified target (from a specific power source, if specified).
 
@@ -15,15 +15,15 @@ Grant a power to the specified target (from a specific power source, if specifie
 - `[<source>]` — the source of the power; optional; defaults to the command default source.
     - (e.g. `example:test`)
 
-#### `power revoke <target> <power> [<source>]`
+#### `power <target> revoke <power> [source]`
 
 Revoke a power from the specified target (from a specific power source, if specified).
 
 - `<target>` — a target selector, username, or UUID; can only select one at a time.
 - `<power>` — the namespace and ID of a power.
-- `[<source>]` — the source of the power; optional; defaults to the command default source.
+- `[source]` — the source of the power; optional; defaults to the command default source.
 
-#### `power revokeall <target> <source>`
+#### `power <target> revokeall <source>`
 
 Revoke all the powers from the specified target that are granted by the specified source.
 
@@ -31,34 +31,27 @@ Revoke all the powers from the specified target that are granted by the specifie
 - `<source>` — the source to completely revoke all powers from.
     - (e.g. `example:test`)
 
-#### `power clear <target>`
+#### `power <target> clear`
 
 Clear all the powers from the specified target.
 
 - `<target>` — a target selector, username, or UUID; can only select one at a time.
 
-#### `power has <target> <power>`
-
-Check if the specified target has a certain power.
-
-- `<target>` — a target selector, username, or UUID; can only select one at a time.
-- `<power>` — the namespace and ID of a power.
-
-#### `power has <target> <power> <source>`
+#### `power <target> has <power> [source]`
 
 Check if the specified target has a certain power from a specific source.
 
 - `<target>` — a target selector, username, or UUID; can only select one at a time.
 - `<power>` — the namespace and ID of a power.
-- `<source>` — the source to check for.
+- `[source]` — the source to check for.
 
-#### `power list <target>`
+#### `power <target> list`
 
 List all the powers available from the specified target.
 
 - `<target>` — a target selector, username, or UUID; can only select one at a time.
 
-#### `power sources <target> <power>`
+#### `power <target> sources <power>`
 
 List all the power sources for a specific power on the specified target.
 

@@ -128,10 +128,6 @@ These features existed in Fabric but are **not yet available** in NeoForge:
 
 | Feature | Status |
 |---------|--------|
-| `origins:chose_origin` advancement trigger | :x: Not yet implemented |
-| `/resource` command | :x: Not yet implemented |
-| `origins:origin` predicate | :x: Not yet implemented |
-| `apoli:power` predicate | :x: Not yet implemented |
 | `Global Power Set` | :x: Not yet implemented |
 | Conditioned Origins in Layers | :x: Not yet implemented |
 | `origins:edible_item` power type | :x: Not yet implemented |
@@ -145,7 +141,6 @@ These features existed in Fabric but are **not yet available** in NeoForge:
 |---------|-------|
 | **DataPack Registry System** | All Origins JSON uses Vanilla's datapack registry |
 | **Power Tags** | Reference `#tag` in origin `powers` and layer `origins` |
-| **Default Origin** | Layer field: assign default on join |
 | **Badge Registry** | Badges use Vanilla registry at `origins:badge` |
 | **Inline Badge Definitions** | `badges` in powers can take inline `{badge}` objects |
 | **ColorSettings** | `red`/`green`/`blue`/`alpha` floats + single `color` hex integer |

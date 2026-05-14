@@ -1,11 +1,5 @@
 # Origin (Predicate)
 
-:::danger Not yet implemented
-
-This predicate is **not yet implemented** in the Origins (NeoForge). It will be available in a future update. The documentation below is from the Fabric version and may change.
-
-:::
-
 Checks if the player has the specified origin.
 
 **Type ID:** `origins:origin`

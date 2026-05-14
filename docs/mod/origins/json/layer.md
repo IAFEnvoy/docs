@@ -23,7 +23,7 @@ For example, `data/origins/origins/layer/origin.json` has the ID `origins:origin
 | `allow_random` | Boolean | `false` | Whether to show a "random pick" option |
 | `allow_random_unchoosable` | Boolean | `false` | Whether the random pick includes unchoosable origins |
 | `exclude_random` | List of Identifier | `[]` | Origin IDs excluded from the random pick |
-| `default_origin` | Identifier | optional | Default origin ID for new players |
+| `default_origin` | Identifier | optional | :x: Not yet implemented |
 | `auto_choose` | Boolean | `false` | If only one origin is available, whether to auto-choose it |
 | `hidden` | Boolean | `false` | Whether to hide this layer from the "View Origin" screen |
 

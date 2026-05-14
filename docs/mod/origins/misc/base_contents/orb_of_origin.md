@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # Orb of Origin
 
 An item that can change the origin(s) of the player upon "use" (right-click).

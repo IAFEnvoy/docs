@@ -72,8 +72,17 @@ To add a new **condition** or **action**:
 2. Provide a `MapCodec`.
 3. Register through `ConditionRegistries` or `ActionRegistries`.
 
+## Dependencies explanation
+
+- **[Jupiter](../../../../library/jupiter)**: Config library.
+- **Additional Entity Attributes** *(JIJ)*: For more entity attributes (e.g. lava vision), which replaced some power types.
+- **Caelus** *(JIJ)*: For attributs and better capability handling on fall flying related powers.
+- **Integration** *(JIJ)*: Provide better compatibility and entrypoints with other mods.
+
 ## Differences from the Fabric Version
 
 This NeoForge port consolidates what used to be separate libraries (Apoli, Calio) into a single mod. The namespace changed from `apoli`/`calio` to `origins`. The data path structure uses NeoForge's DataPack Registry system instead of Fabric's custom loading.
 
 Class names and type IDs mostly match the Fabric version, but always check the source rather than assuming they're identical.
+
+**For how to port from Fabric to NeoForge, see [this guide](../porting).**

@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # List of Powers
 
 The following powers are included by default in the `origins` namespace. Their data files are located at `data/origins/origins/power/`.

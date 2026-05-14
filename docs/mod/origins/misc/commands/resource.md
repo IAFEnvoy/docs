@@ -1,8 +1,8 @@
 # `/resource`
 
-:::danger Not yet implemented
+:::warning Experimental
 
-The `/resource` command is **not yet implemented** in the Origins (NeoForge). It will be available in a future update.
+The `/resource` command is an experimental command, and is subject to change without warning. It may be removed in a later update if it is not fully implemented or if it is deemed unnecessary.
 
 :::
 

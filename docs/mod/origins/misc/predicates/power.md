@@ -1,11 +1,5 @@
 # Power (Predicate)
 
-:::danger Not yet implemented
-
-This predicate is **not yet implemented** in the Origins (NeoForge). It will be available in a future update. The documentation below is from the Fabric version and may change.
-
-:::
-
 Checks if the entity has the specified power.
 
 **Type ID:** `apoli:power`

@@ -4,9 +4,8 @@ title: Tameable
 
 # Tameable
 
-![forge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/forge_vector.svg)
-![fabric](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg)
-![quilt](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/unsupported/quilt_vector.svg)
+:::danger This is no longer maintain.
+:::
 
 *Someone ask me whether they can tame Ingresssus Voltaris (Death Singer) in my SoW Server, so this mod comes out.*
 

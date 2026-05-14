@@ -1,11 +1,5 @@
 # Chose Origin
 
-:::danger Not yet implemented
-
-This advancement trigger is **not yet implemented** in the Origins (NeoForge). It will be available in a future update.
-
-:::
-
 **Type ID:** `origins:chose_origin`
 
 Triggers when a player chooses the specified origin.
@@ -14,7 +8,8 @@ Triggers when a player chooses the specified origin.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `origin` | [Identifier](../../types/basic_concepts#identifier) | | The namespace and ID of the origin to check for. |
+| `origin` | [Identifier](../../types/basic_concepts#identifier) | **required** | The namespace and ID of the origin to check for. |
+| `layer` | [Identifier](../../types/basic_concepts#identifier) | optional | The namespace and ID of the layer to check for. |
 
 ### Examples
 
