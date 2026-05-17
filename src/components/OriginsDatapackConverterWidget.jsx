@@ -265,6 +265,7 @@ export default function ConverterWidget() {
       const langOrigin = {};
       const langLayer = {};
 
+      // ---- Pass 1: convert JSON files ----
       for (const [zipPath, zipEntry] of Object.entries(zip.files)) {
         if (zipEntry.dir || !zipPath.endsWith('.json')) continue;
         const raw = await zipEntry.async('string');
@@ -434,11 +435,15 @@ export default function ConverterWidget() {
           continue;
         }
 
-        // --- other files: copy as-is ---
-        if (zipPath === 'pack.mcmeta' || zipPath === 'pack.png'
-          || zipPath.startsWith('assets/') || zipPath.startsWith('data/')) {
-          outZip.file(zipPath, raw);
-        }
+      }
+
+      // ---- Pass 2: copy non-JSON files as-is ----
+      for (const [zipPath, zipEntry] of Object.entries(zip.files)) {
+        if (zipEntry.dir) continue;
+        // skip files we already processed as JSON in pass 1
+        if (zipPath.endsWith('.json')) continue;
+        const blob = await zipEntry.async('uint8array');
+        outZip.file(zipPath, blob);
       }
 
       // language file
