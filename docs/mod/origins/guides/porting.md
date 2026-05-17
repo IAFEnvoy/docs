@@ -14,7 +14,7 @@ All JSON files moved from custom paths to **Vanilla DataPack Registry** paths.
 | Power | `data/<ns>/powers/` | `data/<ns>/origins/power/` |
 | Layer | `data/<ns>/origin_layers/` | `data/<ns>/origins/layer/` |
 | Badge | (not in Fabric) | `data/<ns>/origins/badge/` |
-| Global Power Set | `data/<ns>/global_powers/` | :x: Not yet implemented |
+| Global Power Set | `data/<ns>/global_powers/` | `data/<ns>/origins/global_powers/` |
 
 > **Action:** Move files and add registry subfolder (`origin/`, `power/`, `layer/`, `badge/`).
 
@@ -24,8 +24,8 @@ All JSON files moved from custom paths to **Vanilla DataPack Registry** paths.
 
 | Field | Status | Notes |
 |-------|--------|-------|
-| `name` | :x: Removed | Use translation key `origin.<ns>.<path>.name` |
-| `description` | :x: Removed | Use translation key `origin.<ns>.<path>.description` |
+| `name` | Change to Optional | Use translation key `origin.<ns>.<path>.name` is more recommended |
+| `description` | Change to Optional | Use translation key `origin.<ns>.<path>.description` is more recommended |
 | `loading_priority` | :x: Removed | Data packs now override by priority naturally |
 | `powers` | Changed | Now supports `#tag` references. **Prefer `#tag` over listing individual power IDs** |
 | `icon` | Changed | From Item+Damage+NBT to `{"id": "minecraft:feather"}` |
@@ -43,7 +43,7 @@ All JSON files moved from custom paths to **Vanilla DataPack Registry** paths.
 | Field | Status | Notes |
 |-------|--------|-------|
 | `replace` | :x: Removed | Use data pack override behavior |
-| `name` | :x: Removed | Use translation key `layer.<ns>.<path>.name` |
+| `name` | Change to Optional | Use translation key `layer.<ns>.<path>.name` is more recommended |
 | `missing_name` | :x: Removed | Not needed |
 | `missing_description` | :x: Removed | Not needed |
 | `origins` | Changed | Now supports `#tag` references. **Prefer `#tag` over listing individual origin IDs** |
@@ -53,10 +53,10 @@ All JSON files moved from custom paths to **Vanilla DataPack Registry** paths.
 | `enabled` | Same | |
 | `allow_random` | Same | |
 | `hidden` | Same | |
-| `auto_choose` | New | Auto-choose if only one origin is available |
-| `default_origin` | New | Default origin for new players |
-| `allow_random_unchoosable` | New | |
-| `exclude_random` | New | |
+| `auto_choose` | Same | |
+| `default_origin` | Same | |
+| `allow_random_unchoosable` | Same | |
+| `exclude_random` | Same | |
 
 > **Action:** Move `choose_origin`/`view_origin` under `gui_title`. Remove `replace`/`name`/`missing_name`/`missing_description`. Use `#tag` references in `origins` instead of listing each origin ID individually whenever possible.
 
@@ -87,29 +87,6 @@ Fabric's `origins:multiple` power type (which bundled several sub-powers into on
 
 ---
 
-## Condition Type Changes
-
-### `origins:attacker` — Moved to BiEntity & Damage conditions
-
-In Fabric, `origins:attacker` was an entity condition used inside bientity conditions. In NeoForge:
-
-| Registry | Type ID | Category | Field |
-|----------|---------|----------|-------|
-| `origins:bientity_condition` | `origins:attacker` | [Bi-entity Condition] | Checks if the actor attacked the target |
-| `origins:damage_condition` | `origins:attacker` | [Damage Condition] | Checks the attacker via `entity_condition` |
-
-> **Action:** Replace nested entity-condition `attacker` with the corresponding BiEntity/Damage condition variant.
-
-### `origins:attack_target`
-
-Same as above: in Fabric it was nested inside bientity conditions. In NeoForge it's a direct BiEntity condition (`origins:attack_target`) checking if the actor is targeting the target.
-
-| Registry | Type ID | Category |
-|----------|---------|----------|
-| `origins:bientity_condition` | `origins:attack_target` | [Bi-entity Condition] |
-
----
-
 ## Removed Condition Types
 
 | Fabric Type | Status in NeoForge | Note|
@@ -128,8 +105,6 @@ These features existed in Fabric but are **not yet available** in NeoForge:
 
 | Feature | Status |
 |---------|--------|
-| `Global Power Set` | :x: Not yet implemented |
-| Conditioned Origins in Layers | :x: Not yet implemented |
 | `origins:edible_item` power type | :x: Not yet implemented |
 | `origins:modify_enchantment_level` power type | :x: Not yet implemented |
 
@@ -185,7 +160,5 @@ Changes to apply:
    Use #tag references in powers instead of listing individual power IDs.
 5. Split any origins:multiple powers into individual power JSON files.
 6. Replace removed condition types (command, entity_group, category, high_humidity, owner) with equivalent alternatives or JS scripts.
-7. origins:attacker and origins:attack_target are now BiEntity conditions directly — no longer nested entity conditions inside bientity conditions.
-8. Do NOT nest comparison/compare_to fields — they remain as flat top-level keys.
-9. Check the porting guide at porting.md for the full list of differences.
+7. Check the porting guide at porting.md for the full list of differences.
 ```

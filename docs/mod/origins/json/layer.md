@@ -16,6 +16,7 @@ For example, `data/origins/origins/layer/origin.json` has the ID `origins:origin
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
+| `name` | [Text Component](./../types/minecraft_data_types#text-component) | optional | The display name of the layer. Use translation key `layer.<namespace>.<path>.name` is more recommended |
 | `order` | Integer | `Integer.MAX_VALUE` | Sort order in the selection screen; lower numbers appear first |
 | `origins` | List of `Identifier` / `#tag` / [Conditioned Origin](#conditioned-origins) objects | **required** | Origins included in this layer. Supports direct IDs, tags, and conditioned origins |
 | `enabled` | Boolean | `true` | Whether this layer is enabled |
@@ -27,6 +28,11 @@ For example, `data/origins/origins/layer/origin.json` has the ID `origins:origin
 | `auto_choose` | Boolean | `false` | If only one origin is available, whether to auto-choose it |
 | `hidden` | Boolean | `false` | Whether to hide this layer from the "View Origin" screen |
 
+:::warning
+Unlike Fabric version, which use `missing_name` and `missing_description` to display when no origin is assign for current layer, Origins (NeoForge) will simply hide the layer in view origin screen if it has no origin.
+:::
+
+
 ### GUI Title
 
 | Field | Type | Default | Description |
@@ -34,17 +40,7 @@ For example, `data/origins/origins/layer/origin.json` has the ID `origins:origin
 | `choose_origin` | Text Component | optional | Overrides the title text shown when choosing an origin |
 | `view_origin` | Text Component | optional | Overrides the title text shown when viewing an origin |
 
-## Translation Key
-
-Layer names use the language key: `layer.<namespace>.<path>.name`
-
 ## Conditioned Origins
-
-:::danger Not yet implemented
-
-Conditioned Origins are **not yet implemented** in the Origins (NeoForge). They will be available in a future update. The documentation below is from the Fabric version and may change.
-
-:::
 
 Within the `origins` List, you can mix string IDs with conditioned origin objects:
 
@@ -65,7 +61,7 @@ Conditioned origin fields:
 | Field | Type | Description |
 |-------|------|-------------|
 | `condition` | Entity Condition | The condition the player must fulfill |
-| `origins` | List of Identifier | Origins shown when the condition is met |
+| `origins` | List of Identifier or #Tag | Origins shown when the condition is met |
 
 ## Examples
 
@@ -102,10 +98,12 @@ A layer with a conditioned origin:
   ]
 }
 ```
+:::caution
+Command can bypass the conditions and grant any origin in the layer, so conditioned origins are not a secure way to gate content. They are mainly for guiding players towards certain choices or creating a more dynamic selection experience.
+:::
 
 :::note
 Key differences from the old version:
-- `name` field removed; use translation keys
 - `replace` field removed (the new registry system handles data overriding automatically)
 - `missing_name` and `missing_description` removed
 - `loading_priority` removed

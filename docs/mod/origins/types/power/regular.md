@@ -232,7 +232,6 @@ Damages the player at regular intervals.
 | `damage` | [Float](../basic_concepts#float) | `1.0` | Amount of damage per tick |
 | `damage_type` | [Identifier](../basic_concepts#identifier) | **required** | Custom damage type |
 | `damage_easy` | [Float](../basic_concepts#float) | optional | Damage on Easy difficulty |
-| `onset_delay` | [Integer](../basic_concepts#integer) | optional | Delay before first damage tick |
 
 
 <details>
@@ -242,7 +241,6 @@ Damages the player at regular intervals.
 {
   	"type": "origins:damage_over_time",
   	"interval": 20,
-  	"onset_delay": 1,
   	"damage": 2,
   	"damage_easy": 1,
   	"damage_type": "origins:hurt_by_water",

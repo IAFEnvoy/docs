@@ -54,16 +54,11 @@ If you directly list powers in the origin file, other data packs won't be able t
 :::
 
 <details>
-<summary>Field reference</summary>
+<summary>Origin JSON Field reference</summary>
 
-| Field | Type | Default | Purpose |
-|-------|------|---------|---------|
-| `powers` | Identifier / tag List | `[]` | Powers granted to this origin |
-| `icon` | Item Stack | optional | Icon shown in the origin selection screen |
-| `unchoosable` | Boolean | `false` | Hide from the GUI (still assignable via command) |
-| `order` | Integer | large | Position in the selection screen |
-| `impact` | Integer | `0` | Difficulty indicator: `0` = none, `1` = low, `2` = medium, `3` = high |
-| `upgrades` | List of Upgrade | `[]` | Advancement-triggered origin transformations |
+import OriginFields from '../../json/field_table/_origin.mdx';
+
+<OriginFields/>
 
 </details>
 
@@ -82,6 +77,16 @@ Names and descriptions are defined in **language files**. Create a resource pack
 The pattern is `origin.<namespace>.<path>.name` / `.description`.
 
 If you prefer to set the name in the origin file itself, you can use the optional `name` and `description` fields (as Text Components), but translation keys are the recommended approach.
+
+:::info
+
+Using default translation keys are always recommended. **But language files are always put in resource packs, which means  you must also include a resource pack with the same namespace.**
+
+By default mods have builtin resource packs and data packs, so use translation keys is not a problem for them. For pure data packs, it's up to you whether to create a resource pack for translations or not.
+
+If you don't want to create a resource pack, you can use the `name` and `description` fields  to directly specify the text, but they won't be localizable.
+
+:::
 
 ## Step 3: Add the Origin to a Layer
 

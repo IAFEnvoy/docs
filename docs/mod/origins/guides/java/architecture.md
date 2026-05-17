@@ -52,7 +52,7 @@ When a power is granted to a player:
 
 1. `Power.grant(holder)` is called.
 2. If the `condition` field is satisfied, the power becomes **active** via `Power.active(holder)`.
-3. On each tick, `Power.tick(holder)` runs.
+3. On specific intervals defined by `Power.tickInterval()`(default is 1), `Power.tick(holder)` runs.
 4. If the condition becomes false, `Power.inactive(holder)` fires.
 5. When the power is revoked, `Power.revoke(holder)` fires.
 

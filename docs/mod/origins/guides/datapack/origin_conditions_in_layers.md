@@ -4,12 +4,6 @@ sidebar_position: 3
 
 # Conditional Origins in Layers
 
-:::danger Not yet implemented
-
-Features described in this guide are **not yet implemented** in the Origins (NeoForge). They will be available in a future update. The documentation below is from the Fabric version and may change.
-
-:::
-
 Layers can show or hide origins based on the player's state. This is useful for multi-stage selection: pick an element first, then see only the origins matching that element.
 
 ## Basic Syntax
@@ -47,7 +41,7 @@ Instead of a plain ID string, use an object with `condition` and `origins`:
 During the day, only Enderian is available. At night, only Arachnid. Plain IDs like `origins:avian` and `origins:blazeborn` always show up.
 
 :::tip
-You can list multiple origin IDs under a single condition if they share the same requirement — no need to repeat the condition for each.
+You can list multiple origin IDs and tags under a single condition if they share the same requirement — no need to repeat the condition for each.
 :::
 
 ## Restricting by Previous Selection

@@ -416,8 +416,8 @@ Executes an entity action at regular intervals.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed each interval |
-| `rising_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when the condition becomes true |
-| `falling_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when the condition becomes false |
+| `active_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when the condition becomes true |
+| `inactive_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when the condition becomes false |
 | `interval` | [Integer](../basic_concepts#integer) | `20` | Interval in ticks between actions |
 
 <details>

@@ -12,7 +12,7 @@ An Upgrade defines how an origin transforms into another origin upon achieving a
 |-------|------|---------|-------------|
 | `condition` | Identifier | **required** | The advancement ID that triggers this upgrade |
 | `origin` | Identifier | **required** | The target origin ID to upgrade to |
-| `announcement` | String | optional | A chat notification shown when the upgrade occurs |
+| `announcement` | Text Component | optional | A chat notification shown when the upgrade occurs |
 
 ## Example
 
