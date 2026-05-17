@@ -72,31 +72,26 @@ This example will check if the item has a durability value of 100 or less.
 
 </details>
 
+### `origins:empty`
+
+Checks if the item stack is empty.
+
+### `origins:enchantable`
+
+Checks if the item can be enchanted.
+
+
 ### `origins:food`
 
-
-<details>
-<summary>Example</summary>
-
-```json
-"item_condition": {
-    "type": "origins:food"
-}
-```
-
-This example will check if the item is considered a food item.
-
-</details>
-
 Checks if the item is a food item.
-
-_No additional fields._
 
 ### `origins:fuel`
 
 
 <details>
 <summary>Example</summary>
+
+Checks if the item can be used as furnace fuel.
 
 ```json
 "item_condition": {
@@ -109,10 +104,6 @@ _No additional fields._
 This example will check if the item fuel time value of 10 or more.
 
 </details>
-
-Checks if the item can be used as furnace fuel.
-
-_No additional fields._
 
 ### `origins:has_component`
 
@@ -193,11 +184,13 @@ This example will check if the armor item (in this context, a chestplate) has a 
 
 </details>
 
+### `origins:is_damageable`
+
+Checks if the item is damageable (i.e. has durability).
+
 ### `origins:is_equipable`
 
 Checks if the item can be equipped in a specific slot.
-
-_No additional fields._
 
 ### `origins:power_count`
 
@@ -248,6 +241,10 @@ Checks the item's durability as a percentage.
 This example will check if the item has a 90% durability or greater.
 
 </details>
+
+### `origins:smeltable`
+
+Checks if the item can be smelted in a furnace. (i.e. has a furnace recipe)
 
 ### `origins:tool_ability`
 

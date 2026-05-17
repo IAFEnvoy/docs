@@ -4,6 +4,10 @@ Biome conditions check properties of a biome.
 
 ## Built-in Conditions
 
+### `origins:high_humidity`
+
+Checks whether the biome counts as an area with high humidity (downfall value of > 0.85).
+
 ### `origins:in_tag`
 
 Checks if the biome is in a biome tag.

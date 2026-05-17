@@ -205,11 +205,31 @@ This example will check if brightness is 0.5 or lower (light level of 11 or belo
 
 </details>
 
+### `origins:climbing`
+
+Checks whether the entity is currently climbing.
+
 ### `origins:collided_horizontally`
 
 Checks if the entity is colliding horizontally with a wall.
 
-_No additional fields._
+### `origins:command`
+
+:::danger Not yet implemented
+
+This condition type is **not yet implemented** in the Origins (NeoForge). It will be available in a future update.
+
+:::
+
+Checks if a command returns a successful result.
+
+### `origins:creative_flying`
+
+Checks if the player is Creative Mode flying.
+
+### `origins:daytime`
+
+Checks whether it's currently daytime.
 
 ### `origins:dimension`
 
@@ -266,6 +286,7 @@ This example will check if the entity is within 8 blocks of (256, 64, 32).
 
 ### `origins:elytra_flight_possible`
 
+Checks if elytra flight is currently possible for the entity.
 
 <details>
 <summary>Example</summary>
@@ -281,10 +302,6 @@ This example will check if the entity is within 8 blocks of (256, 64, 32).
 This example will check if the player can activate elytra flight.
 
 </details>
-
-Checks if elytra flight is currently possible for the entity.
-
-_No additional fields._
 
 ### `origins:enchantment`
 
@@ -366,17 +383,17 @@ This example will check if the item in the entity's mainhand has a harvest level
 
 </details>
 
+### `origins:exists`
+
+Checks if the entity exists.
+
 ### `origins:exposed_to_sky`
 
 Checks if the entity is exposed to the sky.
 
-_No additional fields._
-
 ### `origins:exposed_to_sun`
 
 Checks if the entity is exposed to sunlight.
-
-_No additional fields._
 
 ### `origins:fall_distance`
 
@@ -401,6 +418,10 @@ Checks the entity's fall distance.
 This example will check if the entity has been falling for 4 or more blocks.
 
 </details>
+
+### `origins:fall_flying`
+
+Checks whether the entity is currently fall flying (with an Elytra, an Elytra power, or similar).
 
 ### `origins:fluid_height`
 
@@ -480,8 +501,6 @@ This example will check if the player is in Creative Mode.
 ### `origins:glowing`
 
 Checks if the entity is glowing.
-
-_No additional fields._
 
 ### `origins:health`
 
@@ -564,6 +583,14 @@ This example will check if the entity is currently inside a two-block tall folia
 
 </details>
 
+### `origins:in_rain`
+
+Check if it's raining at the entity's position.
+
+### `origins:in_snow`
+
+Checks if it's snowing at the entity's position.
+
 ### `origins:in_tag`
 
 Checks if the entity is in an entity type tag.
@@ -571,6 +598,10 @@ Checks if the entity is in an entity type tag.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `tag` | [Identifier](../basic_concepts#identifier) | **required** | Entity type tag ID |
+
+### `origins:in_thunderstorm`
+
+Checks if there's a thunderstorm at the entity's position.
 
 ### `origins:inventory`
 
@@ -602,6 +633,14 @@ This example will check if 10 or more slots are occupied by any items in the ent
 
 </details>
 
+### `origins:invisible`
+
+Checks whether the entity is currently invisible.
+
+### `origins:living`
+
+Checks if the entity is an instance of `LivingEntity`, or in simple terms, a mob or a player.
+
 ### `origins:mob_effect`
 
 Checks if a specific status effect is active.
@@ -615,6 +654,10 @@ Checks if a specific status effect is active.
 | `max_duration` | [Integer](../basic_concepts#integer) | `2147483647` | Maximum remaining duration ticks |
 | `inverted` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, checks the effect is NOT active |
 
+### `origins:moving`
+
+Checks whether the entity is currently moving.
+
 ### `origins:nbt`
 
 Checks the entity's NBT data.
@@ -624,7 +667,6 @@ Checks the entity's NBT data.
 | `nbt` | NBT Object | **required** | NBT data to match against the entity |
 
 ### `origins:on_block`
-
 
 <details>
 <summary>Example</summary>
@@ -645,7 +687,10 @@ Checks if the entity is standing on a block (not in the air).
 |-------|------|---------|-------------|
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition on the block being stood on |
 
-_No additional fields._
+
+### `origins:on_fire`
+
+Checks if the entity is on fire.
 
 ### `origins:origin`
 
@@ -959,6 +1004,10 @@ Checks if the entity is sneaking.
 |-------|------|---------|-------------|
 | `inverted` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, checks that the entity is NOT sneaking |
 
+### `origins:sprinting`
+
+Checks if the entity is sprinting.
+
 ### `origins:submerged_in`
 
 Checks if the entity is submerged in a specific fluid.
@@ -981,6 +1030,14 @@ Checks if the entity is submerged in a specific fluid.
 This example will check if the player is submerged in water.
 
 </details>
+
+### `origins:swimming`
+
+Checks if the entity is swimming.
+
+### `origins:tamed`
+
+Checks if the entity is tamed.
 
 ### `origins:time_of_day`
 
@@ -1020,8 +1077,6 @@ This example will check if it's the sun is currently setting.
 ### `origins:using_effective_tool`
 
 Checks if the entity is holding an effective tool for the block they're looking at.
-
-_No additional fields._
 
 ### `origins:using_item`
 

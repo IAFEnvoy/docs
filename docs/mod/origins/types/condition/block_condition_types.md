@@ -34,6 +34,10 @@ This example will check if there are four or more Iron Ore blocks next to the bl
 
 </details>
 
+### `origins:attachable`
+
+Checks whether the block is in a place where a supported block can be attached (i.e. checks whether any of the adjacent blocks' sides towards this block position are solid).
+
 ### `origins:blast_resistance`
 
 Checks the block's blast resistance.
@@ -58,6 +62,10 @@ Checks the block's blast resistance.
 This example will check if the blast resistance value of the block is that of an Obsidian block or greater.
 
 </details>
+
+### `origins:block_entity`
+
+Checks if the block has a block entity.
 
 ### `origins:block_id`
 
@@ -148,6 +156,10 @@ Checks the block's distance from coordinates.
 This example will check if the block is within an 8 blocks radius relative to the specified coordinates (X: 1024, Z: 512).
 
 </details>
+
+### `origins:exposed_to_sky`
+
+Checks if the block is exposed to the sky.
 
 ### `origins:fluid`
 
@@ -245,6 +257,10 @@ This example checks if the block is a Diamond Block.
 
 </details>
 
+### `origins:light_blocking`
+
+Checks whether the block is marked in code as blocking light. Glass for example would not fulfill this condition.
+
 ### `origins:light_level`
 
 Checks the light level at the block.
@@ -273,8 +289,6 @@ This example will check if a Chest block is facing north.
 ### `origins:movement_blocking`
 
 Checks if the block blocks movement (solid).
-
-_No additional fields._
 
 ### `origins:nbt`
 
@@ -308,6 +322,10 @@ This example will check if Beacon block has a `Level` value of 1.
 
 </details>
 
+### `origins:replaceable`
+
+Checks if the block can be replaced by another block (i.e. if it's a non-solid block like tall grass or air).
+
 ### `origins:slipperiness`
 
 Checks the block's slipperiness.
@@ -332,6 +350,10 @@ Checks the block's slipperiness.
 This example will check if the block has the same slipperiness of an Ice (or Packed Ice) block.
 
 </details>
+
+### `origins:water_loggable`
+
+Checks if the block can be waterlogged.
 
 ---
 

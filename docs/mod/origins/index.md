@@ -2,8 +2,6 @@
 
 Welcome to the Origins (NeoForge) documentation! This mod allows players to choose an **Origin** at the start of the game, granting unique abilities and traits.
 
-*This document is written by AI and may contain inaccuracies. Please report any issues you find to the mod developers.*
-
 :::info
 This mod is a fully rewritten version of the original Origins mod, built on top of NeoForge. Some APIs and features from the original mod may not be present in this version, and some behaviors may differ. 
 

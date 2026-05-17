@@ -29,6 +29,7 @@ This example will add a Coal Ore block at the position of the block action type.
 
 ### `origins:bonemeal`
 
+Applies bonemeal effect to the block.
 
 <details>
 <summary>Example</summary>
@@ -43,10 +44,6 @@ This example will add a Coal Ore block at the position of the block action type.
 This example will apply bonemeal to the target block of the block action without the visual effects.
 
 </details>
-
-Applies bonemeal effect to the block.
-
-_No additional fields._
 
 ### `origins:execute_command`
 

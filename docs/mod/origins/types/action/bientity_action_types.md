@@ -77,6 +77,10 @@ This example will deal 5 hearts of `cramming` damage to the target as if the act
 
 </details>
 
+### `origins:mount`
+
+Mounts the target entity on the actor.
+
 ### `origins:remove_from_set`
 
 Removes the actor from an entity set.
@@ -84,6 +88,14 @@ Removes the actor from an entity set.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+
+### `origins:set_in_love`
+
+Sets the target entity in love with the actor.
+
+### `origins:tame`
+
+Tames the target entity.
 
 ---
 

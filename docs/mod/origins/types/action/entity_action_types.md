@@ -156,8 +156,6 @@ This example will add 1 to the `namespace:example` (`data/namespace/powers/examp
 
 Opens a crafting table GUI for the entity.
 
-_No additional fields._
-
 ### `origins:damage`
 
 Damages the entity.
@@ -182,6 +180,10 @@ Damages the entity.
 This example will apply a Speed I status effect to the entity that would last for 20 seconds.
 
 </details>
+
+### `origins:dismount`
+
+Forces the entity to dismount from any vehicle it is currently riding.
 
 ### `origins:drop_inventory`
 
@@ -239,8 +241,6 @@ This example will emit a `minecraft:ring_bell` game event, which has a redstone 
 
 Opens the ender chest GUI for the entity.
 
-_No additional fields._
-
 ### `origins:equipped_item_action`
 
 Executes an item action on the entity's equipped item.
@@ -291,6 +291,8 @@ This example will execute a [Set Block](../action/block_action_types) that would
 
 </details>
 
+### `origins:exhaust`
+
 Adds exhaustion to the player.
 
 | Field | Type | Default | Description |
@@ -310,6 +312,8 @@ Adds exhaustion to the player.
 This example will add 1 to the `namespace:example` (`data/namespace/powers/example.json`) power that uses the [Resource (Power Type)](../power/regular).
 
 </details>
+
+### `origins:explode`
 
 Creates an explosion at the entity's location.
 
@@ -335,6 +339,12 @@ Creates an explosion at the entity's location.
 This example will drop all the items from the entity's inventory.
 
 </details>
+
+### `origins:extinguish`
+
+Extinguishes fire on the entity.
+
+### `origins:feed`
 
 Restores hunger and saturation.
 

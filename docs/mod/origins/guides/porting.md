@@ -1,6 +1,14 @@
-# Porting Guide: Fabric → NeoForge
+---
+sidebar_position: 3
+---
+
+# Porting: Fabric → NeoForge
 
 This document explains the differences between the original Fabric version (Apace100/origins-fabric) and the NeoForge rewrite (IAFEnvoy/Origins-NeoForge). Use it to convert existing data packs, add-ons, or documentation from the Fabric version to the NeoForge version.
+
+:::info
+You can try to use [Fast Convertor](./convertor) for an automated conversion of your data pack, but be sure to review the output and apply any necessary manual adjustments based on the differences outlined in this guide.
+:::
 
 ---
 

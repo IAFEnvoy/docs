@@ -41,8 +41,6 @@ Checks the source entity (attacker).
 
 Checks if the damage is fire-based.
 
-_No additional fields._
-
 ### `origins:id`
 
 Checks the damage type ID.
@@ -92,8 +90,6 @@ This example will check if the damage source is a Spectral Arrow projectile enti
 </details>
 
 Checks if the damage is from a projectile.
-
-_No additional fields._
 
 ### `origins:type`
 

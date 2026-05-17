@@ -4,11 +4,17 @@ Bi-entity conditions check the relationship between two entities (actor and targ
 
 ## Built-in Conditions
 
+### `origins:attacker`
+
+Checks if the actor entity has attacked the target entity within the last 5 seconds, and still exists.
+
+### `origins:attack_target`
+
+Checks if the actor entity is currently aggressive to the target entity.
+
 ### `origins:can_see`
 
 Checks if the actor can see the target (has line of sight).
-
-_No additional fields._
 
 <details>
 <summary>Example</summary>
@@ -55,6 +61,10 @@ Checks if the actor is in a specific entity set.
 |-------|------|---------|-------------|
 | `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
 
+### `origins:owner`
+
+Checks if the actor is the owner of the target.
+
 ### `origins:relative_rotation`
 
 Checks the relative rotation/angle between actor and target.
@@ -83,6 +93,10 @@ This example will check if the actor and target are essentially facing each othe
 
 </details>
 
+### `origins:riding`
+
+Checks if the actor entity is currently riding the target entity.
+
 ### `origins:riding_recursive`
 
 Checks if the actor is riding the target (recursively).
@@ -90,6 +104,10 @@ Checks if the actor is riding the target (recursively).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Nested condition |
+
+### `origins:riding_root`
+
+Checks if the actor entity is riding the target entity from the very end of the riding chain.
 
 ---
 
@@ -293,8 +311,6 @@ This example will check if either the actor or target entities are in rain.
 ### `origins:equal`
 
 Checks if actor and target are the same entity.
-
-_No additional fields._
 
 ### `origins:invert`
 
