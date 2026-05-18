@@ -104,6 +104,11 @@ const TYPE_RENAMES = {
   'origins:any_of': 'origins:or',
   'origins:stacking_status_effect': 'origins:stacking_effect',
   'origins:toggle_night_vision': 'origins:night_vision',
+  'origins:action_on_entity_set': 'origins:action_on_set',
+  'origins:add_to_entity_set': 'origins:add_to_set',
+  'origins:entity_set_size': 'origins:set_size',
+  'origins:actor_action': 'origins:source_action',
+  'origins:keybind': 'origins:tooltip',
 };
 
 const REMOVED_TYPES = new Set([
@@ -347,8 +352,9 @@ function splitMultipleRecursive(outZip, obj, ns, basePath, splitMap, toggleMap, 
       flatIds.push(subId);
 
       toggleMap[oldFlatRef] = subId;
+      toggleMap['*:*_' + key] = subId;  // all sub-keys get wildcard: *:*_spawn, *:*_n, etc.
       if (converted.type === 'origins:toggle') {
-        toggleMap[ns + ':' + key] = subId; toggleMap['*:*_' + key] = subId;
+        toggleMap[ns + ':' + key] = subId;
       }
     } else if (typeof val === 'object') {
       const nested = splitMultipleRecursive(outZip, val, ns, subPath, splitMap, toggleMap, addLog, count, parentName, parentDesc, deletedIds);
@@ -386,7 +392,9 @@ function replaceSplitIds(obj, splitMap, addLog, context, parentKey) {
     let changed = false;
     const out = [];
     for (const item of obj) {
-      if (typeof item === 'string' && splitMap[item] && parentKey !== 'power') {
+      if (typeof item === 'string' && splitMap[item] && parentKey !== 'power'
+        && parentKey !== 'entity_action' && parentKey !== 'bientity_action'
+        && parentKey !== 'block_action' && parentKey !== 'item_action') {
         const subs = [...new Set(splitMap[item])];
         addLog('convert', `Fixed reference: ${item} -> ${subs.length} sub-powers (${context})`);
         out.push(...subs);
@@ -401,17 +409,17 @@ function replaceSplitIds(obj, splitMap, addLog, context, parentKey) {
   }
   let changed = false;
   const result = {};
+  // Fields that always expect a single object/ID, never an array
+  const SINGLE_FIELDS = new Set(['power', 'power_type', 'entity_action', 'bientity_action',
+    'block_action', 'item_action', 'target_action', 'self_action', 'attacker_action']);
   for (const [key, value] of Object.entries(obj)) {
-    const isSingleIdField = (key === 'power' || key === 'power_type') && typeof value === 'string' &&
-      obj.type && (obj.type === 'origins:power_active' || obj.type === 'origins:power_type' || obj.type === 'apoli:power_active' || obj.type === 'apoli:power_type');
-    if (isSingleIdField && splitMap[value]) {
+    const isSingleField = SINGLE_FIELDS.has(key);
+    if (isSingleField && typeof value === 'string' && splitMap[value]) {
       const subs = splitMap[value];
       const resolved = subs.find(s => s.includes('toggle')) || subs[0];
       addLog('convert', `Resolved single-ID reference: ${value} -> ${resolved} (${context}.${key})`);
       result[key] = resolved;
       changed = true;
-    } else if (isSingleIdField) {
-      result[key] = value;
     } else if (typeof value === 'string' && splitMap[value]) {
       const subs = [...new Set(splitMap[value])];
       addLog('convert', `Fixed reference: ${value} -> ${subs.length} sub-powers (${context}.${key})`);
@@ -855,7 +863,7 @@ export default function ConverterWidget() {
   // Render
   // ============================================================
 
-  const LOG_ICONS = { error: 'X', warn: '!', convert: '>', success: 'V' };
+  const LOG_ICONS = { error: '\u2716', warn: '\u26A0', convert: '\u2192', success: '\u2714' };
 
   return (
     <div style={S.container}>
@@ -887,11 +895,11 @@ export default function ConverterWidget() {
       {/* Buttons */}
       <div style={S.buttonRow}>
         <button style={S.btn('#1976d2', !file || processing)} disabled={!file || processing} onClick={doConvert}>
-          {processing ? '[..] Converting...' : '[>>] Convert'}
+          {processing ? '\u23F3 Converting...' : '\u{1F504} Convert'}
         </button>
         {converted && (
           <button style={S.btn('#2e7d32', false)} onClick={doDownload}>
-            [vv] Download Result
+            {'\u2B07'} Download Result
           </button>
         )}
       </div>
@@ -912,7 +920,7 @@ export default function ConverterWidget() {
       {/* Log */}
       <div style={{ marginTop: 4 }}>
         <h4 style={{ margin: '0 0 8px', fontSize: 14, color: '#333' }}>
-          [=] Conversion Log
+          {'\u{1F4CB}'} Conversion Log
           {logs.length > 0 && (
             <span style={{ fontWeight: 400, fontSize: 12, color: '#999', marginLeft: 8 }}>
               ({logs.length} entries)
@@ -928,7 +936,7 @@ export default function ConverterWidget() {
               const style = log.level === 'error' ? S.logError : log.level === 'warn' ? S.logWarn : log.level === 'convert' ? S.logConvert : S.logSuccess;
               return (
                 <div key={i} style={style}>
-                  [{icon}] {log.message}
+                  {icon} {log.message}
                 </div>
               )
             })
