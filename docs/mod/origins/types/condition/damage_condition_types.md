@@ -47,7 +47,7 @@ Checks the damage type ID.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `damage_type` | [Identifier](../basic_concepts#identifier) | optional | Damage type ID |
+| `value` | [Identifier](../basic_concepts#identifier) | optional | Damage type ID |
 
 
 <details>
