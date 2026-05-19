@@ -112,14 +112,12 @@ const TYPE_RENAMES = {
 };
 
 const REMOVED_TYPES = new Set([
-  'origins:add_velocity', 'origins:area_of_effect',
-  'origins:fire_projectile', 'origins:modify_stat',
+  'origins:area_of_effect',
+  'origins:modify_stat',
   'origins:remove_power', 'origins:revoke_all_powers',
-  'origins:entity_group', 'origins:power',
+  'origins:power',
   'origins:enchantment', 'origins:fireproof',
   'origins:harvest_level', 'origins:meat', 'origins:nbt',
-  'origins:bypasses_armor', 'origins:explosive',
-  'origins:from_falling', 'origins:out_of_world', 'origins:unblockable',
   'origins:category', 'origins:nothing',
   'origins:modify_type_tag',
   'origins:stacking_status_effect',
@@ -128,8 +126,29 @@ const REMOVED_TYPES = new Set([
 
 const DELETE_CONTAINER_TYPES = new Set([
   'origins:modify_type_tag',
-  'origins:entity_group',
 ]);
+
+// entity_group → in_tag mapping (group value → minecraft tag)
+const ENTITY_GROUP_TO_TAG = {
+  undead: 'minecraft:undead',
+  arthropod: 'minecraft:arthropod',
+  illager: 'minecraft:illager',
+  aquatic: 'minecraft:aquatic',
+};
+
+// Damage conditions that become origins:in_tag with a minecraft damage type tag
+const DAMAGE_TO_TAG = {
+  'origins:bypasses_armor': 'minecraft:bypasses_armor',
+  'origins:explosive': 'minecraft:is_explosion',
+  'origins:fire': 'minecraft:is_fire',
+  'origins:from_falling': 'minecraft:is_fall',
+  'origins:unblockable': 'minecraft:bypasses_shield',
+};
+
+// Damage conditions that become origins:id with a minecraft damage type ID
+const DAMAGE_TO_ID = {
+  'origins:out_of_world': 'minecraft:out_of_world',
+};
 
 // Type-specific field renames: effectiveType -> { oldField: newField, ... }
 // null value means delete the field entirely.
@@ -142,7 +161,7 @@ const TYPE_FIELDS = {
   'origins:overlay': { sprite: 'texture' },
   'origins:effect_immunity': { effects: 'effect' },
   'origins:attribute_modify_transfer': { class: 'target' },
-  'origins:night_vision': { active_by_default: null, key: null },
+  'origins:night_vision': { active_by_default: null, key: null }
 };
 
 const GLOBAL_FIELDS = {
@@ -204,7 +223,57 @@ function deepConvert(obj, addLog, ctx, toggleMap, parentType) {
     return null;
   }
 
-  const typeRenames = TYPE_FIELDS[selfType] || {};
+  // Convert entity_group to in_tag (default → remove, others → minecraft:undead etc.)
+  if (selfType === 'origins:entity_group') {
+    const group = obj.group;
+    if (group === 'default' || !group) {
+      addLog('convert', `Removed entity_group (group=default) (${ctx})`);
+      return null;
+    }
+    const tag = ENTITY_GROUP_TO_TAG[group];
+    if (tag) {
+      addLog('convert', `Converted entity_group group=${group} -> in_tag ${tag} (${ctx})`);
+      return { type: 'origins:in_tag', tag };
+    }
+    addLog('warn', `Unknown entity_group group: ${group} (${ctx})`);
+    return null;
+  }
+
+  // Convert legacy damage conditions to in_tag or id
+  if (DAMAGE_TO_TAG[selfType]) {
+    const tag = DAMAGE_TO_TAG[selfType];
+    addLog('convert', `Converted damage condition ${selfType} -> in_tag ${tag} (${ctx})`);
+    return { type: 'origins:in_tag', tag };
+  }
+  if (DAMAGE_TO_ID[selfType]) {
+    const id = DAMAGE_TO_ID[selfType];
+    addLog('convert', `Converted damage condition ${selfType} -> id ${id} (${ctx})`);
+    return { type: 'origins:id', id };
+  }
+
+  // Handle objects whose type is no longer supported in NeoForge
+  let typeFallback = false;
+  if (REMOVED_TYPES.has(selfType)) {
+    const pKey = ctx.split('.').pop().replace(/\[\d+\]$/, '');
+    const isAction = /^(entity_action|bientity_action|block_action|item_action|action|actions)$/.test(pKey);
+    const isCondition = /^(condition|conditions|damage_condition)$/.test(pKey);
+    if (isAction) {
+      addLog('warn', `Replaced unsupported action ${selfType} -> origins:no_op (${ctx})`);
+      obj.legacy_type = selfType;
+      obj.type = 'origins:no_op';
+      typeFallback = true;
+    } else if (isCondition) {
+      addLog('warn', `Replaced unsupported condition ${selfType} -> origins:always_true (${ctx})`);
+      obj.legacy_type = selfType;
+      obj.type = 'origins:always_true';
+      typeFallback = true;
+    } else {
+      addLog('warn', `Removed unsupported type: ${selfType} (${ctx})`);
+      return null;
+    }
+  }
+
+  const typeRenames = typeFallback ? {} : (TYPE_FIELDS[selfType] || {});
   const isModifier = 'operation' in obj;
   // detect if this object is an ingredient (only from explicit type/context)
   const isIngredient = INGREDIENT_TYPES.has(selfType) || INGREDIENT_TYPES.has(parentType);
@@ -215,6 +284,10 @@ function deepConvert(obj, addLog, ctx, toggleMap, parentType) {
   const childParent = (selfType && !selfType.startsWith('minecraft:')) ? selfType : parentType;
   const insideKey = ctx.endsWith('.key') || parentType === '__key_wrapper__';
   const isAttrEntry = 'attribute' in obj;
+  // Detect status effect instance objects (no type field, has effect string + effect-specific fields)
+  const isStatusEffect = !selfType && typeof obj.effect === 'string' && obj.effect.includes(':') && (
+    'duration' in obj || 'amplifier' in obj || 'show_particles' in obj || 'show_icon' in obj
+  );
 
   const result = {};
   for (const [key, value] of Object.entries(obj)) {
@@ -232,6 +305,11 @@ function deepConvert(obj, addLog, ctx, toggleMap, parentType) {
     if (key === 'item' && !skipItemRename && typeof value === 'string' && !value.startsWith('#')) nk = 'id';
     // Reverse: `id` inside ingredient objects must become `item`
     if (key === 'id' && isIngredient && typeof value === 'string' && !value.startsWith('#')) nk = 'item';
+    // Status effect instance: inner `effect` field → `id` (NeoForge uses `id` for mob effect references)
+    if (key === 'effect' && isStatusEffect && typeof value === 'string') {
+      nk = 'id';
+      addLog('convert', `Renamed status effect field: effect -> id = ${nv} (${ctx})`);
+    }
 
     if (typeof value === 'string') {
       if (key === 'type') {
@@ -841,7 +919,7 @@ export default function ConverterWidget() {
       const baseName = file.name.replace(/\.zip$/i, '');
       const outBlob = await outZip.generateAsync({ type: 'blob' });
       setConverted(outBlob);
-      setConvertedName(baseName + '_neoforge.zip');
+      setConvertedName(baseName + ' - Neoforged.zip');
       setStats(count);
 
       addLog('success', '=== Conversion done! ===');

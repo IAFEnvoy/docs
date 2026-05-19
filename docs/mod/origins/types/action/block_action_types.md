@@ -2,8 +2,6 @@
 
 Block actions perform operations on a block at a specific position.
 
-## Built-in Actions
-
 ### `origins:add_block`
 
 Adds a block at the position.

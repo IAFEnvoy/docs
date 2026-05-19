@@ -29,13 +29,14 @@ Condition types are used to filter when powers activate or when actions execute:
 
 | Condition Category | Reference |
 |---------------------|-----------|
-| Entity Condition | [Entity Condition Types](./condition/entity_condition_types) |
 | Bi-entity Condition | [Bi-entity Condition Types](./condition/bientity_condition_types) |
-| Block Condition | [Block Condition Types](./condition/block_condition_types) |
-| Item Condition | [Item Condition Types](./condition/item_condition_types) |
 | Biome Condition | [Biome Condition Types](./condition/biome_condition_types) |
+| Block Condition | [Block Condition Types](./condition/block_condition_types) |
 | Damage Condition | [Damage Condition Types](./condition/damage_condition_types) |
+| Entity Condition | [Entity Condition Types](./condition/entity_condition_types) |
 | Fluid Condition | [Fluid Condition Types](./condition/fluid_condition_types) |
+| Item Condition | [Item Condition Types](./condition/item_condition_types) |
+| Meta Condition | [Meta Condition Types](./condition/meta_condition_types) |
 
 All condition categories support **meta conditions** (`and`, `or`, `not`, `chance`, `constant`) documented within each type page.
 
@@ -45,10 +46,11 @@ Action types execute effects on entities, blocks, or items:
 
 | Action Category | Reference |
 |-----------------|-----------|
-| Entity Action | [Entity Action Types](./action/entity_action_types) |
 | Bi-entity Action | [Bi-entity Action Types](./action/bientity_action_types) |
 | Block Action | [Block Action Types](./action/block_action_types) |
+| Entity Action | [Entity Action Types](./action/entity_action_types) |
 | Item Action | [Item Action Types](./action/item_action_types) |
+| Meta Action | [Meta Action Types](./action/meta_action_types) |
 
 All action categories support **meta actions** (`and`, `chance`, `choice`, `delay`, `if_else`, `if_else_list`, `side`) documented within each type page.
 
@@ -62,6 +64,7 @@ Complex data types used across multiple power, action, and condition types. See 
 - **AttributeEntry** — Attribute modifier entry
 - **PositionedItemStack** — Item with optional slot position
 - **ColorSettings** — RGBA color settings
+- **Space** — Coordinate space definition
 
 ## Minecraft Data Types
 

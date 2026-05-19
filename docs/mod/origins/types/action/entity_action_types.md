@@ -2,8 +2,6 @@
 
 Entity actions perform operations on a single entity. Use them inside power types and other actions.
 
-## Built-in Actions
-
 ### `origins:action_on_set`
 
 Executes a bi-entity action for each entity in an entity set.
@@ -39,6 +37,32 @@ Adds a status effect to the entity.
 ```
 
 This example will apply a Speed I status effect for 20 seconds.
+
+</details>
+
+### `origins:add_velocity`
+
+Adds velocity to the entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `x` | [Float](../basic_concepts#float) | `0.0` | Velocity on the X axis |
+| `y` | [Float](../basic_concepts#float) | `0.0` | Velocity on the Y axis |
+| `z` | [Float](../basic_concepts#float) | `0.0` | Velocity on the Z axis |
+| `space` | [Space](../shared_data_types#space) | `world` | Coordinate space for the velocity |
+| `set` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, sets velocity instead of adding |
+
+<details>
+<summary>Example</summary>
+
+```json
+"entity_action": {
+    "type": "origins:add_velocity",
+    "y": 2
+}
+```
+
+This example will add an upward velocity to the entity, launching it into the air.
 
 </details>
 

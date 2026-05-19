@@ -1,5 +1,7 @@
 # Auto Converter (Beta)
 
+**V0.1-beta.7**
+
 :::caution
 - This converter can only convert from 1.21.1 Fabric, if your datapack was made for 1.20.4 or earlier, you will need to manually fix version-specific changes (such as `ItemStack`) after conversion.
 

@@ -2,8 +2,6 @@
 
 Item actions perform operations on an item stack.
 
-## Built-in Actions
-
 ### `origins:consume`
 
 Consumes one or more items from the stack.
