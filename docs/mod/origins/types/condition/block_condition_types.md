@@ -2,8 +2,6 @@
 
 Block conditions check properties of a block at a location.
 
-## Built-in Conditions
-
 ### `origins:adjacent`
 
 Checks if a matching block is adjacent.
@@ -354,58 +352,3 @@ This example will check if the block has the same slipperiness of an Ice (or Pac
 ### `origins:water_loggable`
 
 Checks if the block can be waterlogged.
-
----
-
-## Meta Conditions
-
-### `origins:and`
-
-All conditions must be true.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Block Condition](../condition/block_condition_types) | **required** | Conditions to evaluate |
-
-### `origins:or`
-
-At least one condition must be true.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Block Condition](../condition/block_condition_types) | **required** | Conditions to evaluate |
-
-### `origins:not`
-
-Inverts a condition.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Block Condition](../condition/block_condition_types) | **required** | Condition to invert |
-
-### `origins:chance`
-
-Random chance.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `chance` | [Float](../basic_concepts#float) | **required** | Probability (0-1) |
-
-### `origins:constant`
-
-Always true or false.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `value` | [Boolean](../basic_concepts#boolean) | `true` | Constant value |
-
-### `origins:offset`
-
-Evaluates a condition at an offset position.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Block Condition](../condition/block_condition_types) | **required** | Condition to evaluate |
-| `x` | [Integer](../basic_concepts#integer) | `0` | X offset |
-| `y` | [Integer](../basic_concepts#integer) | `0` | Y offset |
-| `z` | [Integer](../basic_concepts#integer) | `0` | Z offset |

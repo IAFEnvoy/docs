@@ -8,6 +8,32 @@ These powers modify various game mechanics.
 
 ---
 
+### `origins:modify_air_speed`
+
+Modifies the player's air speed (flying horizontally in creative/elytra).
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `modifier` | [Modifier] or List | `[]` | Modifier applied to air speed |
+
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+    "type": "origins:modify_air_speed",
+    "modifier": {
+        "operation": "multiply_total",
+        "value": 1.5
+    }
+}
+```
+
+This example will increase the entity's air speed by 150%.
+
+</details>
+
 ### `origins:modify_attribute`
 
 Applies an attribute modifier while active.
@@ -33,32 +59,6 @@ Applies an attribute modifier while active.
 ```
 
 This example will set the total value of the entity's `minecraft:generic.attack_damage` attribute using the value of the `example:resource` (`data/example/powers/resource.json`) power.
-
-</details>
-
-### `origins:modify_air_speed`
-
-Modifies the player's air speed (flying horizontally in creative/elytra).
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to air speed |
-
-
-<details>
-<summary>Example</summary>
-
-```json
-{
-    "type": "origins:modify_air_speed",
-    "modifier": {
-        "operation": "multiply_total",
-        "value": 1.5
-    }
-}
-```
-
-This example will increase the entity's air speed by 150%.
 
 </details>
 

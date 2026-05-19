@@ -1,8 +1,4 @@
-# Extras
-
-Extras are reference pages that do not fit in other sections of the documentation.
-
-### List
+# References
 
 - [Biome Categories](biome_categories)
 - [Damage Source Names](damage_source_names)

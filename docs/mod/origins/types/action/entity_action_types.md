@@ -845,6 +845,16 @@ This example will apply a Speed II status effect to the entity that is currently
 
 </details>
 
+### `origins:selector_action`
+
+Execute action on entities selected by a selector. With a condition to filter the selected entities.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `selector` | [String](../basic_concepts#string) | **required** | Entity selector (e.g. `@p`, `@e[type=minecraft:zombie]`, etc.) |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action to execute |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Filter for selected entities |
+
 ### `origins:set_fall_distance`
 
 Sets the entity's fall distance (affects fall damage).
@@ -994,6 +1004,11 @@ Spread fields: `x`, `y`, `z` (Float, default `0.0`).
 
 ### `origins:swing_hand`
 
+Makes the entity swing their hand.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `hand` | [String](../basic_concepts#string) | **required** | `MAIN_HAND` or `OFF_HAND` |
 
 <details>
 <summary>Example</summary>
@@ -1008,14 +1023,6 @@ Spread fields: `x`, `y`, `z` (Float, default `0.0`).
 This example will swing the entity's off hand.
 
 </details>
-
-### `origins:swing_hand`
-
-Makes the entity swing their hand.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `hand` | [String](../basic_concepts#string) | **required** | `MAIN_HAND` or `OFF_HAND` |
 
 ### `origins:toggle`
 
@@ -1060,230 +1067,3 @@ Triggers the cooldown of another power.
 This example will restore about 3 hearts to the entity.
 
 </details>
-
----
-
-## Meta Actions
-
-### `origins:and`
-
-Executes multiple entity actions in sequence.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `actions` | List of [Entity Action](../action/entity_action_types) | **required** | Actions to execute in order |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:and",
-  "actions": [
-    {
-      "type": "origins:execute_command",
-      "command": "say first"
-    },
-    {
-      "type": "origins:execute_command",
-      "command": "say second"
-    }
-  ]
-}
-```
-
-This example will execute two commands in sequence: first "say first", then "say second".
-
-</details>
-
-### `origins:chance`
-
-Executes an action with a random chance.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute |
-| `chance` | [Float](../basic_concepts#float) | **required** | Chance (0.0-1.0) of executing |
-| `fail_action` | [Entity Action](../action/entity_action_types) | optional | Action to execute if chance fails |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:chance",
-  "chance": 0.5,
-  "action": {
-    "type": "origins:execute_command",
-    "command": "say lucky!"
-  },
-  "fail_action": {
-    "type": "origins:execute_command",
-    "command": "say unlucky..."
-  }
-}
-```
-
-This example has a 50% chance of printing "lucky!" and a 50% chance of printing "unlucky...".
-
-</details>
-
-### `origins:choice`
-
-Executes one action from a weighted list.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `actions` | List of WeightedAction | **required** | Weighted action list |
-
-WeightedAction fields:
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `element` | [Entity Action](../action/entity_action_types) | **required** | The action |
-| `weight` | [Integer](../basic_concepts#integer) | `0` | Selection weight |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:choice",
-  "actions": [
-    {
-      "action": {
-        "type": "origins:execute_command",
-        "command": "say option A"
-      },
-      "weight": 3
-    },
-    {
-      "action": {
-        "type": "origins:execute_command",
-        "command": "say option B"
-      },
-      "weight": 1
-    }
-  ]
-}
-```
-
-This example has a 75% chance of picking option A and 25% chance for option B.
-
-</details>
-
-### `origins:delay`
-
-Delays execution of an action by a number of ticks.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute after delay |
-| `ticks` | [Integer](../basic_concepts#integer) | **required** | Delay in ticks |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:delay",
-  "ticks": 40,
-  "action": {
-    "type": "origins:execute_command",
-    "command": "say 2 seconds have passed"
-  }
-}
-```
-
-This example will execute the command after a 2-second (40 tick) delay.
-
-</details>
-
-Executes one action if a condition is met, another if not.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition to evaluate |
-| `if_action` | [Entity Action](../action/entity_action_types) | **required** | Action if condition is true |
-| `else_action` | [Entity Action](../action/entity_action_types) | optional | Action if condition is false |
-
-### `origins:if_else_list`
-
-Evaluates a list of condition-action pairs, executing the first matching action.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `actions` | List of IfElseEntry | **required** | Condition-action pairs |
-
-IfElseEntry fields:
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition to evaluate |
-| `action` | [Entity Action](../action/entity_action_types) | **required** | Action if condition is true |
-
-### `origins:side`
-
-Executes an action only on a specific side (client/server).
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute |
-| `side` | [String](../basic_concepts#string) | **required** | `client` or `server` |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:side",
-  "side": "server",
-  "action": {
-    "type": "origins:execute_command",
-    "command": "say server only"
-  }
-}
-```
-
-This action will only execute on the server side.
-
-</details>
-
-Executes an action on entities selected by a target selector.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action between source and selected entities |
-| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Filter for selected entities |
-| `selector` | [String](../basic_concepts#string) | **required** | Target selector (e.g. `@a[distance=..10]`) |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:selector_action",
-  "selector": "Steve",
-  "bientity_action": {
-    "type": "origins:damage",
-    "amount": 5,
-    "damage_type": "minecraft:generic"
-  }
-}
-```
-
-This example will deal 2.5 hearts of damage to the player named Steve.
-
-</details>
-
-### `origins:region_apply`
-
-Applies a bi-entity action to all entities within a radius.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action applied to each entity in range |
-| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Filter for target entities |
-| `radius` | [Float](../basic_concepts#float) | `16.0` | Search radius |
-| `shape` | [String](../basic_concepts#string) | `cube` | `cube` or `sphere` |
-| `include_actor` | [Boolean](../basic_concepts#boolean) | `false` | Whether the source entity is included |

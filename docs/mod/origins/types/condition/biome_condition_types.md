@@ -2,8 +2,6 @@
 
 Biome conditions check properties of a biome.
 
-## Built-in Conditions
-
 ### `origins:high_humidity`
 
 Checks whether the biome counts as an area with high humidity (downfall value of > 0.85).
@@ -84,37 +82,3 @@ Checks the biome's temperature.
 This example will check if the biome the entity is currently in has a temperature of 2 or more. (e.g: `minecraft:badlands`, `minecraft:desert`, etc.)
 
 </details>
-
----
-
-## Meta Conditions
-
-### `origins:and`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Biome Condition](../condition/biome_condition_types) | **required** | Conditions |
-
-### `origins:or`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Biome Condition](../condition/biome_condition_types) | **required** | Conditions |
-
-### `origins:not`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Biome Condition](../condition/biome_condition_types) | **required** | Condition to invert |
-
-### `origins:chance`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `chance` | [Float](../basic_concepts#float) | **required** | Probability (0-1) |
-
-### `origins:constant`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `value` | [Boolean](../basic_concepts#boolean) | `true` | Constant value |

@@ -936,31 +936,6 @@ Replaces loot tables.
 |-------|------|---------|-------------|
 | `replace` | Object | **required** | Map of original loot table 闂?replacement loot table IDs |
 
-
-<details>
-<summary>Example</summary>
-
-```json
-{
-    "type": "minecraft:block",
-    "pools": [
-        {
-            "rolls": 2,
-            "entries": [
-                {
-                    "type": "minecraft:loot_table",
-                    "name": "apoli:replaced_loot_table"
-                }
-            ]
-        }
-    ]
-}
-```
-
-`data/example/powers/double_ores_except_diamond_ore.json`
-
-</details>
-
 ### `origins:resource`
 
 Provides a numeric resource that can be modified by actions.

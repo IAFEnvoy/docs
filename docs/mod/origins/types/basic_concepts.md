@@ -10,7 +10,7 @@ This page defines the fundamental data types used throughout all Origins JSON fi
 
 ## Identifier
 
-An **Identifier** (also known as a "Resource Location") is a string in the format `namespace:path` that uniquely identifies a game object.
+An **Identifier** (also known as a `Resource Location`) is a string in the format `namespace:path` that uniquely identifies a game object.
 
 - **Format:** `namespace:path`
 - **Example:** `minecraft:diamond`, `origins:fire_immunity`

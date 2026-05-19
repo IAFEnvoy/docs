@@ -1,17 +1,18 @@
-# Chose Origin
+# Criterion Triggers
 
-**Type ID:** `origins:chose_origin`
+Criterion triggers (or known as `Advancement Triggers`), as the name suggests, are for triggering advancements upon doing a certain action.
+
+### `origins:chose_origin`
 
 Triggers when a player chooses the specified origin.
-
-### Fields
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `origin` | [Identifier](../../types/basic_concepts#identifier) | **required** | The namespace and ID of the origin to check for. |
 | `layer` | [Identifier](../../types/basic_concepts#identifier) | optional | The namespace and ID of the layer to check for. |
 
-### Examples
+<details>
+<summary>Example1</summary>
 
 ```json
 {
@@ -27,6 +28,11 @@ Triggers when a player chooses the specified origin.
 ```
 
 This example will be granted to players who have chosen the `origins:phantom` origin.
+
+</details>
+
+<details>
+<summary>Example2</summary>
 
 ```json
 {
@@ -55,3 +61,5 @@ This example will be granted to players who have chosen the `origins:phantom` or
 ```
 
 This example shows an advancement that is granted when a player chooses the `origins:human` origin.
+
+</details>

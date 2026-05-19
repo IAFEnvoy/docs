@@ -2,8 +2,6 @@
 
 Entity conditions check the state of an entity.
 
-## Built-in Conditions
-
 ### `origins:ability`
 
 Checks if the player has a specific ability (e.g. `invulnerable`, `mayfly`).
@@ -1152,63 +1150,3 @@ Checks the player's XP points (progress toward next level).
 This example will check if the player has 90 or more experience points, which is only achieveable if the player have at least 7 levels.
 
 </details>
-
----
-
-## Meta Conditions
-
-### `origins:and`
-
-All sub-conditions must be true.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Entity Condition](../condition/entity_condition_types) | **required** | Conditions to evaluate |
-
-### `origins:or`
-
-At least one sub-condition must be true.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Entity Condition](../condition/entity_condition_types) | **required** | Conditions to evaluate |
-
-### `origins:not`
-
-Inverts a condition.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition to invert |
-
-<details>
-<summary>Example</summary>
-
-```json
-"condition": {
-  "type": "origins:not",
-  "condition": {
-    "type": "origins:exposed_to_sun"
-  }
-}
-```
-
-This example will check if the entity is **not** exposed to the sun.
-
-</details>
-
-### `origins:chance`
-
-Random chance condition.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `chance` | [Float](../basic_concepts#float) | **required** | Probability (0-1) |
-
-### `origins:constant`
-
-Always true or always false.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `value` | [Boolean](../basic_concepts#boolean) | **required** | Constant return value |

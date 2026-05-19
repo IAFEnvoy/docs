@@ -16,6 +16,10 @@ You can use [this website](https://misode.github.io/recipe/) to easily create a 
 
 ### Origin (and origin layer) specific Orb
 
+:::warning
+Currently only support layer settings.
+:::
+
 You can add the `origins:orb_layers` component to the item so that you can only change a certain origin layer by using the Orb of Origin.
 
 Example:

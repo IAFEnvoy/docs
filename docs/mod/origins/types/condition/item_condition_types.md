@@ -2,8 +2,6 @@
 
 Item conditions check properties of an item stack.
 
-## Built-in Conditions
-
 ### `origins:amount`
 
 Checks the item stack size.
@@ -253,47 +251,3 @@ Checks if the item is the correct tool for a specific block-mining ability.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `ability` | [String](../basic_concepts#string) | **required** | Tool ability name |
-
----
-
-## Meta Conditions
-
-### `origins:and`
-
-All conditions must be true.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Item Condition](../condition/item_condition_types) | **required** | Conditions to evaluate |
-
-### `origins:or`
-
-At least one condition must be true.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Item Condition](../condition/item_condition_types) | **required** | Conditions to evaluate |
-
-### `origins:not`
-
-Inverts a condition.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Item Condition](../condition/item_condition_types) | **required** | Condition to invert |
-
-### `origins:chance`
-
-Random chance.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `chance` | [Float](../basic_concepts#float) | **required** | Probability (0-1) |
-
-### `origins:constant`
-
-Always true or false.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `value` | [Boolean](../basic_concepts#boolean) | `true` | Constant value |

@@ -2,8 +2,6 @@
 
 Damage conditions check properties of damage instances.
 
-## Built-in Conditions
-
 ### `origins:amount`
 
 Checks the damage amount.
@@ -36,10 +34,6 @@ Checks the source entity (attacker).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `entity_condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition on the attacker |
-
-### `origins:fire`
-
-Checks if the damage is fire-based.
 
 ### `origins:id`
 
@@ -98,37 +92,3 @@ Checks the damage type (similar to id).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `type` | [Identifier](../basic_concepts#identifier) | optional | Damage type ID |
-
----
-
-## Meta Conditions
-
-### `origins:and`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Damage Condition](../condition/damage_condition_types) | **required** | Conditions |
-
-### `origins:or`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `conditions` | List of [Damage Condition](../condition/damage_condition_types) | **required** | Conditions |
-
-### `origins:not`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Damage Condition](../condition/damage_condition_types) | **required** | Condition to invert |
-
-### `origins:chance`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `chance` | [Float](../basic_concepts#float) | **required** | Probability (0-1) |
-
-### `origins:constant`
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `value` | [Boolean](../basic_concepts#boolean) | `true` | Constant value |

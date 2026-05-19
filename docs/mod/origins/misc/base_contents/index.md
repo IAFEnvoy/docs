@@ -6,3 +6,4 @@ Base Contents are JSON files that are added by the mod by default. These JSON fi
 
 - [Origins](origins)
 - [Powers](powers)
+- [Orb of Origin](orb_of_origin)

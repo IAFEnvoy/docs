@@ -6,6 +6,10 @@ sidebar_position: 1
 
 The following powers are included by default in the `origins` namespace. Their data files are located at `data/origins/origins/power/`.
 
+:::caution
+This list need update. Check the `data/origins/origins/power` folder for the most up-to-date list of powers.
+:::
+
 - **Acrobatics** (`origins:fall_immunity`)
 - **Aerial Combatant** (`origins:aerial_combatant`)
 - **Aqua Affinity** (`origins:aqua_affinity`)
