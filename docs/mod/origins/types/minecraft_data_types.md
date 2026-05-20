@@ -156,3 +156,9 @@ An **EffectEntry** is a simplified status effect definition used in some power t
 | `ambient` | [Boolean](./basic_concepts#boolean) | `false` | Whether the effect is ambient |
 | `show_particles` | [Boolean](./basic_concepts#boolean) | `true` | Whether to show particles |
 | `show_icon` | [Boolean](./basic_concepts#boolean) | `true` | Whether to show the icon |
+
+## NBT Compound
+
+An **NBT Compound** is a simplified representation of NBT data used in some power types. It supports basic NBT types like byte, short, int, long, float, double, string, list, and compound. NBT is used for defining complex data structures, such as item data or entity data.
+
+See [Minecraft Wiki: NBT format](https://minecraft.wiki/w/NBT_format) for details on NBT structure and types.

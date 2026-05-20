@@ -76,3 +76,4 @@ Minecraft's built-in data types used in Origins JSON. See **[Minecraft Data Type
 - **Text Component** — Rich text format for messages
 - **MobEffectInstance** — Status effect configuration
 - **EffectEntry** — Simplified status effect definition
+- **NBT Compound** — Simplified status effect definition

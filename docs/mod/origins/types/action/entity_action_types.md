@@ -392,6 +392,19 @@ This example will emit a `minecraft:ring_bell` game event, which has a redstone 
 
 </details>
 
+### `origins:fire_projectile`
+
+Fires a projectile from the entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `entity_type` | [Identifier](../basic_concepts#identifier) | **required** | Projectile entity type ID |
+| `divergence` | [Float](../basic_concepts#float) | `1.0` | Projectile spread/divergence |
+| `speed` | [Float](../basic_concepts#float) | `1.0` | Projectile speed multiplier |
+| `count` | [Integer](../basic_concepts#integer) | `1` | Number of projectiles to fire |
+| `tag` | [NBT Compound](../minecraft_data_types#nbt-compound) | optional | NBT data tag for the projectile entity |
+| `projectile_action` | Entity Action | optional | Action to execute for each fired projectile |
+
 ### `origins:gain_air`
 
 Refills the entity's air (oxygen).
