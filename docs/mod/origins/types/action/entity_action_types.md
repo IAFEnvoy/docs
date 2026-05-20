@@ -1001,7 +1001,7 @@ Spawns particles at the entity's position.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `particle` | Object | **required** | Particle type and params |
+| `particle` | [Particle Option](../minecraft_data_types#particle-option) | **required** | Particle type and params |
 | `count` | [Integer](../basic_concepts#integer) | **required** | Number of particles |
 | `speed` | [Float](../basic_concepts#float) | `0.0` | Particle speed |
 | `spread` | Object | optional | Spread (`x`/`y`/`z`, default `0.5`) |

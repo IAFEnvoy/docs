@@ -191,10 +191,6 @@ const ATTR_OPS = { addition: 'add_value', multiply_base: 'add_multiplied_base', 
 // Old names from Fabric modifier system → new names (lowed by ModifierOperation#getSerializedName)
 const MODIFIER_OPS = { addition: 'add_base_early', multiply_base: 'multiply_base_multiplicative', multiply_total: 'multiply_total_multiplicative' };
 
-const POWER_MODIFIER_FIELDS = new Set([
-  'origins:modify_falling',
-]);
-
 // ============================================================
 // Conversion utilities
 // ============================================================
@@ -207,13 +203,12 @@ function effType(obj) {
   return TYPE_RENAMES[t] || t;
 }
 
-function deepConvert(obj, addLog, ctx, toggleMap, parentType) {
+function deepConvert(obj, addLog, ctx, parentType) {
   if (!ctx) ctx = '';
-  if (!toggleMap) toggleMap = {};
   if (!parentType) parentType = '';
   if (obj === null || typeof obj !== 'object') return obj;
   if (Array.isArray(obj)) {
-    const out = obj.map((it, i) => deepConvert(it, addLog, `${ctx}[${i}]`, toggleMap, parentType));
+    const out = obj.map((it, i) => deepConvert(it, addLog, `${ctx}[${i}]`, parentType));
     return out.filter(it => it !== null);
   }
 
@@ -313,23 +308,28 @@ function deepConvert(obj, addLog, ctx, toggleMap, parentType) {
 
     if (typeof value === 'string') {
       if (key === 'type') {
+        // === TYPE field: handled in complete isolation, no other transforms touch it ===
         nv = replaceNS(value);
         if (TYPE_RENAMES[nv]) { addLog('convert', `Renamed: ${value} -> ${TYPE_RENAMES[nv]} (${ctx})`); nv = TYPE_RENAMES[nv]; }
         if (REMOVED_TYPES.has(nv)) addLog('warn', `Removed type: ${nv} -> manual fix needed (${ctx})`);
-      } else if (value.startsWith('apoli:')) {
+        if (nk !== key && result.hasOwnProperty(nk)) continue;
+        result[nk] = nv;
+        continue;
+      }
+      if (value.startsWith('apoli:')) {
         nv = replaceNS(value);
       }
-      if (toggleMap[nv]) { addLog('convert', `Replaced toggle ref: ${nv} -> ${toggleMap[nv]} (${ctx})`); nv = toggleMap[nv]; }
+
       // wrap bare key string -> Key object, only if not already inside a Key
       if (nk === 'key' && typeof nv === 'string' && !insideKey) {
         nv = { key: nv, continuous: false };
       }
     } else if (typeof value === 'object' && !Array.isArray(value)) {
       const isKeyObj = nk === 'key' && value && typeof value === 'object' && 'key' in value;
-      nv = deepConvert(value, addLog, `${ctx}.${key}`, toggleMap, isKeyObj ? '__key_wrapper__' : childParent);
+      nv = deepConvert(value, addLog, `${ctx}.${key}`, isKeyObj ? '__key_wrapper__' : childParent);
       if (nv === null) continue;
     } else if (Array.isArray(value)) {
-      nv = deepConvert(value, addLog, `${ctx}.${key}`, toggleMap, childParent);
+      nv = deepConvert(value, addLog, `${ctx}.${key}`, childParent);
       if (nv === null) continue;
     }
 
@@ -349,6 +349,14 @@ function deepConvert(obj, addLog, ctx, toggleMap, parentType) {
     if (nk !== key && result.hasOwnProperty(nk)) continue;
     result[nk] = nv;
   }
+
+  // Auto-wrap conditions that have inverted:true with origins:not
+  if (result.inverted === true && result.type) {
+    delete result.inverted;
+    addLog('convert', `Wrapped inverted condition: origins:not (${ctx})`);
+    return { type: 'origins:not', condition: result };
+  }
+
   return result;
 }
 
@@ -367,6 +375,15 @@ function mergeModifiers(obj) {
     }
     delete obj.hardness_modifiers;
   }
+  // Remove modifiers with id="*:*" (wildcard that resolves to nothing)
+  if (Array.isArray(obj.modifier)) {
+    obj.modifier = obj.modifier.filter(m => !(m && m.id === '*:*'));
+    if (obj.modifier.length === 0) delete obj.modifier;
+  }
+  if (Array.isArray(obj.hardness_modifier)) {
+    obj.hardness_modifier = obj.hardness_modifier.filter(m => !(m && m.id === '*:*'));
+    if (obj.hardness_modifier.length === 0) delete obj.hardness_modifier;
+  }
 }
 
 function convertIcon(icon) {
@@ -379,139 +396,6 @@ function convertIcon(icon) {
   if (icon.components) result.components = icon.components;
   else if (icon.tag) result.components = icon.tag;
   return result;
-}
-
-// Recursively flatten a multiple-power object into individual power files.
-// Returns flat array of full IDs (e.g., ['ns:parent/child/grandchild', ...]) for splitMap.
-function splitMultipleRecursive(outZip, obj, ns, basePath, splitMap, toggleMap, addLog, count, parentName, parentDesc, deletedIds) {
-  const flatIds = [];
-  const subKeys = Object.keys(obj).filter(k =>
-    k !== 'type' && k !== 'name' && k !== 'description'
-    && k !== 'hidden' && k !== 'condition' && k !== 'loading_priority'
-  );
-
-  const hasName = parentName || parentDesc;
-  let firstName = true;
-
-  for (const key of subKeys) {
-    const val = JSON.parse(JSON.stringify(obj[key]));
-    if (val === null || typeof val !== 'object') {
-      addLog('warn', `Skipped non-object sub-key ${ns}:${basePath}/${key}`);
-      continue;
-    }
-
-    const subId = ns + ':' + basePath + '/' + key;
-    const subPath = basePath + '/' + key;
-    const oldFlatRef = ns + ':' + basePath + '_' + key;
-
-    if (typeof val.type === 'string') {
-      const converted = deepConvert(val, addLog, `${ns}:${basePath}`, toggleMap, '');
-      if (converted === null) {
-        addLog('warn', `Removed power ${subId} (deleted container)`);
-        if (deletedIds) deletedIds.add(subId);
-        continue;
-      }
-      mergeModifiers(converted);
-      fixModifierFields(converted, addLog, subId);
-
-      // Propagate parent name/desc to first sub-power, hide others
-      if (hasName) {
-        if (firstName) {
-          if (parentName && !converted.name) converted.name = parentName;
-          if (parentDesc && !converted.description) converted.description = parentDesc;
-          firstName = false;
-        } else {
-          if (!converted.hidden) converted.hidden = true;
-        }
-      }
-
-      outZip.file(`data/${ns}/origins/power/${subPath}.json`, JSON.stringify(converted, null, 2));
-      count.powers++;
-      flatIds.push(subId);
-
-      toggleMap[oldFlatRef] = subId;
-      toggleMap['*:*_' + key] = subId;  // all sub-keys get wildcard: *:*_spawn, *:*_n, etc.
-      if (converted.type === 'origins:toggle') {
-        toggleMap[ns + ':' + key] = subId;
-      }
-    } else if (typeof val === 'object') {
-      const nested = splitMultipleRecursive(outZip, val, ns, subPath, splitMap, toggleMap, addLog, count, parentName, parentDesc, deletedIds);
-      flatIds.push(...nested);
-      if (nested.length > 0) {
-        if (!splitMap[subId]) splitMap[subId] = [];
-        splitMap[subId].push(...nested);
-        addLog('convert', `Mapped intermediate ${subId} -> ${nested.length} leaf powers`);
-      }
-    } else {
-      addLog('warn', `Skipped non-power sub-key ${ns}:${basePath}/${key}`);
-    }
-  }
-
-  return flatIds;
-}
-
-// Convert old float field `velocity` to modifier object for modify_falling power
-function fixModifierFields(obj, addLog, subId) {
-  if (!POWER_MODIFIER_FIELDS.has(obj.type)) return;
-  if (typeof obj.velocity === 'number' && !obj.modifier) {
-    addLog('convert', `Converted velocity->modifier in ${subId}`);
-    obj.modifier = { operation: 'multiply_base_multiplicative', value: obj.velocity };
-    delete obj.velocity;
-  }
-}
-
-// Replace old multiple-power IDs with split sub-IDs in JSON trees
-// Also handles intermediate paths (e.g. ns:parent/child -> leaf powers)
-function replaceSplitIds(obj, splitMap, addLog, context, parentKey) {
-  if (!context) context = '';
-  if (!parentKey) parentKey = '';
-  if (obj === null || typeof obj !== 'object') return obj;
-  if (Array.isArray(obj)) {
-    let changed = false;
-    const out = [];
-    for (const item of obj) {
-      if (typeof item === 'string' && splitMap[item] && parentKey !== 'power'
-        && parentKey !== 'entity_action' && parentKey !== 'bientity_action'
-        && parentKey !== 'block_action' && parentKey !== 'item_action') {
-        const subs = [...new Set(splitMap[item])];
-        addLog('convert', `Fixed reference: ${item} -> ${subs.length} sub-powers (${context})`);
-        out.push(...subs);
-        changed = true;
-      } else {
-        const nested = replaceSplitIds(item, splitMap, addLog, context + '[]', '');
-        if (nested !== item) changed = true;
-        out.push(nested);
-      }
-    }
-    return changed ? out : obj;
-  }
-  let changed = false;
-  const result = {};
-  // Fields that always expect a single object/ID, never an array
-  const SINGLE_FIELDS = new Set(['power', 'power_type', 'entity_action', 'bientity_action',
-    'block_action', 'item_action', 'target_action', 'self_action', 'attacker_action']);
-  for (const [key, value] of Object.entries(obj)) {
-    const isSingleField = SINGLE_FIELDS.has(key);
-    if (isSingleField && typeof value === 'string' && splitMap[value]) {
-      const subs = splitMap[value];
-      const resolved = subs.find(s => s.includes('toggle')) || subs[0];
-      addLog('convert', `Resolved single-ID reference: ${value} -> ${resolved} (${context}.${key})`);
-      result[key] = resolved;
-      changed = true;
-    } else if (typeof value === 'string' && splitMap[value]) {
-      const subs = [...new Set(splitMap[value])];
-      addLog('convert', `Fixed reference: ${value} -> ${subs.length} sub-powers (${context}.${key})`);
-      result[key] = subs.length === 1 ? subs[0] : subs;
-      changed = true;
-    } else if (typeof value === 'object') {
-      const nested = replaceSplitIds(value, splitMap, addLog, `${context}.${key}`, key);
-      if (nested !== value) changed = true;
-      result[key] = nested;
-    } else {
-      result[key] = value;
-    }
-  }
-  return changed ? result : obj;
 }
 
 // ============================================================
@@ -579,10 +463,7 @@ export default function ConverterWidget() {
       const langOrigin = {};
       const langLayer = {};
 
-      const toggleMap = {}; // collects *_toggle ->actual power ID mappings during Pass 1
-      const splitMap = {};  // collects old multiple ID ->[split sub-IDs] for reference fixup
-      const pendingTags = { power: {}, origin: {} }; // deferred tag generation (after splitMap resolution)
-      const deletedIds = new Set(); // IDs of sub-powers removed during multiple split
+
 
       // ---- Pass 1: convert JSON files ----
       for (const [zipPath, zipEntry] of Object.entries(zip.files)) {
@@ -599,7 +480,7 @@ export default function ConverterWidget() {
           const ns = originMatch[1];
           const rawId = originMatch[2];
           if (json.powers !== undefined) {
-            json = deepConvert(json, addLog, '', toggleMap);
+            json = deepConvert(json, addLog, '');
             if (json === null) { addLog('convert', `Skipped removed origin: ${zipPath}`); continue; }
 
             if (json.name) {
@@ -612,15 +493,14 @@ export default function ConverterWidget() {
 
             if (json.icon) json.icon = convertIcon(json.icon);
 
-            // powers ->tag (deferred: tag generated in Pass 3.5 after splitMap resolution)
+            // powers ->tag
             if (Array.isArray(json.powers)) {
               const ids = json.powers.filter(p => typeof p === 'string' && !p.startsWith('#'));
               const tags = json.powers.filter(p => typeof p === 'string' && p.startsWith('#'));
               if (ids.length > 0) {
                 const tagId = '#' + ns + ':' + rawId;
                 tags.push(tagId);
-                // store pending tag for post-splitMap generation
-                pendingTags.power[`data/${ns}/tags/origins/power/${rawId}.json`] = ids;
+                outZip.file(`data/${ns}/tags/origins/power/${rawId}.json`, JSON.stringify({ replace: false, values: ids }, null, 2));
               }
               json.powers = tags;
             }
@@ -636,20 +516,13 @@ export default function ConverterWidget() {
         if (powerMatch && !zipPath.includes('/origins/power/')) {
           const ns = powerMatch[1];
           const rawId = powerMatch[2];
-          json = deepConvert(json, addLog, '', toggleMap);
+          json = deepConvert(json, addLog, '');
           if (json === null) { addLog('convert', `Skipped removed power: ${zipPath}`); continue; }
 
-          if (json.type === 'origins:multiple' || json.type === 'apoli:multiple') {
-            const flatIds = splitMultipleRecursive(outZip, json, ns, rawId, splitMap, toggleMap, addLog, count, json.name, json.description, deletedIds);
-            splitMap[ns + ':' + rawId] = flatIds;
-            addLog('convert', `Split ${ns}:${rawId} ->${flatIds.length} individual powers (subfolder)`);
-          } else {
-            json.type = replaceNS(json.type || '');
-            mergeModifiers(json);
-            fixModifierFields(json, addLog, ns + ':' + rawId);
-            outZip.file(`data/${ns}/origins/power/${rawId}.json`, JSON.stringify(json, null, 2));
-            count.powers++;
-          }
+          json.type = replaceNS(json.type || '');
+          mergeModifiers(json);
+          outZip.file(`data/${ns}/origins/power/${rawId}.json`, JSON.stringify(json, null, 2));
+          count.powers++;
           continue;
         }
 
@@ -658,7 +531,7 @@ export default function ConverterWidget() {
         if (layerMatch) {
           const ns = layerMatch[1];
           const rawId = layerMatch[2];
-          json = deepConvert(json, addLog, '', toggleMap);
+          json = deepConvert(json, addLog, '');
           if (json === null) { addLog('convert', `Skipped removed layer: ${zipPath}`); continue; }
 
           if (json.name) {
@@ -688,27 +561,31 @@ export default function ConverterWidget() {
               else conditioned.push(o);
             }
             if (ids.length > 0) {
-              // 如果是默->origin layer，直接合并到 #origins:origin tag 并跳过写->JSON
+              // Merge into #origins:origin tag (skip writing layer JSON for default layer)
               if (ns === 'origins' && rawId === 'origin') {
-                pendingTags.origin[`data/origins/tags/origins/origin/origin.json`] = [
-                  ...(pendingTags.origin[`data/origins/tags/origins/origin/origin.json`] || []),
-                  ...ids,
-                ];
+                let existing = [];
+                try {
+                  const exRaw = outZip.file(`data/origins/tags/origins/origin/origin.json`);
+                  if (exRaw) { const ex = JSON.parse(await exRaw.async('string')); if (Array.isArray(ex.values)) existing = ex.values; }
+                } catch { }
+                const merged = [...new Set([...existing, ...ids])];
+                outZip.file(`data/origins/tags/origins/origin/origin.json`, JSON.stringify({ replace: false, values: merged }, null, 2));
               } else {
                 const tagId = '#' + ns + ':layer/' + rawId;
                 tags.push(tagId);
-                pendingTags.origin[`data/${ns}/tags/origins/origin/${rawId}.json`] = ids;
+                outZip.file(`data/${ns}/tags/origins/origin/${rawId}.json`, JSON.stringify({ replace: false, values: ids }, null, 2));
               }
             }
             json.origins = [...tags, ...conditioned];
           }
 
-          // 默认 origin layer 不写->JSON 文件
+          // Default origin layer — skip writing layer JSON (merged into tag above)
           if (ns === 'origins' && rawId === 'origin') {
-            addLog('convert', `Deferred default layer origins ->#origins:origin tag`);
+            addLog('convert', `Merged default layer origins ->#origins:origin tag`);
           } else {
             outZip.file(`data/${ns}/origins/layer/${rawId}.json`, JSON.stringify(json, null, 2));
             count.layers++;
+            addLog('convert', `Written layer: data/${ns}/origins/layer/${rawId}.json`);
           }
           continue;
         }
@@ -718,8 +595,9 @@ export default function ConverterWidget() {
         if (badgeMatch && !zipPath.includes('/origins/badge/')) {
           const ns = badgeMatch[1];
           const rawId = badgeMatch[2];
-          json = deepConvert(json, addLog, '', toggleMap);
+          json = deepConvert(json, addLog, '');
           if (json === null) { addLog('convert', `Skipped removed badge: ${zipPath}`); continue; }
+          if (!json.type) { json.type = 'origins:keybind'; addLog('convert', `Added default badge type: keybind (${zipPath})`); }
           outZip.file(`data/${ns}/origins/badge/${rawId}.json`, JSON.stringify(json, null, 2));
           count.badges++;
           continue;
@@ -730,7 +608,7 @@ export default function ConverterWidget() {
         if (gpMatch && !zipPath.includes('/origins/global_powers/')) {
           const ns = gpMatch[1];
           const rawId = gpMatch[2];
-          json = deepConvert(json, addLog, '', toggleMap);
+          json = deepConvert(json, addLog, '');
           if (json === null) { addLog('convert', `Skipped removed global_power: ${zipPath}`); continue; }
           delete json.order;
           outZip.file(`data/${ns}/origins/global_powers/${rawId}.json`, JSON.stringify(json, null, 2));
@@ -747,126 +625,7 @@ export default function ConverterWidget() {
 
       }
 
-      // ---- Pass 2: resolve toggleMap references (including *:* wildcards) ----
-      if (Object.keys(toggleMap).length > 0) {
-        addLog('convert', `Resolving ${Object.keys(toggleMap).length} toggle pattern(s)...`);
-        // build regex patterns for wildcard keys like *:*_climbing_toggle
-        const wildcards = Object.entries(toggleMap)
-          .filter(([k]) => k.includes('*'))
-          .map(([pattern, replacement]) => {
-            const regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\\\*/g, '[a-z0-9_.-]+'), 'g');
-            return { regex, replacement, pattern };
-          });
-        if (wildcards.length > 0) addLog('convert', `Found ${wildcards.length} wildcard pattern(s)`);
-
-        for (const [zipPath] of Object.entries(outZip.files)) {
-          if (!zipPath.endsWith('.json')) continue;
-          let raw = await outZip.file(zipPath).async('string');
-          let changed = false;
-          for (const { regex, replacement, pattern } of wildcards) {
-            if (regex.test(raw)) {
-              raw = raw.replace(regex, replacement);
-              changed = true;
-              addLog('convert', `Resolved wildcard ${pattern} in ${zipPath}`);
-            }
-          }
-          if (changed) outZip.file(zipPath, raw);
-        }
-      }
-
-      // ---- Pass 3: fix references — replace old multiple IDs with split sub-IDs ----
-      // Also cleans up existing copied tags: remove old multiple IDs, replace with sub-IDs
-      if (Object.keys(splitMap).length > 0) {
-        addLog('convert', `Fixing ${Object.keys(splitMap).length} multiple-power reference(s)`);
-        for (const [zipPath] of Object.entries(outZip.files)) {
-          if (!zipPath.endsWith('.json')) continue;
-          const raw = await outZip.file(zipPath).async('string');
-          let json;
-          try { json = JSON.parse(raw); } catch { continue; }
-          // For tags, also strip old multiple IDs and deleted sub-powers from values array
-          if (zipPath.includes('/tags/') && Array.isArray(json.values)) {
-            const cleaned = [];
-            for (const v of json.values) {
-              if (splitMap[v]) {                      // old multiple ID → expand to sub-IDs
-                cleaned.push(...splitMap[v]);
-              } else if (deletedIds.has(v)) {         // explicitly deleted sub-power
-                addLog('convert', `Removed deleted ref from tag ${zipPath}: ${v}`);
-              } else {
-                // check if v belongs under a split multiple
-                let belongsToMultiple = false;
-                for (const [oldId, subs] of Object.entries(splitMap)) {
-                  if (v.startsWith(oldId + '/')) {
-                    belongsToMultiple = true;
-                    if (subs.includes(v)) {
-                      cleaned.push(v);                // still exists as a sub-power
-                    } else {
-                      addLog('convert', `Removed deleted sub-ref from tag ${zipPath}: ${v}`);
-                    }
-                    break;
-                  }
-                }
-                if (!belongsToMultiple) {
-                  cleaned.push(v);                    // unrelated entry, keep as-is
-                }
-              }
-            }
-            json.values = [...new Set(cleaned)];
-            outZip.file(zipPath, JSON.stringify(json, null, 2));
-            addLog('convert', `Cleaned tag: ${zipPath}`);
-          }
-          const updated = replaceSplitIds(json, splitMap, addLog, zipPath);
-          if (updated !== json) {
-            outZip.file(zipPath, JSON.stringify(updated, null, 2));
-          }
-        }
-      }
-
-      // ---- Pass 3.5: generate all deferred tags (after splitMap resolution) ----
-      if (Object.keys(pendingTags.power).length > 0 || Object.keys(pendingTags.origin).length > 0) {
-        addLog('convert', 'Generating deferred tags...');
-
-        // power tags
-        for (const [tagPath, ids] of Object.entries(pendingTags.power)) {
-          // apply splitMap to IDs (resolve any remaining old multiple IDs)
-          const resolvedIds = [];
-          for (const id of ids) {
-            if (splitMap[id]) {
-              resolvedIds.push(...splitMap[id]);
-            } else {
-              resolvedIds.push(id);
-            }
-          }
-          const uniq = [...new Set(resolvedIds)];
-          outZip.file(tagPath, JSON.stringify({ replace: false, values: uniq }, null, 2));
-          addLog('convert', `Generated power tag: ${tagPath} (${uniq.length} values)`);
-        }
-
-        // origin tags
-        for (const [tagPath, ids] of Object.entries(pendingTags.origin)) {
-          const resolvedIds = [];
-          for (const id of ids) {
-            if (splitMap[id]) {
-              resolvedIds.push(...splitMap[id]);
-            } else {
-              resolvedIds.push(id);
-            }
-          }
-          const uniq = [...new Set(resolvedIds)];
-          // merge with existing tag if any (e.g., multiple origins:origin layers)
-          let merged = uniq;
-          try {
-            const exRaw = outZip.file(tagPath);
-            if (exRaw) {
-              const ex = JSON.parse(await exRaw.async('string'));
-              if (Array.isArray(ex.values)) merged = [...new Set([...ex.values, ...uniq])];
-            }
-          } catch { }
-          outZip.file(tagPath, JSON.stringify({ replace: false, values: merged }, null, 2));
-          addLog('convert', `Generated origin tag: ${tagPath} (${merged.length} values)`);
-        }
-      }
-
-      // ---- Pass 4: sanitize power tags — remove values that don't exist as power files ----
+      // ---- Pass 2: sanitize power tags — remove values that don't exist as power files ----
       const existingPowers = new Set();
       for (const [zp] of Object.entries(outZip.files)) {
         const m = zp.match(/^data\/([^/]+)\/origins\/power\/(.+)\.json$/);
@@ -892,7 +651,7 @@ export default function ConverterWidget() {
         }
       }
 
-      // ---- Pass 5: copy non-JSON files as-is ----
+      // ---- Pass 3: copy non-JSON files as-is ----
       for (const [zipPath, zipEntry] of Object.entries(zip.files)) {
         if (zipEntry.dir) continue;
         // skip files we already processed as JSON in pass 1

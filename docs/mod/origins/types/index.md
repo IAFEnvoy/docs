@@ -77,3 +77,4 @@ Minecraft's built-in data types used in Origins JSON. See **[Minecraft Data Type
 - **MobEffectInstance** — Status effect configuration
 - **EffectEntry** — Simplified status effect definition
 - **NBT Compound** — Simplified status effect definition
+- **Particle Option** — Particle parameters for spawning particles

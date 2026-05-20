@@ -162,3 +162,9 @@ An **EffectEntry** is a simplified status effect definition used in some power t
 An **NBT Compound** is a simplified representation of NBT data used in some power types. It supports basic NBT types like byte, short, int, long, float, double, string, list, and compound. NBT is used for defining complex data structures, such as item data or entity data.
 
 See [Minecraft Wiki: NBT format](https://minecraft.wiki/w/NBT_format) for details on NBT structure and types.
+
+## Particle Option
+
+A **Particle Option** is a data type used for defining particle parameters in powers that spawn particles. It includes the particle type and its associated data.
+
+For each particle type, the required options vary. See the [Minecraft Wiki: Particle Format](https://minecraft.wiki/w/Particle_format) page for details on particle types and their parameters.

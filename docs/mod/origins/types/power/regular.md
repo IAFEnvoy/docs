@@ -767,6 +767,44 @@ This example will give the entity's texture a blue-ish tint and makes it slightl
 
 </details>
 
+### `origins:multiple`
+
+Allows for defining more than one power in a single file.
+
+Any "key", except for `type`, `name`, `description`, `condition`, `hidden`, `loading_priority`, and `badges`, is considered a sub-power and takes a fully-defined power type as the value.
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+    "type": "origins:multiple",
+    "toggle": {
+        "type": "origins:toggle",
+        "active_by_default": false,
+        "key": {
+            "key": "key.origins.secondary_active"
+        }
+    },
+    "invisibility": {
+        "type": "origins:invisibility",
+        "render_armor": false,
+        "condition": {
+            "type": "origins:power_active",
+            "power": "*:*_toggle"
+        }
+    }
+}
+```
+
+This example super-power has two "keys", which are considered sub-powers: `toggle` and `invisibility`. The `invisibility` sub-power will only be active (e.g: make the entity invisible) if the `toggle` sub-power is toggled ON.
+
+</details>
+
+:::warning
+Using multiple powers in a multiple power are not recommended.
+:::
+
 ### `origins:night_vision`
 
 Grants night vision.
@@ -831,7 +869,7 @@ Spawns particles around the player.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `particle` | [Identifier](../basic_concepts#identifier) | **required** | Particle type ID |
+| `particle` | [Particle Option](../minecraft_data_types#particle-option) | **required** | Particle type and params |
 | `frequency` | [Integer](../basic_concepts#integer) | `4` | How often to spawn particles (ticks per spawn) |
 
 
