@@ -56,7 +56,6 @@ See [Power JSON Format](../json/power) for data structure details. See [`/power`
 | `revokePower(source, powerId)` | Revoke a power from a source |
 | `revokeAllPowers(source)` | Remove all powers from a source |
 | `hasPower(powerId)` | Check whether the entity has a power |
-| `hasPowerFromSource(source, powerId)` | Check from a specific source |
 | `getAllPowerIds()` | List all power ID strings |
 
 ### Resource (Integer resource bar)

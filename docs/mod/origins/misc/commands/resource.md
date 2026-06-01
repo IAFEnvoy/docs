@@ -2,11 +2,15 @@
 
 :::warning Experimental
 
-The `/resource` command is an experimental command, and is subject to change without warning. It may be removed in a later update if it is not fully implemented or if it is deemed unnecessary.
+The `/resource` command is an experimental command, and is subject to change without warning.
 
 :::
 
 The `/resource` command can be used to change (add/subtract), get, set, and do operations on resources. Resource operations can only do **scoreboard objective to resource**, not resource to resource.
+
+:::tip
+Cooldown powers are also considered resources, so this command can be used to manipulate cooldowns as well.
+:::
 
 ### Syntax
 
