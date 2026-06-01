@@ -30,6 +30,16 @@ Identifiers are used for:
 
 ---
 
+## Wildcard Identifier
+
+A **Wildcard Identifier** is an special type of identifier. It can be used as a normal identifier, but it also supports the `*` wildcard character.
+
+All `*` characters in namespace will be replaced with the namespace of the current power. All `*` characters in path will be replaced with the path of the current power.
+
+For example: `*:*_toggle` in `example:power` will be resolved to `example:power_toggle`.
+
+---
+
 ## String
 
 A **String** is a sequence of text characters.

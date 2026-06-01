@@ -960,7 +960,7 @@ Grants additional crafting recipes to the player.
         	}
       	],
       	"result": {
-        	"item": "minecraft:cobweb"
+        	"id": "minecraft:cobweb"
       	}
     }
 }

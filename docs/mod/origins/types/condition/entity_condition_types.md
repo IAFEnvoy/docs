@@ -885,7 +885,7 @@ Checks the value of a resource.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power ID |
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
@@ -990,7 +990,7 @@ Checks the entity's current set membership.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+| `set` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Entity set ID |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
 

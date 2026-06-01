@@ -61,7 +61,7 @@ Checks if the actor is in a specific entity set.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+| `set` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Entity set ID |
 
 ### `origins:owner`
 

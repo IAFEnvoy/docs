@@ -8,7 +8,7 @@ Executes a bi-entity action for each entity in an entity set.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+| `set` | [ Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Entity set ID |
 | `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action between source and each set member |
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Filter for set members |
 | `limit` | [Integer](../basic_concepts#integer) | `0` | Max entities to target (0 = unlimited) |
@@ -156,7 +156,7 @@ Changes a resource value by a specified amount.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power ID |
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
 | `change` | [Integer](../basic_concepts#integer) | **required** | Amount to change (can be negative) |
 | `operation` | [String](../basic_concepts#string) | optional | Operation: `add` or `set` |
 
@@ -484,7 +484,7 @@ Grants a power to the entity.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `power` | [Identifier](../basic_concepts#identifier) | **required** | Power ID |
-| `source` | [Identifier](../basic_concepts#identifier) | **required** | Source identifier for the power |
+| `source` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Source identifier for the power |
 
 
 <details>
@@ -589,7 +589,7 @@ Modifies a resource value.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power ID |
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
 | `modifier` | [Modifier] | **required** | Modifier applied |
 
 
@@ -833,7 +833,7 @@ Revokes a power from the entity.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `power` | [Identifier](../basic_concepts#identifier) | optional | Power whose power source to revoke from |
-| `source` | [Identifier](../basic_concepts#identifier) | **required** | Source identifier to revoke |
+| `source` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Source identifier to revoke |
 
 
 <details>
@@ -1067,7 +1067,7 @@ Toggles another power on/off.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `power` | [Identifier](../basic_concepts#identifier) | **required** | Power ID to toggle |
+| `power` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Power ID to toggle |
 
 <details>
 <summary>Example</summary>
@@ -1089,7 +1089,7 @@ Triggers the cooldown of another power.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `power` | [Identifier](../basic_concepts#identifier) | **required** | Power ID whose cooldown to trigger |
+| `power` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Power ID whose cooldown to trigger |
 
 <details>
 <summary>Example</summary>

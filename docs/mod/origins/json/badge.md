@@ -4,6 +4,10 @@ sidebar_position: 4
 
 # Badge JSON Format
 
+:::warning FIXME
+Should update this page to reflect the new badge system, and add more examples.
+:::
+
 A Badge displays an icon and optional tooltip next to a power's name in the Origins GUI.
 
 ## File Location

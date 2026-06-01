@@ -8,7 +8,7 @@ Adds the actor to an entity set, with an optional time limit. After the time lim
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+| `set` | [ Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Entity set ID |
 | `time_limit` | [Integer](../basic_concepts#integer) | -1 | Time limit in ticks to be in the set, after which the actor will be removed from the set |
 
 <details>
@@ -86,7 +86,7 @@ Removes the actor from an entity set.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+| `set` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Entity set ID |
 
 ### `origins:set_in_love`
 
