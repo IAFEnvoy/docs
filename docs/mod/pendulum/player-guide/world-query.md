@@ -32,7 +32,7 @@ mc.getLookingEntity()                   // → {type, name, x, y, z, distance, .
 ```js
 mc.getNearbyPlayers(radius)             // → [{name, x, y, z, distance}]
 mc.getNearbyEntities(radius)            // all non-player entities
-mc.getNearbyEntities(radius, 'minecraft:cow') // filtered
+mc.getNearbyEntities(radius, 'minecraft:cow') // filtered by type
 ```
 
 ## Ray Trace

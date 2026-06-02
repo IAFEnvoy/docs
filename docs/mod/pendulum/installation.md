@@ -4,12 +4,19 @@ sidebar_position: 1
 
 # Installation
 
+## Version Support
+
+| Minecraft | Fabric | Forge | NeoForge | Status          |
+|-----------|--------|-------|----------|-----------------|
+| 1.20.1    | ✅      | ✅     |          | Fully Supported |
+| 1.21.1    | ✅      | ❌     | ✅        | Fully Supported |
+| 26.1.2    | 🔨     | ❌     | 🔨       | In development  |
+
 ## Install the Mod
 
-1. Download the Pendulum `.jar` file
-2. Download dependencies `Rhino` and `Jupiter`
-3. Place it in `.minecraft/mods/`
-4. Launch the game
+1. Download the Pendulum `.jar` file for your Minecraft version
+2. Drop it in `.minecraft/mods/` (dependencies `Rhino` and `Jupiter` are bundled)
+3. Launch the game
 
 ## Optional: Baritone
 

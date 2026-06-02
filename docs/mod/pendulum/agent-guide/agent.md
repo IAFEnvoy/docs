@@ -40,19 +40,22 @@ import Download from '@site/src/components/Download';
 
 ## Return Values & `console.log()`
 
-**All `mc.*` functions return a value.** Use it to check success:
+**Most `mc.*` functions return a value.** Movement/hold functions (`forward`, `back`, `jump`, `sneak`, `sprint`, `startUse`, `stopUse`) and some actions (`use`, `attack`, `say`, `log`) are `void`. Everything else returns `boolean` or query data.
+
+Use return values to check success:
 
 ```js
-if (mc.forward(20)) { /* started walking */ }
-if (!mc.say("hello")) { /* chat disabled or player null */ }
+mc.forward(20)                           // void — always starts walking
 if (mc.placeBlockAt(x, y, z)) { /* block placed */ }
+if (!mc.hasItem('diamond', 5)) { /* check before acting */ }
 ```
 
 **General pattern:**
-- **Movement / actions** → `boolean` (`true` = action started, `false` = player null / disabled)
+- **Movement (hold)** → `void` (fire-and-forget, no return)
+- **Movement (timed), interaction** → `boolean` (`true` = started, `false` = player null / permission denied)
 - **Queries** → `String`, `number`, `boolean`, or `[{...}]` array
 - **GUI clicks** → `boolean` (`false` = no GUI open / no player)
-- **Chat** → `boolean` (`false` = permission denied / no player)
+- **Chat** → `void` (`say`/`log` are fire-and-forget)
 
 **`console.log()` is captured:** Any `console.log(...)` output appears in the MCP `pendulum_eval` return. Use it for debugging:
 
@@ -69,12 +72,12 @@ The MCP return will show: `"Found 3 diamond ores"`
 ### Directional Movement
 
 ```js
-mc.forward(20)    // walk forward 20 ticks, then auto-stop
-mc.forward()      // hold forward indefinitely (use mc.stop() to release)
+mc.forward(20)    // walk forward 20 ticks, then auto-stop (void)
+mc.forward()      // hold forward indefinitely (void — use mc.stop() to release)
 mc.back(ticks?)   // backward
 mc.left(ticks?)   // strafe left
 mc.right(ticks?)  // strafe right
-mc.stop()         // release ALL movement keys (forward/back/left/right/jump/sneak)
+mc.stop()         // release ALL movement keys (void)
 ```
 
 **Pattern**: When walking towards a target with Baritone, prefer `br.goto()`. Use manual movement only for fine adjustments.
@@ -159,10 +162,10 @@ mc.useItem(100) // hold shield for 5s
 ### Combat
 
 ```js
-mc.attack()                            // left-click attack (hits crosshair entity)
+mc.attack()                            // left-click attack (void)
 ```
 
-Requires `allowAttack` permission. Has a 2-tick cooldown built in when `syncUseAttack` config is enabled.
+Requires `allowAttack` permission (config). Has a built-in cooldown when `syncUseAttack` is enabled (waits 2 ticks).
 
 ### Other
 
@@ -170,7 +173,7 @@ Requires `allowAttack` permission. Has a 2-tick cooldown built in when `syncUseA
 mc.swapHands()                         // swap main ↔ offhand
 mc.drop()                              // drop 1 item from held stack
 mc.dropAll()                           // drop entire held stack
-mc.pickBlock()                         // pick block (middle-click)
+mc.pickBlock()                         // pick block — middle-click (void)
 ```
 
 ---

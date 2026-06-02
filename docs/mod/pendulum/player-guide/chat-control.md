@@ -3,9 +3,9 @@
 ## Chat
 
 ```js
-mc.say('Hello world!')                 // send to public chat
-mc.log('Task completed.')              // log to action bar ([Pendulum] prefix)
-console.log('Debug info')              // log to game console (F3 log)
+mc.say('Hello world!')                 // send to public chat (void)
+mc.log('Task completed.')              // log to action bar ([Pendulum] prefix) (void)
+console.log('Debug info')              // log to game log & MCP return
 ```
 
 ## Commands

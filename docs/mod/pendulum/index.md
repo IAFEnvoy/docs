@@ -1,6 +1,9 @@
 # Pendulum
 
 > Client-side JavaScript executor for Minecraft. Automate everything.
+>
+> Supports **Fabric 1.20.1/1.21.1**, **Forge 1.20.1**, and **NeoForge 1.21.1**.
+> See [Installation](installation) for version compatibility.
 
 **Support both player scripts and AI agents via MCP.**
 

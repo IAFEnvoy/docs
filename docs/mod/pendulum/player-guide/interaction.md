@@ -37,9 +37,9 @@ mc.stopUse()                  // release right-click
 ## Other
 
 ```js
-mc.attack()                   // left-click attack
-mc.swapHands()                // swap main/offhand
-mc.drop()                     // drop 1 from held stack
-mc.dropAll()                  // drop entire held stack
-mc.pickBlock()                // pick block (middle-click)
+mc.attack()                   // left-click attack (void)
+mc.swapHands()                // swap main/offhand (void)
+mc.drop()                     // drop 1 from held stack (void)
+mc.dropAll()                  // drop entire held stack (void)
+mc.pickBlock()                // pick block — middle-click (void)
 ```

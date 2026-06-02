@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Pendulum exposes an MCP (Model Context Protocol) JSON-RPC 2.0 server over TCP for AI agents.
 
-## Useful Resources
+## Resources
 
 Click to download the MCP bridge script and API reference for your agent integration.
 
@@ -24,10 +24,10 @@ import Download from '@site/src/components/Download';
 2. Configure your MCP client to connect to `localhost:25566` (default port).
 
 :::tip
-You can customize the host and port in the Pendulum config screen (Jupiter config GUI). Also you can set MCP to auto-start on game launch for convenience.
+You can customize the port in the Pendulum config screen (Jupiter config GUI). Also you can set MCP to auto-start on game launch for convenience.
 :::
 
-## For VS Code Copilot
+## For VSCode Copilot
 
 Add to `.vscode/mcp.json`:
 
@@ -65,6 +65,33 @@ Add to `claude_desktop_config.json`:
   }
 }
 ```
+
+## For Codex CLI
+
+Create `~/.codex.yaml` (or `~/.codex.yml`):
+
+```yaml
+mcpServers:
+  pendulum:
+    command: node
+    args:
+      - path/to/mcp-bridge.js
+    env:
+      PENDULUM_HOST: localhost
+      PENDULUM_PORT: "25566"
+```
+
+:::tip
+Make sure to use the **absolute path** to `mcp-bridge.js`. You can get it by running `pwd` (macOS/Linux) or `cd` (Windows) in the Pendulum project directory.
+:::
+
+Once configured, run Codex:
+
+```bash
+codex
+```
+
+Codex will automatically discover the `pendulum` MCP server and can use all five tools (`pendulum_eval`, `pendulum_screenshot`, `pendulum_gui_elements`, `pendulum_status`, `pendulum_abort`) to control Minecraft.
 
 ## Available Tools
 
