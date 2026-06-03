@@ -13,7 +13,9 @@ All commands use `/pendulum` as the root.
 | `/pendulum mcp stop` | Stop MCP server |
 | `/pendulum mcp status` | Check MCP server state |
 
-> Only one script runs at a time. `/pendulum abort` if stuck.
+:::info
+Only one script runs at a time. `/pendulum abort` if stuck.
+:::
 
 ## Script Files
 

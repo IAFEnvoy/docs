@@ -1,3 +1,7 @@
+---
+sidebar_position: 5
+---
+
 # Inventory & GUI
 
 ## Hotbar
@@ -57,7 +61,7 @@ mc.gui.getElements()                   // → recursive widget tree (recommended
 
 Returns all visible widgets on the current screen. See [GUI Interaction](gui-interaction) for full `mc.gui.*` API.
 
-## GUI Input (New!)
+## GUI Input
 
 ```js
 mc.gui.click(x, y)                     // click at screen coordinate

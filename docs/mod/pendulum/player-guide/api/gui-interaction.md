@@ -1,12 +1,8 @@
-# GUI Interaction
-
-> `mc.gui` sub-object — screen-level mouse, keyboard, and widget operations.
-
-The `mc.gui` API lets scripts and AI agents inspect and interact with Minecraft's GUI screens: click buttons, type text, press keys, enumerate widgets, and manipulate container inventories.
-
-The **old top-level functions** (`mc.isGuiOpen()`, `mc.clickSlot()`, `mc.getContainerAllItems()`, etc.) still work for backward compatibility, but `mc.gui` is the recommended API going forward.
-
 ---
+sidebar_position: 6
+---
+
+# GUI Interaction
 
 ## Screen Info
 
