@@ -25,6 +25,10 @@ import Download from '@site/src/components/Download';
 
 :::tip
 You can customize the port in the Pendulum config screen (Jupiter config GUI). Also you can set MCP to auto-start on game launch for convenience.
+
+When the MCP server is running, the game window title will show **" | Shared with AI Agent"** (like VS Code's remote indicator). When a script is executing, it shows **" | Script Running"**.
+
+All MCP tool calls are automatically logged to `pendulum/logs/mcp_calls.jsonl` for post-hoc review.
 :::
 
 ## For VSCode Copilot
@@ -91,7 +95,7 @@ Once configured, run Codex:
 codex
 ```
 
-Codex will automatically discover the `pendulum` MCP server and can use all five tools (`pendulum_eval`, `pendulum_screenshot`, `pendulum_gui_elements`, `pendulum_status`, `pendulum_abort`) to control Minecraft.
+Codex will automatically discover the `pendulum` MCP server and can use all available tools to control Minecraft. See the [Agent API Reference](AGENT) for the full tool list.
 
 ## Available Tools
 

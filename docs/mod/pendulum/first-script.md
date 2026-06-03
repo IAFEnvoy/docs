@@ -17,7 +17,7 @@ You'll see `Hello from Pendulum!` in the chat.
 ## Move Forward
 
 ```
-/pendulum execute mc.forward(20)
+/pendulum execute mc.player.forward(20)
 ```
 
 Walks forward for 20 game ticks (~1 second), then stops.
@@ -27,7 +27,7 @@ Walks forward for 20 game ticks (~1 second), then stops.
 Look at a block and run:
 
 ```
-/pendulum execute mc.breakBlock()
+/pendulum execute mc.player.breakBlock()
 ```
 
 The script will wait until the block is destroyed.
@@ -38,9 +38,9 @@ Create `.minecraft/pendulum/hello.js`:
 
 ```js
 mc.log('Starting task...');
-mc.forward(40);
+mc.player.forward(40);
 mc.log('Done walking!');
-mc.jump();
+mc.player.jump();
 ```
 
 Run it:

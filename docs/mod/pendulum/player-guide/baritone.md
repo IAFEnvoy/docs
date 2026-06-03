@@ -1,6 +1,8 @@
 # Baritone API
 
-> Requires Baritone mod installed. `baritone` / `br` global object.
+:::info
+Requires Baritone mod installed. `baritone` / `br` global object.
+:::
 
 ## Pathfinding
 

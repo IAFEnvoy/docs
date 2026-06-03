@@ -8,6 +8,14 @@ mc.log('Task completed.')              // log to action bar ([Pendulum] prefix) 
 console.log('Debug info')              // log to game log & MCP return
 ```
 
+### Opening Chat via GUI
+
+```js
+mc.gui.openChat()                      // open chat input
+mc.gui.pressKey('T')                   // also opens chat (default keybind)
+mc.gui.typeText('/spawn', true)        // type command + Enter
+```
+
 ## Commands
 
 ```js

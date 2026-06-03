@@ -10,13 +10,76 @@
 
 | Tool | Parameters | Returns | Notes |
 |------|-----------|---------|-------|
-| `pendulum_eval` | `code: string` | Execution result (string) or error | **The last expression's value is returned.** Use `console.log(...)` to output debug info — it will appear in the game log AND the MCP return string. |
-| `pendulum_screenshot` | none | Base64-encoded PNG | May fail if game not focused |
-| `pendulum_gui_elements` | none | `[{type, x, y, width, height, text?, id?}]` | Non-slot widgets only |
-| `pendulum_status` | none | `"idle"` or `"running"` | Check before running new code |
-| `pendulum_abort` | none | — | Kill the currently running script |
+| `pendulum_eval` | `code: string` | Execution result | **Last expression value returned.** `console.log()` goes to MCP return. |
+| `pendulum_screenshot` | none | Base64 PNG with **coordinate grid** | 100px grid + edge rulers |
+| `pendulum_screenshot_to_file` | `path?: string` | `{file, size}` | Save to disk |
+| `pendulum_enumerate_widgets` | none | `[{type,text?,x,y,w,h,active?,focused?,children?}]` | **Recursive** widget tree |
+| `pendulum_gui_elements` | none | `[{type,x,y,w,h,text?}]` | Flat list (legacy) |
+| `pendulum_click` | `x,y,button?` | Confirmation | Screen coordinate click |
+| `pendulum_click_button` | `target` | `{clicked,widget,x,y}` | Find button by text & click |
+| `pendulum_press_key` | `key,hold_seconds?` | Confirmation | Keyboard injection |
+| `pendulum_type_text` | `text,press_enter?` | Confirmation | Type into focused field |
+| `pendulum_paste_text` | `text,press_enter?` | Confirmation | Fast text input |
+| `pendulum_scroll` | `clicks` | Confirmation | Mouse wheel |
+| `pendulum_hotkey` | `keys` (e.g. `"ctrl,s"`) | Confirmation | Key combination |
+| `pendulum_mouse_drag` | `x_start,y_start,x_end,y_end,button?` | Confirmation | Drag mouse |
+| `pendulum_wait` | `seconds?: number` | Confirmation | Wait N seconds |
+| `pendulum_call_screen_method` | `method` | `{called,method,screen,result}` | ⚠️ HIGH RISK — reflection call on screen |
+| `pendulum_select_list_item` | `text` | `{selected,text,x,y}` | Select dropdown item by text |
+| `pendulum_video_start` | none | Confirmation | ⚡ EXPERIMENTAL — start ~10fps capture |
+| `pendulum_video_stop` | none | Confirmation | Stop video capture |
+| `pendulum_video_frame` | none | Latest frame PNG or error | ⚡ Get cached frame (< 5s old) |
+| `pendulum_status` | none | `"idle"` / `"running"` | Check before running |
+| `pendulum_abort` | none | — | Kill running script |
 
-**IMPORTANT**: Only ONE script can run at a time. If `pendulum_status` returns `"running"`, call `pendulum_abort` first before new `pendulum_eval`.
+**IMPORTANT**: Only ONE script runs at a time. Check `pendulum_status` first; `pendulum_abort` if running.
+
+---
+
+## GUI Workflow (Recommended)
+
+```
+1. pendulum_screenshot        → see screen with coordinate grid
+2. pendulum_enumerate_widgets → get widget tree with positions
+3. pendulum_click_button("Done") → click by text (preferred)
+   OR pendulum_click(x, y)   → click by coordinate from grid
+4. pendulum_type_text         → type + Enter
+5. pendulum_screenshot        → verify result
+```
+
+### Advanced GUI Tools
+
+```
+pendulum_wait(1.0)              → wait between actions
+pendulum_select_list_item("English") → choose from dropdown
+pendulum_call_screen_method("onClose") → ⚠️ direct screen method call
+```
+
+---
+
+## MCP Call Logging
+
+All MCP tool calls are **automatically logged** to `pendulum/logs/mcp_calls.jsonl`.
+Each line is a JSON object: `{timestamp, tool, duration_ms, error, params?, result_preview?}`.
+This replaces real-time SSE streaming and the web debug panel —
+you can review the log file after a session to understand what the AI agent did.
+
+---
+
+## Video Frame Capture ⚡
+
+:::warning
+**EXPERIMENTAL — use sparingly.** Reading the GPU framebuffer every 6 frames is expensive.
+Prefer `pendulum_screenshot` for single screenshots unless you need to observe continuous motion.
+:::
+
+| Tool | Description |
+|------|-------------|
+| `pendulum_video_start` | Start ~10fps capture (1 frame every 6 ticks) |
+| `pendulum_video_frame` | Get the latest cached frame as base64 PNG |
+| `pendulum_video_stop` | Stop capture and free resources |
+
+**Use case**: observing entity movement, falling items, block breaking animations, or any short continuous action.
 
 ---
 
@@ -24,7 +87,11 @@
 
 | Object | Aliases | Purpose |
 |--------|---------|---------|
-| `minecraft` | `mc`, `game` | Player control, interaction, world, inventory, GUI |
+| `minecraft` | `mc`, `game` | Chat, commands, script control (`say`, `executeCommand`, `waitTick`, etc.) |
+| `mc.player` | — | Movement, rotation, interaction, player state |
+| `mc.world` | — | Block/entity/environment queries |
+| `mc.inv` | — | Inventory & container operations |
+| `mc.gui` | — | Screen-level GUI: click, type, press keys, enumerate widgets |
 | `baritone` | `br` | Baritone pathfinding, mining, building (optional) |
 | `console` | — | `console.log(...)` → game log AND MCP return |
 
@@ -32,24 +99,27 @@
 
 ## Return Values & `console.log()`
 
-**All `mc.*` functions return a value.** Use it to check success:
+**Most `mc.*` functions return a value.** Movement/hold functions (`forward`, `back`, `jump`, `sneak`, `sprint`, `startUse`, `stopUse`) and some actions (`use`, `attack`, `say`, `log`) are `void`. Everything else returns `boolean` or query data.
+
+Use return values to check success:
 
 ```js
-if (mc.forward(20)) { /* started walking */ }
-if (!mc.say("hello")) { /* chat disabled or player null */ }
-if (mc.placeBlockAt(x, y, z)) { /* block placed */ }
+mc.player.forward(20)                           // void — always starts walking
+if (mc.player.placeBlockAt(x, y, z)) { /* block placed */ }
+if (!mc.inv.hasItem('diamond', 5)) { /* check before acting */ }
 ```
 
 **General pattern:**
-- **Movement / actions** → `boolean` (`true` = action started, `false` = player null / disabled)
+- **Movement (hold)** → `void` (fire-and-forget, no return)
+- **Movement (timed), interaction** → `boolean` (`true` = started, `false` = player null / permission denied)
 - **Queries** → `String`, `number`, `boolean`, or `[{...}]` array
 - **GUI clicks** → `boolean` (`false` = no GUI open / no player)
-- **Chat** → `boolean` (`false` = permission denied / no player)
+- **Chat** → `void` (`say`/`log` are fire-and-forget)
 
 **`console.log()` is captured:** Any `console.log(...)` output appears in the MCP `pendulum_eval` return. Use it for debugging:
 
 ```js
-console.log("Found", mc.findBlocks("diamond_ore", 8).length, "diamond ores");
+console.log("Found", mc.world.findBlocks("diamond_ore", 8).length, "diamond ores");
 ```
 
 The MCP return will show: `"Found 3 diamond ores"`
@@ -61,12 +131,12 @@ The MCP return will show: `"Found 3 diamond ores"`
 ### Directional Movement
 
 ```js
-mc.forward(20)    // walk forward 20 ticks, then auto-stop
-mc.forward()      // hold forward indefinitely (use mc.stop() to release)
-mc.back(ticks?)   // backward
-mc.left(ticks?)   // strafe left
-mc.right(ticks?)  // strafe right
-mc.stop()         // release ALL movement keys (forward/back/left/right/jump/sneak)
+mc.player.forward(20)    // walk forward 20 ticks, then auto-stop (void)
+mc.player.forward()      // hold forward indefinitely (void — use mc.player.stop() to release)
+mc.player.back(ticks?)   // backward
+mc.player.left(ticks?)   // strafe left
+mc.player.right(ticks?)  // strafe right
+mc.player.stop()         // release ALL movement keys (void)
 ```
 
 **Pattern**: When walking towards a target with Baritone, prefer `br.goto()`. Use manual movement only for fine adjustments.
@@ -74,32 +144,32 @@ mc.stop()         // release ALL movement keys (forward/back/left/right/jump/sne
 ### Vertical
 
 ```js
-mc.jump()         // single jump
-mc.jump(true)     // hold jump key (continuous bouncing)
-mc.sneak()        // start sneaking
-mc.sneak(false)   // stop
-mc.sprint()       // start sprinting
-mc.stopSprint()   // stop sprinting
+mc.player.jump()         // single jump
+mc.player.jump(true)     // hold jump key (continuous bouncing)
+mc.player.sneak()        // start sneaking
+mc.player.sneak(false)   // stop
+mc.player.sprint()       // start sprinting
+mc.player.stopSprint()   // stop sprinting
 ```
 
 ### Rotation
 
 ```js
-mc.lookAt(x, y, z)           // instantly face a coordinate
-mc.setYaw(degrees)           // set horizontal rotation (0=south, 90=west, 180=north, -90=east)
-mc.setPitch(degrees)         // set vertical rotation (-90=up, 90=down)
-mc.getYaw() → number        // current yaw
-mc.getPitch() → number      // current pitch
+mc.player.lookAt(x, y, z)           // instantly face a coordinate
+mc.player.setYaw(degrees)           // set horizontal rotation (0=south, 90=west, 180=north, -90=east)
+mc.player.setPitch(degrees)         // set vertical rotation (-90=up, 90=down)
+mc.player.getYaw() → number        // current yaw
+mc.player.getPitch() → number      // current pitch
 ```
 
-**IMPORTANT**: `mc.lookAt()` sets both the player rotation AND the PlayerSimulator rotation immediately. Other rotation functions do not animate — they snap instantly.
+**IMPORTANT**: `mc.player.lookAt()` sets both the player rotation AND the PlayerSimulator rotation immediately. Other rotation functions do not animate — they snap instantly.
 
 ### Position
 
 ```js
-mc.getX() → number        // X coordinate (double)
-mc.getY() → number        // Y coordinate (feet level)
-mc.getZ() → number        // Z coordinate (double)
+mc.player.getX() → number        // X coordinate (double)
+mc.player.getY() → number        // Y coordinate (feet level)
+mc.player.getZ() → number        // Z coordinate (double)
 ```
 
 ---
@@ -109,8 +179,8 @@ mc.getZ() → number        // Z coordinate (double)
 ### Breaking Blocks
 
 ```js
-mc.breakBlock() → boolean              // break block under crosshair; waits until done
-mc.breakBlockAt(x, y, z) → boolean     // break specific coordinate (RECOMMENDED)
+mc.player.breakBlock() → boolean              // break block under crosshair; waits until done
+mc.player.breakBlockAt(x, y, z) → boolean     // break specific coordinate (RECOMMENDED)
 ```
 
 **PREFER `breakBlockAt`** over `breakBlock`. It computes the best face to hit from the player's position and does NOT rely on crosshair targeting. It's synchronous — the JS thread blocks until the block is destroyed or timeout.
@@ -118,14 +188,14 @@ mc.breakBlockAt(x, y, z) → boolean     // break specific coordinate (RECOMMEND
 ### Placing Blocks
 
 ```js
-mc.placeBlock() → boolean              // place on crosshair target (unreliable)
-mc.placeBlockAt(x, y, z) → boolean     // place at exact coordinate (RECOMMENDED)
-mc.jumpAndPlaceBelow() → boolean       // jump up, look down, place block under feet
+mc.player.placeBlock() → boolean              // place on crosshair target (unreliable)
+mc.player.placeBlockAt(x, y, z) → boolean     // place at exact coordinate (RECOMMENDED)
+mc.player.jumpAndPlaceBelow() → boolean       // jump up, look down, place block under feet
 ```
 
-**WARNING**: `mc.placeBlock()` is unreliable due to crosshair drift. **ALWAYS use `mc.placeBlockAt(x, y, z)`** for precise placement. It automatically finds the best adjacent face to click.
+**WARNING**: `mc.player.placeBlock()` is unreliable due to crosshair drift. **ALWAYS use `mc.player.placeBlockAt(x, y, z)`** for precise placement. It automatically finds the best adjacent face to click.
 
-`mc.jumpAndPlaceBelow()` is specifically designed for building platforms:
+`mc.player.jumpAndPlaceBelow()` is specifically designed for building platforms:
 1. Jumps
 2. Looks straight down (pitch=90)
 3. Places block at feet position
@@ -134,35 +204,35 @@ mc.jumpAndPlaceBelow() → boolean       // jump up, look down, place block unde
 ### Item Use (Eating / Bow / Shield)
 
 ```js
-mc.use()                               // single right-click (one-shot)
-mc.useItem(ticks) → boolean            // hold right-click for N ticks, then release
-mc.startUse()                          // start holding right-click
-mc.stopUse()                           // release right-click
+mc.player.use()                               // single right-click (one-shot)
+mc.player.useItem(ticks) → boolean            // hold right-click for N ticks, then release
+mc.player.startUse()                          // start holding right-click
+mc.player.stopUse()                           // release right-click
 ```
 
 **Recommended pattern**: Use `mc.useItem(N)` for simple cases:
 
 ```js
-mc.useItem(32)  // eat food (~1.6s)
-mc.useItem(20)  // full draw bow (~1s)
-mc.useItem(100) // hold shield for 5s
+mc.player.useItem(32)  // eat food (~1.6s)
+mc.player.useItem(20)  // full draw bow (~1s)
+mc.player.useItem(100) // hold shield for 5s
 ```
 
 ### Combat
 
 ```js
-mc.attack()                            // left-click attack (hits crosshair entity)
+mc.player.attack()                            // left-click attack (void)
 ```
 
-Requires `allowAttack` permission. Has a 2-tick cooldown built in when `syncUseAttack` config is enabled.
+Requires `allowAttack` permission (config). Has a built-in cooldown when `syncUseAttack` is enabled (waits 2 ticks).
 
 ### Other
 
 ```js
-mc.swapHands()                         // swap main ↔ offhand
-mc.drop()                              // drop 1 item from held stack
-mc.dropAll()                           // drop entire held stack
-mc.pickBlock()                         // pick block (middle-click)
+mc.player.swapHands()                         // swap main ↔ offhand
+mc.player.drop()                              // drop 1 item from held stack
+mc.player.dropAll()                           // drop entire held stack
+mc.player.pickBlock()                         // pick block — middle-click (void)
 ```
 
 ---
@@ -172,18 +242,18 @@ mc.pickBlock()                         // pick block (middle-click)
 ### Hotbar
 
 ```js
-mc.selectHotbar(slot)                  // select slot 1-9
-mc.getSelectedSlot() → number         // current hotbar slot (1-9)
+mc.inv.selectHotbar(slot)                  // select slot 1-9
+mc.inv.getSelectedSlot() → number         // current hotbar slot (1-9)
 ```
 
 ### Item Query
 
 ```js
-mc.hasItem('minecraft:diamond', 64) → boolean   // has at least N items?
-mc.getItemInHand() → {id, count, maxCount, durability, maxDurability, name}
-mc.getItemOffhand() → same
-mc.getItemInSlot(slot) → same                   // slot 0-35
-mc.getAllItems() → [{slot, id, count, maxCount, durability, maxDurability, name}]
+mc.inv.hasItem('minecraft:diamond', 64) → boolean   // has at least N items?
+mc.inv.getItemInHand() → {id, count, maxCount, durability, maxDurability, name}
+mc.inv.getItemOffhand() → same
+mc.inv.getItemInSlot(slot) → same                   // slot 0-35
+mc.inv.getAllItems() → [{slot, id, count, maxCount, durability, maxDurability, name}]
 ```
 
 **IMPORTANT**: `mc.getAllItems()` skips empty slots. The `slot` field is the raw inventory index (0-8 hotbar, 9-35 inventory, 36-39 armor, 40 offhand).
@@ -191,14 +261,14 @@ mc.getAllItems() → [{slot, id, count, maxCount, durability, maxDurability, nam
 **Recipe for checking/selecting materials**:
 ```js
 // Check if we have enough material
-if (!mc.hasItem('minecraft:white_concrete', 82)) {
+if (!mc.inv.hasItem('minecraft:white_concrete', 82)) {
     mc.log('Not enough concrete!');
 } else {
     // Find which hotbar slot has it
-    let items = mc.getAllItems();
+    let items = mc.inv.getAllItems();
     for (let item of items) {
         if (item.id === 'minecraft:white_concrete' && item.slot < 9) {
-            mc.selectHotbar(item.slot + 1);
+            mc.inv.selectHotbar(item.slot + 1);
             break;
         }
     }
@@ -250,23 +320,86 @@ Returns all visible non-slot widgets (buttons, labels, text fields). Useful for:
 
 ---
 
+## GUI & Screen Input (`mc.gui.*`) — NEW!
+
+For scripts that need to interact with GUI screens (pause menu, settings, chat, server list, etc.), use the `mc.gui` sub-object.
+
+### Screen Info
+
+```js
+mc.gui.isOpen() → boolean              // is a GUI screen open?
+mc.gui.getTitle() → string             // screen title ('' if none)
+mc.gui.close()                         // close screen (void)
+mc.gui.openChat()                      // open chat input (void)
+```
+
+### Widget Enumeration
+
+```js
+mc.gui.getElements() → [{type, text?, x, y, width, height, active?, focused?, children?}]
+```
+
+Recursively enumerates ALL widgets on the current screen including nested children. Each widget has type, bounds, text, active/focused state.
+
+### Screen-Level Mouse
+
+```js
+mc.gui.click(x, y)                     // left-click at screen pixel
+mc.gui.click(x, y, 'right')            // right-click
+mc.gui.click(x, y, 'middle')           // middle-click
+mc.gui.clickButton('Done')             // find button by text & click center → JSON
+mc.gui.mouseDrag(x1,y1, x2,y2)         // drag with left button
+mc.gui.mouseDrag(x1,y1, x2,y2, 'right') // right-button drag
+mc.gui.scroll(3)                       // scroll up 3 clicks
+mc.gui.scroll(-5)                      // scroll down 5 clicks
+```
+
+### Screen-Level Keyboard
+
+```js
+mc.gui.pressKey('ESC')                 // press & release
+mc.gui.pressKey('W', 1.0)              // hold for 1 second
+mc.gui.typeText('Hello', true)         // type + Enter
+mc.gui.pasteText('long text', true)    // fast input + Enter
+mc.gui.hotkey('ctrl,s')                // Ctrl+S
+mc.gui.hotkey('shift,f3')              // Shift+F3
+```
+
+**Workflow for AI agents**: `pendulum_screenshot` → identify target from grid → `pendulum_click_button("text")` → `pendulum_screenshot` to verify. Prefer `clickButton` over `click(x,y)` when button text is known.
+
+### Container Ops (via mc.gui)
+
+```js
+mc.gui.getType() → string              // 'chest'|'crafting_table'|...
+mc.gui.getSlotCount() → number
+mc.gui.getSlotItem(slot) → {id,count,...}
+mc.gui.getAllItems() → [{slot,id,count,...}]
+mc.gui.clickSlot(slotId)               // left-click
+mc.gui.clickSlotRight(slotId)          // right-click
+mc.gui.craft() / mc.gui.craftAll()     // crafting
+mc.gui.moveItem(from, to)              // pick up & place
+mc.gui.quickMoveItem(slot)             // shift-click
+```
+
+---
+
 ## World Query
 
 ### Block Queries
 
 ```js
-mc.getBlock(x, y, z) → string               // full block ID, e.g. 'minecraft:dirt'
-mc.isBlock(x, y, z, 'blockId') → boolean    // exact match
-mc.isBlockByTag(x, y, z, 'tag') → boolean   // tag match
-mc.getBlockState(x, y, z) → {id, properties: {key: value, ...}}
+mc.world.getBlock(x, y, z) → string               // full block ID, e.g. 'minecraft:dirt'
+mc.world.isBlock(x, y, z, 'blockId') → boolean    // exact match
+mc.world.isBlockByTag(x, y, z, 'tag') → boolean   // tag match
+mc.world.getBlockState(x, y, z) → {id, properties: {key: value, ...}}
 ```
 
 ### Block Search
 
 ```js
-mc.findBlocks('blockId', radius?) → [{x, y, z}]     // sphere search (default radius=16)
-mc.findBlocksByTag('tag', radius?) → [{x, y, z}]     // tag-based sphere search
-mc.findBlocksInBox(x1,y1,z1, x2,y2,z2, 'blockId'?) → [{x, y, z, block?}]
+mc.world.findBlocks('blockId', radius?) → [{x, y, z}]     // sphere search (default radius=16)
+mc.world.findBlocksByTag('tag', radius?) → [{x, y, z}]     // tag-based sphere search
+mc.world.findBlocksInBox(x1,y1,z1, x2,y2,z2, 'blockId'?) → [{x, y, z, block?}]
 ```
 
 **Performance note**: `findBlocks` scans a 3D sphere. `radius=16` = 32^3 = ~32K blocks. On large radii, it may take a few ticks. If you omit `blockId` in `findBlocksInBox`, it returns ALL non-air blocks in the box.
@@ -274,11 +407,11 @@ mc.findBlocksInBox(x1,y1,z1, x2,y2,z2, 'blockId'?) → [{x, y, z, block?}]
 ### Crosshair & Ray Tracing
 
 ```js
-mc.facingBlock('blockId') → boolean     // is crosshair on this block?
-mc.facingEntity('entityType') → boolean // is crosshair on this entity type?
-mc.getFacingBlock() → string           // block ID or ''
-mc.getLookingEntity() → {type, name, x, y, z, distance, health?, maxHealth?, isAlive?}
-mc.rayTrace(maxDist?) → {type:'block'|'entity'|'miss', x, y, z, face?, entityName?, ...}
+mc.world.facingBlock('blockId') → boolean     // is crosshair on this block?
+mc.world.facingEntity('entityType') → boolean // is crosshair on this entity type?
+mc.world.getFacingBlock() → string           // block ID or ''
+mc.world.getLookingEntity() → {type, name, x, y, z, distance, health?, maxHealth?, isAlive?}
+mc.world.rayTrace(maxDist?) → {type:'block'|'entity'|'miss', x, y, z, face?, entityName?, ...}
 ```
 
 `rayTrace` returns the **first** hit — entities are checked before blocks.
@@ -286,9 +419,9 @@ mc.rayTrace(maxDist?) → {type:'block'|'entity'|'miss', x, y, z, face?, entityN
 ### Entity Detection
 
 ```js
-mc.getNearbyPlayers(radius) → [{name, x, y, z, distance}]
-mc.getNearbyEntities(radius) → [{name, type, x, y, z, distance}]
-mc.getNearbyEntities(radius, 'entityType')  // filtered
+mc.world.getNearbyPlayers(radius) → [{name, x, y, z, distance}]
+mc.world.getNearbyEntities(radius) → [{name, type, x, y, z, distance}]
+mc.world.getNearbyEntities(radius, 'entityType')  // filtered
 ```
 
 ### World State

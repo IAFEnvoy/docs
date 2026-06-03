@@ -16,8 +16,11 @@ sidebar_position: 1
 
 1. Download the Pendulum `.jar` file for your Minecraft version
 2. Drop it in `.minecraft/mods/` (dependencies `Rhino` and `Jupiter` are bundled)
-3. Launch the game
+3. Launch the game — the mod auto-detects your Minecraft language.
 
+:::tip
+Pendulum supports **11 languages**: English, 简体中文, 繁體中文, 日本語, 한국어, Français, Español, Русский, Italiano, Deutsch, Português (Brasil).
+:::
 ## Optional: Baritone
 
 `Baritone` adds automated pathfinding, mining, farming, and schematic building.
