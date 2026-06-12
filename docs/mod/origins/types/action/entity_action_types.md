@@ -14,32 +14,6 @@ Executes a bi-entity action for each entity in an entity set.
 | `limit` | [Integer](../basic_concepts#integer) | `0` | Max entities to target (0 = unlimited) |
 | `reverse` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, iterate in reverse order |
 
-### `origins:add_effect`
-
-Adds a status effect to the entity.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `effect` | List of [MobEffectInstance](../minecraft_data_types#mobeffectinstance) | optional | Effects to add |
-
-<details>
-<summary>Example</summary>
-
-```json
-"entity_action": {
-  "type": "origins:apply_effect",
-  "effect": {
-    "effect": "minecraft:speed",
-    "duration": 400,
-    "amplifier": 0
-  }
-}
-```
-
-This example will apply a Speed I status effect for 20 seconds.
-
-</details>
-
 ### `origins:add_velocity`
 
 Adds velocity to the entity.
@@ -95,8 +69,7 @@ Applies a status effect (different internal behavior from add_effect).
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `effect` | List of [MobEffectInstance](../minecraft_data_types#mobeffectinstance) | **required** | Effects to apply |
-
+| `effect` | [ValueOrList](../basic_concepts#valueorlist) of [MobEffectInstance](../minecraft_data_types#mobeffectinstance) | **required** | Effects to apply |
 
 <details>
 <summary>Example</summary>
@@ -105,7 +78,7 @@ Applies a status effect (different internal behavior from add_effect).
 "entity_action": {
     "type": "origins:apply_effect",
     "effect": {
-        "effect": "minecraft:speed",
+        "id": "minecraft:speed",
         "duration": 400,
         "amplifier": 0
     }

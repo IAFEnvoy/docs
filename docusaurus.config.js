@@ -136,6 +136,14 @@ const config = {
           {
             type: 'dropdown',
             position: 'left',
+            label: 'Tools',
+            items: [
+              { to: '/docs/tool/dashboard', label: 'ModList Dashboard' },
+            ]
+          },
+          {
+            type: 'dropdown',
+            position: 'left',
             label: 'Deprecated',
             items: [
               { to: '/docs/library/annotation-lib', label: 'Annotation Lib' },

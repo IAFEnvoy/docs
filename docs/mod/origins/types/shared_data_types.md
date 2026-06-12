@@ -22,6 +22,10 @@ Used by powers to display cooldown/resource bars in the HUD.
 | `inverted` | [Boolean](./basic_concepts#boolean) | `false` | If `true`, inverts the bar direction |
 | `order` | [Integer](./basic_concepts#integer) | `0` | Render order among multiple HUD elements |
 
+:::caution
+`should_render` is no longer supported for HUD elements. You can just remove HudRender from power to hide the HUD element, or use the `condition` field to control its visibility instead.
+:::
+
 ---
 
 ## Key
