@@ -78,6 +78,7 @@ Allows the player to climb walls like a spider.
 |-------|------|---------|-------------|
 | `allow_holding` | [Boolean](../basic_concepts#boolean) | `true` | Whether the player can hold position on the wall |
 | `hold_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition required to hold position |
+| `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for climbable blocks (defaults to solid blocks) |
 
 <details>
 <summary>Example</summary>
@@ -558,7 +559,7 @@ Provides an additional inventory accessible via key press.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `title` | [Text Component](../minecraft_data_types#text-component) | `container.inventory` | Container title |
-| `container_type` | [String](../basic_concepts#string) | `dispenser` | Container type: `dispenser`, `dropper`, `chest`, `double_chest` |
+| `container_type` | [String](../basic_concepts#string) | `dispenser` | Container type: `chest_1x9` `chest_2x9` `chest_3x9` `chest_4x9` `chest_5x9` `chest_6x9` `hopper` `dispenser` |
 | `drop_on_death` | [Boolean](../basic_concepts#boolean) | `false` | Whether contents drop on death |
 | `drop_on_death_filter` | [Item Condition](../condition/item_condition_types) | optional | Filter for items that should drop on death |
 | `recoverable` | [Boolean](../basic_concepts#boolean) | `true` | Whether items are recovered when re-gaining the power |
