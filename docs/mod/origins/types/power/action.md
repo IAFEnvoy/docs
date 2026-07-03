@@ -49,7 +49,7 @@ Executes actions when another entity interacts with the player.
 |-------|------|---------|-------------|
 | `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action executed (actor = other entity, target = player) |
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition that must be met for the action to execute |
-
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 <details>
 <summary>Example</summary>
@@ -202,7 +202,7 @@ Executes actions when the player right-clicks an entity.
 | `target_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the target entity |
 | `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Bi-entity action executed |
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition that must be met |
-
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 <details>
 <summary>Example</summary>
@@ -284,6 +284,7 @@ Executes actions when the player picks up an item.
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the player |
 | `item_action` | [Item Action](../action/item_action_types) | optional | Action executed on the picked-up item |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the item must meet |
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 ### `origins:action_on_item_use`
 
@@ -294,7 +295,18 @@ Executes actions when the player uses an item.
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the player |
 | `item_action` | [Item Action](../action/item_action_types) | optional | Action executed on the item |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the item must meet |
+| `trigger` | Trigger | `finish` | Trigger that must be met for the action to execute |
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
+#### Trigger
+
+| Name | Description |
+|-------|------|
+| `finish` |The action will execute when the entity finishes (as in, completes) using an item which has a use duration, such as eating food. |
+| `start` | The action will execute when the entity starts using an item which has a use duration. |
+| `stop` | The action will execute when the entity stops using an item which has a use duration, before the maximum use duration has been reached. Compared to `finish`, this can be used to detect shooting a bow, for example. |
+| `during` | The action will be called every tick while the entity is using an item which has a use duration. |
+| `instant` | The action will not fire for items with a use duration, but will instead fire when an item is used which triggers its effect instantly, such as an ender pearl or splash potion. |
 
 <details>
 <summary>Example</summary>

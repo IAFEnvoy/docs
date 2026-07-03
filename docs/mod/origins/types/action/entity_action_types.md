@@ -174,7 +174,7 @@ Damages the entity.
 }
 ```
 
-This example will apply a Speed I status effect to the entity that would last for 20 seconds.
+This example will damage the entity for 4 points (2 hearts) of fire damage.
 
 </details>
 

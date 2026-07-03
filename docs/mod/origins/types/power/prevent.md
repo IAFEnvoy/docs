@@ -303,6 +303,7 @@ Prevents picking up certain items.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition for items prevented from pickup |
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 ### `origins:prevent_item_use`
 
@@ -340,6 +341,7 @@ Prevents the player from sleeping in beds.
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for beds prevented from use |
 | `message` | [Text Component](../minecraft_data_types#text-component) | optional | Custom message shown when sleep is blocked |
 | `set_spawn` | [Boolean](../basic_concepts#boolean) | `true` | Whether the bed can still set the player's spawn point |
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 
 <details>

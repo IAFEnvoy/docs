@@ -178,7 +178,7 @@ Checks if the item is in an item tag.
 }
 ```
 
-This example will check if the armor item (in this context, a chestplate) has a higher armor value than 3, which is the armor value for the leather chestplate armor item.
+This example will check whether item is in the `origins:meat` item tag.
 
 </details>
 

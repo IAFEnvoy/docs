@@ -287,7 +287,7 @@ Makes certain items edible for the player.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition for items that become edible |
-
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 <details>
 <summary>Example</summary>
@@ -364,7 +364,7 @@ Grants elytra flight capability without needing an elytra item.
 }
 ```
 
-This example power will add 0.4 to the entity's `minecraft:generic.movement_speed` attribute if the entity is sprinting.
+This example power will grant the player the ability to fly like an elytra, and it will render the default elytra wings on the player.
 
 </details>
 
@@ -941,7 +941,7 @@ Grants additional crafting recipes to the player.
 |-------|------|---------|-------------|
 | `recipe` | [Identifier](../basic_concepts#identifier) | **required** | Recipe ID to grant |
 | `replace` | [Boolean](../basic_concepts#boolean) | optional | If true, replace existing recipe |
-
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 <details>
 <summary>Example</summary>
@@ -978,6 +978,7 @@ Replaces loot tables.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `replace` | Object | **required** | Map of original loot table 闂?replacement loot table IDs |
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 ### `origins:resource`
 
