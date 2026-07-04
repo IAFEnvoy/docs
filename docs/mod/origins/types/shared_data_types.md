@@ -43,18 +43,30 @@ Key binding settings.
 
 A mathematical modifier applied to numeric values.
 
+:::warning
+
+Don't be confused with [AttributeEntry](#attributeentry), which is used for modifying entity attributes. This is a more general-purpose modifier that can be applied to any numeric value.
+
+:::
+
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `value` | [Float](./basic_concepts#float) | **required** | Modifier value |
 | `operation` | [String](./basic_concepts#string) | `add_base_early` | Operation: `add_base_early`, `multiply_base_additive`, `multiply_base_multiplicative`, `multiply_total_additive`, `multiply_total_multiplicative` |
 | `resource` | [Identifier](./basic_concepts#identifier) | optional | Resource to use as the modifier value |
-| `modifier` | Modifier | optional | Sub-modifier applied to the resource value |
+| `modifier` | [Modifier](#modifier) | optional | Sub-modifier applied to the resource value |
 
 ---
 
 ## AttributeEntry
 
 An attribute modifier entry.
+
+:::warning
+
+Don't be confused with [Modifier](#modifier), which is a more general-purpose modifier that can be applied to any numeric value. This is specifically for modifying entity attributes.
+
+:::
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -87,6 +99,16 @@ RGBA color configuration.
 | `blue` | [Float](./basic_concepts#float) | optional | Blue channel (0-1) |
 | `alpha` | [Float](./basic_concepts#float) | optional | Alpha channel (0-1) |
 | `color` | [Integer](./basic_concepts#integer) | optional | ARGB color as a single hex integer (0xAARRGGBB) |
+
+## Shape
+
+Indicate how to select blocks/entities in a region. Should be used with `distance`.
+
+| Value |	Formula |
+|-------|---------|
+| `cube` | `max(x,y,z)` |
+| `star` | `|x| + |y| + |z|` |
+| `sphere` | `x^2 + y^2 + z^2` |
 
 ## Space
 

@@ -505,6 +505,38 @@ Executes an action at an absolute offset.
 | `y` | [Integer](../basic_concepts#integer) | `0` | Y offset |
 | `z` | [Integer](../basic_concepts#integer) | `0` | Z offset |
 
+### `origins:region_apply`
+
+Applies an action to all blocks in a cubic region.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `radius` | [Double](../basic_concepts#double) | `16.0` | Radius |
+| `shape` | [Shape](../shared_data_types#shape) | `cube` | How to select blocks |
+| `block_action` | [Block Action](../action/block_action_types) | **required** | Action to apply |
+| `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition to filter blocks |
+
+
+<details>
+<summary>Example</summary>
+
+```json
+"block_action": {
+    "type": "origins:area_of_effect",
+    "radius": 16,
+    "shape": "cube",
+    "block_action": {
+        "type": "origins:modify_block_state",
+        "property": "waterlogged",
+        "value": false
+    }
+}
+```
+
+This example will make all waterloggable blocks not waterlogged within 16 blocks radius with a shape of a cube.
+
+</details>
+
 ### `origins:relative_offset`
 
 Executes an action at a relative offset based on the entity's facing.
@@ -535,34 +567,16 @@ This example will offset the position of the [Add Block](./#originsadd_block) in
 
 </details>
 
+## Entity Specific
+
 ### `origins:region_apply`
 
-Applies an action to all blocks in a cubic region.
+Applies an action to all entities in a cubic region.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `action` | [Block Action](../action/block_action_types) | **required** | Action to apply |
-| `radius_x` | [Integer](../basic_concepts#integer) | **required** | X radius |
-| `radius_y` | [Integer](../basic_concepts#integer) | **required** | Y radius |
-| `radius_z` | [Integer](../basic_concepts#integer) | **required** | Z radius |
-
-
-<details>
-<summary>Example</summary>
-
-```json
-"block_action": {
-    "type": "origins:area_of_effect",
-    "radius": 16,
-    "shape": "cube",
-    "block_action": {
-        "type": "origins:modify_block_state",
-        "property": "waterlogged",
-        "value": false
-    }
-}
-```
-
-This example will make all waterloggable blocks not waterlogged within 16 blocks radius with a shape of a cube.
-
-</details>
+| `radius` | [Double](../basic_concepts#double) | `16.0` | Radius |
+| `shape` | [Shape](../shared_data_types#shape) | `cube` | How to select entities |
+| `bientity_action` | [BiEntity Action](../action/bientity_action_types) | **required** | Action to apply |
+| `bientity_condition` | [BiEntity Condition](../condition/bientity_condition_types) | optional | Condition to filter entities |
+| `includActor` | [Boolean](../basic_concepts#boolean) | `false` | Whether to include the actor entity in the selection |

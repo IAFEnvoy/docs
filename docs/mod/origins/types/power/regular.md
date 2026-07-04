@@ -276,9 +276,9 @@ _No additional fields beyond the common fields._
 
 ### `origins:edible_item`
 
-:::danger Not yet implemented
+:::caution Unstable
 
-This power type is **not yet implemented** in the Origins (NeoForge). It will be available in a future update.
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
 
 :::
 
@@ -286,8 +286,37 @@ Makes certain items edible for the player.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition for items that become edible |
-| `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
+| `entity_action` | [Entity Action](../action/entity_action_types) | optional | This action will be executed on the player upon consuming an item. |
+| `item_action` | [Item Action](../action/item_action_types) | optional | This action will be executed on the item consumed by the player. |
+| `result_item_action` | [Item Action](../action/item_action_types) | optional | This action will be executed on the item that is given to the player as a result of consuming an item. |
+| `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Will only make the item edible and the specified actions will only be executed if this condition is fulfilled by the item. |
+| `food_properties` | [Food Properties](#food-properties) | **required** | The food component that the item grants upon eating it. |
+| `consume_animation` | [String](../basic_concepts#string) | `eat` | Determines whether the animation effect for consuming the item should be `eating` (`eat`, displays particle effects based on the item) or `drinking` (`drink`, no particle effects.) |
+| `consume_sound` | [Identifier](../basic_concepts#identifier) | `minecraft:entity.generic.eat` | The sound event with this namespace and ID will be played when the item is eaten. |
+| `consuming_time_modifier` | [Modifier](../shared_data_types#modifier) or List | optional | This modifier will be applied on the maximum time the item is being consumed (in ticks). |
+| `priority` | [Integer](../basic_concepts#integer) | `0` | Determines the priority of which the power will apply its modification to the item. Must be higher than 0 if the item is already edible.
+
+#### Food Properties
+
+:::tip
+The actual food saturation level is determined by the `nutrition * saturation * 2` formula.
+:::
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `nutrition` | [Integer](../basic_concepts#integer) | **required** | The amount of hunger the food component recovers upon consumption. |
+| `saturation` | [Float](../basic_concepts#float) | **required** | The amount of saturation to give the player upon consumption. |
+| `can_always_eat` | [Boolean](../basic_concepts#boolean) | `false` | Whether this food component is edible at full hunger or not. |
+| `eat_seconds` | [Float](../basic_concepts#float) | `1.6F` | The time it takes to eat this food component (in seconds). |
+| `using_converts_to` | [ItemStack](../minecraft_data_types.md#item-stack) | optional | If specified, this item stack will be given to the player. |
+| `effects` | List of [PossibleEffect](#possibleeffect) | optional | A status effect and the chance of it triggering upon consuming something with this food component. |
+
+#### PossibleEffect
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `effect` | [MobEffectInstance](../minecraft_data_types#mobeffectinstance) | **required** | The status effect to apply. |
+| `probability` | [Float](../basic_concepts#float) | `1.0F` | The probability of the effect triggering upon consumption. |
 
 <details>
 <summary>Example</summary>
@@ -301,16 +330,15 @@ Makes certain items edible for the player.
             "item": "minecraft:axolotl_bucket"
         }
     },
-    "food_component": {
-        "hunger": 4,
+    "food_properties": {
+        "nutrition": 4,
         "saturation": 1,
-        "meat": true
+        "using_converts_to": {
+            "id": "minecraft:water_bucket",
+            "count": 1
+        }
     },
-    "use_action": "eat",
-    "result_stack": {
-        "item": "minecraft:water_bucket",
-        "amount": 1
-    }
+    "use_action": "eat"
 }
 ```
 

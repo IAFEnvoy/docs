@@ -107,17 +107,6 @@ Fabric's `origins:multiple` power type (which bundled several sub-powers into on
 
 ---
 
-## Not Yet Implemented
-
-These features existed in Fabric but are **not yet available** in NeoForge:
-
-| Feature | Status |
-|---------|--------|
-| `origins:edible_item` power type | :x: Not yet implemented |
-| `origins:modify_enchantment_level` power type | :x: Not yet implemented |
-
----
-
 ## New Features
 
 | Feature | Notes |

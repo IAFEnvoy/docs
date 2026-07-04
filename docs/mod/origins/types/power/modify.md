@@ -289,17 +289,17 @@ Modifies the duration of status effects on the player.
 
 ### `origins:modify_enchantment_level`
 
-:::danger Not yet implemented
+:::caution Unstable
 
-This power type is **not yet implemented** in the Origins (NeoForge). It will be available in a future update.
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
 
 :::
-
 Modifies enchantment levels.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enchantment` | [Identifier](../basic_concepts#identifier) | **required** | Enchantment ID to modify |
+| `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the item must meet |
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to enchantment level |
 
 
