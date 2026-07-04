@@ -588,8 +588,10 @@ Modifies where the player spawns/respawns.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `dimension` | [Identifier](../basic_concepts#identifier) | **required** | Dimension ID for spawning |
+| `dimension_distance_multiplier` | [Float](../basic_concepts#float) | `1.0` | Multiplier for the distance from the spawn point in the dimension |
 | `spawn_strategy` | [String](../basic_concepts#string) | `default` | Spawn strategy: `default` or `center` |
-
+| `biome` | [Identifier](../basic_concepts#identifier) | optional | Biome ID for spawning |
+| `structure` | [Identifier](../basic_concepts#identifier) | optional | Structure ID for spawning |
 
 <details>
 <summary>Example</summary>
