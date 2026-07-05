@@ -8,8 +8,8 @@ sidebar_position: 0
 
 ### Sections
 
-- **[API Reference](api-reference)** — Full method reference for HolderWrapper, Static Shortcuts, and JS type registrations
-- **[Examples](examples)** — Usage examples for managing origins/powers, custom actions, conditions, and JS powers
+- **[API Reference](api-reference)** — Full method reference for HolderWrapper, HelperWrapper (recommended PowerHelper API), Static Shortcuts, and JS type registrations
+- **[Examples](examples)** — Usage examples for managing origins/powers, HelperWrapper, custom actions, conditions, and JS powers
 
 ---
 

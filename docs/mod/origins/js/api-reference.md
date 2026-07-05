@@ -27,6 +27,12 @@ All custom types use the `origins_js:` namespace prefix. For the standard types 
 
 ## HolderWrapper API
 
+:::warning
+
+Using [`HelperWrapper`](#helperwrapper-api-recommended) is **recommended** for querying and manipulating power state. It uses the new PowerHelper API internally, which is safer and more flexible than the older HolderWrapper methods.
+
+:::
+
 Available methods on the wrapper returned by `OriginsJS.getHolder(entity)`:
 
 ### Origin Management
@@ -92,10 +98,102 @@ See [Action On Set (Entity Action)](../types/action/entity_action_types#originsa
 
 ---
 
+## HelperWrapper API (Recommended)
+
+Available on the wrapper returned by `OriginsJS.getHelper(entity)` or `holder.getHelper()`.
+Uses the new PowerHelper API internally. This is the **recommended** way to query and manipulate power state.
+
+### Active State
+
+| Method | Description |
+|--------|-------------|
+| `anyActive()` | Check if ANY power is currently active |
+| `noneActive()` | Check if no power is currently active |
+| `hasActive(powerId)` | Check if a specific power (by ID) has any active instance |
+| `hasNoneActive(powerId)` | Check if a specific power has no active instances |
+
+### Toggle
+
+| Method | Description |
+|--------|-------------|
+| `toggle(key)` | Toggle a power by key (e.g. `"primary"`, `"secondary"`) |
+
+### Stream / List / GetFirst
+
+| Method | Description |
+|--------|-------------|
+| `streamActive(powerId)` | Stream all active instances of the power type |
+| `listActive(powerId)` | List all active instances |
+| `listActive(powerId, filter)` | List active instances matching a predicate |
+| `getFirst(powerId)` | Get the first active instance, or `null` |
+| `getFirst(powerId, filter)` | Get the first active instance matching a predicate, or `null` |
+
+### Execute
+
+`execute(powerId, (holder, power) => { ... })` — Run a callback on every active instance.
+
+| Method | Description |
+|--------|-------------|
+| `execute(powerId, action)` | Execute callback on every active instance |
+| `execute(powerId, filter, action)` | Execute callback on matching active instances |
+
+The callback receives `(OriginDataHolder, Power)`.
+
+### Modify
+
+Apply modifier power effects to a base value. Only works on powers that implement `ModifierPowerHelper` (e.g. `origins:modify_attribute`).
+
+| Method | Description |
+|--------|-------------|
+| `modifyInt(powerId, base)` | Modify an int base value |
+| `modifyInt(powerId, filter, base)` | Modify int with predicate filter |
+| `modifyFloat(powerId, base)` | Modify a float base value |
+| `modifyFloat(powerId, filter, base)` | Modify float with predicate filter |
+| `modifyDouble(powerId, base)` | Modify a double base value |
+| `modifyDouble(powerId, filter, base)` | Modify double with predicate filter |
+
+### Reduce
+
+Fold over all active instances, accumulating a result.
+
+| Method | Description |
+|--------|-------------|
+| `reduceDouble(powerId, identity, reducer)` | Reduce double. reducer: `(holder, acc, power) => newAcc` |
+| `reduce(powerId, identity, reducer, combiner)` | Generic reduce with custom type and combiner |
+
+### Apply Modifiers
+
+Apply a list of Modifiers to a base value.
+
+| Method | Description |
+|--------|-------------|
+| `applyModifiers(modifiers, base)` | Apply modifiers (int/float/double) |
+
+### Component Access
+
+| Method | Description |
+|--------|-------------|
+| `getComponent(powerId, class)` | Get a component attached to a power, or `null` |
+| `getComponentFor(power, class)` | Get component from a specific power instance |
+| `getComponentHolder(powerId, class)` | Get a component holder, or `null` |
+
+### Resource / Cooldown / Entity Set
+
+Same as HolderWrapper, available directly:
+
+| Method | Description |
+|--------|-------------|
+| `getResource(powerId)` / `setResource(powerId, value)` / `addResource(powerId, delta)` | Resource management |
+| `getCooldown(powerId)` / `startCooldown(powerId)` / `canUseCooldown(powerId)` | Cooldown management |
+| `addToEntitySet(powerId, uuid)` / `removeFromEntitySet(powerId, uuid)` / `isInEntitySet(powerId, uuid)` / `getEntitySetSize(powerId)` / `getEntitySetMembers(powerId)` | Entity Set management |
+
+---
+
 ## Static Shortcut Methods
 
 ```javascript
 OriginsJS.getPlayerHolder(player)
+OriginsJS.getHelper(entity)            // Get HelperWrapper directly
 OriginsJS.grantPower(entity, source, powerId)
 OriginsJS.revokePower(entity, source, powerId)
 OriginsJS.hasPower(entity, powerId)
@@ -118,4 +216,9 @@ OriginsJS.addToEntitySet(entity, powerId, uuid)
 OriginsJS.removeFromEntitySet(entity, powerId, uuid)
 OriginsJS.isInEntitySet(entity, powerId, uuid)
 OriginsJS.getEntitySetSize(entity, powerId)
+
+// PowerHelper shortcuts
+OriginsJS.anyPowerActive(entity)
+OriginsJS.noPowerActive(entity)
+OriginsJS.togglePower(entity, key)
 ```

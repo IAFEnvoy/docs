@@ -579,4 +579,4 @@ Applies an action to all entities in a cubic region.
 | `shape` | [Shape](../shared_data_types#shape) | `cube` | How to select entities |
 | `bientity_action` | [BiEntity Action](../action/bientity_action_types) | **required** | Action to apply |
 | `bientity_condition` | [BiEntity Condition](../condition/bientity_condition_types) | optional | Condition to filter entities |
-| `includActor` | [Boolean](../basic_concepts#boolean) | `false` | Whether to include the actor entity in the selection |
+| `includeActor` | [Boolean](../basic_concepts#boolean) | `false` | Whether to include the actor entity in the selection |

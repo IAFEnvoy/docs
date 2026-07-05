@@ -43,6 +43,12 @@ holder.getAllOrigins().forEach(([layer, origin]) => {
 holder.setResource("origins:climbing", 20);
 holder.startCooldown("origins:fireball");
 holder.addToEntitySet("mypack:friends", event.player.getStringUuid());
+
+// HelperWrapper (recommended API)
+let helper = OriginsJS.getHelper(event.player);
+helper.anyActive();
+helper.hasActive("origins:climbing");
+helper.toggle("primary");
 ```
 
 ## Custom Actions
@@ -107,6 +113,53 @@ OriginsJS.registerBlockCondition("mypack:is_block", (level, pos, params) => {
     "id": "mypack:low_health",
     "params": { "threshold": 5 }
 }
+```
+
+## HelperWrapper (Recommended API)
+
+The HelperWrapper provides a cleaner API backed by the new PowerHelper system.
+
+```javascript
+let helper = OriginsJS.getHelper(event.player);
+
+// === Active State ===
+helper.anyActive();                        // any power active?
+helper.noneActive();                       // no powers active?
+helper.hasActive("origins:climbing");      // specific power?
+
+// === Toggle ===
+helper.toggle("primary");                  // toggle primary power
+
+// === Stream / List active powers ===
+let powers = helper.listActive("origins:climbing");
+powers.forEach(p => console.log(p));
+helper.streamActive("origins:climbing").forEach(p => { /* ... */ });
+
+// With filter
+helper.listActive("origins:climbing", p => p.isActive(helper.getRaw()));
+
+// Get first active instance
+let first = helper.getFirst("origins:climbing");
+
+// === Execute callback on active powers ===
+helper.execute("origins:climbing", (holder, power) => {
+    holder.getEntity().tell("You are climbing!");
+});
+
+// === Modify (for modifier powers like modify_attribute) ===
+// Applies all active modifier effects to a base value
+let modified = helper.modifyDouble("origins:modify_attribute", 10.0);
+
+// === Reduce (fold over active powers) ===
+let total = helper.reduceDouble("origins:modify_attribute", 0.0,
+    (holder, acc, power) => acc + power.getModifierValue()
+);
+
+// === Resource / Cooldown / Entity Set (also on HelperWrapper) ===
+helper.setResource("origins:climbing", 20);
+helper.startCooldown("origins:fireball");
+helper.addToEntitySet("mypack:friends", event.player.getStringUuid());
+helper.getEntitySetMembers("mypack:friends").forEach(uuid => console.log(uuid));
 ```
 
 ## Custom Powers
