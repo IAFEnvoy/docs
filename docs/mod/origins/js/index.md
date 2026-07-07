@@ -1,8 +1,15 @@
 ---
 sidebar_position: 0
+title: "Origins JS"
 ---
 
-# Origins JS
+# Origins JS (1.21.1)
+
+:::warning
+
+This document is for 1.21.1, for 1.20.1, see the [1.20 docs](./../origins-js).
+
+:::
 
 **Origins JS** is a KubeJS add-on that allows you to register custom actions, conditions, and powers using JavaScript. All custom types use the `origins_js:` namespace prefix.
 

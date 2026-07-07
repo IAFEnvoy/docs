@@ -129,6 +129,7 @@ const config = {
             items: [
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
+              { to: '/docs/mod/origins-js', label: 'Origins JS' },
               { to: '/docs/mod/rainimator-mod', label: 'Rainimator Mod' },
               { to: '/docs/mod/pendulum', label: 'Pendulum' },
             ]
