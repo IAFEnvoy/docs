@@ -89,7 +89,9 @@ OriginsJS.registerItemAction("damage_item", (world, entity, slotAccess, params) 
 OriginsJS.registerBiEntityAction("copy_effects", (actor, target, params) => {
     if (actor.isLiving() && target.isLiving()) {
         actor.getActiveEffects().forEach(effect => {
-            target.addEffect(new net.minecraft.world.effect.MobEffectInstance(effect));
+            target.addEffect(
+                new net.minecraft.world.effect.MobEffectInstance(effect)
+            );
         });
     }
 });

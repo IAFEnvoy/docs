@@ -26,6 +26,12 @@ Obtain a builder with `OriginsJS.powerBuilder(id)`, chain callback methods, then
 | `.isActive(pred)` | `(LivingEntity, JsonObject) => boolean` | Whether the power is active |
 | `.register()` | — | Finalize (must be called last) |
 
+:::caution
+
+`active` and `inactive` callbacks have limited support on 1.20.1 — they are not true overrides of Apoli's lifecycle. Their behavior depends on external key-binding integration.
+
+:::
+
 ---
 
 ## Regeneration Power
@@ -51,14 +57,17 @@ let nightVisionActive = new java.util.HashMap();
 OriginsJS.powerBuilder("night_vision_toggle")
     .active((entity, params) => {
         entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-            net.minecraft.world.effect.MobEffects.NIGHT_VISION, 999999, 0, false, false));
+            net.minecraft.world.effect.MobEffects.NIGHT_VISION,
+            999999, 0, false, false
+        ));
         nightVisionActive.put(entity.getUUID(), true);
     })
     .inactive((entity, params) => {
         entity.removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
         nightVisionActive.put(entity.getUUID(), false);
     })
-    .isActive((entity, params) => nightVisionActive.getOrDefault(entity.getUUID(), false))
+    .isActive((entity, params) =>
+        nightVisionActive.getOrDefault(entity.getUUID(), false))
     .register();
 ```
 
@@ -71,7 +80,9 @@ OriginsJS.powerBuilder("underwater_speed")
     .tick((entity, params) => {
         if (entity.isUnderWater()) {
             entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED, 20, 1, false, false));
+                net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED,
+                20, 1, false, false
+            ));
         }
     })
     .grant((entity, params) => {

@@ -4,9 +4,6 @@ title: "Global API"
 description: "OriginsJS global object — all top-level methods"
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # Global API
 
 All methods are accessed through the global `OriginsJS` object.

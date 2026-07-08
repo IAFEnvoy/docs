@@ -1,5 +1,6 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
+title: "Installation"
 description: "How to install Origins JS for Minecraft 1.20.1"
 ---
 

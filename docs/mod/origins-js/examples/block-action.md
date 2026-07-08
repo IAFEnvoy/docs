@@ -37,5 +37,5 @@ OriginsJS.registerBlockAction("set_air", (world, pos, direction, params) => {
 |-------|------|-------------|
 | `world` | `Level` | The dimension / world |
 | `pos` | `BlockPos` | Position of the block |
-| `direction` | `Direction?` | Facing direction, or `null` |
+| `direction` | `Direction` or `null` | Facing direction |
 | `params` | `JsonObject` | JSON params from the data file |

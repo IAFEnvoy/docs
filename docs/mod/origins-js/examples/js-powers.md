@@ -83,3 +83,4 @@ OriginsJS.powerBuilder("underwater_speed")
 - Use `new java.util.HashMap()` for persistent state across callbacks.
 - `params` is a Gson `JsonObject` — use `.get("key").getAsFloat()` etc.
 - `tick()` runs every tick — keep it lightweight.
+- `active`/`inactive` callbacks have limited support on 1.20.1.

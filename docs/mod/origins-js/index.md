@@ -11,7 +11,7 @@ This document is for 1.20.1, for 1.21.1, see the [1.21 docs](./origins/js).
 
 :::
 
-Origins JS is a KubeJS addon that lets you register custom **Actions**, **Conditions**, and **Powers** from JavaScript, and directly manipulate entity origins at runtime.
+Origins JS is a KubeJS addon for Minecraft 1.20.1 that lets you register custom **Actions**, **Conditions**, and **Powers** from JavaScript, and directly manipulate entity origins at runtime.
 
 ---
 
@@ -32,9 +32,3 @@ Origins JS is a KubeJS addon that lets you register custom **Actions**, **Condit
 | Fully scripted powers with tick / toggle / grant | `OriginsJS.powerBuilder(...)` |
 | Change origins at runtime | `holder.setOrigin(...)` |
 | Grant / revoke powers on the fly | `holder.grantPower(...)` |
-
----
-
-## Target Version
-
-**Minecraft 1.20.1** · **Origins 1.20.1** (Fabric or Forge) · **KubeJS 2001.6.5**

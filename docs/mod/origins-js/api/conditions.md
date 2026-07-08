@@ -42,7 +42,7 @@ The callback **must return** `true` or `false`. The `id` must match between JS a
 
 ```js
 OriginsJS.registerEntityCondition("is_in_nether", (entity, params) => {
-    return entity.level.dimension() === "minecraft:the_nether";
+    return entity.level.dimension().location().toString() === "minecraft:the_nether";
 });
 ```
 
@@ -99,7 +99,8 @@ OriginsJS.registerBiEntityCondition("is_looking_at", (actor, target, params) => 
 
 ```js
 OriginsJS.registerDamageCondition("bypass_shield", (source, amount, params) => {
-    if (source.isMagic()) return true;
+    // 1.20.1: use source.is(tag) instead of source.isMagic()
+    if (source.is(net.minecraft.tags.DamageTypeTags.IS_MAGIC)) return true;
     return amount > 5.0;
 });
 ```

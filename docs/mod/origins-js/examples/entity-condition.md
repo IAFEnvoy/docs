@@ -11,7 +11,8 @@ description: "registerEntityCondition with parameters"
 ```js
 // kubejs/startup_scripts/conditions.js
 OriginsJS.registerEntityCondition("is_in_nether", (entity, params) => {
-    return entity.level.dimension() === "minecraft:the_nether";
+    // 1.20.1: dimension() returns ResourceKey, use .location().toString()
+    return entity.level.dimension().location().toString() === "minecraft:the_nether";
 });
 
 OriginsJS.registerEntityCondition("health_below", (entity, params) => {

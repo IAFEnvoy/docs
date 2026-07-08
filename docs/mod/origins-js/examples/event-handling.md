@@ -39,9 +39,10 @@ OriginsJS.registerEntityAction("origin_change_particles", (entity, params) => {
 ## Damage condition: bypass shield
 
 ```js
+// 1.20.1: DamageSource uses .is(DamageTypeTags.IS_*) instead of .isMagic()
 OriginsJS.registerDamageCondition("bypass_shield", (source, amount, params) => {
-    if (source.isMagic()) return true;
-    if (source.isExplosion()) return true;
+    if (source.is(net.minecraft.tags.DamageTypeTags.IS_MAGIC)) return true;
+    if (source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)) return true;
     return amount > 5.0;
 });
 ```
@@ -75,3 +76,4 @@ OriginsJS.registerBiomeCondition("is_forest", (biome, pos, params) => {
 - Register actions/conditions in `startup_scripts/`.
 - Use KubeJS events (`PlayerEvents`, `EntityEvents`, etc.) in `server_scripts/`.
 - Combining custom conditions with Origins JSON enables powerful declarative setups.
+- `DamageSource` in 1.20.1 uses `source.is(TagKey)` pattern, **not** `source.isMagic()`.
