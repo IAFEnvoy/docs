@@ -131,7 +131,7 @@ For each entry in the `actions` list:
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `element` | Action | **required** | Action to execute |
-| `weight` | [Integer](../basic_concepts#integer) | 1 | Weight for selection |
+| `weight` | [Integer](../basic_concepts#integer) | `1` | Weight for selection |
 
 <details>
 <summary>Example1</summary>

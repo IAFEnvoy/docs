@@ -100,6 +100,23 @@ RGBA color configuration.
 | `alpha` | [Float](./basic_concepts#float) | optional | Alpha channel (0-1) |
 | `color` | [Integer](./basic_concepts#integer) | optional | ARGB color as a single hex integer (0xAARRGGBB) |
 
+## EffectEntry
+
+Effect configuration for powers that apply effects.
+
+:::tip Note
+
+You can just use a resource location string (e.g. `minecraft:strength`) instead of an EffectEntry object if you don't need to customize the effect.
+
+:::
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `effect` | [Identifier](./basic_concepts#identifier) | **required** | Effect ID |
+| `amplifier` | [Integer](./basic_concepts#integer) | `0` | Base amplifier |
+| `show_particles` | [Boolean](./basic_concepts#boolean) | `true` | Whether to show particles |
+| `show_icon` | [Boolean](./basic_concepts#boolean) | `true` | Whether to show the icon |
+
 ## Shape
 
 Indicate how to select blocks/entities in a region. Should be used with `distance`.
@@ -124,3 +141,71 @@ Coordinate space definition for position-based powers and conditions. Currently 
 | `velocity_normalized` |	Same as velocity, except the axes are normalized. (e.g: the axes' length are brought back to its previous length of 1 if it's of non-zero length, making it not depend on the speed of the entity's movement, only as long as the entity is moving) |
 | `velocity_horizontal` |	Same as velocity, except the vertical velocity is considered to be 0. |
 | `velocity_horizontal_normalized` |	Same as velocity_horizontal, except the axes are normalized. (e.g: the axes' length are brought back to its previous length of 1 if it's of non-zero length) |
+
+## Stat Reference
+
+A `Stat Reference` is a value type used by stat-related actions and conditions to specify which Minecraft statistic to
+target. It accepts two forms: a **simple form** for custom stats, and a **typed form** for stats that have a variant (
+such as block/item/entity type).
+
+### Simple Form
+
+For stats registered under the `minecraft:custom` StatType (e.g. jumps, deaths, distance traveled), just use a
+`ResourceLocation`:
+
+```json
+"minecraft:jump"
+```
+
+```json
+"minecraft:deaths"
+```
+
+### Typed Form
+
+For stats that have a variant value, use an object with `stat_type` and `id`:
+
+| Field       | Type       | Default  | Description                                                  |
+|-------------|------------|----------|--------------------------------------------------------------|
+| `stat_type` | Identifier | required | The Stat Type ID.                                            |
+| `id`        | Identifier | required | The registry ID of the specific block, item, or entity type. |
+
+```json
+{
+  "stat_type": "minecraft:mined",
+  "id": "minecraft:diamond_ore"
+}
+```
+
+### Vanilla Stat Types
+
+| StatType ID           | Value Registry | Description                                     |
+|-----------------------|----------------|-------------------------------------------------|
+| `minecraft:mined`     | Block          | Blocks broken                                   |
+| `minecraft:crafted`   | Item           | Items crafted                                   |
+| `minecraft:used`      | Item           | Items used                                      |
+| `minecraft:broken`    | Item           | Items broken (durability exhausted)             |
+| `minecraft:picked_up` | Item           | Items picked up                                 |
+| `minecraft:dropped`   | Item           | Items dropped                                   |
+| `minecraft:killed`    | EntityType     | Entities killed                                 |
+| `minecraft:killed_by` | EntityType     | Deaths by entity                                |
+| `minecraft:custom`    | CustomStat     | General stats (jump, deaths, walk_one_cm, etc.) |
+
+For the `minecraft:custom` stat type, use the **simple form** (a plain
+`ResourceLocation`) instead of the typed form.
+
+### Weighted Sound Entry
+
+A `Weighted Sound Entry` is a value type used to define a sound with a weight for use in sound-related actions and conditions. It accepts an object with `sound` and `weight` fields:
+
+| Field   | Type       | Default  | Description                                      |
+|---------|------------|----------|--------------------------------------------------|
+| `sound` | [Identifier](./basic_concepts#identifier) or List | required | The sound ID.                                    |
+| `weight`| [Float](./basic_concepts#float) | required | The weight of the sound (higher = more likely to play). |
+
+```json
+{
+  "sound": "minecraft:entity.player.death",
+  "weight": 1.0
+}
+```

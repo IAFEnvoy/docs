@@ -147,16 +147,15 @@ This example will check if the entity is colliding with the positive X or Z face
 
 ### `origins:block_in_radius`
 
-Checks if a block matching a condition exists within a radius.
+Checks for blocks matching a condition within a radius of the entity.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `block_condition` | [Block Condition](../condition/block_condition_types) | **required** | Condition for matching blocks |
+| `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for matching blocks |
 | `radius` | [Integer](../basic_concepts#integer) | **required** | Search radius |
 | `shape` | [String](../basic_concepts#string) | `cube` | `cube` or `sphere` |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>
@@ -213,13 +212,13 @@ Checks if the entity is colliding horizontally with a wall.
 
 ### `origins:command`
 
-:::danger Not yet implemented
+Checks if a command returns a specific result.
 
-This condition type is **not yet implemented** in the Origins (NeoForge). It will be available in a future update.
-
-:::
-
-Checks if a command returns a successful result.
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `command` | [String](../basic_concepts#string) | **required** | Command to execute |
+| `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
+| `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
 ### `origins:creative_flying`
 
@@ -329,6 +328,18 @@ Checks if an equipped item has a specific enchantment.
 This condition will check whether the entity is wearing a full set of Protection IV armor (or better, which might be possible with mods).
 
 </details>
+
+### `origins:entity_in_radius`
+
+Checks for entities matching a condition within a radius of the entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `entity_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition for matching entities |
+| `radius` | [Integer](../basic_concepts#integer) | **required** | Search radius |
+| `shape` | [String](../basic_concepts#string) | `cube` | `cube` or `sphere` |
+| `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
+| `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
 ### `origins:entity_type`
 
@@ -1006,6 +1017,52 @@ Checks if the entity is sneaking.
 
 Checks if the entity is sprinting.
 
+### `origins:stat`
+
+Checks the value of a Minecraft statistic for the entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `stat` | [Stat Reference](../shared_data_types#stat-reference) | **required** | The stat to check. |
+| `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
+| `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
+
+<details>
+<summary>Example 1</summary>
+
+```json
+{
+  "type": "origins:stat",
+  "stat": "minecraft:deaths",
+  "comparison": ">=",
+  "compare_to": 10
+}
+```
+
+This example will check if the player has died 10 or more times.
+
+</details>
+
+<details>
+<summary>Example 2</summary>
+
+```json
+{
+  "type": "origins:stat",
+  "stat": {
+    "stat_type": "minecraft:mined",
+    "id": "minecraft:diamond_ore"
+  },
+  "comparison": ">=",
+  "compare_to": 100
+}
+```
+
+This example will check if the player has mined 100 or more diamond ores.
+
+</details>
+
+
 ### `origins:submerged_in`
 
 Checks if the entity is submerged in a specific fluid.
@@ -1013,7 +1070,6 @@ Checks if the entity is submerged in a specific fluid.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `fluid` | [Identifier](../basic_concepts#identifier) | **required** | Fluid ID |
-
 
 <details>
 <summary>Example</summary>

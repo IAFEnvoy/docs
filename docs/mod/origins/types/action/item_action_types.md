@@ -2,6 +2,34 @@
 
 Item actions perform operations on an item stack.
 
+### `origins:add_enchantment`
+
+Adds enchantments to the item.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enchantment` | Enchantment->int Map | **required** | Enchantment ID to add |
+| `override` | [Boolean](../basic_concepts#boolean) | `false` | Whether to force override existing enchantments |
+
+
+<details>
+<summary>Example</summary>
+
+```json
+"item_action": {
+    "type": "origins:add_enchantment",
+    "enchantment": {
+        "minecraft:sharpness": 5
+    }
+}
+```
+
+This example will add the Sharpness enchantment with a level of 5 to the item.
+
+</details>
+
+### `origins:damage`
+
 ### `origins:consume`
 
 Consumes one or more items from the stack.
@@ -9,7 +37,6 @@ Consumes one or more items from the stack.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `amount` | [Integer](../basic_concepts#integer) | `1` | Amount to consume |
-
 
 <details>
 <summary>Example</summary>

@@ -189,8 +189,6 @@ This example will prevent the entity from equipping any armor which is more powe
 
 Grants conduit power effects while on land.
 
-_No additional fields beyond the common fields._
-
 ### `origins:cooldown`
 
 A power that simply provides a cooldown (usable by other mechanisms).
@@ -220,8 +218,6 @@ This example will set the entity on fire for 1 second, within an interval of 20 
 ### `origins:creative_flight`
 
 Grants creative flight while active.
-
-_No additional fields beyond the common fields._
 
 ### `origins:damage_over_time`
 
@@ -271,8 +267,6 @@ This example will deal damage to the entity if the entity is in water.
 ### `origins:disable_regen`
 
 Disables natural health regeneration.
-
-_No additional fields beyond the common fields._
 
 ### `origins:edible_item`
 
@@ -474,8 +468,6 @@ This example will apply 0.4 exhaustion to the player, which is similar in effect
 
 Grants immunity to fire damage.
 
-_No additional fields beyond the common fields._
-
 <details>
 <summary>Example</summary>
 
@@ -527,8 +519,6 @@ Using [entity action version](../action/entity_action_types#origins:fire_project
 
 Causes the player to freeze (like in powdered snow).
 
-_No additional fields beyond the common fields._
-
 <details>
 <summary>Example</summary>
 
@@ -546,8 +536,6 @@ This example will freeze the entity that has the power.
 
 Prevents the player from flying (elytra, creative flight, etc.).
 
-_No additional fields beyond the common fields._
-
 <details>
 <summary>Example</summary>
 
@@ -564,8 +552,6 @@ The most basic example - always counts the player as being on the ground, allowi
 ### `origins:ignore_water`
 
 Makes the player ignore water for movement (walk through water normally).
-
-_No additional fields beyond the common fields._
 
 <details>
 <summary>Example</summary>
@@ -765,8 +751,6 @@ This example will launch the player into the air, with a cooldown of 30 seconds.
 
 Makes the player treated as being in water for various checks.
 
-_No additional fields beyond the common fields._
-
 ### `origins:model_color`
 
 Changes the player model's render color.
@@ -914,6 +898,40 @@ Spawns particles around the player.
 ```
 
 This example will continuously spawn portal particles on the entity that has the power.
+
+</details>
+
+### `origins:permanent_effect`
+
+:::caution Unstable
+
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+
+:::
+
+Applies permanent effects to the player. Cannot be removed by milk or other means.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `effect` | [EffectEntry](../shared_data_types#effectentry) or List | **required** | Status effect to apply |
+| `allow_higher_level` | [Boolean](../basic_concepts#boolean) | `false` | Whether to allow higher level effects to override this effect |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+    "type": "origins:permanent_effect",
+    "effect": {
+        "effect": "minecraft:strength",
+        "amplifier": 1,
+        "show_particles": false,
+        "show_icon": false
+    }
+}
+```
+
+This example will give the player Strength II, without particles or icon.
 
 </details>
 
@@ -1163,20 +1181,10 @@ Applies status effects that stack based on a condition.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
+| `effect` | [EffectEntry](../shared_data_types#effectentry) or List | **required** | Effects to apply |
 | `min_stacks` | [Integer](../basic_concepts#integer) | `0` | Minimum effect amplifier stacks |
 | `max_stacks` | [Integer](../basic_concepts#integer) | `10` | Maximum effect amplifier stacks |
 | `duration_per_stack` | [Integer](../basic_concepts#integer) | `10` | Effect duration per stack in seconds |
-| `effect` | List of EffectEntry | `[]` | Effects to apply |
-
-EffectEntry fields:
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `id` | [Identifier](../basic_concepts#identifier) | **required** | Effect ID |
-| `amplifier` | [Integer](../basic_concepts#integer) | `0` | Base amplifier |
-| `ambient` | [Boolean](../basic_concepts#boolean) | `false` | Whether the effect is ambient |
-| `show_particles` | [Boolean](../basic_concepts#boolean) | `true` | Whether to show particles |
-| `show_icon` | [Boolean](../basic_concepts#boolean) | `true` | Whether to show the icon |
 
 ### `origins:starting_equipment`
 
@@ -1304,8 +1312,6 @@ This example will allow the entity that has the power to walk on lava similar to
 ### `origins:water_breathing`
 
 Grants water breathing (prevents drowning).
-
-_No additional fields beyond the common fields._
 
 ### `origins:water_vision`
 

@@ -155,8 +155,6 @@ This example will always prevent the entity from dying and then apply the same e
 
 Prevents elytra flight activation.
 
-_No additional fields beyond the common fields._
-
 <details>
 <summary>Example</summary>
 
@@ -365,8 +363,6 @@ This example will prevent the player from sleeping unless they are burning.
 ### `origins:prevent_sprinting`
 
 Prevents the player from sprinting.
-
-_No additional fields beyond the common fields._
 
 <details>
 <summary>Example</summary>

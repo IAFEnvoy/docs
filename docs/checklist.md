@@ -13,7 +13,7 @@ I'll close issues that don't follow this checklist without any explainations sin
 ## About Descriptions
 
 - **Use template on GitHub**: Template can help me collect useful information and solve your problems more quickly.
-- **No AIGC long-winded discourse**: You can use AI to summarize your issue, but **DO NOT** use AI to generate a long text. I will close such issues without any explainations since I don't want to waste my time.
+- **No AIGC long-winded discourse**: You can use AI to summarize your issue, but **DO NOT** use AI to generate a long text.
 
 ## About Mods Support
 

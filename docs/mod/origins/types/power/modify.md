@@ -269,6 +269,23 @@ This example will make the entity that has the power take 2 and a half additiona
 
 </details>
 
+### `origins:modify_death_sound`
+
+:::caution Unstable
+
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+
+:::
+
+Modifies the sound played when the player dies.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `muted` | [Boolean](../basic_concepts#boolean) | `false` | Whether to mute the death sound |
+| `sound` | [Weighted Sound Entry](../shared_data_types#weighted-sound-entry) or list | **required** | Replacement sound to play on death |
+| `volume` | [Float](../basic_concepts#float) | `1.0` | Volume of the sound |
+| `pitch` | [Float](../basic_concepts#float) | `1.0` | Pitch of the sound |
+
 ### `origins:modify_effect_amplifier`
 
 Modifies the amplifier of status effects on the player.
@@ -294,6 +311,7 @@ Modifies the duration of status effects on the player.
 This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
 
 :::
+
 Modifies enchantment levels.
 
 | Field | Type | Default | Description |
@@ -524,6 +542,23 @@ Modifies natural health regeneration.
 This example will double the effectiveness of all healing used on you.
 
 </details>
+
+### `origins:modify_hurt_sound`
+
+:::caution Unstable
+
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+
+:::
+
+Modifies the sound played when the player is hurt.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `muted` | [Boolean](../basic_concepts#boolean) | `false` | Whether to mute the hurt sound |
+| `sound` | [Weighted Sound Entry](../shared_data_types#weighted-sound-entry) or list | **required** | Replacement sound to play when hurt |
+| `volume` | [Float](../basic_concepts#float) | `1.0` | Volume of the sound |
+| `pitch` | [Float](../basic_concepts#float) | `1.0` | Pitch of the sound |
 
 ### `origins:modify_insomnia_ticks`
 

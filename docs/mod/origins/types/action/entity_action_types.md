@@ -89,6 +89,50 @@ This example will apply a Speed I status effect to the entity that would last fo
 
 </details>
 
+### `origins:award_stat`
+
+Increments one or more Minecraft stats. Only works on the server side.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `stat`  | [Stat Reference](../shared_data_types#stat-reference) or List | **required** | Stats to increment |
+| `amount` | [Integer](../basic_concepts#integer) | `1` | Amount to increment |
+
+<details>
+<summary>Example 1</summary>
+
+```json
+{
+  "type": "origins:award_stat",
+  "stat": [
+    "minecraft:jump",
+    "minecraft:sprint_one_cm"
+  ]
+}
+```
+
+This example will increment both the `minecraft:jump` and `minecraft:sprint_one_cm` stats by 1.
+
+</details>
+
+<details>
+<summary>Example 2</summary>
+
+```json
+{
+  "type": "origins:award_stat",
+  "stat": {
+    "stat_type": "minecraft:mined",
+    "id": "minecraft:diamond_ore"
+  },
+  "amount": 20
+}
+```
+
+This example will increment the `minecraft:mined:minecraft:diamond_ore` stat by 20.
+
+</details>
+
 ### `origins:block_action`
 
 Executes a block action at the entity's position.
@@ -148,6 +192,14 @@ Changes a resource value by a specified amount.
 This example will add 1 to the `namespace:example` (`data/namespace/powers/example.json`) power that uses the [Resource (Power Type)](../power/regular).
 
 </details>
+
+### `origins:clear_set`
+
+Clears an entity set.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `set` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Entity set ID |
 
 ### `origins:crafting_table`
 
@@ -772,6 +824,53 @@ Replaces the entity's inventory contents.
 ```
 
 This example will replace the item in the entity's offhand with a Barrier item.
+
+</details>
+
+### `origins:reset_stat`
+
+Resets (sets to 0) one or more Minecraft statistics for the entity. Only
+works on the server side.
+
+The `stat` field accepts either a
+single [Stat Reference](https://docs.iafenvoy.com/docs/mod/origins/types/util/stat_reference) or a list of them.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `stat`  | [Stat Reference](../shared_data_types#stat-reference) or List | **required** | Stats to reset |
+
+<details>
+<summary>Example 1</summary>
+
+```json
+{
+  "type": "origins:reset_stat",
+  "stat": [
+    "minecraft:deaths",
+    "minecraft:jump",
+    "minecraft:walk_one_cm"
+  ]
+}
+```
+
+This example will reset the `minecraft:deaths`, `minecraft:jump`, and `minecraft:walk_one_cm` stats to 0 for the entity.
+
+</details>
+
+<details>
+<summary>Example 2</summary>
+
+```json
+{
+  "type": "origins:reset_stat",
+  "stat": {
+    "stat_type": "minecraft:mined",
+    "id": "minecraft:diamond_ore"
+  }
+}
+```
+
+This example will reset the `minecraft:mined:minecraft:diamond_ore` stat to 0 for the entity.
 
 </details>
 
