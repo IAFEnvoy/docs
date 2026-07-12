@@ -85,7 +85,6 @@ Executes actions when the player breaks a block.
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition the broken block must meet |
 | `only_when_harvested` | [Boolean](../basic_concepts#boolean) | `false` | Only trigger if the block was successfully harvested |
 
-
 <details>
 <summary>Example</summary>
 
@@ -136,7 +135,6 @@ Executes actions when the player right-clicks a block.
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the player |
 | `block_action` | [Block Action](../action/block_action_types) | optional | Action executed on the block |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition the block must meet |
-
 
 <details>
 <summary>Example</summary>
@@ -257,7 +255,6 @@ Executes actions when the player hits an entity.
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition that must be met |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 
-
 <details>
 <summary>Example</summary>
 
@@ -340,7 +337,6 @@ Executes actions when the player lands on the ground.
 |-------|------|---------|-------------|
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the player |
 
-
 <details>
 <summary>Example</summary>
 
@@ -372,7 +368,6 @@ Executes actions when the player wakes up from sleeping.
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the player |
 | `block_action` | [Block Action](../action/block_action_types) | optional | Action at the bed position |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition the bed/hit block must meet |
-
 
 <details>
 <summary>Example</summary>
@@ -466,7 +461,6 @@ Executes actions when the player takes damage.
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Bi-entity action (attacker鈫抪layer) |
 
-
 <details>
 <summary>Example</summary>
 
@@ -497,7 +491,6 @@ Executes actions when the player is hit.
 |-------|------|---------|-------------|
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the player |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
-
 
 <details>
 <summary>Example</summary>
@@ -566,7 +559,6 @@ Executes actions on the attacker when the player is hit.
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
 | `hud_render` | [Hud Render] | optional | HUD display settings |
 
-
 <details>
 <summary>Example</summary>
 
@@ -596,7 +588,6 @@ Executes an action on the player when they hit someone.
 | `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the target must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
 | `hud_render` | [Hud Render] | optional | HUD display settings |
-
 
 <details>
 <summary>Example</summary>
@@ -632,7 +623,6 @@ Executes an action on the player when they kill an entity.
 | `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the killed entity must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
 | `hud_render` | [Hud Render] | optional | HUD display settings |
-
 
 <details>
 <summary>Example</summary>
@@ -678,7 +668,6 @@ Executes an action on the player when they are hit.
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
 | `hud_render` | [Hud Render] | optional | HUD display settings |
 
-
 <details>
 <summary>Example</summary>
 
@@ -717,7 +706,6 @@ Executes an action on the target when the player hits them.
 | `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the target must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
 | `hud_render` | [Hud Render] | optional | HUD display settings |
-
 
 <details>
 <summary>Example</summary>

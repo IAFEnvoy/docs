@@ -12,7 +12,6 @@ Checks if a matching block is adjacent.
 | `comparison` | [String](../basic_concepts#string) | optional | Comparison for matching count |
 | `compare_to` | [Integer](../basic_concepts#integer) | optional | Count to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -44,7 +43,6 @@ Checks the block's blast resistance.
 |-------|------|---------|-------------|
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>
@@ -97,7 +95,6 @@ Checks a specific block state property.
 | `value` | [String](../basic_concepts#string) | **required** | Expected value |
 | `comparison` | [String](../basic_concepts#string) | optional | Comparison type |
 
-
 <details>
 <summary>Example</summary>
 
@@ -134,7 +131,6 @@ Checks the block's distance from coordinates.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Distance value |
 
-
 <details>
 <summary>Example</summary>
 
@@ -167,7 +163,6 @@ Checks the fluid at the block position.
 |-------|------|---------|-------------|
 | `fluid_condition` | [Fluid Condition](../condition/fluid_condition_types) | **required** | Fluid condition to evaluate |
 
-
 <details>
 <summary>Example</summary>
 
@@ -192,7 +187,6 @@ Checks the block's hardness.
 |-------|------|---------|-------------|
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>
@@ -296,7 +290,6 @@ Checks the block entity's NBT data.
 |-------|------|---------|-------------|
 | `nbt` | [String](../basic_concepts#string) | **required** | NBT query string |
 
-
 <details>
 <summary>Example</summary>
 
@@ -332,7 +325,6 @@ Checks the block's slipperiness.
 |-------|------|---------|-------------|
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>

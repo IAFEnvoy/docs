@@ -16,7 +16,6 @@ Executes multiple actions in sequence.
 |-------|------|---------|-------------|
 | `actions` | List of Actions | **required** | Actions to execute |
 
-
 <details>
 <summary>Example1</summary>
 
@@ -76,7 +75,6 @@ Random chance execution.
 | `action` | Action | **required** | Action |
 | `chance` | [Float](../basic_concepts#float) | **required** | Chance (0-1) |
 | `fail_action` | Action | optional | Action if chance fails |
-
 
 <details>
 <summary>Example1</summary>
@@ -211,7 +209,6 @@ Delays execution.
 | `action` | Action | **required** | Action |
 | `ticks` | [Integer](../basic_concepts#integer) | **required** | Delay in ticks |
 
-
 <details>
 <summary>Example1</summary>
 
@@ -265,7 +262,6 @@ Conditional execution.
 | `condition` | Action | **required** | Condition |
 | `if_action` | Action | optional | Action if true |
 | `else_action` | Action | optional | Action if false |
-
 
 <details>
 <summary>Example</summary>
@@ -375,7 +371,6 @@ Specific side only.
 | `action` | Action | **required** | Action |
 | `side` | [String](../basic_concepts#string) | **required** | `client` or `server` |
 
-
 <details>
 <summary>Example1</summary>
 
@@ -423,7 +418,6 @@ Swaps actor and target.
 |-------|------|---------|-------------|
 | `action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action with swapped entities |
 
-
 <details>
 <summary>Example</summary>
 
@@ -447,7 +441,6 @@ Executes an entity action on the actor only.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action on the actor |
-
 
 <details>
 <summary>Example</summary>
@@ -473,7 +466,6 @@ Executes an entity action on the target only.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action on the target |
-
 
 <details>
 <summary>Example</summary>
@@ -516,7 +508,6 @@ Applies an action to all blocks in a cubic region.
 | `block_action` | [Block Action](../action/block_action_types) | **required** | Action to apply |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition to filter blocks |
 
-
 <details>
 <summary>Example</summary>
 
@@ -547,7 +538,6 @@ Executes an action at a relative offset based on the entity's facing.
 | `forward` | [Integer](../basic_concepts#integer) | `0` | Forward offset |
 | `right` | [Integer](../basic_concepts#integer) | `0` | Right offset |
 | `up` | [Integer](../basic_concepts#integer) | `0` | Up offset |
-
 
 <details>
 <summary>Example</summary>

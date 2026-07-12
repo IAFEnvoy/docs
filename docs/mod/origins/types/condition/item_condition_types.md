@@ -20,7 +20,6 @@ Checks the item's armor protection value.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -54,7 +53,6 @@ Checks the item's current durability.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Durability to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -78,13 +76,11 @@ Checks if the item stack is empty.
 
 Checks if the item can be enchanted.
 
-
 ### `origins:food`
 
 Checks if the item is a food item.
 
 ### `origins:fuel`
-
 
 <details>
 <summary>Example</summary>
@@ -118,7 +114,6 @@ Checks if the item has a specific power (from Origins items).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `power` | [Identifier](../basic_concepts#identifier) | **required** | Power ID |
-
 
 <details>
 <summary>Example</summary>
@@ -199,7 +194,6 @@ Checks the number of powers the item has.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -223,7 +217,6 @@ Checks the item's durability as a percentage.
 |-------|------|---------|-------------|
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Percentage (0-1) to compare against |
-
 
 <details>
 <summary>Example</summary>

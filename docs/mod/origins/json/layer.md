@@ -32,7 +32,6 @@ For example, `data/origins/origins/layer/origin.json` has the ID `origins:origin
 Unlike Fabric version, which use `missing_name` and `missing_description` to display when no origin is assign for current layer, Origins (NeoForge) will simply hide the layer in view origin screen if it has no origin.
 :::
 
-
 ### GUI Title
 
 | Field | Type | Default | Description |

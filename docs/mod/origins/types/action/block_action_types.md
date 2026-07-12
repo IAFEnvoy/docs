@@ -10,7 +10,6 @@ Adds a block at the position.
 |-------|------|---------|-------------|
 | `block` | [Identifier](../basic_concepts#identifier) | **required** | Block ID to add |
 
-
 <details>
 <summary>Example</summary>
 
@@ -51,7 +50,6 @@ Executes a command at the block position.
 |-------|------|---------|-------------|
 | `command` | [String](../basic_concepts#string) | **required** | Command to execute |
 
-
 <details>
 <summary>Example</summary>
 
@@ -76,7 +74,6 @@ Creates an explosion at the block position.
 | `destruction_type` | [String](../basic_concepts#string) | `break` | Block destruction: `break`, `destroy`, `none` |
 | `indestructible` | [Block Condition](../condition/block_condition_types) | optional | Blocks immune to the explosion |
 | `create_fire` | [Boolean](../basic_concepts#boolean) | `false` | Whether to create fire |
-
 
 <details>
 <summary>Example</summary>
@@ -106,7 +103,6 @@ Modifies the block's state properties.
 | `enum_values` | List of String | optional | Cycle through values |
 | `cycle` | [Boolean](../basic_concepts#boolean) | `true` | Whether to cycle through enum values |
 
-
 <details>
 <summary>Example</summary>
 
@@ -129,7 +125,6 @@ Sets the block at the position.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `block` | [Identifier](../basic_concepts#identifier) | **required** | Block ID |
-
 
 <details>
 <summary>Example</summary>
@@ -154,7 +149,6 @@ Spawns an entity at the block position.
 | `entity_type` | [Identifier](../basic_concepts#identifier) | **required** | Entity type ID |
 | `tag` | NBT | optional | Initial NBT data |
 | `action` | [Entity Action](../action/entity_action_types) | optional | Action on the spawned entity |
-
 
 <details>
 <summary>Example</summary>

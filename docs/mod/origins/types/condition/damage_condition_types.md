@@ -11,7 +11,6 @@ Checks the damage amount.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Damage amount |
 
-
 <details>
 <summary>Example</summary>
 
@@ -43,7 +42,6 @@ Checks the damage type ID.
 |-------|------|---------|-------------|
 | `value` | [Identifier](../basic_concepts#identifier) | optional | Damage type ID |
 
-
 <details>
 <summary>Example</summary>
 
@@ -67,7 +65,6 @@ Checks if the damage type is in a damage type tag.
 | `tag` | [Identifier](../basic_concepts#identifier) | **required** | Damage type tag ID |
 
 ### `origins:projectile`
-
 
 <details>
 <summary>Example</summary>

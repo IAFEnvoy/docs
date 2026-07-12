@@ -311,7 +311,6 @@ Checks if an equipped item has a specific enchantment.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison for level |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Level to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -371,7 +370,6 @@ Checks an item equipped in a specific slot.
 |-------|------|---------|-------------|
 | `equipment_slot` | [Equipment Slot](../minecraft_data_types#equipment-slot-group) | **required** | Slot to check |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | **required** | Item condition |
-
 
 <details>
 <summary>Example</summary>
@@ -442,7 +440,6 @@ Checks the height of fluid the entity is submerged in.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -468,7 +465,6 @@ Checks the entity's food level.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -491,7 +487,6 @@ Checks the player's game mode.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `gamemode` | [String](../basic_concepts#string) | **required** | Game mode: `survival`, `creative`, `adventure`, `spectator` |
-
 
 <details>
 <summary>Example</summary>
@@ -520,7 +515,6 @@ Checks the entity's current health.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -543,7 +537,6 @@ Checks if the entity's hitbox intersects a specific block.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `block_condition` | [Block Condition](../condition/block_condition_types) | **required** | Block condition |
-
 
 <details>
 <summary>Example</summary>
@@ -571,7 +564,6 @@ Checks if any block matching a condition exists within the entity's bounding box
 | `block_condition` | [Block Condition](../condition/block_condition_types) | **required** | Block condition |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Minimum number of matching blocks |
-
 
 <details>
 <summary>Example</summary>
@@ -624,7 +616,6 @@ Checks the entity's inventory contents.
 | `power` | [Identifier](../basic_concepts#identifier) | optional | Power whose inventory to check |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison for matching count |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Count to compare against |
-
 
 <details>
 <summary>Example</summary>
@@ -696,7 +687,6 @@ Checks if the entity is standing on a block (not in the air).
 |-------|------|---------|-------------|
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition on the block being stood on |
 
-
 ### `origins:on_fire`
 
 Checks if the entity is on fire.
@@ -735,7 +725,6 @@ Checks if the entity has a matching passenger.
 | `comparison` | Comparison | **required** | Comparison with count of matching passengers |
 | `recursive` | [Boolean](../basic_concepts#boolean) | optional | Whether to check recursively |
 
-
 <details>
 <summary>Example</summary>
 
@@ -763,7 +752,6 @@ Recursively checks passengers.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition at each level |
-
 
 <details>
 <summary>Example</summary>
@@ -817,7 +805,6 @@ Checks if the entity has a power of a specific type active.
 |-------|------|---------|-------------|
 | `power_type` | [Identifier](../basic_concepts#identifier) | **required** | Power type ID |
 
-
 <details>
 <summary>Example</summary>
 
@@ -839,7 +826,6 @@ Checks against a predicate defined in the data pack.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `predicate` | [Identifier](../basic_concepts#identifier) | **required** | Predicate resource location |
-
 
 <details>
 <summary>Example</summary>
@@ -874,7 +860,6 @@ Checks the entity's health as a percentage of max.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Percentage value (0-1) |
 
-
 <details>
 <summary>Example</summary>
 
@@ -899,7 +884,6 @@ Checks the value of a resource.
 | `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>
@@ -951,7 +935,6 @@ Checks the player's saturation level.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -977,7 +960,6 @@ Checks a scoreboard score.
 | `objective` | [String](../basic_concepts#string) | **required** | Scoreboard objective name |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>
@@ -1062,7 +1044,6 @@ This example will check if the player has mined 100 or more diamond ores.
 
 </details>
 
-
 ### `origins:submerged_in`
 
 Checks if the entity is submerged in a specific fluid.
@@ -1102,7 +1083,6 @@ Checks the time of day.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Ticks to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1140,7 +1120,6 @@ Checks if the entity is currently using an item.
 |-------|------|---------|-------------|
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition for the item being used |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1166,7 +1145,6 @@ Checks the player's XP levels.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1190,7 +1168,6 @@ Checks the player's XP points (progress toward next level).
 |-------|------|---------|-------------|
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
-
 
 <details>
 <summary>Example</summary>

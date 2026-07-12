@@ -32,7 +32,6 @@ Always true or false.
 |-------|------|---------|-------------|
 | `value` | [Boolean](../basic_concepts#boolean) | `true` | Constant value |
 
-
 <details>
 <summary>Example</summary>
 
@@ -54,7 +53,6 @@ Inverts a condition.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `condition` | [Bi-entity Condition](../condition/bientity_condition_types) | **required** | Condition to invert |
-
 
 <details>
 <summary>Example1</summary>
@@ -127,7 +125,6 @@ Evaluates an entity condition on the actor.
 |-------|------|---------|-------------|
 | `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition on the actor |
 
-
 <details>
 <summary>Example</summary>
 
@@ -151,7 +148,6 @@ Evaluates an entity condition on the target.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition on the target |
-
 
 <details>
 <summary>Example</summary>
@@ -177,7 +173,6 @@ Evaluates an entity condition on both actor and target.
 |-------|------|---------|-------------|
 | `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition for both entities |
 
-
 <details>
 <summary>Example</summary>
 
@@ -202,7 +197,6 @@ Evaluates an entity condition on either entity.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition for either |
-
 
 <details>
 <summary>Example</summary>

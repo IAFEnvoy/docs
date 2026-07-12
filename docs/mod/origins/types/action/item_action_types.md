@@ -11,7 +11,6 @@ Adds enchantments to the item.
 | `enchantment` | Enchantment->int Map | **required** | Enchantment ID to add |
 | `override` | [Boolean](../basic_concepts#boolean) | `false` | Whether to force override existing enchantments |
 
-
 <details>
 <summary>Example</summary>
 
@@ -86,7 +85,6 @@ Modifies the item stack.
 | `modifier` | [Modifier] | **required** | Value modifier |
 | `item_action` | [Item Action](../action/item_action_types) | optional | Nested action |
 
-
 <details>
 <summary>Example</summary>
 
@@ -108,7 +106,6 @@ Removes an enchantment from the item.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enchantment` | [Identifier](../basic_concepts#identifier) | optional | Enchantment ID to remove (all if not specified) |
-
 
 <details>
 <summary>Example</summary>

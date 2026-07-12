@@ -16,7 +16,6 @@ Prevents other entities from interacting with the player.
 |-------|------|---------|-------------|
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition that must be met to block the interaction |
 
-
 <details>
 <summary>Example</summary>
 
@@ -53,7 +52,6 @@ Prevents selecting (mining outline) of certain blocks.
 |-------|------|---------|-------------|
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for blocks prevented from selection |
 
-
 <details>
 <summary>Example</summary>
 
@@ -83,7 +81,6 @@ Prevents using (right-clicking) certain blocks.
 |-------|------|---------|-------------|
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for blocks prevented from use |
 
-
 <details>
 <summary>Example</summary>
 
@@ -109,7 +106,6 @@ Prevents the player from dying.
 |-------|------|---------|-------------|
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition for damage types prevented from killing |
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when death is prevented |
-
 
 <details>
 <summary>Example</summary>
@@ -188,7 +184,6 @@ Prevents collision with certain entities.
 |-------|------|---------|-------------|
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition for entities whose collision is prevented |
 
-
 <details>
 <summary>Example</summary>
 
@@ -209,7 +204,6 @@ Prevents rendering of certain entities.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `entity_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition for entities hidden from rendering |
-
 
 <details>
 <summary>Example</summary>
@@ -238,7 +232,6 @@ Prevents interacting with certain entities.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition for entities prevented from interaction |
-
 
 <details>
 <summary>Example</summary>
@@ -274,7 +267,6 @@ Prevents certain game events from being detected (e.g. sculk sensors).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `event` | Identifier or List | optional | Game event ID(s) to prevent |
-
 
 <details>
 <summary>Example</summary>
@@ -340,7 +332,6 @@ Prevents the player from sleeping in beds.
 | `message` | [Text Component](../minecraft_data_types#text-component) | optional | Custom message shown when sleep is blocked |
 | `set_spawn` | [Boolean](../basic_concepts#boolean) | `true` | Whether the bed can still set the player's spawn point |
 | `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
-
 
 <details>
 <summary>Example</summary>

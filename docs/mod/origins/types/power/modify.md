@@ -16,7 +16,6 @@ Modifies the player's air speed (flying horizontally in creative/elytra).
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to air speed |
 
-
 <details>
 <summary>Example</summary>
 
@@ -70,7 +69,6 @@ Modifies block rendering distance/shape.
 |-------|------|---------|-------------|
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for blocks to apply the modification |
 
-
 <details>
 <summary>Example</summary>
 
@@ -98,7 +96,6 @@ Modifies block breaking speed.
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to break speed |
 | `hardness_modifier` | [Modifier] or List | `[]` | Modifier applied to block hardness |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for affected blocks |
-
 
 <details>
 <summary>Example</summary>
@@ -130,7 +127,6 @@ Modifies camera effects when submerged in fluids.
 | `from` | [Identifier](../basic_concepts#identifier) | **required** | Original camera submersion type |
 | `to` | [Identifier](../basic_concepts#identifier) | **required** | Replacement camera submersion type |
 
-
 <details>
 <summary>Example</summary>
 
@@ -155,7 +151,6 @@ Modifies crafting results.
 | `recipe` | [Identifier](../basic_concepts#identifier) | **required** | Recipe ID to modify |
 | `result` | [Item Stack](../minecraft_data_types#item-stack) | optional | Replacement result item |
 | `result_action` | [Item Action](../action/item_action_types) | optional | Action applied to the crafted result |
-
 
 <details>
 <summary>Example</summary>
@@ -187,7 +182,6 @@ Modifies damage dealt by the player.
 | `self_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the attacker |
 | `target_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the target |
 | `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Bi-entity action between attacker and target |
-
 
 <details>
 <summary>Example</summary>
@@ -225,7 +219,6 @@ Modifies damage taken by the player.
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to damage taken |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `attacker_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the attacker must meet |
-
 
 <details>
 <summary>Example</summary>
@@ -320,7 +313,6 @@ Modifies enchantment levels.
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the item must meet |
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to enchantment level |
 
-
 <details>
 <summary>Example</summary>
 
@@ -346,7 +338,6 @@ Modifies exhaustion gain.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to exhaustion |
-
 
 <details>
 <summary>Example</summary>
@@ -375,7 +366,6 @@ Modifies falling damage and speed.
 | `take_fall_damage` | [Boolean](../basic_concepts#boolean) | `true` | Whether the player takes fall damage |
 | `velocity` | [Float](../basic_concepts#float) | optional | Override fall velocity |
 
-
 <details>
 <summary>Example</summary>
 
@@ -402,7 +392,6 @@ Modifies how fluids are rendered around the player.
 |-------|------|---------|-------------|
 | `fluid` | [Identifier](../basic_concepts#identifier) | **required** | Fluid ID |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition at the fluid position |
-
 
 <details>
 <summary>Example</summary>
@@ -431,7 +420,6 @@ Modifies food value when eating.
 | `food_modifier` | [Modifier] or List | `[]` | Modifier applied to food restored |
 | `saturation_modifier` | [Modifier] or List | `[]` | Modifier applied to saturation restored |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the food item must meet |
-
 
 <details>
 <summary>Example</summary>
@@ -471,7 +459,6 @@ Modifies grindstone results.
 | `result_action` | [Item Action](../action/item_action_types) | optional | Action applied to the grindstone result |
 | `result` | [Item Stack](../minecraft_data_types#item-stack) | optional | Replacement result item |
 
-
 <details>
 <summary>Example</summary>
 
@@ -498,7 +485,6 @@ Modifies harvest behavior (drops, silk touch, fortune).
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for affected blocks |
 | `allow` | [Boolean](../basic_concepts#boolean) | `true` | Whether harvesting is allowed |
 
-
 <details>
 <summary>Example</summary>
 
@@ -524,7 +510,6 @@ Modifies natural health regeneration.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to healing |
-
 
 <details>
 <summary>Example</summary>
@@ -568,7 +553,6 @@ Modifies phantom insomnia ticks.
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to insomnia ticks |
 
-
 <details>
 <summary>Example</summary>
 
@@ -593,7 +577,6 @@ Modifies jump height.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to jump velocity |
-
 
 <details>
 <summary>Example</summary>
@@ -653,7 +636,6 @@ Modifies projectile damage.
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to projectile damage |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 
-
 <details>
 <summary>Example</summary>
 
@@ -684,7 +666,6 @@ Modifies how slippery blocks are for the player.
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to block slipperiness |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for affected blocks |
 
-
 <details>
 <summary>Example</summary>
 
@@ -713,7 +694,6 @@ Modifies the player's velocity in response to knockback, explosions, etc.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to velocity changes |
-
 
 <details>
 <summary>Example</summary>
@@ -744,7 +724,6 @@ Modifies experience gained.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] or List | `[]` | Modifier applied to XP gain |
-
 
 <details>
 <summary>Example</summary>

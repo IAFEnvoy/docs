@@ -14,7 +14,6 @@ Checks if the biome is in a biome tag.
 |-------|------|---------|-------------|
 | `tag` | [Identifier](../basic_concepts#identifier) | **required** | Biome tag ID |
 
-
 <details>
 <summary>Example</summary>
 
@@ -36,7 +35,6 @@ Checks the biome's precipitation type.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `precipitation` | [String](../basic_concepts#string) | **required** | `none`, `rain`, or `snow` |
-
 
 <details>
 <summary>Example</summary>
@@ -63,7 +61,6 @@ Checks the biome's temperature.
 |-------|------|---------|-------------|
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Temperature value |
-
 
 <details>
 <summary>Example</summary>

@@ -77,7 +77,6 @@ Checks the relative rotation/angle between actor and target.
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Float](../basic_concepts#float) | **required** | Angle to compare against |
 
-
 <details>
 <summary>Example</summary>
 

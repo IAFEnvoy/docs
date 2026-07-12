@@ -26,7 +26,6 @@ Transfers attribute modifiers between entities.
 | `class` | [Identifier](../basic_concepts#identifier) | **required** | Power class to look for on other entities |
 | `modifier` | [Modifier] or List | `[]` | Multiplier for transferred values |
 
-
 <details>
 <summary>Example</summary>
 
@@ -106,7 +105,6 @@ Applies attribute modifiers when active (condition-dependent).
 | `modifier` | [AttributeEntry] or List | `[]` | Attribute modifier entries |
 | `update_health` | [Boolean](../basic_concepts#boolean) | `true` | Whether to update max health after applying |
 
-
 <details>
 <summary>Example</summary>
 
@@ -141,7 +139,6 @@ Restricts armor based on conditions, dropping incompatible pieces.
 | `legs` | [Item Condition](../condition/item_condition_types) | optional | Condition for leggings to keep |
 | `feet` | [Item Condition](../condition/item_condition_types) | optional | Condition for boots to keep |
 | `tick_rate` | [Integer](../basic_concepts#integer) | `20` | Interval in ticks for checking equipment |
-
 
 <details>
 <summary>Example</summary>
@@ -229,7 +226,6 @@ Damages the player at regular intervals.
 | `damage` | [Float](../basic_concepts#float) | `1.0` | Amount of damage per tick |
 | `damage_type` | [Identifier](../basic_concepts#identifier) | **required** | Custom damage type |
 | `damage_easy` | [Float](../basic_concepts#float) | optional | Damage on Easy difficulty |
-
 
 <details>
 <summary>Example</summary>
@@ -349,7 +345,6 @@ Grants immunity to specific status effects.
 | `effect` | [Identifier](../basic_concepts#identifier) or List | **required** | Effect ID(s) to be immune to |
 | `inverted` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, only the listed effects apply |
 
-
 <details>
 <summary>Example</summary>
 
@@ -401,7 +396,6 @@ Makes other entities glow (outline) for the player.
 | `use_teams` | [Boolean](../basic_concepts#boolean) | `true` | Whether to use team colors |
 | `color` | [Integer](../basic_concepts#integer) | `0xFFFFFFFF` | ARGB color for the glow outline |
 
-
 <details>
 <summary>Example</summary>
 
@@ -448,7 +442,6 @@ Adds exhaustion to the player at regular intervals.
 |-------|------|---------|-------------|
 | `interval` | [Integer](../basic_concepts#integer) | `20` | Interval in ticks |
 | `exhaustion` | [Float](../basic_concepts#float) | `1.0` | Exhaustion amount per interval |
-
 
 <details>
 <summary>Example</summary>
@@ -588,7 +581,6 @@ Makes the player invisible.
 | `render_armor` | [Boolean](../basic_concepts#boolean) | `false` | Whether armor is rendered while invisible |
 | `render_outline` | [Boolean](../basic_concepts#boolean) | `false` | Whether the player outline is rendered |
 
-
 <details>
 <summary>Example</summary>
 
@@ -614,7 +606,6 @@ Grants damage invulnerability.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition for damage types the player is vulnerable to (unless `inverted`) |
-
 
 <details>
 <summary>Example</summary>
@@ -644,7 +635,6 @@ Combines two items on right-click.
 | `result` | [Item Stack](../minecraft_data_types#item-stack) | optional | Result item |
 | `result_action` | [Item Action](../action/item_action_types) | optional | Action applied to the result |
 | `using_item_stack_amount` | [Integer](../basic_concepts#integer) | `1` | Consumed amount from the using item |
-
 
 <details>
 <summary>Example</summary>
@@ -686,7 +676,6 @@ Keeps the player's inventory on death.
 | `slots` | List of Integer | optional | Specific inventory slot indices to keep |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition for items to keep |
 
-
 <details>
 <summary>Example</summary>
 
@@ -722,7 +711,6 @@ Launches the player into the air on key press.
 | `hud_render` | [Hud Render] | optional | HUD display settings |
 | `sound` | [Identifier](../basic_concepts#identifier) | optional | Sound event ID played on launch |
 | `key` | [Key] | optional | Key binding settings |
-
 
 <details>
 <summary>Example</summary>
@@ -762,7 +750,6 @@ Changes the player model's render color.
 | `blue` | [Float](../basic_concepts#float) | optional | Blue channel (0-1) |
 | `alpha` | [Float](../basic_concepts#float) | optional | Alpha channel (0-1) |
 | `color` | [Integer](../basic_concepts#integer) | optional | ARGB color as a single integer |
-
 
 <details>
 <summary>Example</summary>
@@ -826,7 +813,6 @@ Grants night vision.
 |-------|------|---------|-------------|
 | `strength` | [Float](../basic_concepts#float) | `1.0` | Night vision strength (0-1) |
 
-
 <details>
 <summary>Example</summary>
 
@@ -852,7 +838,6 @@ Renders an overlay texture on the screen.
 | `draw_phase` | [String](../basic_concepts#string) | optional | Drawing phase |
 | `texture_width` | [Integer](../basic_concepts#integer) | optional | Override texture width |
 | `texture_height` | [Integer](../basic_concepts#integer) | optional | Override texture height |
-
 
 <details>
 <summary>Example</summary>
@@ -884,7 +869,6 @@ Spawns particles around the player.
 |-------|------|---------|-------------|
 | `particle` | [Particle Option](../minecraft_data_types#particle-option) | **required** | Particle type and params |
 | `frequency` | [Integer](../basic_concepts#integer) | `4` | How often to spawn particles (ticks per spawn) |
-
 
 <details>
 <summary>Example</summary>
@@ -946,7 +930,6 @@ Allows the player to phase through blocks.
 | `render_type` | [String](../basic_concepts#string) | `blindness` | Visual effect: `blindness` or `remove_blocks` |
 | `view_distance` | [Float](../basic_concepts#float) | `10.0` | How far the player can see while phasing |
 | `phase_down_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition to phase downward (default requires sneaking) |
-
 
 <details>
 <summary>Example</summary>
@@ -1051,7 +1034,6 @@ Prevents equipping armor that does not match conditions.
 | `feet` | [Item Condition](../condition/item_condition_types) | optional | Condition for allowed boots |
 | `tick_rate` | [Integer](../basic_concepts#integer) | `20` | Interval for checking equipment |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1103,7 +1085,6 @@ Makes the player glow.
 | `use_teams` | [Boolean](../basic_concepts#boolean) | `true` | Whether to use team colors |
 | `color` | [Integer](../basic_concepts#integer) | optional | ARGB color for the glow |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1133,7 +1114,6 @@ Applies a post-processing shader to the player's view.
 | `shader` | [Identifier](../basic_concepts#identifier) | **required** | Shader resource location |
 | `toggleable` | [Boolean](../basic_concepts#boolean) | optional | Whether the shader can be toggled |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1156,7 +1136,6 @@ Causes the player's camera to shake.
 |-------|------|---------|-------------|
 | `shake_intensity` | [Float](../basic_concepts#float) | optional | Shake intensity |
 | `shake_frequency` | [Float](../basic_concepts#float) | optional | Shake frequency |
-
 
 <details>
 <summary>Example</summary>
@@ -1195,7 +1174,6 @@ Grants items when the power is gained.
 | `stack` | [PositionedItemStack] or List | **required** | Items to grant, optionally with slot position |
 | `recurrent` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, items are also granted on respawn |
 
-
 <details>
 <summary>Example</summary>
 
@@ -1230,7 +1208,6 @@ Changes the player's status bar textures (hearts, hunger, etc.).
 | `texture` | [Identifier](../basic_concepts#identifier) | **required** | Texture location |
 | `draw_mode` | [String](../basic_concepts#string) | optional | Drawing mode |
 | `priority` | [Integer](../basic_concepts#integer) | `0` | Draw priority |
-
 
 <details>
 <summary>Example</summary>
@@ -1287,7 +1264,6 @@ Allows the player to walk on a specific fluid.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `fluid` | [Identifier](../basic_concepts#identifier) | **required** | Fluid ID to walk on (e.g. `minecraft:water`) |
-
 
 <details>
 <summary>Example</summary>

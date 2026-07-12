@@ -149,7 +149,6 @@ Executes a block action at a specific offset from the entity.
 |-------|------|---------|-------------|
 | `block_action` | [Block Action](../action/block_action_types) | optional | Action to execute |
 
-
 <details>
 <summary>Example</summary>
 
@@ -176,7 +175,6 @@ Changes a resource value by a specified amount.
 | `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
 | `change` | [Integer](../basic_concepts#integer) | **required** | Amount to change (can be negative) |
 | `operation` | [String](../basic_concepts#string) | optional | Operation: `add` or `set` |
-
 
 <details>
 <summary>Example</summary>
@@ -249,7 +247,6 @@ Drops the entity's inventory.
 | `retain_ownership` | [Boolean](../basic_concepts#boolean) | `true` | Whether dropped items retain ownership |
 | `amount` | [Integer](../basic_concepts#integer) | `0` | Max items to drop (0 = all) |
 
-
 <details>
 <summary>Example</summary>
 
@@ -270,7 +267,6 @@ Emits a game event at the entity's location.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `action` | [Identifier](../basic_concepts#identifier) | **required** | Game event ID |
-
 
 <details>
 <summary>Example</summary>
@@ -298,7 +294,6 @@ Executes an item action on the entity's equipped item.
 |-------|------|---------|-------------|
 | `slot` | [Equipment Slot Group](../minecraft_data_types#equipment-slot-group) | **required** | Which equipment slot |
 | `action` | [Item Action](../action/item_action_types) | **required** | Action to execute |
-
 
 <details>
 <summary>Example</summary>
@@ -487,7 +482,6 @@ Grants an advancement to the player.
 |-------|------|---------|-------------|
 | `advancement` | [Identifier](../basic_concepts#identifier) | **required** | Advancement ID |
 
-
 <details>
 <summary>Example</summary>
 
@@ -510,7 +504,6 @@ Grants a power to the entity.
 |-------|------|---------|-------------|
 | `power` | [Identifier](../basic_concepts#identifier) | **required** | Power ID |
 | `source` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Source identifier for the power |
-
 
 <details>
 <summary>Example</summary>
@@ -557,7 +550,6 @@ Modifies the entity's death tick counter.
 |-------|------|---------|-------------|
 | `modifier` | [Modifier] | **required** | Modifier applied to death ticks |
 
-
 <details>
 <summary>Example</summary>
 
@@ -589,7 +581,6 @@ Modifies items in the entity's inventory.
 | `process_mode` | [String](../basic_concepts#string) | `STACKS` | `STACKS` or `ITEMS` |
 | `limit` | [Integer](../basic_concepts#integer) | `0` | Max items to process (0 = unlimited) |
 
-
 <details>
 <summary>Example</summary>
 
@@ -617,7 +608,6 @@ Modifies a resource value.
 | `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
 | `modifier` | [Modifier] | **required** | Modifier applied |
 
-
 <details>
 <summary>Example</summary>
 
@@ -644,7 +634,6 @@ Executes an action on the entity's passengers.
 |-------|------|---------|-------------|
 | `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute |
 | `recursive` | [Boolean](../basic_concepts#boolean) | optional | Whether to apply recursively |
-
 
 <details>
 <summary>Example</summary>
@@ -674,7 +663,6 @@ Plays a sound.
 | `category` | [String](../basic_concepts#string) | optional | Sound category (e.g. `neutral`, `player`, `hostile`, `ambient`) |
 | `volume` | [Float](../basic_concepts#float) | `1.0` | Sound volume |
 | `pitch` | [Float](../basic_concepts#float) | `1.0` | Sound pitch |
-
 
 <details>
 <summary>Example</summary>
@@ -730,7 +718,6 @@ Performs a raycast and executes actions on hit entities/blocks.
 | `command_hit_offset` | [Float](../basic_concepts#float) | optional | Offset from hit for command execution |
 | `command_along_ray_only_on_hit` | [Boolean](../basic_concepts#boolean) | `true` | Only show along-ray particles on hit |
 
-
 <details>
 <summary>Example</summary>
 
@@ -780,7 +767,6 @@ Removes a status effect.
 |-------|------|---------|-------------|
 | `effect` | List of [Identifier](../basic_concepts#identifier) | optional | Effect IDs to remove (all if not specified) |
 
-
 <details>
 <summary>Example</summary>
 
@@ -808,7 +794,6 @@ Replaces the entity's inventory contents.
 | `slot` | List of Integer | optional | Specific slots to replace |
 | `merge_component` | [Boolean](../basic_concepts#boolean) | `true` | Whether to merge data components |
 | `stack` | [Item Stack](../minecraft_data_types#item-stack) | **required** | Replacement item |
-
 
 <details>
 <summary>Example</summary>
@@ -907,7 +892,6 @@ Revokes a power from the entity.
 | `power` | [Identifier](../basic_concepts#identifier) | optional | Power whose power source to revoke from |
 | `source` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Source identifier to revoke |
 
-
 <details>
 <summary>Example</summary>
 
@@ -931,7 +915,6 @@ Executes an action on the entity being ridden.
 |-------|------|---------|-------------|
 | `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute |
 | `recursive` | [Boolean](../basic_concepts#boolean) | optional | Whether to apply recursively |
-
 
 <details>
 <summary>Example</summary>
@@ -971,7 +954,6 @@ Sets the entity's fall distance (affects fall damage).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `fall_distance` | [Float](../basic_concepts#float) | **required** | New fall distance |
-
 
 <details>
 <summary>Example</summary>
@@ -1019,7 +1001,6 @@ Spawns an effect cloud at the entity's position.
 | `radius` | [Float](../basic_concepts#float) | `3.0` | Cloud radius |
 | `radius_on_use` | [Float](../basic_concepts#float) | `0.5` | Radius increase on use |
 | `wait_time` | [Integer](../basic_concepts#integer) | optional | Cloud duration |
-
 
 <details>
 <summary>Example</summary>
@@ -1082,7 +1063,6 @@ Spawns particles at the entity's position.
 | `offset_x` | [Float](../basic_concepts#float) | `0.0` | X offset |
 | `offset_y` | [Float](../basic_concepts#float) | `0.0` | Y offset |
 | `offset_z` | [Float](../basic_concepts#float) | `0.0` | Z offset |
-
 
 <details>
 <summary>Example</summary>
