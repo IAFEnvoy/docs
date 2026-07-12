@@ -281,21 +281,30 @@ Modifies the sound played when the player dies.
 
 ### `origins:modify_effect_amplifier`
 
-Modifies the amplifier of status effects on the player.
+Modifies the amplifier of effects apply to the player.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `effect` | [Identifier](../basic_concepts#identifier) | optional | Effect ID to modify |
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to the effect amplifier |
+| `effect` | [Identifier](../basic_concepts#identifier) or List | `[]` | Effect ID to modify |
+| `modifier` | [Modifier] or List | **required** | Modifier applied to the effect amplifier |
 
 ### `origins:modify_effect_duration`
 
-Modifies the duration of status effects on the player.
+Modifies the duration of effects apply to the player.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `effect` | [Identifier](../basic_concepts#identifier) | optional | Effect ID to modify |
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to the effect duration |
+| `effect` | [Identifier](../basic_concepts#identifier) or List | `[]` | Effect ID to modify |
+| `modifier` | [Modifier] or List | **required** | Modifier applied to the effect duration |
+
+### `origins:modify_effect_type`
+
+Modifies the type of effects apply to the player.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `effect` | [Identifier](../basic_concepts#identifier) or List | `[]` | Effect ID to modify |
+| `new_effect` | [Identifier](../basic_concepts#identifier) | **required** | The new effect type to apply |
 
 ### `origins:modify_enchantment_level`
 
