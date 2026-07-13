@@ -14,7 +14,7 @@ Modifies the player's air speed (flying horizontally in creative/elytra).
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to air speed |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to air speed |
 
 <details>
 <summary>Example</summary>
@@ -40,7 +40,7 @@ Applies an attribute modifier while active.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `attribute` | [Identifier](../basic_concepts#identifier) | **required** | Minecraft attribute ID (e.g. `minecraft:generic.max_health`) |
-| `modifier` | [Attribute Modifier] or List | **required** | The attribute modifier(s) to apply |
+| `modifier` | [Attribute Modifier](../shared_data_types#attributeentry) or List | **required** | The attribute modifier(s) to apply |
 
 <details>
 <summary>Example</summary>
@@ -93,8 +93,8 @@ Modifies block breaking speed.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to break speed |
-| `hardness_modifier` | [Modifier] or List | `[]` | Modifier applied to block hardness |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to break speed |
+| `hardness_modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to block hardness |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for affected blocks |
 
 <details>
@@ -216,7 +216,7 @@ Modifies damage taken by the player.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to damage taken |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to damage taken |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `attacker_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the attacker must meet |
 
@@ -286,7 +286,7 @@ Modifies the amplifier of effects apply to the player.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `effect` | [Identifier](../basic_concepts#identifier) or List | `[]` | Effect ID to modify |
-| `modifier` | [Modifier] or List | **required** | Modifier applied to the effect amplifier |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | **required** | Modifier applied to the effect amplifier |
 
 ### `origins:modify_effect_duration`
 
@@ -295,7 +295,7 @@ Modifies the duration of effects apply to the player.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `effect` | [Identifier](../basic_concepts#identifier) or List | `[]` | Effect ID to modify |
-| `modifier` | [Modifier] or List | **required** | Modifier applied to the effect duration |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | **required** | Modifier applied to the effect duration |
 
 ### `origins:modify_effect_type`
 
@@ -320,7 +320,7 @@ Modifies enchantment levels.
 |-------|------|---------|-------------|
 | `enchantment` | [Identifier](../basic_concepts#identifier) | **required** | Enchantment ID to modify |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the item must meet |
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to enchantment level |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to enchantment level |
 
 <details>
 <summary>Example</summary>
@@ -346,7 +346,7 @@ Modifies exhaustion gain.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to exhaustion |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to exhaustion |
 
 <details>
 <summary>Example</summary>
@@ -426,8 +426,8 @@ Modifies food value when eating.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `food_modifier` | [Modifier] or List | `[]` | Modifier applied to food restored |
-| `saturation_modifier` | [Modifier] or List | `[]` | Modifier applied to saturation restored |
+| `food_modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to food restored |
+| `saturation_modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to saturation restored |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition the food item must meet |
 
 <details>
@@ -518,7 +518,7 @@ Modifies natural health regeneration.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to healing |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to healing |
 
 <details>
 <summary>Example</summary>
@@ -560,7 +560,7 @@ Modifies phantom insomnia ticks.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to insomnia ticks |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to insomnia ticks |
 
 <details>
 <summary>Example</summary>
@@ -585,7 +585,7 @@ Modifies jump height.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to jump velocity |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to jump velocity |
 
 <details>
 <summary>Example</summary>
@@ -642,7 +642,7 @@ Modifies projectile damage.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to projectile damage |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to projectile damage |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 
 <details>
@@ -672,7 +672,7 @@ Modifies how slippery blocks are for the player.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to block slipperiness |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to block slipperiness |
 | `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition for affected blocks |
 
 <details>
@@ -702,7 +702,7 @@ Modifies the player's velocity in response to knockback, explosions, etc.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to velocity changes |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to velocity changes |
 
 <details>
 <summary>Example</summary>
@@ -732,7 +732,7 @@ Modifies experience gained.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [Modifier] or List | `[]` | Modifier applied to XP gain |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier applied to XP gain |
 
 <details>
 <summary>Example</summary>

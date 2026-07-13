@@ -521,8 +521,8 @@ An active ability that executes an entity action on key press, with cooldown.
 |-------|------|---------|-------------|
 | `entity_action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute when activated |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings for the cooldown |
-| `key` | [Key] | optional | Key binding settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings for the cooldown |
+| `key` | [Key](../shared_data_types#key) | optional | Key binding settings |
 
 <details>
 <summary>Example</summary>
@@ -557,7 +557,7 @@ Executes actions on the attacker when the player is hit.
 | `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the attacker |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 
 <details>
 <summary>Example</summary>
@@ -587,7 +587,7 @@ Executes an action on the player when they hit someone.
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the target must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 
 <details>
 <summary>Example</summary>
@@ -622,7 +622,7 @@ Executes an action on the player when they kill an entity.
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the killing damage must meet |
 | `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the killed entity must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 
 <details>
 <summary>Example</summary>
@@ -666,7 +666,7 @@ Executes an action on the player when they are hit.
 | `entity_action` | [Entity Action](../action/entity_action_types) | **required** | Action executed on the player |
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 
 <details>
 <summary>Example</summary>
@@ -705,7 +705,7 @@ Executes an action on the target when the player hits them.
 | `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the damage must meet |
 | `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the target must meet |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 
 <details>
 <summary>Example</summary>

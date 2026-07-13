@@ -83,7 +83,7 @@ An item stack with an optional inventory slot position.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `stack` | Item Stack | **required** | The item stack |
+| `stack` | [Item Stack](./minecraft_data_types#item-stack) | **required** | The item stack |
 | `slot` | [Integer](./basic_concepts#integer) | optional | Inventory slot index to place the item into |
 
 ---

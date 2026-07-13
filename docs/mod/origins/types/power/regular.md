@@ -14,7 +14,7 @@ Applies attribute modifiers when the power is active, even without the condition
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [AttributeEntry] or List | `[]` | Attribute modifier entries |
+| `modifier` | [AttributeEntry](../shared_data_types#attributeentry) or List | `[]` | Attribute modifier entries |
 | `update_health` | [Boolean](../basic_concepts#boolean) | `true` | Whether to update max health after applying |
 
 ### `origins:attribute_modify_transfer`
@@ -24,7 +24,7 @@ Transfers attribute modifiers between entities.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `class` | [Identifier](../basic_concepts#identifier) | **required** | Power class to look for on other entities |
-| `modifier` | [Modifier] or List | `[]` | Multiplier for transferred values |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Multiplier for transferred values |
 
 <details>
 <summary>Example</summary>
@@ -102,7 +102,7 @@ Applies attribute modifiers when active (condition-dependent).
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `modifier` | [AttributeEntry] or List | `[]` | Attribute modifier entries |
+| `modifier` | [AttributeEntry](../shared_data_types#attributeentry) or List | `[]` | Attribute modifier entries |
 | `update_health` | [Boolean](../basic_concepts#boolean) | `true` | Whether to update max health after applying |
 
 <details>
@@ -193,7 +193,7 @@ A power that simply provides a cooldown (usable by other mechanisms).
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown duration in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 
 <details>
 <summary>Example</summary>
@@ -496,7 +496,7 @@ Using [entity action version](../action/entity_action_types#origins:fire_project
 |-------|------|---------|-------------|
 | `entity_type` | [Identifier](../basic_concepts#identifier) | **required** | Entity type ID of the projectile |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 | `count` | [Integer](../basic_concepts#integer) | `1` | Number of projectiles to fire |
 | `interval` | [Integer](../basic_concepts#integer) | `0` | Interval between projectiles when firing multiple |
 | `start_delay` | [Integer](../basic_concepts#integer) | `0` | Delay before the first projectile |
@@ -504,7 +504,7 @@ Using [entity action version](../action/entity_action_types#origins:fire_project
 | `divergence` | [Float](../basic_concepts#float) | `1.0` | Random spread angle |
 | `sound` | [Identifier](../basic_concepts#identifier) | optional | Sound event ID played on fire |
 | `tag` | NBT | optional | NBT data applied to the projectile |
-| `key` | [Key] | optional | Key binding settings |
+| `key` | [Key](../shared_data_types#key) | optional | Key binding settings |
 | `projectile_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the projectile |
 | `shooter_action` | [Entity Action](../action/entity_action_types) | optional | Action executed on the shooter |
 
@@ -673,7 +673,7 @@ Keeps the player's inventory on death.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `slots` | List of Integer | optional | Specific inventory slot indices to keep |
+| `slots` | List of [Integer](../basic_concepts#integer) | optional | Specific inventory slot indices to keep |
 | `item_condition` | [Item Condition](../condition/item_condition_types) | optional | Condition for items to keep |
 
 <details>
@@ -708,9 +708,9 @@ Launches the player into the air on key press.
 |-------|------|---------|-------------|
 | `speed` | [Float](../basic_concepts#float) | **required** | Upward launch speed |
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Cooldown in ticks |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 | `sound` | [Identifier](../basic_concepts#identifier) | optional | Sound event ID played on launch |
-| `key` | [Key] | optional | Key binding settings |
+| `key` | [Key](../shared_data_types#key) | optional | Key binding settings |
 
 <details>
 <summary>Example</summary>
@@ -802,7 +802,7 @@ This example super-power has two "keys", which are considered sub-powers: `toggl
 </details>
 
 :::warning
-Using multiple powers in a multiple power are not recommended.
+Using multiple powers in a multiple power is not recommended.
 :::
 
 ### `origins:night_vision`
@@ -1006,7 +1006,7 @@ Replaces loot tables.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `replace` | Object | **required** | Map of original loot table 闂?replacement loot table IDs |
+| `replace` | Object | **required** | Map of original loot table -> replacement loot table IDs |
 | `priority` | [Integer](../basic_concepts#integer) | `0` | Priority of the power, higher priority powers are executed first |
 
 ### `origins:resource`
@@ -1017,7 +1017,7 @@ Provides a numeric resource that can be modified by actions.
 |-------|------|---------|-------------|
 | `min` | [Integer](../basic_concepts#integer) | **required** | Minimum resource value |
 | `max` | [Integer](../basic_concepts#integer) | **required** | Maximum resource value |
-| `hud_render` | [Hud Render] | optional | HUD display settings |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
 | `start_value` | [Integer](../basic_concepts#integer) | optional | Initial resource value (defaults to min) |
 | `min_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when resource hits minimum |
 | `max_action` | [Entity Action](../action/entity_action_types) | optional | Action executed when resource hits maximum |
@@ -1171,7 +1171,7 @@ Grants items when the power is gained.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `stack` | [PositionedItemStack] or List | **required** | Items to grant, optionally with slot position |
+| `stack` | [PositionedItemStack](../shared_data_types#positioneditemstack) or List | **required** | Items to grant, optionally with slot position |
 | `recurrent` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, items are also granted on respawn |
 
 <details>
@@ -1231,7 +1231,7 @@ A toggleable power that can be switched on/off via key press.
 |-------|------|---------|-------------|
 | `active_by_default` | [Boolean](../basic_concepts#boolean) | `true` | Whether the power starts active |
 | `retain_state` | [Boolean](../basic_concepts#boolean) | `true` | Whether the state persists across deaths/dimension changes |
-| `key` | [Key] | optional | Key binding settings |
+| `key` | [Key](../shared_data_types#key) | optional | Key binding settings |
 
 ### `origins:tooltip`
 

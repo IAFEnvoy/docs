@@ -266,7 +266,7 @@ Prevents certain game events from being detected (e.g. sculk sensors).
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `event` | Identifier or List | optional | Game event ID(s) to prevent |
+| `event` | [Identifier](../basic_concepts#identifier) or List | optional | Game event ID(s) to prevent |
 
 <details>
 <summary>Example</summary>
