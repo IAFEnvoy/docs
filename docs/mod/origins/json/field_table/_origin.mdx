@@ -3,7 +3,7 @@
 | `name` | [Text Component](/docs/mod/origins/types/minecraft_data_types#text-component) | optional | The display name of the origin. Use translation key `origin.<namespace>.<path>.name` is more recommended |
 | `description` | [Text Component](/docs/mod/origins/types/minecraft_data_types#text-component) | optional | The description shown in the origin's tooltip. Use translation key `origin.<namespace>.<path>.description` is more recommended |
 | `powers` | [ReferenceOrTagList](/docs/mod/origins/types/basic_concepts#referenceortaglist) | `[]` | Power IDs or tags granted by this origin. Use `"origins:xxx"` or `"#origins:tag_name"` |
-| `icon` | [Item Stack](/mod/origins/types/minecraft_data_types#item-stack) | optional | The item displayed as the origin's icon in the selection screen |
+| `icon` | [Item Stack](/docs/mod/origins/types/minecraft_data_types#item-stack) | optional | The item displayed as the origin's icon in the selection screen |
 | `unchoosable` | Boolean | `false` | If `true`, this origin won't appear in selection screens, but can still be assigned via commands or upgrades |
 | `order` | Integer | `Integer.MAX_VALUE` | Sort order in the selection screen; lower numbers appear first |
 | `impact` | Integer | `0` | Impact level: `0` = NONE, `1` = LOW, `2` = MEDIUM, `3` = HIGH |

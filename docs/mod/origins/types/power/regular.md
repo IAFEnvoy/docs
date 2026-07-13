@@ -489,7 +489,7 @@ This example will grant immunity to fire if the entity is holding a Magma Block 
 Fires a projectile on key press with cooldown.
 
 :::warning
-Using [entity action version](../action/entity_action_types#origins:fire_projectile) is more recommended
+Using [entity action version](../action/entity_action_types#originsfire_projectile) is more recommended
 :::
 
 | Field | Type | Default | Description |

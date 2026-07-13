@@ -8,8 +8,8 @@ Triggers when a player chooses the specified origin.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `origin` | [Identifier](../../types/basic_concepts#identifier) | **required** | The namespace and ID of the origin to check for. |
-| `layer` | [Identifier](../../types/basic_concepts#identifier) | optional | The namespace and ID of the layer to check for. |
+| `origin` | [Identifier](../types/basic_concepts#identifier) | **required** | The namespace and ID of the origin to check for. |
+| `layer` | [Identifier](../types/basic_concepts#identifier) | optional | The namespace and ID of the layer to check for. |
 
 <details>
 <summary>Example1</summary>

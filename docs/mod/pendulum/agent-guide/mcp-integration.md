@@ -95,7 +95,7 @@ Once configured, run Codex:
 codex
 ```
 
-Codex will automatically discover the `pendulum` MCP server and can use all available tools to control Minecraft. See the [Agent API Reference](AGENT) for the full tool list.
+Codex will automatically discover the `pendulum` MCP server and can use all available tools to control Minecraft. See the [Agent API Reference](agent) for the full tool list.
 
 ## Available Tools
 

@@ -10,8 +10,8 @@ Checks if the player has the specified origin.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `origin` | [Identifier](../../types/basic_concepts#identifier) | | The namespace and ID of the origin to check for. |
-| `layer` | [Identifier](../../types/basic_concepts#identifier) | *optional* | If specified, checks if the specified origin is from this origin layer. |
+| `origin` | [Identifier](../types/basic_concepts#identifier) | | The namespace and ID of the origin to check for. |
+| `layer` | [Identifier](../types/basic_concepts#identifier) | *optional* | If specified, checks if the specified origin is from this origin layer. |
 
 <details>
 <summary>Example1</summary>
@@ -50,8 +50,8 @@ Checks if the entity has the specified power.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `power` | [Identifier](../../types/basic_concepts#identifier) | | The namespace and ID of the power to check for. |
-| `source` | [Identifier](../../types/basic_concepts#identifier) | *optional* | If specified, checks if the specified power is from this power source. |
+| `power` | [Identifier](../types/basic_concepts#identifier) | | The namespace and ID of the power to check for. |
+| `source` | [Identifier](../types/basic_concepts#identifier) | *optional* | If specified, checks if the specified power is from this power source. |
 
 <details>
 <summary>Example1</summary>

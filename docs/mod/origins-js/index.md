@@ -7,7 +7,7 @@ description: "KubeJS addon for Origins — register custom Actions, Conditions, 
 
 :::warning
 
-This document is for 1.20.1, for 1.21.1, see the [1.21 docs](./origins/js).
+This document is for 1.20.1, for 1.21.1, see the [1.21 docs](../origins/js).
 
 :::
 

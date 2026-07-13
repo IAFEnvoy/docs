@@ -553,7 +553,7 @@ Executes an action at a relative offset based on the entity's facing.
 }
 ```
 
-This example will offset the position of the [Add Block](./#originsadd_block) in the positive Y axis, raising the positional context of the block action to be 1 block above to where it initially was.
+This example will offset the position of the [Add Block](./block_action_types#originsadd_block) in the positive Y axis, raising the positional context of the block action to be 1 block above to where it initially was.
 
 </details>
 

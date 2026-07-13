@@ -48,7 +48,7 @@ You can list multiple origin IDs and tags under a single condition if they share
 
 The most common use case is a multi-layer setup: the player picks an element in layer 1, then sees matching origins in layer 2.
 
-Use [`origins:origin`](../types/condition/entity_condition_types#originsorigin) as the condition:
+Use [`origins:origin`](../../types/condition/entity_condition_types#originsorigin) as the condition:
 
 ```json
 // Layer 2: data/elements/origins/layer/elemental_origins.json
@@ -83,7 +83,7 @@ Use [`origins:origin`](../types/condition/entity_condition_types#originsorigin) 
 
 When the player chose `elements:fire` in the `elements:element` layer, they see Blazeborn and Flame Spirit in this layer.
 
-You can also check for a specific **power** with [`origins:power_active`](../types/condition/entity_condition_types#originspower_active).
+You can also check for a specific **power** with [`origins:power_active`](../../types/condition/entity_condition_types#originspower_active).
 
 :::caution
 Entity conditions in layers are evaluated **client-side**. Conditions that require server access (like scoreboard checks) will not work here. Stick to conditions like `origins:origin`, `origins:dimension`, `origins:exposed_to_sun`, etc.

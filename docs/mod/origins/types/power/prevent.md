@@ -256,7 +256,7 @@ Prevents interacting with certain entities.
 }
 ```
 
-This example will prevent the player that has the power from interacting with a Pig (also prevent powers that enables you to interact with a Pig) and executes an [Execute Command (Entity Action Type)](../entity_action_types/execute_command) to the entity that has attempted to interact with a Pig.
+This example will prevent the player that has the power from interacting with a Pig (also prevent powers that enables you to interact with a Pig) and executes an [Execute Command (Entity Action Type)](../action/entity_action_types#originsexecute_command) to the entity that has attempted to interact with a Pig.
 
 </details>
 

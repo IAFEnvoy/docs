@@ -7,7 +7,7 @@ title: "Origins JS"
 
 :::warning
 
-This document is for 1.21.1, for 1.20.1, see the [1.20 docs](./../origins-js).
+This document is for 1.21.1, for 1.20.1, see the [1.20 docs](./../../origins-js).
 
 :::
 
@@ -37,4 +37,4 @@ Origins JS wraps the standard Origins types. See the main documentation for deta
 | `registerBiomeCondition` | `origins_js:js_biome_condition` | [Biome Condition Types](../types/condition/biome_condition_types) |
 | `registerDamageCondition` | `origins_js:js_damage_condition` | [Damage Condition Types](../types/condition/damage_condition_types) |
 | `registerFluidCondition` | `origins_js:js_fluid_condition` | [Fluid Condition Types](../types/condition/fluid_condition_types) |
-| `powerBuilder(id)` | `origins_js:js_power` | [Power Types](../types/power/index) |
+| `powerBuilder(id)` | `origins_js:js_power` | [Power Types](../types/power) |

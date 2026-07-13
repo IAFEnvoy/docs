@@ -12,7 +12,7 @@ Finish [Creating a Custom Origin](define_origin) first so you have an origin to 
 
 ## Step 1 — Pick a Power Type
 
-A power's behavior is determined by its `type`. For "do something to the entity I just hit", the right choice is [`origins:target_action_on_hit`](../types/power/action#originstarget_action_on_hit).
+A power's behavior is determined by its `type`. For "do something to the entity I just hit", the right choice is [`origins:target_action_on_hit`](../../types/power/action#originstarget_action_on_hit).
 
 Create the file and start with the skeleton:
 
@@ -35,7 +35,7 @@ Create the file and start with the skeleton:
 
 ## Step 2 — Define the Entity Action
 
-An `entity_action` is itself a typed object. We want [`origins:set_on_fire`](../types/action/entity_action_types#originsset_on_fire):
+An `entity_action` is itself a typed object. We want [`origins:set_on_fire`](../../types/action/entity_action_types#originsset_on_fire):
 
 ```json title='data/example/origins/power/holy_fire.json'
 {

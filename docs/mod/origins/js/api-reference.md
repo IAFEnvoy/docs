@@ -21,7 +21,7 @@ All custom types use the `origins_js:` namespace prefix. For the standard types 
 | `origins_js:js_biome_condition` | `registerBiomeCondition` | `(biomeHolder, pos, params) => bool` | [Biome Condition](../types/condition/biome_condition_types) |
 | `origins_js:js_damage_condition` | `registerDamageCondition` | `(damageSource, amount, params) => bool` | [Damage Condition](../types/condition/damage_condition_types) |
 | `origins_js:js_fluid_condition` | `registerFluidCondition` | `(fluidState, params) => bool` | [Fluid Condition](../types/condition/fluid_condition_types) |
-| `origins_js:js_power` | `powerBuilder(id).grant/.../...register()` | Builder: `.grant((holder, params) => ...)` | [Power Types](../types/power/index) |
+| `origins_js:js_power` | `powerBuilder(id).grant/.../...register()` | Builder: `.grant((holder, params) => ...)` | [Power Types](../types/power) |
 
 ---
 

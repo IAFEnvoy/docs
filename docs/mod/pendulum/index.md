@@ -14,12 +14,12 @@ This mod is heavily inspired by `Playwright.js`, a browser automation framework.
 | Section | Audience | Description |
 |---------|----------|-------------|
 | [Getting Started](installation) | Everyone | Install, configure, run your first script |
-| [Player Guide](player-guide/commands) | Players | Commands, examples, and [API Reference](player-guide/api/index) |
+| [Player Guide](player-guide/commands) | Players | Commands, examples, and [API Reference](player-guide/api) |
 | [Agent Guide](agent-guide/agent) | AI Agents | Complete API reference for MCP-controlled agents |
 
 ## Quick Links
 
 - [Commands Reference](player-guide/commands)
-- [API Reference](player-guide/api/index)
+- [API Reference](player-guide/api)
 - [Script Examples](player-guide/examples)
 - [MCP Integration](agent-guide/mcp-integration)

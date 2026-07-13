@@ -90,7 +90,6 @@ const config = {
         ],
       },
     ],
-    "@cmfcmf/docusaurus-search-local",
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -221,6 +220,11 @@ const config = {
       codeblock: {
         showGithubLink: true,
         githubLinkLabel: 'View on GitHub'
+      },
+      algolia: {
+        appId: 'L0D3UPINT6',
+        apiKey: 'e2e9ba7af6e58bfe5b708a92768cb4e2',
+        indexName: 'Main Documentation Site',
       },
     }),
 };

@@ -16,8 +16,8 @@ You also need to install [Jupiter](../../library/jupiter/).
 
 ## Overview
 
-- Origins, Powers, Layers, and Badges are all configurable via **[Data Packs](./guides/datapack)**
-- All JSON formats are documented in **[JSON Data Formats](./json/index)**
+- Origins, Powers, Layers, and Badges are all configurable via **[Data Packs](./guides/datapack/define_origin)**
+- All JSON formats are documented in **[JSON Data Formats](./json/origin)**
 - The type system is covered in **[Basic Concepts](./types/basic_concepts)**, **[Shared Data Types](./types/shared_data_types)**, and **[Minecraft Data Types](./types/minecraft_data_types)**
-- Condition and action types are listed in **[Types Reference](./types/index)**
-- KubeJS add-on documentation: **[Origins JS](./js/index)**
+- Condition and action types are listed in **[Types Reference](./types)**
+- KubeJS add-on documentation: **[Origins JS](./js)**

@@ -21,7 +21,7 @@ Power types are split by category:
 | Prevent | Prevent certain actions like using items or sleeping | [Prevent Powers](./power/prevent) |
 | Regular | Standalone powers like flight, invisibility, phasing, etc. | [Regular Powers](./power/regular) |
 
-See the [Power Types index](./power/index) for an overview and shared data types.
+See the [Power Types index](./power) for an overview and shared data types.
 
 ## Condition Types
 
