@@ -102,13 +102,18 @@ const TYPE_RENAMES = {
   'origins:name': 'origins:id',
   'origins:all_of': 'origins:and',
   'origins:any_of': 'origins:or',
+  'origins:sequence': 'origins:and',
+  'origins:random_chance': 'origins:chance',
+  'origins:simple': 'origins:empty',
+  'origins:dummy': 'origins:empty',
+  'origins:action_on_key_press': 'origins:active_self',
+  'origins:action_on_block_placed': 'origins:action_on_block_place',
   'origins:stacking_status_effect': 'origins:stacking_effect',
   'origins:toggle_night_vision': 'origins:night_vision',
   'origins:action_on_entity_set': 'origins:action_on_set',
   'origins:add_to_entity_set': 'origins:add_to_set',
   'origins:entity_set_size': 'origins:set_size',
   'origins:actor_action': 'origins:source_action',
-  'origins:keybind': 'origins:tooltip',
 };
 
 const REMOVED_TYPES = new Set([
@@ -124,11 +129,7 @@ const REMOVED_TYPES = new Set([
   'origins:command',
 ]);
 
-const DELETE_CONTAINER_TYPES = new Set([
-  'origins:modify_type_tag',
-]);
-
-// entity_group → in_tag mapping (group value → minecraft tag)
+// entity_group -> in_tag mapping (group value -> minecraft tag)
 const ENTITY_GROUP_TO_TAG = {
   undead: 'minecraft:undead',
   arthropod: 'minecraft:arthropod',
@@ -168,6 +169,12 @@ const GLOBAL_FIELDS = {
   is_ambient: 'ambient',
 };
 
+const PLURAL_LIST_FIELDS = {
+  biomes: 'biome', criteria: 'criterion', effects: 'effect', enchantments: 'enchantment',
+  events: 'event', modifiers: 'modifier', slots: 'slot', stacks: 'stack',
+  status_effects: 'effect', texts: 'text',
+};
+
 const TAG_REF_TYPES = new Set([
   'origins:in_tag', 'apoli:in_tag',
 ]);
@@ -195,7 +202,11 @@ const MODIFIER_OPS = { addition: 'add_base_early', multiply_base: 'multiply_base
 // Conversion utilities
 // ============================================================
 
-const replaceNS = s => s.startsWith('apoli:') ? 'origins:' + s.slice(6) : s;
+const replaceNS = s => {
+  if (s.startsWith('apoli:')) return 'origins:' + s.slice(6);
+  if (s.startsWith('apugli:')) return 'origins:' + s.slice(7);
+  return s;
+};
 
 function effType(obj) {
   if (!obj || typeof obj !== 'object' || typeof obj.type !== 'string') return '';
@@ -213,19 +224,14 @@ function deepConvert(obj, addLog, ctx, parentType) {
   }
 
   const selfType = effType(obj);
-  if (DELETE_CONTAINER_TYPES.has(selfType)) {
-    addLog('warn', `Removed ${selfType} object (${ctx})`);
-    return null;
-  }
-
-  // Convert entity_group to in_tag (default → remove, others → minecraft:undead etc.)
+  // Convert entity_group to in_tag (default -> complement of vanilla group tags).
   if (selfType === 'origins:entity_group') {
-    const group = obj.group;
-    if (group === 'default' || !group) {
-      addLog('convert', `Removed entity_group (group=default) (${ctx})`);
-      return null;
+    const group = typeof obj.group === 'string' ? obj.group.toLowerCase() : '';
+    if (group === 'default') {
+      addLog('convert', `Converted entity_group group=default -> inverse group tags (${ctx})`);
+      return defaultEntityGroupCondition();
     }
-    const tag = ENTITY_GROUP_TO_TAG[group];
+    const tag = ENTITY_GROUP_TO_TAG[group === 'water' ? 'aquatic' : group];
     if (tag) {
       addLog('convert', `Converted entity_group group=${group} -> in_tag ${tag} (${ctx})`);
       return { type: 'origins:in_tag', tag };
@@ -295,6 +301,11 @@ function deepConvert(obj, addLog, ctx, parentType) {
       nk = GLOBAL_FIELDS[key];
     }
 
+    if (PLURAL_LIST_FIELDS[key] && !Object.prototype.hasOwnProperty.call(obj, PLURAL_LIST_FIELDS[key])
+      && (Array.isArray(value) || (value && typeof value === 'object'))) {
+      nk = PLURAL_LIST_FIELDS[key];
+    }
+
     if (key === 'tag' && !skipTagRename) nk = 'components';
     if (key === 'amount' && isModifier) nk = 'value';
     if (key === 'item' && !skipItemRename && typeof value === 'string' && !value.startsWith('#')) nk = 'id';
@@ -316,7 +327,7 @@ function deepConvert(obj, addLog, ctx, parentType) {
         result[nk] = nv;
         continue;
       }
-      if (value.startsWith('apoli:')) {
+      if (value.startsWith('apoli:') || value.startsWith('apugli:')) {
         nv = replaceNS(value);
       }
 
@@ -358,6 +369,16 @@ function deepConvert(obj, addLog, ctx, parentType) {
   }
 
   return result;
+}
+
+function defaultEntityGroupCondition() {
+  return {
+    type: 'origins:not',
+    condition: {
+      type: 'origins:or',
+      conditions: Object.values(ENTITY_GROUP_TO_TAG).map(tag => ({ type: 'origins:in_tag', tag })),
+    },
+  };
 }
 
 function mergeModifiers(obj) {
@@ -453,9 +474,21 @@ export default function ConverterWidget() {
 
   const doConvert = useCallback(async () => {
     if (!file) return;
+    const conversionLogs = [{ level: 'success', message: '=== Starting conversion... ===' }];
+    const log = (level, message) => conversionLogs.push({ level, message });
     setProcessing(true);
-    setLogs(prev => [...prev, { level: 'success', message: '=== Starting conversion... ===' }]);
-    const count = { origins: 0, powers: 0, layers: 0, badges: 0, globalPowers: 0 };
+    setLogs(conversionLogs);
+    const count = {
+      origins: 0,
+      powers: 0,
+      layers: 0,
+      badges: 0,
+      globalPowers: 0,
+      jsonScanned: 0,
+      jsonCopied: 0,
+      invalidJson: 0,
+      skipped: 0,
+    };
 
     try {
       const zip = await JSZip.loadAsync(file);
@@ -468,9 +501,17 @@ export default function ConverterWidget() {
       // ---- Pass 1: convert JSON files ----
       for (const [zipPath, zipEntry] of Object.entries(zip.files)) {
         if (zipEntry.dir || !zipPath.endsWith('.json')) continue;
+        count.jsonScanned++;
         const raw = await zipEntry.async('string');
         let json;
-        try { json = JSON.parse(raw); } catch { continue; }
+        try {
+          json = JSON.parse(raw);
+        } catch {
+          count.invalidJson++;
+          outZip.file(zipPath, raw);
+          log('warn', `Copied invalid JSON without conversion: ${zipPath}`);
+          continue;
+        }
 
         // --- origin (data/<ns>/origins/xxx.json) ---
         const originMatch = zipPath.match(/^data\/([^/]+)\/origins\/(.+)\.json$/);
@@ -480,8 +521,8 @@ export default function ConverterWidget() {
           const ns = originMatch[1];
           const rawId = originMatch[2];
           if (json.powers !== undefined) {
-            json = deepConvert(json, addLog, '');
-            if (json === null) { addLog('convert', `Skipped removed origin: ${zipPath}`); continue; }
+            json = deepConvert(json, log, '');
+            if (json === null) { count.skipped++; log('convert', `Skipped removed origin: ${zipPath}`); continue; }
 
             if (json.name) {
               langOrigin[`origin.${ns}.${rawId}.name`] = typeof json.name === 'string' ? json.name : JSON.stringify(json.name);
@@ -516,8 +557,8 @@ export default function ConverterWidget() {
         if (powerMatch && !zipPath.includes('/origins/power/')) {
           const ns = powerMatch[1];
           const rawId = powerMatch[2];
-          json = deepConvert(json, addLog, '');
-          if (json === null) { addLog('convert', `Skipped removed power: ${zipPath}`); continue; }
+          json = deepConvert(json, log, '');
+          if (json === null) { count.skipped++; log('convert', `Skipped removed power: ${zipPath}`); continue; }
 
           json.type = replaceNS(json.type || '');
           mergeModifiers(json);
@@ -531,8 +572,8 @@ export default function ConverterWidget() {
         if (layerMatch) {
           const ns = layerMatch[1];
           const rawId = layerMatch[2];
-          json = deepConvert(json, addLog, '');
-          if (json === null) { addLog('convert', `Skipped removed layer: ${zipPath}`); continue; }
+          json = deepConvert(json, log, '');
+          if (json === null) { count.skipped++; log('convert', `Skipped removed layer: ${zipPath}`); continue; }
 
           if (json.name) {
             langLayer[`layer.${ns}.${rawId}.name`] = typeof json.name === 'string' ? json.name : JSON.stringify(json.name);
@@ -581,11 +622,11 @@ export default function ConverterWidget() {
 
           // Default origin layer — skip writing layer JSON (merged into tag above)
           if (ns === 'origins' && rawId === 'origin') {
-            addLog('convert', `Merged default layer origins ->#origins:origin tag`);
+            log('convert', `Merged default layer origins ->#origins:origin tag`);
           } else {
             outZip.file(`data/${ns}/origins/layer/${rawId}.json`, JSON.stringify(json, null, 2));
             count.layers++;
-            addLog('convert', `Written layer: data/${ns}/origins/layer/${rawId}.json`);
+            log('convert', `Written layer: data/${ns}/origins/layer/${rawId}.json`);
           }
           continue;
         }
@@ -595,9 +636,9 @@ export default function ConverterWidget() {
         if (badgeMatch && !zipPath.includes('/origins/badge/')) {
           const ns = badgeMatch[1];
           const rawId = badgeMatch[2];
-          json = deepConvert(json, addLog, '');
-          if (json === null) { addLog('convert', `Skipped removed badge: ${zipPath}`); continue; }
-          if (!json.type) { json.type = 'origins:keybind'; addLog('convert', `Added default badge type: keybind (${zipPath})`); }
+          json = deepConvert(json, log, '');
+          if (json === null) { count.skipped++; log('convert', `Skipped removed badge: ${zipPath}`); continue; }
+          if (!json.type) { json.type = 'origins:keybind'; log('convert', `Added default badge type: keybind (${zipPath})`); }
           outZip.file(`data/${ns}/origins/badge/${rawId}.json`, JSON.stringify(json, null, 2));
           count.badges++;
           continue;
@@ -608,8 +649,8 @@ export default function ConverterWidget() {
         if (gpMatch && !zipPath.includes('/origins/global_powers/')) {
           const ns = gpMatch[1];
           const rawId = gpMatch[2];
-          json = deepConvert(json, addLog, '');
-          if (json === null) { addLog('convert', `Skipped removed global_power: ${zipPath}`); continue; }
+          json = deepConvert(json, log, '');
+          if (json === null) { count.skipped++; log('convert', `Skipped removed global_power: ${zipPath}`); continue; }
           delete json.order;
           outZip.file(`data/${ns}/origins/global_powers/${rawId}.json`, JSON.stringify(json, null, 2));
           count.globalPowers++;
@@ -617,11 +658,18 @@ export default function ConverterWidget() {
         }
 
         // --- existing tags (data/<ns>/tags/**/*.json) ---
-        if (zipPath.startsWith('data/') && (zipPath.includes('/tags/'))) {
+        if (zipPath.startsWith('data/') && zipPath.includes('/tags/')) {
           outZip.file(zipPath, raw);
-          addLog('convert', `Copied existing tag: ${zipPath}`);
+          count.jsonCopied++;
+          log('convert', `Copied existing tag: ${zipPath}`);
           continue;
         }
+
+        // Keep JSON outside the legacy Origins layout intact. Datapacks frequently include
+        // recipes, loot tables, advancements, tags, language files, or already-native entries.
+        outZip.file(zipPath, raw);
+        count.jsonCopied++;
+        log('convert', `Copied unrecognized JSON without conversion: ${zipPath}`);
 
       }
 
@@ -646,7 +694,7 @@ export default function ConverterWidget() {
           });
           if (json.values.length !== before) {
             outZip.file(zipPath, JSON.stringify(json, null, 2));
-            addLog('convert', `Sanitized power tag ${zipPath}: removed ${before - json.values.length} dead references`);
+            log('convert', `Sanitized power tag ${zipPath}: removed ${before - json.values.length} dead references`);
           }
         }
       }
@@ -681,16 +729,18 @@ export default function ConverterWidget() {
       setConvertedName(baseName + ' - Neoforged.zip');
       setStats(count);
 
-      addLog('success', '=== Conversion done! ===');
-      addLog('success', `Origin: ${count.origins}  Power: ${count.powers}  Layer: ${count.layers}  Badge: ${count.badges}  GlobalPower: ${count.globalPowers}`);
+      log('success', '=== Conversion done! ===');
+      log('success', `Origin: ${count.origins}  Power: ${count.powers}  Layer: ${count.layers}  Badge: ${count.badges}  GlobalPower: ${count.globalPowers}`);
+      log('success', `JSON scanned: ${count.jsonScanned}  copied unchanged: ${count.jsonCopied}  invalid: ${count.invalidJson}  skipped: ${count.skipped}`);
 
     } catch (err) {
-      addLog('error', 'Conversion failed: ' + err.message);
-      addLog('error', 'Stack: ' + (err.stack || '(no stack)'));
+      log('error', 'Conversion failed: ' + err.message);
+      log('error', 'Stack: ' + (err.stack || '(no stack)'));
     } finally {
+      setLogs([...conversionLogs]);
       setProcessing(false);
     }
-  }, [file, addLog]);
+  }, [file]);
 
   const doDownload = useCallback(() => {
     if (converted && convertedName) saveAs(converted, convertedName);
@@ -751,6 +801,10 @@ export default function ConverterWidget() {
           <span style={S.statItem}>Layer: <span style={S.statValue}>{stats.layers}</span></span>
           <span style={S.statItem}>Badge: <span style={S.statValue}>{stats.badges}</span></span>
           <span style={S.statItem}>GlobalPower: <span style={S.statValue}>{stats.globalPowers}</span></span>
+          <span style={S.statItem}>JSON scanned: <span style={S.statValue}>{stats.jsonScanned}</span></span>
+          <span style={S.statItem}>Copied unchanged: <span style={S.statValue}>{stats.jsonCopied}</span></span>
+          <span style={S.statItem}>Invalid JSON: <span style={S.statValue}>{stats.invalidJson}</span></span>
+          <span style={S.statItem}>Skipped: <span style={S.statValue}>{stats.skipped}</span></span>
         </div>
       )}
 
