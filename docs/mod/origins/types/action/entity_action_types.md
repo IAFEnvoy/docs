@@ -991,6 +991,18 @@ This example will clear the Poison status effect from the entity.
 
 </details>
 
+### `origins:set_no_gravity`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Sets whether the entity is affected by gravity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `no_gravity` | [Boolean](../basic_concepts#boolean) | `true` | Whether gravity is disabled |
+
 ### `origins:spawn_effect_cloud`
 
 Spawns an effect cloud at the entity's position.

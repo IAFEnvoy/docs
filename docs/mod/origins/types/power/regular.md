@@ -542,6 +542,18 @@ The most basic example - always counts the player as being on the ground, allowi
 
 </details>
 
+### `origins:hover`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Keeps the power holder at their current vertical velocity, allowing them to hover in place.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `step_assist` | [Float](../basic_concepts#float) | `0` | Reserved step-assist distance |
+
 ### `origins:ignore_water`
 
 Makes the player ignore water for movement (walk through water normally).
@@ -1153,6 +1165,18 @@ Causes the player's camera to shake.
 This example will make the entity shake if the entity is not burning.
 
 </details>
+
+### `origins:sprinting`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Makes the power holder sprint while the power is active.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `requires_input` | [Boolean](../basic_concepts#boolean) | `false` | Only force sprint while the player is already sprinting |
 
 ### `origins:stacking_effect`
 

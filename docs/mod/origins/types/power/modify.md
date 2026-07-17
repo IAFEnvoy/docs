@@ -306,6 +306,45 @@ Modifies the type of effects apply to the player.
 | `effect` | [Identifier](../basic_concepts#identifier) or List | `[]` | Effect ID to modify |
 | `new_effect` | [Identifier](../basic_concepts#identifier) | **required** | The new effect type to apply |
 
+### `origins:modify_enchantment_damage_dealt`
+
+:::caution Unstable
+
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+
+:::
+
+Adds damage based on the level of a specified enchantment on the power holder's main-hand item.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enchantment` | [Identifier](../basic_concepts#identifier) | **required** | Enchantment required on the main-hand item |
+| `base_value` | [Float](../basic_concepts#float) | **required** | Extra damage at the first enchantment level |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the dealt damage must meet |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the attacker and target |
+| `target_condition` | [Entity Condition](../condition/entity_condition_types) | optional | Condition the damaged target must meet |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier repeatedly applied to the extra damage for each level after the first |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action executed between the attacker and target when this power applies |
+
+### `origins:modify_enchantment_damage_taken`
+
+:::caution Unstable
+
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+
+:::
+
+Adds damage based on the level of a specified enchantment on the attacker's main-hand item.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enchantment` | [Identifier](../basic_concepts#identifier) | **required** | Enchantment required on the attacker's main-hand item |
+| `base_value` | [Float](../basic_concepts#float) | **required** | Extra damage at the first enchantment level |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the incoming damage must meet |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the attacker and power holder |
+| `modifier` | [Modifier](../shared_data_types#modifier) or List | `[]` | Modifier repeatedly applied to the extra damage for each level after the first |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action executed between the attacker and power holder when this power applies |
+
 ### `origins:modify_enchantment_level`
 
 :::caution Unstable

@@ -35,6 +35,20 @@ This example will check if the armor item (in this context, a chestplate) has a 
 
 </details>
 
+### `origins:base_enchantment`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks an enchantment level stored directly on the item, without applying enchantment-level powers.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enchantment` | [Identifier](../basic_concepts#identifier) | **required** | Enchantment to inspect |
+| `comparison` | [String](../basic_concepts#string) | `>=` | Comparison operator |
+| `compare_to` | [Integer](../basic_concepts#integer) | **required** | Enchantment level to compare against |
+
 ### `origins:component`
 
 Checks a specific data component value.
@@ -176,6 +190,18 @@ Checks if the item is in an item tag.
 This example will check whether item is in the `origins:meat` item tag.
 
 </details>
+
+### `origins:on_cooldown`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the player currently holding the item has that item type on cooldown.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
 
 ### `origins:is_damageable`
 

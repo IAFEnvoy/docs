@@ -36,6 +36,20 @@ This example will prevent other players from "using" (right-clicking) the entity
 
 </details>
 
+### `origins:prevent_breeding`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Prevents the power holder from breeding matching animals.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition with player as actor and parent as target |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action when breeding is prevented |
+| `prevent_follow` | [Boolean](../basic_concepts#boolean) | `false` | Reserved following-behavior option |
+
 ### `origins:prevent_block_place`
 
 Prevents placing certain blocks.

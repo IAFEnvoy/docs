@@ -64,6 +64,18 @@ Checks if the damage type is in a damage type tag.
 |-------|------|---------|-------------|
 | `tag` | [Identifier](../basic_concepts#identifier) | **required** | Damage type tag ID |
 
+### `origins:magic`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the damage is classified as magic damage, such as potion or dragon-breath damage.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:projectile`
 
 <details>

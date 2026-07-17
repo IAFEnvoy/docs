@@ -41,6 +41,22 @@ This example will give the player the Luck I (30:00) status effect the moment th
 
 </details>
 
+### `origins:action_on_attacker_hurt`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action between the power holder and their most recent attacker when the holder takes damage.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Ticks before this power can trigger again |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display for the cooldown |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action with the power holder as actor and their most recent attacker as target |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the power holder and their most recent attacker |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the incoming damage must meet |
+
 ### `origins:action_on_being_used`
 
 Executes actions when another entity interacts with the player.
@@ -73,6 +89,20 @@ Executes actions when another entity interacts with the player.
 This example will grant the players the ability to mount the target entity that has the power upon "using" (right-clicking) the said entity, unless the entity that has the power already has a passenger.
 
 </details>
+
+### `origins:action_on_bonemeal`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes actions when the power holder applies bone meal to a matching block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `block_action` | [Block Action](../action/block_action_types) | optional | Action at the targeted block |
+| `self_action` | [Entity Action](../action/entity_action_types) | optional | Action on the power holder |
+| `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition the block must meet |
 
 ### `origins:action_on_block_break`
 
@@ -189,6 +219,23 @@ Executes actions when the player dies.
 This example will grant the players the ability to mount the target entity that has the power upon "using" (right-clicking) the said entity, unless the entity that has the power already has a passenger.
 
 </details>
+
+### `origins:action_on_equip`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action when the power holder equips a matching armor or offhand item.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `head` | [Item Condition](../condition/item_condition_types) | optional | Condition for the head slot |
+| `chest` | [Item Condition](../condition/item_condition_types) | optional | Condition for the chest slot |
+| `legs` | [Item Condition](../condition/item_condition_types) | optional | Condition for the legs slot |
+| `feet` | [Item Condition](../condition/item_condition_types) | optional | Condition for the feet slot |
+| `offhand` | [Item Condition](../condition/item_condition_types) | optional | Condition for the offhand slot |
+| `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute after a configured slot changes to a matching item |
 
 ### `origins:action_on_entity_use`
 
@@ -329,6 +376,18 @@ This example will give half a shank of hunger, and 1 saturation point if the pla
 
 </details>
 
+### `origins:action_on_jump`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action when the power holder jumps.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action on the power holder |
+
 ### `origins:action_on_land`
 
 Executes actions when the player lands on the ground.
@@ -358,6 +417,58 @@ Executes actions when the player lands on the ground.
 This example will execute an [Execute Command](../action/entity_action_types) that will then execute a `/fill` command that will replace a 3x3 area of Grass Blocks with Air underneath the entity's feet if the entity in question has been falling for 4 or more blocks.
 
 </details>
+
+### `origins:action_on_projectile_hit`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes actions when a projectile owned by the power holder hits an entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with projectile as actor and hit entity as target |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition for `bientity_action` |
+| `owner_bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with owner as actor and hit entity as target |
+| `owner_bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition for `owner_bientity_action` |
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Minimum ticks between executions |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | Cooldown HUD settings |
+
+### `origins:action_on_target_death`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action between the power holder and an entity they kill.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action with holder as actor and dead entity as target |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition for the killing damage |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between holder and dead entity |
+| `includes_prime_adversary` | [Boolean](../basic_concepts#boolean) | `true` | Whether a prime-adversary kill triggers the power |
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Minimum ticks between executions |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | Cooldown HUD settings |
+
+### `origins:action_on_tame_hit`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes actions when a tamed creature owned by the power holder damages an entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Ticks before this power can trigger again |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display for the cooldown |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the dealt damage must meet |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with the tame as actor and damaged entity as target |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the tame and damaged entity |
+| `owner_bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with the power holder as actor and damaged entity as target |
+| `owner_bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the power holder and damaged entity |
 
 ### `origins:action_on_wake_up`
 
@@ -512,6 +623,39 @@ Executes actions when the player is hit.
 This example will deal 1 heart of damage to any entities that attacks the entity that has the power, quite similar to having an armor item that has the Thorns enchantment. Bear in mind that the '**actor**' is the entity that dealt the hit, so an invert is needed.
 
 </details>
+
+### `origins:action_when_lightning_struck`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action when the power holder is struck by lightning.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition with holder as actor and lightning as target |
+| `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action on the power holder |
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Minimum ticks between executions |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | Cooldown HUD settings |
+
+### `origins:action_when_tame_hit`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes actions when a tamed creature owned by the power holder takes damage from another living entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Ticks before this power can trigger again |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display for the cooldown |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition the incoming damage must meet |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with the attacker as actor and tame as target |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the attacker and tame |
+| `owner_bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with the attacker as actor and power holder as target |
+| `owner_bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the attacker and power holder |
 
 ### `origins:active_self`
 

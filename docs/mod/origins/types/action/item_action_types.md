@@ -27,8 +27,6 @@ This example will add the Sharpness enchantment with a level of 5 to the item.
 
 </details>
 
-### `origins:damage`
-
 ### `origins:consume`
 
 Consumes one or more items from the stack.
@@ -50,6 +48,18 @@ Consumes one or more items from the stack.
 This example will "consume" (remove) 1 item from the item stack.
 
 </details>
+
+### `origins:cooldown`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Applies an item cooldown to a player holding the item stack.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `ticks` | [Integer](../basic_concepts#integer) | **required** | Cooldown duration in ticks |
 
 ### `origins:damage`
 

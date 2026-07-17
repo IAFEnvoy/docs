@@ -2,6 +2,18 @@
 
 Block conditions check properties of a block at a location.
 
+### `origins:air`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the target block is air.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:adjacent`
 
 Checks if a matching block is adjacent.
@@ -249,6 +261,18 @@ This example checks if the block is a Diamond Block.
 
 </details>
 
+### `origins:in_rain`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether rain reaches the target block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:light_blocking`
 
 Checks whether the block is marked in code as blocking light. Glass for example would not fulfill this condition.
@@ -313,6 +337,18 @@ This example will check if Beacon block has a `Level` value of 1.
 
 </details>
 
+### `origins:raining`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether it is currently raining in the level.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:replaceable`
 
 Checks if the block can be replaced by another block (i.e. if it's a non-solid block like tall grass or air).
@@ -340,6 +376,18 @@ Checks the block's slipperiness.
 This example will check if the block has the same slipperiness of an Ice (or Packed Ice) block.
 
 </details>
+
+### `origins:thundering`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether it is currently thundering in the level.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
 
 ### `origins:water_loggable`
 

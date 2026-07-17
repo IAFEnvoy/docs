@@ -46,6 +46,30 @@ This example will check if the player has the `minecraft:story/smelt_iron` advan
 
 </details>
 
+### `origins:attacker_condition`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether a living entity has a most recent mob attacker.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
+### `origins:attack_target_condition`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether a mob has an attack target.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:air`
 
 Checks the entity's remaining air.
@@ -201,6 +225,18 @@ Checks the light level at the entity's eyes.
 This example will check if brightness is 0.5 or lower (light level of 11 or below).
 
 </details>
+
+### `origins:can_have_effect`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether a living entity can be affected by the specified status effect.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `effect` | [Identifier](../basic_concepts#identifier) | **required** | Status effect to test |
 
 ### `origins:climbing`
 
@@ -506,7 +542,31 @@ This example will check if the player is in Creative Mode.
 
 Checks if the entity is glowing.
 
+### `origins:grounded`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the entity is on the ground.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:health`
+
+### `origins:hostile`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the entity implements Minecraft's hostile-mob interface.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
 
 Checks the entity's current health.
 
@@ -875,6 +935,18 @@ This example will check if the player has half or less of their max health.
 
 </details>
 
+### `origins:raining`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether it is currently raining in the entity's level.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:resource`
 
 Checks the value of a resource.
@@ -1107,6 +1179,18 @@ Checks the time of day.
 This example will check if it's the sun is currently setting.
 
 </details>
+
+### `origins:thundering`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether it is currently thundering in the entity's level.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
 
 ### `origins:using_effective_tool`
 

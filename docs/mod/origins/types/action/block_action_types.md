@@ -42,6 +42,18 @@ This example will apply bonemeal to the target block of the block action without
 
 </details>
 
+### `origins:destroy`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Destroys the target block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `drop` | [Boolean](../basic_concepts#boolean) | `true` | Whether the block drops loot |
+
 ### `origins:execute_command`
 
 Executes a command at the block position.
@@ -91,6 +103,18 @@ This example will summon an explosion at the position of where the block action 
 
 </details>
 
+### `origins:light_up`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Sets a block's `lit` state to `true` when that state property exists.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:modify_block_state`
 
 Modifies the block's state properties.
@@ -139,6 +163,18 @@ Sets the block at the position.
 This example will set a Coal Ore block at the position of the block action type.
 
 </details>
+
+### `origins:schedule_tick`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Schedules a tick for the target block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `delay` | [Integer](../basic_concepts#integer) | **required** | Delay before the scheduled tick |
 
 ### `origins:spawn_entity`
 
