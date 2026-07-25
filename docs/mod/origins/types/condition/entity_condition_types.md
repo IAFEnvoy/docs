@@ -1244,6 +1244,46 @@ This example will check if the player has 5 levels or less.
 
 </details>
 
+### `origins:team`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether an entity belongs to any scoreboard team or a named team.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `team` | String | optional | Required scoreboard team name |
+
+### `origins:attack_cooldown`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Compares a player's current attack cooldown progress.
+
+### `origins:team`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether an entity belongs to any scoreboard team or, when `team` is present, a named team.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `team` | String | optional | Required scoreboard team name |
+
+### `origins:attack_cooldown`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Compares a player's current attack cooldown progress.
+
 ### `origins:xp_points`
 
 Checks the player's XP points (progress toward next level).

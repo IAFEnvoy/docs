@@ -109,3 +109,19 @@ Checks if the actor is riding the target (recursively).
 ### `origins:riding_root`
 
 Checks if the actor entity is riding the target entity from the very end of the riding chain.
+
+### `origins:same_team`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks that actor and target are both in the same non-null scoreboard team.
+
+### `origins:same_team`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks that actor and target are both in the same non-null scoreboard team.

@@ -8,6 +8,16 @@ These powers execute actions in response to events.
 
 ---
 
+### `origins:hold_action`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Runs `charged_action` after holding its active key for `hold_duration` ticks. While held, it then runs optional `entity_action` every `interval` ticks, with `max_actions: 0` meaning no limit. The key is always treated as continuous.
+
+---
+
 ### `origins:action_on_callback`
 
 Executes entity actions at lifecycle events.

@@ -51,6 +51,20 @@ This example will "pull" the target entity to the actor entity on the Y axis.
 
 </details>
 
+### `origins:copy_origin`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Copies each entity's origin from the other entity in a layer.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `layer` | Layer | **required** | Layer whose origins are read and changed |
+| `modify_actor` | [Boolean](../basic_concepts#boolean) | `false` | Replace the actor's origin with the target's origin |
+| `modify_target` | [Boolean](../basic_concepts#boolean) | `true` | Replace the target's origin with the actor's origin |
+
 ### `origins:damage_target`
 
 Damages the target entity.
@@ -92,6 +106,48 @@ Removes the actor from an entity set.
 
 Sets the target entity in love with the actor.
 
+### `origins:teleport`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Teleports the actor and/or target to the other entity's original position.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `teleport_actor` | [Boolean](../basic_concepts#boolean) | `false` | Teleport the actor to the target |
+| `teleport_target` | [Boolean](../basic_concepts#boolean) | `true` | Teleport the target to the actor |
+| `rotate` | [Boolean](../basic_concepts#boolean) | `false` | Copy the destination entity's rotation |
+
 ### `origins:tame`
 
 Tames the target entity.
+
+### `origins:copy_origin`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Copies the actor and/or target origin in a layer.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `layer` | Layer | **required** | Layer whose origins are copied |
+| `modify_actor` | Boolean | `false` | Copy the target's origin to the actor |
+| `modify_target` | Boolean | `true` | Copy the actor's origin to the target |
+
+### `origins:copy_origin`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Copies the actor and/or target origin in a layer.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `layer` | Layer | **required** | Layer whose origins are copied |
+| `modify_actor` | Boolean | `false` | Copy the target's origin to the actor |
+| `modify_target` | Boolean | `true` | Copy the actor's origin to the target |

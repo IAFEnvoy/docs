@@ -100,7 +100,7 @@ Fabric's `origins:multiple` power type (which bundled several sub-powers into on
 | Fabric Type | Status in NeoForge | Note|
 |-------------|-------------------|-------|
 | `origins:command` | :x: Removed ||
-| `origins:entity_group` | :x: Removed | 1.21.1 no longer has entity groups, use `origins:in_tag` instead |
+| `origins:entity_group` | :warning: Reintroduced as a power | `origins:entity_group` now provides limited combat-group compatibility; use `origins:in_tag` for generic type-tag checks |
 | `origins:category` (biome) | :x: Removed | 1.21.1 no longer has biome categories, use `origins:in_tag` instead |
 | `origins:high_humidity` (biome) | :x: Removed | 1.21.1 no longer has humidity conditions, use  `origins:in_tag` instead` |
 | `origins:owner` (bientity) | :x: Removed | Will be added later |
@@ -156,6 +156,6 @@ Changes to apply:
 4. Update icon format: old "item"/"damage"/"nbt" → new {"id": "minecraft:..."}
    Use #tag references in powers instead of listing individual power IDs.
 5. Split any origins:multiple powers into individual power JSON files.
-6. Replace removed condition types (command, entity_group, category, high_humidity, owner) with equivalent alternatives or JS scripts.
+6. Replace removed condition types (command, category, high_humidity, owner) with equivalent alternatives or JS scripts. `entity_group` is available again as a limited power, not a condition.
 7. Check the porting guide at porting.md for the full list of differences.
 ```

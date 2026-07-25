@@ -49,6 +49,14 @@ Checks an enchantment level stored directly on the item, without applying enchan
 | `comparison` | [String](../basic_concepts#string) | `>=` | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Enchantment level to compare against |
 
+### `origins:block_item`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the item stack contains a block item.
+
 ### `origins:component`
 
 Checks a specific data component value.
