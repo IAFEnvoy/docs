@@ -542,6 +542,30 @@ This example gives the entity 3 Eggs.
 
 </details>
 
+### `origins:modify_attack_cooldown`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Changes a player's current attack-strength cooldown ticker through a [Modifier](../shared_data_types#modifier).
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `modifier` | Modifier | **required** | Modifier applied to the current cooldown ticker |
+
+### `origins:modify_attack_cooldown`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Changes a player's current attack-strength cooldown ticker through a [Modifier](../shared_data_types#modifier). A value of `0` means the attack cooldown has just started; the normal maximum means it is ready.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `modifier` | Modifier | **required** | Modifier applied to the current cooldown ticker |
+
 ### `origins:modify_death_ticks`
 
 Modifies the entity's death tick counter.
@@ -781,6 +805,33 @@ This example will clear the Poison status effect from the entity.
 
 </details>
 
+### `origins:replace_entity`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Replaces a non-player entity with one of the configured entity types while retaining its serialized data, position, and rotation.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `entity_types` | List of Entity Type | **required** | Replacement list |
+| `random` | Boolean | `false` | Choose randomly instead of using the first list entry |
+| `tag` | NBT Compound | optional | Data merged into the replacement entity |
+### `origins:replace_entity`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Replaces a non-player entity with a configured entity type while retaining serialized data, position, and rotation.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `entity_types` | List of Entity Type | **required** | Replacement list |
+| `random` | Boolean | `false` | Choose randomly instead of the first list entry |
+| `tag` | NBT Compound | optional | Data merged into the replacement entity |
+
 ### `origins:replace_inventory`
 
 Replaces the entity's inventory contents.
@@ -959,19 +1010,6 @@ Executes a bi-entity action with the same entity as both actor and target.
 |-------|------|---------|-------------|
 | `action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action to execute with this entity in both roles |
 
-### `origins:set_origin`
-
-:::caution Unstable
-This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Sets the entity's origin in a layer.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `layer` | Layer | **required** | Layer whose origin will be changed |
-| `origin` | Origin | **required** | Origin to assign |
-
 ### `origins:set_fall_distance`
 
 Sets the entity's fall distance (affects fall damage).
@@ -993,6 +1031,18 @@ Sets the entity's fall distance (affects fall damage).
 This example will reset the entity's fall distance so that the fall damage is now calculated from that point.
 
 </details>
+
+### `origins:set_no_gravity`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Sets whether the entity is affected by gravity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `no_gravity` | [Boolean](../basic_concepts#boolean) | `true` | Whether gravity is disabled |
 
 ### `origins:set_on_fire`
 
@@ -1016,17 +1066,18 @@ This example will clear the Poison status effect from the entity.
 
 </details>
 
-### `origins:set_no_gravity`
+### `origins:set_origin`
 
 :::caution Unstable
 This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
 :::
 
-Sets whether the entity is affected by gravity.
+Sets the entity's origin in a layer.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `no_gravity` | [Boolean](../basic_concepts#boolean) | `true` | Whether gravity is disabled |
+| `layer` | Layer | **required** | Layer whose origin will be changed |
+| `origin` | Origin | **required** | Origin to assign |
 
 ### `origins:spawn_effect_cloud`
 
@@ -1193,55 +1244,3 @@ Triggers the cooldown of another power.
 This example will restore about 3 hearts to the entity.
 
 </details>
-
-### `origins:modify_attack_cooldown`
-
-:::caution Unstable
-This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Changes a player's current attack-strength cooldown ticker through a [Modifier](../shared_data_types#modifier).
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `modifier` | Modifier | **required** | Modifier applied to the current cooldown ticker |
-
-### `origins:replace_entity`
-
-:::caution Unstable
-This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Replaces a non-player entity with a configured entity type while retaining serialized data, position, and rotation.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `entity_types` | List of Entity Type | **required** | Replacement list |
-| `random` | Boolean | `false` | Choose randomly instead of the first list entry |
-| `tag` | NBT Compound | optional | Data merged into the replacement entity |
-
-### `origins:modify_attack_cooldown`
-
-:::caution Unstable
-This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Changes a player's current attack-strength cooldown ticker through a [Modifier](../shared_data_types#modifier). A value of `0` means the attack cooldown has just started; the normal maximum means it is ready.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `modifier` | Modifier | **required** | Modifier applied to the current cooldown ticker |
-
-### `origins:replace_entity`
-
-:::caution Unstable
-This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Replaces a non-player entity with one of the configured entity types while retaining its serialized data, position, and rotation.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `entity_types` | List of Entity Type | **required** | Replacement list |
-| `random` | Boolean | `false` | Choose randomly instead of using the first list entry |
-| `tag` | NBT Compound | optional | Data merged into the replacement entity |

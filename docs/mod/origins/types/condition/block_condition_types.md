@@ -2,18 +2,6 @@
 
 Block conditions check properties of a block at a location.
 
-### `origins:air`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether the target block is air.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| None | - | - | - |
-
 ### `origins:adjacent`
 
 Checks if a matching block is adjacent.
@@ -42,6 +30,18 @@ Checks if a matching block is adjacent.
 This example will check if there are four or more Iron Ore blocks next to the block in question.
 
 </details>
+
+### `origins:air`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether the target block is air.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
 
 ### `origins:attachable`
 
@@ -239,6 +239,18 @@ This example will check if the blast resistance value of the block is that of an
 
 </details>
 
+### `origins:in_rain`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether rain reaches the target block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:in_tag`
 
 Checks if the block is in a block tag.
@@ -260,18 +272,6 @@ Checks if the block is in a block tag.
 This example checks if the block is a Diamond Block.
 
 </details>
-
-### `origins:in_rain`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether rain reaches the target block.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| None | - | - | - |
 
 ### `origins:light_blocking`
 

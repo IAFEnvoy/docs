@@ -141,30 +141,6 @@ This example will check if the actor entity is a tamable and tamed mob.
 
 </details>
 
-### `origins:target_condition`
-
-Evaluates an entity condition on the target.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition on the target |
-
-<details>
-<summary>Example</summary>
-
-```json
-"bientity_condition": {
-    "type": "origins:target_condition",
-    "condition": {
-       "type": "origins:tamed"
-    }
-}
-```
-
-This example will check if the target entity is a tamable and a tamed mob.
-
-</details>
-
 ### `origins:both`
 
 Evaluates an entity condition on both actor and target.
@@ -221,6 +197,30 @@ Swaps actor and target.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `condition` | [Bi-entity Condition](../condition/bientity_condition_types) | **required** | Condition with swapped entities |
+
+### `origins:target_condition`
+
+Evaluates an entity condition on the target.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `condition` | [Entity Condition](../condition/entity_condition_types) | **required** | Condition on the target |
+
+<details>
+<summary>Example</summary>
+
+```json
+"bientity_condition": {
+    "type": "origins:target_condition",
+    "condition": {
+       "type": "origins:tamed"
+    }
+}
+```
+
+This example will check if the target entity is a tamable and a tamed mob.
+
+</details>
 
 ## Block Specific
 

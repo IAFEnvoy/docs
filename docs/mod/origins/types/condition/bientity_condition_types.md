@@ -2,13 +2,13 @@
 
 Bi-entity conditions check the relationship between two entities (actor and target).
 
-### `origins:attacker`
-
-Checks if the actor entity has attacked the target entity within the last 5 seconds, and still exists.
-
 ### `origins:attack_target`
 
 Checks if the actor entity is currently aggressive to the target entity.
+
+### `origins:attacker`
+
+Checks if the actor entity has attacked the target entity within the last 5 seconds, and still exists.
 
 ### `origins:can_see`
 
@@ -117,7 +117,6 @@ This condition is currently unstable and may not work as intended. Please report
 :::
 
 Checks that actor and target are both in the same non-null scoreboard team.
-
 ### `origins:same_team`
 
 :::caution Unstable

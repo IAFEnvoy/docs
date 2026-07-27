@@ -142,6 +142,18 @@ This example will cycle through the values of the `facing` property if available
 
 </details>
 
+### `origins:schedule_tick`
+
+:::caution Unstable
+This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Schedules a tick for the target block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `delay` | [Integer](../basic_concepts#integer) | **required** | Delay before the scheduled tick |
+
 ### `origins:set_block`
 
 Sets the block at the position.
@@ -163,18 +175,6 @@ Sets the block at the position.
 This example will set a Coal Ore block at the position of the block action type.
 
 </details>
-
-### `origins:schedule_tick`
-
-:::caution Unstable
-This action is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Schedules a tick for the target block.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `delay` | [Integer](../basic_concepts#integer) | **required** | Delay before the scheduled tick |
 
 ### `origins:spawn_entity`
 

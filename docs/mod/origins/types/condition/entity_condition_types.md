@@ -46,30 +46,6 @@ This example will check if the player has the `minecraft:story/smelt_iron` advan
 
 </details>
 
-### `origins:attacker_condition`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether a living entity has a most recent mob attacker.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| None | - | - | - |
-
-### `origins:attack_target_condition`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether a mob has an attack target.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| None | - | - | - |
-
 ### `origins:air`
 
 Checks the entity's remaining air.
@@ -93,6 +69,46 @@ Checks the entity's remaining air.
 This example will check if the player has no breath / air / bubbles left.
 
 </details>
+
+### `origins:attack_cooldown`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Compares a player's current attack cooldown progress.
+
+### `origins:attack_cooldown`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Compares a player's current attack cooldown progress.
+
+### `origins:attack_target_condition`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether a mob has an attack target.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
+### `origins:attacker_condition`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether a living entity has a most recent mob attacker.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
 
 ### `origins:attribute`
 
@@ -901,6 +917,18 @@ This example will check if the `example:check_if_thunderstorm` predicate (`data\
 
 </details>
 
+### `origins:raining`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether it is currently raining in the entity's level.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:raycast`
 
 Performs a raycast and checks for matching entities/blocks.
@@ -934,18 +962,6 @@ Checks the entity's health as a percentage of max.
 This example will check if the player has half or less of their max health.
 
 </details>
-
-### `origins:raining`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether it is currently raining in the entity's level.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| None | - | - | - |
 
 ### `origins:resource`
 
@@ -1146,6 +1162,42 @@ Checks if the entity is swimming.
 
 Checks if the entity is tamed.
 
+### `origins:team`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether an entity belongs to any scoreboard team or a named team.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `team` | String | optional | Required scoreboard team name |
+
+### `origins:team`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether an entity belongs to any scoreboard team or, when `team` is present, a named team.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `team` | String | optional | Required scoreboard team name |
+
+### `origins:thundering`
+
+:::caution Unstable
+This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Checks whether it is currently thundering in the entity's level.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| None | - | - | - |
+
 ### `origins:time_of_day`
 
 Checks the time of day.
@@ -1179,18 +1231,6 @@ Checks the time of day.
 This example will check if it's the sun is currently setting.
 
 </details>
-
-### `origins:thundering`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether it is currently thundering in the entity's level.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| None | - | - | - |
 
 ### `origins:using_effective_tool`
 
@@ -1243,46 +1283,6 @@ Checks the player's XP levels.
 This example will check if the player has 5 levels or less.
 
 </details>
-
-### `origins:team`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether an entity belongs to any scoreboard team or a named team.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `team` | String | optional | Required scoreboard team name |
-
-### `origins:attack_cooldown`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Compares a player's current attack cooldown progress.
-
-### `origins:team`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Checks whether an entity belongs to any scoreboard team or, when `team` is present, a named team.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `team` | String | optional | Required scoreboard team name |
-
-### `origins:attack_cooldown`
-
-:::caution Unstable
-This condition is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Compares a player's current attack cooldown progress.
 
 ### `origins:xp_points`
 

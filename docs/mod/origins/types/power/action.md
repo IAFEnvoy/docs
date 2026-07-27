@@ -8,49 +8,6 @@ These powers execute actions in response to events.
 
 ---
 
-### `origins:hold_action`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Runs `charged_action` after holding its active key for `hold_duration` ticks. While held, it then runs optional `entity_action` every `interval` ticks, with `max_actions: 0` meaning no limit. The key is always treated as continuous.
-
----
-
-### `origins:action_on_callback`
-
-Executes entity actions at lifecycle events.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `entity_action_respawned` | [Entity Action](../action/entity_action_types) | optional | Action executed when the player respawns |
-| `entity_action_removed` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power is revoked |
-| `entity_action_gained` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power is granted |
-| `entity_action_lost` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power is lost (revoked) |
-| `entity_action_added` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power becomes active |
-
-<details>
-<summary>Example</summary>
-
-```json
-{
-  "type": "origins:action_on_callback",
-  "entity_action_gained": {
-    "type": "origins:execute_command",
-    "command": "say I have gained this power!"
-  },
-  "entity_action_lost": {
-    "type": "origins:execute_command",
-    "command": "say I have lost this power!"
-  }
-}
-```
-
-This example will give the player the Luck I (30:00) status effect the moment the player has chosen the origin that has the power, unless the player used the Orb of Origin item to choose that origin.
-
-</details>
-
 ### `origins:action_on_attacker_hurt`
 
 :::caution Unstable
@@ -99,20 +56,6 @@ Executes actions when another entity interacts with the player.
 This example will grant the players the ability to mount the target entity that has the power upon "using" (right-clicking) the said entity, unless the entity that has the power already has a passenger.
 
 </details>
-
-### `origins:action_on_bonemeal`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Executes actions when the power holder applies bone meal to a matching block.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `block_action` | [Block Action](../action/block_action_types) | optional | Action at the targeted block |
-| `self_action` | [Entity Action](../action/entity_action_types) | optional | Action on the power holder |
-| `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition the block must meet |
 
 ### `origins:action_on_block_break`
 
@@ -204,6 +147,53 @@ This example will replace any iron blocks with gold blocks if you right click th
 
 </details>
 
+### `origins:action_on_bonemeal`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes actions when the power holder applies bone meal to a matching block.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `block_action` | [Block Action](../action/block_action_types) | optional | Action at the targeted block |
+| `self_action` | [Entity Action](../action/entity_action_types) | optional | Action on the power holder |
+| `block_condition` | [Block Condition](../condition/block_condition_types) | optional | Condition the block must meet |
+
+### `origins:action_on_callback`
+
+Executes entity actions at lifecycle events.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `entity_action_respawned` | [Entity Action](../action/entity_action_types) | optional | Action executed when the player respawns |
+| `entity_action_removed` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power is revoked |
+| `entity_action_gained` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power is granted |
+| `entity_action_lost` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power is lost (revoked) |
+| `entity_action_added` | [Entity Action](../action/entity_action_types) | optional | Action executed when the power becomes active |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "origins:action_on_callback",
+  "entity_action_gained": {
+    "type": "origins:execute_command",
+    "command": "say I have gained this power!"
+  },
+  "entity_action_lost": {
+    "type": "origins:execute_command",
+    "command": "say I have lost this power!"
+  }
+}
+```
+
+This example will give the player the Luck I (30:00) status effect the moment the player has chosen the origin that has the power, unless the player used the Orb of Origin item to choose that origin.
+
+</details>
+
 ### `origins:action_on_death`
 
 Executes actions when the player dies.
@@ -229,23 +219,6 @@ Executes actions when the player dies.
 This example will grant the players the ability to mount the target entity that has the power upon "using" (right-clicking) the said entity, unless the entity that has the power already has a passenger.
 
 </details>
-
-### `origins:action_on_equip`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Executes an action when the power holder equips a matching armor or offhand item.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `head` | [Item Condition](../condition/item_condition_types) | optional | Condition for the head slot |
-| `chest` | [Item Condition](../condition/item_condition_types) | optional | Condition for the chest slot |
-| `legs` | [Item Condition](../condition/item_condition_types) | optional | Condition for the legs slot |
-| `feet` | [Item Condition](../condition/item_condition_types) | optional | Condition for the feet slot |
-| `offhand` | [Item Condition](../condition/item_condition_types) | optional | Condition for the offhand slot |
-| `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute after a configured slot changes to a matching item |
 
 ### `origins:action_on_entity_use`
 
@@ -299,6 +272,23 @@ Executes actions when the player right-clicks an entity.
 This example will heal and display the heart particle effects at the tamed mob if the mob in question is owned by the player that has the power.
 
 </details>
+
+### `origins:action_on_equip`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action when the power holder equips a matching armor or offhand item.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `head` | [Item Condition](../condition/item_condition_types) | optional | Condition for the head slot |
+| `chest` | [Item Condition](../condition/item_condition_types) | optional | Condition for the chest slot |
+| `legs` | [Item Condition](../condition/item_condition_types) | optional | Condition for the legs slot |
+| `feet` | [Item Condition](../condition/item_condition_types) | optional | Condition for the feet slot |
+| `offhand` | [Item Condition](../condition/item_condition_types) | optional | Condition for the offhand slot |
+| `action` | [Entity Action](../action/entity_action_types) | **required** | Action to execute after a configured slot changes to a matching item |
 
 ### `origins:action_on_hit`
 
@@ -445,23 +435,6 @@ Executes actions when a projectile owned by the power holder hits an entity.
 | `cooldown` | [Integer](../basic_concepts#integer) | `1` | Minimum ticks between executions |
 | `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | Cooldown HUD settings |
 
-### `origins:action_on_target_death`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Executes an action between the power holder and an entity they kill.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action with holder as actor and dead entity as target |
-| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition for the killing damage |
-| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between holder and dead entity |
-| `includes_prime_adversary` | [Boolean](../basic_concepts#boolean) | `true` | Whether a prime-adversary kill triggers the power |
-| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Minimum ticks between executions |
-| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | Cooldown HUD settings |
-
 ### `origins:action_on_tame_hit`
 
 :::caution Unstable
@@ -479,6 +452,23 @@ Executes actions when a tamed creature owned by the power holder damages an enti
 | `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the tame and damaged entity |
 | `owner_bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action with the power holder as actor and damaged entity as target |
 | `owner_bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between the power holder and damaged entity |
+
+### `origins:action_on_target_death`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Executes an action between the power holder and an entity they kill.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Action with holder as actor and dead entity as target |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Condition for the killing damage |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | Condition between holder and dead entity |
+| `includes_prime_adversary` | [Boolean](../basic_concepts#boolean) | `true` | Whether a prime-adversary kill triggers the power |
+| `cooldown` | [Integer](../basic_concepts#integer) | `1` | Minimum ticks between executions |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | Cooldown HUD settings |
 
 ### `origins:action_on_wake_up`
 
@@ -730,6 +720,16 @@ Executes actions on the attacker when the player is hit.
 This example will add positive-Y axis velocity to the attacker of the entity that has the power, essentially launching them up into the air.
 
 </details>
+
+### `origins:hold_action`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Runs `charged_action` after holding its active key for `hold_duration` ticks. While held, it then runs optional `entity_action` every `interval` ticks, with `max_actions: 0` meaning no limit. The key is always treated as continuous.
+
+---
 
 ### `origins:self_action_on_hit`
 

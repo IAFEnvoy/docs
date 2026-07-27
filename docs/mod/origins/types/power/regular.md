@@ -8,70 +8,6 @@ Standalone powers with unique functionality.
 
 ---
 
-### `origins:riptide`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Lets the holder use the Riptide enchantment whenever this power's base `condition` is active, even outside water and rain. No additional fields are required.
-
----
-
-### `origins:entity_group`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Assigns the holder to a combat group without changing its actual entity type. In 1.21.1, `undead` makes the holder receive the normal bonus damage from Smite and `arthropod` does the same for Bane of Arthropods. The remaining values preserve data compatibility but do not change vanilla behaviour because Minecraft no longer exposes a general entity-group API.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `group` | `undead`, `arthropod`, `illager`, `aquatic`, or `default` | **required** | Logical combat group to apply |
-
----
-
-### `origins:prevent_targeting`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Prevents matching mobs from setting the holder as an attack target.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `mob_condition` | Entity Condition | optional | Condition tested against the targeting mob |
-
-### `origins:modify_target_range`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Changes the maximum target-search range of matching mobs for the holder.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `mob_condition` | Entity Condition | optional | Condition tested against the targeting mob |
-| `modifier` | Modifier | **required** | Applied to the mob's base follow range |
-
-### `origins:protect`
-
-:::caution Unstable
-This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
-:::
-
-Calls nearby matching mobs to attack an entity that hurt the holder or was hurt by the holder.
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `protector_condition` | Entity Condition | optional | Condition tested against a nearby potential protector |
-| `radius` | Double | `16.0` | Search radius for protectors |
-
----
-
 ### `origins:attribute`
 
 Applies attribute modifiers when the power is active, even without the condition.
@@ -490,6 +426,20 @@ This example will make all entities outside the arthropod entity type tag glow w
 
 </details>
 
+### `origins:entity_group`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Assigns the holder to a combat group without changing its actual entity type. In 1.21.1, `undead` makes the holder receive the normal bonus damage from Smite and `arthropod` does the same for Bane of Arthropods. The remaining values preserve data compatibility but do not change vanilla behaviour because Minecraft no longer exposes a general entity-group API.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `group` | `undead`, `arthropod`, `illager`, `aquatic`, or `default` | **required** | Logical combat group to apply |
+
+---
+
 ### `origins:entity_set`
 
 Adds the entity to an entity set (tag-based group).
@@ -843,6 +793,19 @@ This example will give the entity's texture a blue-ish tint and makes it slightl
 
 </details>
 
+### `origins:modify_target_range`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Changes the maximum target-search range of matching mobs for the holder.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `mob_condition` | Entity Condition | optional | Condition tested against the targeting mob |
+| `modifier` | Modifier | **required** | Applied to the mob's base follow range |
+
 ### `origins:multiple`
 
 Allows for defining more than one power in a single file.
@@ -1038,6 +1001,33 @@ This example will allow the player to phase through all blocks except for those 
 
 </details>
 
+### `origins:prevent_targeting`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Prevents matching mobs from setting the holder as an attack target.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `mob_condition` | Entity Condition | optional | Condition tested against the targeting mob |
+
+### `origins:protect`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Calls nearby matching mobs to attack an entity that hurt the holder or was hurt by the holder.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `protector_condition` | Entity Condition | optional | Condition tested against a nearby potential protector |
+| `radius` | Double | `16.0` | Search radius for protectors |
+
+---
+
 ### `origins:recipe`
 
 Grants additional crafting recipes to the player.
@@ -1142,6 +1132,16 @@ Prevents equipping armor that does not match conditions.
 This example will prevent the entity from equipping any armor which has more defense than chainmail.
 
 </details>
+
+### `origins:riptide`
+
+:::caution Unstable
+This power is currently unstable and may not work as intended. Please report if you encounter any issues with it.
+:::
+
+Lets the holder use the Riptide enchantment whenever this power's base `condition` is active, even outside water and rain. No additional fields are required.
+
+---
 
 ### `origins:scare_creepers`
 

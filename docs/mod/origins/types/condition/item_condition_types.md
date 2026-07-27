@@ -151,6 +151,28 @@ This example will check if the item has Merling's Gills *(`origins:water_breathi
 
 </details>
 
+### `origins:in_tag`
+
+Checks if the item is in an item tag.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `tag` | [Identifier](../basic_concepts#identifier) | **required** | Item tag ID |
+
+<details>
+<summary>Example</summary>
+
+```json
+"item_condition": {
+  "type": "origins:in_tag",
+  "tag": "origins:meat"
+}
+```
+
+This example will check whether item is in the `origins:meat` item tag.
+
+</details>
+
 ### `origins:ingredient`
 
 Checks if the item matches an ingredient (item, tag, or list).
@@ -177,27 +199,13 @@ An ingredient which matches a diamond.
 
 </details>
 
-### `origins:in_tag`
+### `origins:is_damageable`
 
-Checks if the item is in an item tag.
+Checks if the item is damageable (i.e. has durability).
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `tag` | [Identifier](../basic_concepts#identifier) | **required** | Item tag ID |
+### `origins:is_equipable`
 
-<details>
-<summary>Example</summary>
-
-```json
-"item_condition": {
-  "type": "origins:in_tag",
-  "tag": "origins:meat"
-}
-```
-
-This example will check whether item is in the `origins:meat` item tag.
-
-</details>
+Checks if the item can be equipped in a specific slot.
 
 ### `origins:on_cooldown`
 
@@ -210,14 +218,6 @@ Checks whether the player currently holding the item has that item type on coold
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | None | - | - | - |
-
-### `origins:is_damageable`
-
-Checks if the item is damageable (i.e. has durability).
-
-### `origins:is_equipable`
-
-Checks if the item can be equipped in a specific slot.
 
 ### `origins:power_count`
 

@@ -31,9 +31,11 @@ Selected player-crafted production blocks can be recovered under more forgiving 
 MITE does not track artificial tunnels as a separate system. Early mining is constrained by tool gates and depth-biased ore generation, while exposed stone, exposed ore, gravel, and surface resources provide the intended first materials.
 
 ## `PRG-07` - Unstable Soil Collapse {#prg-07}
-**Configuration:** `Enable unstable soil collapse`; `Soil collapse delay (ticks)`; `Maximum soil collapses per tick`
+**Configuration:** `Enable unstable soil collapse`; `Soil collapse delay (ticks)`; `Extra slope collapse delay (ticks)`
 
-Dirt and other tagged soils can collapse after support is removed or the area is disturbed. Delayed, chained processing creates unstable excavations while a per-tick limit protects the server from large updates.
+Dirt and other tagged soils fall vertically after losing support. They can also slide sideways from an open ledge when the adjacent space and the block below it form a continuous opening, then continue falling down the slope.
+
+Open-slope collapses wait for the normal collapse delay plus an additional delay, which defaults to 40 ticks. Closing the opening or adding scaffolding before the scheduled check prevents the collapse, giving players time to support a tunnel as it is excavated. Scaffolding directly below soil acts as stable support.
 
 ## `CRF-01` - Timed Crafting {#crf-01}
 **Configuration:** `Enable timed crafting`; `Use MITE recipe difficulties when available`; `Minimum crafting time (ticks)`; `Base crafting time (ticks)`; `Crafting time per occupied ingredient slot (ticks)`
