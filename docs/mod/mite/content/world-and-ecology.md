@@ -46,9 +46,9 @@ Tree leaves provide biome-appropriate sticks, saplings, apples, bananas, and ora
 Livestock track food, water, freedom, crowding, and panic. Healthy animals produce milk, eggs, feathers, and manure; poor conditions reduce production and can spread panic through a herd.
 
 ## `WLD-01` - Ore Generation {#wld-01}
-**Configuration:** `Enable MITE ore generation`; `Generate copper ore`; `Generate silver ore`; `Generate mithril ore`; `Generate adamantium ore in the Underworld`; `Ore Fortune extra-drop chance per level`
+**Configuration:** `Ore Fortune extra-drop chance per level`
 
-Copper, silver, mithril, and adamantium deposits have independent generation switches, attempt counts, vein sizes, and height ranges. Fortune uses a separately controlled extra-drop chance.
+Copper, silver, mithril, adamantium, and Underworld vanilla ores use standard configured features, placed features, and NeoForge biome modifiers. Data packs control their target blocks, vein sizes, counts, height ranges, and biome placement. Fortune uses a separately controlled extra-drop chance.
 
 ## `WLD-02` - The Underworld {#wld-02}
 **Configuration:** `Enable the Underworld`; `Enable Underworld dungeon attempts`; `Enable Underworld fog cycle`; `Enable MITE Underworld bedrock strata`; `Enable exact MITE Underworld terrain noise`; `Enable MITE Underworld cave cobwebs`

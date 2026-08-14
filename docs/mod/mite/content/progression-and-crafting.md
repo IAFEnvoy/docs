@@ -26,9 +26,9 @@ Logs require a hatchet, axe, or battle axe; stone and ores require a pickaxe or 
 Selected player-crafted production blocks can be recovered under more forgiving rules than natural terrain. This prevents progression equipment from becoming permanently trapped without weakening ordinary harvesting gates.
 
 ## `PRG-06` - Early Mining Sources {#prg-06}
-**Configuration:** `Enable tool gates`; `Use MITE gravel loot`; `Enable MITE ore generation`
+**Configuration:** `Enable tool gates`; `Use MITE gravel loot`
 
-MITE does not track artificial tunnels as a separate system. Early mining is constrained by tool gates and depth-biased ore generation, while exposed stone, exposed ore, gravel, and surface resources provide the intended first materials.
+MITE does not track artificial tunnels as a separate system. Early mining is constrained by tool gates and depth-biased ore generation, while exposed stone, exposed ore, gravel, and surface resources provide the intended first materials. Ore distribution is controlled through world-generation data packs.
 
 ## `PRG-07` - Unstable Soil Collapse {#prg-07}
 **Configuration:** `Enable unstable soil collapse`; `Soil collapse delay (ticks)`; `Extra slope collapse delay (ticks)`

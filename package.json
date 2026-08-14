@@ -14,13 +14,14 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.10.0",
-    "@docusaurus/plugin-pwa": "^3.10.0",
-    "@docusaurus/plugin-sitemap": "^3.10.0",
-    "@docusaurus/preset-classic": "^3.10.0",
-    "@docusaurus/theme-common": "^3.10.0",
-    "@docusaurus/theme-mermaid": "^3.10.0",
+    "@docusaurus/core": "^3.10.2",
+    "@docusaurus/plugin-pwa": "^3.10.2",
+    "@docusaurus/plugin-sitemap": "^3.10.2",
+    "@docusaurus/preset-classic": "^3.10.2",
+    "@docusaurus/theme-common": "^3.10.2",
+    "@docusaurus/theme-mermaid": "^3.10.2",
     "@mdx-js/react": "^3.1.1",
+    "@mermaid-js/layout-elk": "^0.2.2",
     "@saucelabs/theme-github-codeblock": "^0.3.0",
     "clsx": "^2.0.0",
     "file-saver": "^2.0.5",
@@ -31,22 +32,10 @@
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.10.1",
-    "@docusaurus/types": "3.10.1",
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/types": "3.10.2",
     "less": "^4.4.2",
     "less-loader": "^12.2.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 3 chrome version",
-      "last 3 firefox version",
-      "last 5 safari version"
-    ]
   },
   "engines": {
     "node": ">=24.0"

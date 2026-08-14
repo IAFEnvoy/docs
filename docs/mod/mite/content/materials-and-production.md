@@ -93,7 +93,7 @@ Supported metal and cooked-food outputs grant fixed MITE experience values. Manu
 ## `FOD-01` - Food Nutrition Values {#fod-01}
 **Configuration:** `Enable MITE food values`; `Enable nutrient physiology`; `Nutrition per food point`; `Nutrient reserve per food point`
 
-Every supported food supplies its own combination of overall nutrition, protein, essential fats, phytonutrients, and sugar response. Data packs define item and tag relationships, allowing modpacks to extend the food table.
+Every supported food supplies its own combination of food energy, protein, essential fats, phytonutrients, and sugar response. Food energy resists starvation and is tracked separately from the three long-term nutrient reserves. Data packs define item and tag relationships, allowing modpacks to extend the food table.
 
 ## `FOD-02` - Survival Food Chain {#fod-02}
 **Configuration:** `Enable MITE food values`; `Enable nutrient physiology`; `Enable MITE fishing`; `Enable blueberry bushes`

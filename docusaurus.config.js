@@ -127,6 +127,7 @@ const config = {
             label: 'Mods',
             items: [
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
+              { to: '/docs/mod/dragon-mounts-reforged', label: 'Dragon Mounts: Reforged' },
               { to: '/docs/mod/mite', label: 'MITE: Reforged' },
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
               { to: '/docs/mod/origins-js', label: 'Origins JS' },

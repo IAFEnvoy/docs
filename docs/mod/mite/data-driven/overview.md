@@ -54,6 +54,18 @@ All three forms are valid:
 
 Depending on the rule, the field may be named `items`, `blocks`, `entities`, `spawn_blocks`, or `corner_blocks`; the selector semantics are the same. Tags always begin with `#`.
 
+## Ore world generation
+
+MITE ores use Minecraft's standard world-generation registries. Override the same `mite` resource ID in a higher-priority data pack to change them:
+
+```text
+data/mite/worldgen/configured_feature/<ore>.json
+data/mite/worldgen/placed_feature/<ore>.json
+data/mite/neoforge/biome_modifier/<ore>.json
+```
+
+Configured features select replacement blocks and vein size. Placed features control count and height distribution. NeoForge biome modifiers determine the dimensions and biomes receiving each placed feature. World-generation changes only affect newly generated chunks.
+
 ## Priority and errors
 
 - Multi-file rules may use an integer `priority`; larger values match first.

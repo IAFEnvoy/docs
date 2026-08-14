@@ -11,19 +11,19 @@ sidebar_position: 2
 New players begin with reduced health and food capacity. Experience milestones increase maximum health and unlock additional food slots until the configured cap is reached; the HUD renders the current limits rather than a misleading vanilla maximum.
 
 ## `PLR-02` - Nutrition and Nutrient Reserves {#plr-02}
-**Configuration:** `Initial nutrition`; `Nutrition limit`; `Enable nutrient physiology`; `Enable MITE food values`; `Nutrition per food point`; `Nutrient reserve limit`; `Initial protein reserve`; `Initial essential-fat reserve`; `Initial phytonutrient reserve`; `Nutrient reserve per food point`; `Nutrient reserve decay per tick`; `Insulin resistance limit`; `Insulin resistance decay per tick`
+**Configuration:** `Initial food energy`; `Food energy limit`; `Enable nutrient physiology`; `Enable MITE food values`; `Food energy per nutrition point`; `Nutrient reserve limit`; `Initial protein reserve`; `Initial essential-fat reserve`; `Initial phytonutrient reserve`; `Nutrient reserve per food point`; `Nutrient reserve decay per tick`; `Insulin resistance limit`; `Insulin resistance decay per tick`
 
-Food maintains overall nutrition as well as protein, essential fats, and phytonutrients. Sugary food builds insulin resistance, while eating a varied diet replenishes the reserves used by long-term survival.
+Food maintains a starvation-resistant food-energy reserve as well as separate protein, essential-fat, and phytonutrient reserves. Sugary food builds insulin resistance, while eating a varied diet replenishes the reserves used by long-term survival.
 
 ## `PLR-03` - Food Energy, Sprinting, and Passive Hunger {#plr-03}
 **Configuration:** `Use MITE sprint rules`; `Allow beneficial eating`; `Passive hunger exhaustion per tick`; `Passive nutrition consumption ratio`
 
-Sprinting uses remaining food energy instead of vanilla's fixed hunger threshold. Full players may still eat food that restores an exhausted nutrition reserve, while passive hunger steadily consumes food and a smaller share of overall nutrition.
+Sprinting uses remaining food or food energy instead of vanilla's fixed hunger threshold. Full players may still eat food that restores exhausted food energy or a nutrient reserve, while passive hunger steadily consumes food and a smaller share of food energy.
 
 ## `PLR-04` - Healing, Malnutrition, and Starvation {#plr-04}
 **Configuration:** `Malnutrition threshold`; `Malnutrition hunger-rate multiplier`; `Malnutrition natural-healing multiplier`; `Dynamic natural-regeneration threshold`; `Starvation progress per tick`; `Starvation damage`
 
-Natural healing follows MITE nutrition rules by default. Missing nutrients slow recovery and increase hunger use; exhausted overall nutrition advances starvation damage. The optional dynamic threshold switches healing back to food-capacity-scaled vanilla behavior.
+Natural healing follows MITE nutrition rules by default. Missing nutrients slow recovery and increase hunger use; exhausted food energy advances starvation damage. The optional dynamic threshold switches healing back to food-capacity-scaled vanilla behavior.
 
 ## `PLR-05` - Weak Strikes {#plr-05}
 **Configuration:** `Enable MITE weak strikes`; `Weak-strike health threshold`; `Weak-strike knockback strength`

@@ -21,11 +21,11 @@ Maximum health is stored and synchronized by the server. The client HUD renders 
 
 ## Food energy and eating
 
-With **Use MITE sprint rules** enabled, sprinting requires food energy rather than vanilla's fixed food threshold. A player can sprint while either food or overall nutrition remains above zero, so the starting 6-point food limit does not prevent sprinting.
+With **Use MITE sprint rules** enabled, sprinting requires available energy rather than vanilla's fixed food threshold. A player can sprint while either food or the separate food-energy reserve remains above zero, so the starting 6-point food limit does not prevent sprinting.
 
-**Allow beneficial eating** lets a player at the current food limit eat only when the food still has a useful effect. A food is useful when it can restore food, depleted overall nutrition, or a depleted protein, essential-fat, or phytonutrient reserve. Foods without MITE nutrition data retain vanilla eating rules.
+**Allow beneficial eating** lets a player at the current food limit eat only when the food still has a useful effect. A food is useful when it can restore food, depleted food energy, or a depleted protein, essential-fat, or phytonutrient reserve. Foods without MITE nutrition data retain vanilla eating rules.
 
-The server adds the configured **Passive hunger exhaustion per tick** every tick. The fraction selected by **Passive nutrition consumption ratio** is also accumulated against overall nutrition; every 4 accumulated points consume 1 nutrition point. Defaults `0.002` and `0.25` reproduce the MITE rates. Setting the first value to `0` disables both passive drains.
+The server adds the configured **Passive hunger exhaustion per tick** every tick. The fraction selected by **Passive food-energy consumption ratio** is also accumulated against food energy; every 4 accumulated points consume 1 food-energy point. Defaults `0.002` and `0.25` reproduce the MITE rates. Setting the first value to `0` disables both passive drains.
 
 ## Nutrition is not hunger
 
@@ -47,7 +47,7 @@ Cooked meat provides substantial protein but may not provide phytonutrients. Fru
 
 ## Starvation and malnutrition
 
-Malnutrition begins when protein or phytonutrients fall below 5% of the reserve limit. It raises hunger consumption to 1.5 times the normal rate and reduces natural regeneration to one quarter by default. These penalties use **Malnutrition hunger-rate multiplier** and **Malnutrition natural-healing multiplier**. Depleting overall nutrition advances starvation according to **Starvation progress per tick** and **Starvation damage**.
+Malnutrition begins when protein or phytonutrients fall below 5% of the reserve limit. It raises hunger consumption to 1.5 times the normal rate and reduces natural regeneration to one quarter by default. These penalties use **Malnutrition hunger-rate multiplier** and **Malnutrition natural-healing multiplier**. Depleting food energy advances starvation according to **Starvation progress per tick** and **Starvation damage**.
 
 Natural healing uses the MITE nutrition-progress formula by default. Enabling **Dynamic natural-regeneration threshold** switches to vanilla healing with its food thresholds scaled to the current capacity: full capacity for saturated fast healing and capacity minus 2 for normal healing.
 
