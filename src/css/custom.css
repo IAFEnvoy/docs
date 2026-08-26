@@ -41,6 +41,26 @@
   padding-right: .8em
 }
 
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 2.5rem 1rem 2rem;
+}
+
+.home-cards .link-card {
+  height: 100%;
+  margin: 0;
+}
+
+@media screen and (max-width: 996px) {
+  .home-cards {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-inline: 0;
+  }
+}
+
 .projectGitHub {
   color: var(--ifm-link-color);
   display: flex;

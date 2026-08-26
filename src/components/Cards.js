@@ -1,69 +1,44 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Link from '@docusaurus/Link';
 
-export function Entry({ link, name, content }) {
-    return (<div className="project">
-        <div className="flex">
-            <b><a href={link} target="_blank" rel="noopener noreferrer">{name}</a></b>
-            <p>{content}</p>
-        </div>
-    </div>);
+function Card({ title, body, link, linkTitle = 'View documentation' }) {
+    return (
+        <article className="card link-card">
+            <div className="card__header">
+                <h3>{title}</h3>
+            </div>
+            <div className="card__body">
+                <p>{body}</p>
+            </div>
+            {link && (
+                <div className="card__footer">
+                    <Link to={link} className="button button--secondary button--block">
+                        {linkTitle}
+                    </Link>
+                </div>
+            )}
+        </article>
+    );
 }
+
+export function Entry({ link, name, content, linkTitle = 'View documentation' }) {
+    return <Card title={name} body={content} link={link} linkTitle={linkTitle} />;
+}
+
 export function Maven({ name, link, group, artifact }) {
-    return (<div>
-        <Tabs>
-            <TabItem value="maven" label="Maven" default>
-                <pre>
-                    <code>
-                        &lt;repository&gt;<br></br>
-                        &nbsp;&nbsp;&lt;id&gt;{name}&lt;/id&gt;<br></br>
-                        &nbsp;&nbsp;&lt;name&gt;{name}&lt;/name&gt;<br></br>
-                        &nbsp;&nbsp;&lt;url&gt;{link}&lt;/url&gt;<br></br>
-                        &lt;/repository&gt;<br></br>
-                        <br></br>
-                        &lt;dependency&gt;<br></br>
-                        &nbsp;&nbsp;&lt;groupId&gt;{group}&lt;/groupId&gt;<br></br>
-                        &nbsp;&nbsp;&lt;artifactId&gt;{artifact}&lt;/artifactId&gt;<br></br>
-                        &nbsp;&nbsp;&lt;version&gt;$&#123;{artifact}_version&#125;&lt;/version&gt;<br></br>
-                        &lt;/dependency&gt;
-                    </code>
-                </pre>
-            </TabItem>
-            <TabItem value="kotlin" label="Gradle Kotlin">
-                <pre>
-                    <code>
-                        maven &#123;<br></br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;name = "{name}"<br></br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;url = uri("{link}")<br></br>
-                        &#125;<br></br>
-                        <br></br>
-                        implementation("{group}:{artifact}:$&#123;{artifact}_version&#125;")
-                    </code>
-                </pre>
-            </TabItem>
-            <TabItem value="groovy" label="Gradle Groovy">
-                <pre>
-                    <code>
-                        maven &#123;<br></br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;name "{name}"<br></br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;url "{link}"<br></br>
-                        &#125;<br></br>
-                        <br></br>
-                        implementation "{group}:{artifact}:$&#123;{artifact}_version&#125;"
-                    </code>
-                </pre>
-            </TabItem>
-            <TabItem value="sbt" label="SBT">
-                <pre>
-                    <code>
-                        resolvers +=<br></br>
-                        &nbsp;&nbsp;"{name}"<br></br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;at "{link}"<br></br>
-                        <br></br>
-                        "{group}" %% "{artifact}" %% "$&#123;{artifact}_version&#125;"
-                    </code>
-                </pre>
-            </TabItem>
-        </Tabs>
-    </div>);
+    const version = '${' + artifact + '_version}';
+    const snippets = {
+        maven: `<repository>\n  <id>${name}</id>\n  <name>${name}</name>\n  <url>${link}</url>\n</repository>\n\n<dependency>\n  <groupId>${group}</groupId>\n  <artifactId>${artifact}</artifactId>\n  <version>${version}</version>\n</dependency>`,
+        kotlin: `maven {\n    name = "${name}"\n    url = uri("${link}")\n}\n\nimplementation("${group}:${artifact}:${version}")`,
+        groovy: `maven {\n    name "${name}"\n    url "${link}"\n}\n\nimplementation "${group}:${artifact}:${version}"`,
+        sbt: `resolvers += "${name}" at "${link}"\n\n"${group}" %% "${artifact}" %% "${version}"`,
+    };
+
+    return <Tabs>
+        <TabItem value="maven" label="Maven" default><pre><code>{snippets.maven}</code></pre></TabItem>
+        <TabItem value="kotlin" label="Gradle Kotlin"><pre><code>{snippets.kotlin}</code></pre></TabItem>
+        <TabItem value="groovy" label="Gradle Groovy"><pre><code>{snippets.groovy}</code></pre></TabItem>
+        <TabItem value="sbt" label="SBT"><pre><code>{snippets.sbt}</code></pre></TabItem>
+    </Tabs>;
 }
