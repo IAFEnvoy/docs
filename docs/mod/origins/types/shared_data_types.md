@@ -14,17 +14,58 @@ Used by powers to display cooldown/resource bars in the HUD.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `should_render_inactive` | [Boolean](./basic_concepts#boolean) | `true` | Whether to render when the resource is full/empty |
+| `should_render_inactive` | [Boolean](./basic_concepts#boolean) | `true` | Whether to render when the resource is full/empty; `should_render` is accepted as a compatibility alias |
 | `sprite_location` | [Identifier](./basic_concepts#identifier) | `origins:textures/gui/resource_bar.png` | Texture for the bar |
-| `bar_index` | [Integer](./basic_concepts#integer) | `0` | Index of the bar in the sprite sheet |
-| `icon_index` | [Integer](./basic_concepts#integer) | `0` | Index of the icon in the sprite sheet |
+| `bar_index` | Integer or [Resource Reference](#resource-reference) | `0` | Index of the bar in the sprite sheet |
+| `icon_index` | Integer or [Resource Reference](#resource-reference) | `0` | Index of the icon in the sprite sheet |
 | `condition` | [Entity Condition](./condition/entity_condition_types) | optional | Condition for rendering the HUD element |
 | `inverted` | [Boolean](./basic_concepts#boolean) | `false` | If `true`, inverts the bar direction |
-| `order` | [Integer](./basic_concepts#integer) | `0` | Render order among multiple HUD elements |
+| `order` | Integer or [Resource Reference](#resource-reference) | `0` | Render order among multiple HUD elements |
 
-:::caution
-`should_render` is no longer supported for HUD elements. You can just remove HudRender from power to hide the HUD element, or use the `condition` field to control its visibility instead.
-:::
+The Origins: Math parent-and-children list representation is also accepted for data compatibility.
+
+---
+
+## Resource Reference
+
+A Resource Reference can be either a literal number or the identifier of a resource power on the executing entity. Fields documented with this type evaluate the resource value when used.
+
+```json
+5
+```
+
+```json
+"example:charge"
+```
+
+Missing resources and non-finite values resolve to `0`.
+
+---
+
+## Variables
+
+Expression-enabled types accept an optional `variables` object which maps an expression variable name to a resource power identifier.
+
+```json
+{
+  "expression": "charge * 0.25 + bonus",
+  "variables": {
+    "charge": "example:charge",
+    "bonus": "example:bonus"
+  }
+}
+```
+
+Variable names must begin with a letter or `_`, and may then contain letters, digits, or `_`. Expressions use exp4j syntax; invalid or non-finite results resolve to `0`.
+
+`variable_execute_command` and `variable_nbt_linked_resource` can interpolate variables in strings:
+
+| Form | Result |
+|------|--------|
+| `$:name` | Integer value of `name` |
+| `${name}` | Integer value of `name` |
+| `${name:%d}` | Integer value of `name` |
+| `${name:%.2f}` | Decimal value with a precision from `0` to `17` |
 
 ---
 

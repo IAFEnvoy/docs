@@ -92,6 +92,16 @@ Copies each entity's origin from the other entity in a layer.
 | `modify_actor` | [Boolean](../basic_concepts#boolean) | `false` | Replace the actor's origin with the target's origin |
 | `modify_target` | [Boolean](../basic_concepts#boolean) | `true` | Replace the target's origin with the actor's origin |
 
+### `origins:copy_resource_value`
+
+Copies a resource value from the target to the actor.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `actor_resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power on the actor to change |
+| `target_resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power on the target to read |
+| `operation` | [String](../basic_concepts#string) | `add` | `add` the value or `set` the actor resource |
+
 ### `origins:damage_target`
 
 Damages the target entity.
@@ -150,3 +160,14 @@ Teleports the actor and/or target to the other entity's original position.
 | `teleport_actor` | [Boolean](../basic_concepts#boolean) | `false` | Teleport the actor to the target |
 | `teleport_target` | [Boolean](../basic_concepts#boolean) | `true` | Teleport the target to the actor |
 | `rotate` | [Boolean](../basic_concepts#boolean) | `false` | Copy the destination entity's rotation |
+
+### `origins:variable_execute_command`
+
+Executes a command as the actor after interpolating resource variables. The default `%a` and `%t` tokens are replaced by the actor and target UUIDs.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `command` | [String](../basic_concepts#string) | **required** | Command to execute |
+| `actor_selector` | [String](../basic_concepts#string) | `%a` | Token replaced with the actor UUID |
+| `target_selector` | [String](../basic_concepts#string) | `%t` | Token replaced with the target UUID |
+| `variables` | [Variables](../shared_data_types#variables) | optional | Resource values available to the command |

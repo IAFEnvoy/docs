@@ -65,6 +65,8 @@ Complex data types used across multiple power, action, and condition types. See 
 - **PositionedItemStack** — Item with optional slot position
 - **ColorSettings** — RGBA color settings
 - **Space** — Coordinate space definition
+- **Resource Reference** — Literal number or resource-backed numeric value
+- **Variables** — Resource values exposed to expressions and interpolated strings
 
 ## Minecraft Data Types
 

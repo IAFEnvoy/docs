@@ -27,6 +27,16 @@ This example will check if the straight path from the actor entity's eyes to the
 
 </details>
 
+### `origins:compare_resources`
+
+Compares a resource on the actor with a resource on the target. `source_resource` is accepted as a compatibility alias for `actor_resource`.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `actor_resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power ID on the actor |
+| `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
+| `target_resource` | [Identifier](../basic_concepts#identifier) | **required** | Resource power ID on the target |
+
 ### `origins:distance`
 
 Checks the distance between actor and target.

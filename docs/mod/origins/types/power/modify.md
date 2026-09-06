@@ -61,6 +61,16 @@ This example will set the total value of the entity's `minecraft:generic.attack_
 
 </details>
 
+### `origins:modify_attribute_like_resource`
+
+Modifies the current value of an `attribute_like_resource`.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+| `modifier` | [Modifier](../shared_data_types#modifier) | optional | Applied before `modifiers` |
+| `modifiers` | List of [Modifier](../shared_data_types#modifier) | optional | Value modifiers |
+
 ### `origins:modify_block_render`
 
 Modifies block rendering distance/shape.
@@ -647,6 +657,16 @@ This example will increase the entity that has the power's jump height to 4 bloc
 
 </details>
 
+### `origins:modify_knockback`
+
+Modifies knockback independently on each axis.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `x` | [Modifier](../shared_data_types#modifier) or List | `[]` | X-axis modifiers |
+| `y` | [Modifier](../shared_data_types#modifier) or List | `[]` | Y-axis modifiers |
+| `z` | [Modifier](../shared_data_types#modifier) or List | `[]` | Z-axis modifiers |
+
 ### `origins:modify_player_spawn`
 
 Modifies where the player spawns/respawns.
@@ -704,6 +724,35 @@ Modifies projectile damage.
 This example will modify the damage of the Spectral Arrow projectile entity shot by the entity that has the power to deal additional 4 hearts of damage.
 
 </details>
+
+### `origins:modify_resource_maximum`
+
+Modifies the active maximum of a `modifiable_resource`.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+| `modifier` | [Modifier](../shared_data_types#modifier) | optional | Applied before `modifiers` |
+| `modifiers` | List of [Modifier](../shared_data_types#modifier) | optional | Bound modifiers |
+
+### `origins:modify_resource_minimum`
+
+Modifies the active minimum of a `modifiable_resource`.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+| `modifier` | [Modifier](../shared_data_types#modifier) | optional | Applied before `modifiers` |
+| `modifiers` | List of [Modifier](../shared_data_types#modifier) | optional | Bound modifiers |
+
+### `origins:modify_simple`
+
+Generic modifier holder for integrations. It has no effect unless an integration queries it.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `modifier` | [Modifier](../shared_data_types#modifier) | optional | Applied before `modifiers` |
+| `modifiers` | List of [Modifier](../shared_data_types#modifier) | optional | Value modifiers |
 
 ### `origins:modify_slipperiness`
 

@@ -17,6 +17,25 @@ Applies attribute modifiers when the power is active, even without the condition
 | `modifier` | [AttributeEntry](../shared_data_types#attributeentry) or List | `[]` | Attribute modifier entries |
 | `update_health` | [Boolean](../basic_concepts#boolean) | `true` | Whether to update max health after applying |
 
+### `origins:attribute_like_resource`
+
+Provides a decimal resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `min` | Number | **required** | Minimum value |
+| `max` | Number | **required** | Maximum value |
+| `start_value` | Number | `min` | Initial value |
+
+### `origins:attribute_linked_resource`
+
+Provides the holder's attribute value as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `attribute` | [Identifier](../basic_concepts#identifier) | **required** | Attribute ID |
+| `value` | [String](../basic_concepts#string) | `total` | Attribute value: `total` or `base` |
+
 ### `origins:attribute_modify_transfer`
 
 Transfers attribute modifiers between entities.
@@ -216,6 +235,26 @@ This example will set the entity on fire for 1 second, within an interval of 20 
 
 Grants creative flight while active.
 
+### `origins:current_biome_linked_resource`
+
+Provides a current-biome value as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `property` | [String](../basic_concepts#string) | **required** | `temperature` or `humidity` |
+
+### `origins:damage_dealt_linked_resource`
+
+Provides the latest matching damage dealt by the holder as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `duration` | [Integer](../basic_concepts#integer) | `2147483647` | Ticks to retain the event value |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Filter for matching damage |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action when the value updates |
+| `modifier` | [Modifier](../shared_data_types#modifier) | optional | Applied before `modifiers` |
+| `modifiers` | List of [Modifier](../shared_data_types#modifier) | optional | Modifiers for the recorded damage |
+
 ### `origins:damage_over_time`
 
 Damages the player at regular intervals.
@@ -259,6 +298,18 @@ Damages the player at regular intervals.
 This example will deal damage to the entity if the entity is in water.
 
 </details>
+
+### `origins:damage_taken_linked_resource`
+
+Provides the latest matching damage received by the holder as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `duration` | [Integer](../basic_concepts#integer) | `2147483647` | Ticks to retain the event value |
+| `damage_condition` | [Damage Condition](../condition/damage_condition_types) | optional | Filter for matching damage |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | optional | Action when the value updates |
+| `modifier` | [Modifier](../shared_data_types#modifier) | optional | Applied before `modifiers` |
+| `modifiers` | List of [Modifier](../shared_data_types#modifier) | optional | Modifiers for the recorded damage |
 
 ### `origins:disable_regen`
 
@@ -442,11 +493,12 @@ Assigns the holder to a combat group without changing its actual entity type. In
 
 ### `origins:entity_set`
 
-Adds the entity to an entity set (tag-based group).
+Creates an entity set for this power. The set is unique to the power holder and this power ID. Use the power ID as the `set` field of [entity set actions](../action/bientity_action_types#originsadd_to_set) and conditions to add, remove, and query members.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `set` | [Identifier](../basic_concepts#identifier) | **required** | Entity set ID |
+| `action_on_add` | [Bi-entity Action](../action/bientity_action_types) | optional | Action to execute when an entity is added; the holder is the actor and the added entity is the target |
+| `action_on_remove` | [Bi-entity Action](../action/bientity_action_types) | optional | Action to execute when an entity is removed; the holder is the actor and the removed entity is the target |
 
 ### `origins:exhaust`
 
@@ -568,6 +620,15 @@ Keeps the power holder at their current vertical velocity, allowing them to hove
 |-------|------|---------|-------------|
 | `step_assist` | [Float](../basic_concepts#float) | `0` | Reserved step-assist distance |
 
+### `origins:healing_linked_resource`
+
+Provides the latest amount healed by the holder as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `duration` | [Integer](../basic_concepts#integer) | `2147483647` | Ticks to retain the event value |
+| `entity_action` | [Entity Action](../action/entity_action_types) | optional | Action when the value updates |
+
 ### `origins:ignore_water`
 
 Makes the player ignore water for movement (walk through water normally).
@@ -597,6 +658,16 @@ Provides an additional inventory accessible via key press.
 | `drop_on_death_filter` | [Item Condition](../condition/item_condition_types) | optional | Filter for items that should drop on death |
 | `recoverable` | [Boolean](../basic_concepts#boolean) | `true` | Whether items are recovered when re-gaining the power |
 | `key` | [Key] | optional | Key binding settings |
+
+### `origins:living_entity_linked_resource`
+
+Provides a living-entity property as a read-only resource; returns `0` for non-living entities.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `property` | [String](../basic_concepts#string) | **required** | Living-entity property to read |
+
+Player properties are `food_level`, `saturation`, `health`, `relative_health`, `absorption`, `breathing`, `fire_ticks`, `frozen_ticks`, `freezing_scale`, `exp_level`, `exp_points`, `exp_score`, `sleep_timer`, `stuck_arrows`, `fall_distance`, `time_of_day`, `time`, `lunar_time`, `light_level`, `block_light_level`, `sky_light_level`, `age`, `x`, `y`, `z`, `velocity_x`, `velocity_y`, `velocity_z`, `pitch`, `yaw`, and `roll`. Living-entity resources support the same list except experience and sleep properties. `roll` resolves to `0` on Minecraft 1.21.1.
 
 ### `origins:invisibility`
 
@@ -793,6 +864,30 @@ This example will give the entity's texture a blue-ish tint and makes it slightl
 
 </details>
 
+### `origins:math_resource`
+
+Provides an expression result as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `expression` | [String](../basic_concepts#string) | **required** | Expression evaluated with exp4j |
+| `variables` | [Variables](../shared_data_types#variables) | optional | Resource values available to the expression |
+
+### `origins:modifiable_resource`
+
+Provides an integer resource with bounds that modifier powers can change.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `min` | [Integer](../basic_concepts#integer) | **required** | Base minimum value |
+| `max` | [Integer](../basic_concepts#integer) | **required** | Base maximum value |
+| `start_value` | [Integer](../basic_concepts#integer) | `min` | Initial value |
+| `enforce_limits` | [Boolean](../basic_concepts#boolean) | `true` | Clamp reads and writes to active bounds |
+| `retain_value` | [Boolean](../basic_concepts#boolean) | `false` | Preserve an out-of-range stored value while bounds change |
+| `hud_render` | [Hud Render](../shared_data_types#hudrender) | optional | HUD display settings |
+| `min_action` | [Entity Action](../action/entity_action_types) | optional | Action when a write reaches the active minimum |
+| `max_action` | [Entity Action](../action/entity_action_types) | optional | Action when a write reaches the active maximum |
+
 ### `origins:modify_target_range`
 
 :::caution Unstable
@@ -864,6 +959,14 @@ Grants night vision.
 This example will give the player regular night vision.
 
 </details>
+
+### `origins:nbt_linked_resource`
+
+Provides the first numeric value at an entity NBT path as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `path` | [String](../basic_concepts#string) | **required** | Entity NBT path |
 
 ### `origins:overlay`
 
@@ -1000,6 +1103,14 @@ Allows the player to phase through blocks.
 This example will allow the player to phase through all blocks except for those in the `origins:unphasable` (`data/origins/tags/blocks/unphasable.json`) block tag. They can also phase down while sneaking, but will make a short stop at each block so they don't take fall damage.
 
 </details>
+
+### `origins:player_linked_resource`
+
+Provides a player property as a read-only resource; returns `0` for non-player entities.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `property` | [String](../basic_concepts#string) | **required** | Player property to read |
 
 ### `origins:prevent_targeting`
 
@@ -1142,6 +1253,14 @@ This power is currently unstable and may not work as intended. Please report if 
 Lets the holder use the Riptide enchantment whenever this power's base `condition` is active, even outside water and rain. No additional fields are required.
 
 ---
+
+### `origins:scoreboard_linked_resource`
+
+Provides the holder's current scoreboard value as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `objective` | [String](../basic_concepts#string) | **required** | Scoreboard objective name |
 
 ### `origins:scare_creepers`
 
@@ -1287,6 +1406,15 @@ This example will give the player the "Explorer Kit" known from Origins: Classes
 
 </details>
 
+### `origins:status_effect_linked_resource`
+
+Provides a status-effect value as a read-only resource. A missing effect has an amplifier of `-1` and a duration of `0`.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `effect` | [Identifier](../basic_concepts#identifier) | **required** | Status effect ID |
+| `property` | [String](../basic_concepts#string) | **required** | `amplifier` or `duration` |
+
 ### `origins:status_bar_texture`
 
 Changes the player's status bar textures (hearts, hunger, etc.).
@@ -1384,3 +1512,12 @@ Improves underwater visibility.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `strength` | [Float](../basic_concepts#float) | `1.0` | Vision clarity strength (0-1) |
+
+### `origins:variable_nbt_linked_resource`
+
+Provides the first numeric value at an interpolated entity NBT path as a read-only resource.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `path` | [String](../basic_concepts#string) | **required** | Entity NBT path with variable interpolation |
+| `variables` | [Variables](../shared_data_types#variables) | optional | Resource values available to the path |

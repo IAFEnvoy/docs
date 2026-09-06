@@ -173,8 +173,8 @@ Changes a resource value by a specified amount.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
-| `change` | [Integer](../basic_concepts#integer) | **required** | Amount to change (can be negative) |
-| `operation` | [String](../basic_concepts#string) | optional | Operation: `add` or `set` |
+| `change` | Integer or [Resource Reference](../shared_data_types#resource-reference) | **required** | Amount to change (can be negative) |
+| `operation` | [String](../basic_concepts#string) | `add` | Operation: `add` or `set` |
 
 <details>
 <summary>Example</summary>
@@ -190,6 +190,17 @@ Changes a resource value by a specified amount.
 This example will add 1 to the `namespace:example` (`data/namespace/powers/example.json`) power that uses the [Resource (Power Type)](../power/regular).
 
 </details>
+
+### `origins:variable_change_resource`
+
+Changes a resource by an expression result.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+| `expression` | [String](../basic_concepts#string) | **required** | Expression evaluated with exp4j |
+| `variables` | [Variables](../shared_data_types#variables) | optional | Resource values available to the expression |
+| `operation` | [String](../basic_concepts#string) | `add` | `add` or `set` |
 
 ### `origins:clear_set`
 
@@ -334,6 +345,15 @@ Executes a command as the entity.
 This example will execute a [Set Block](../action/block_action_types) that would set a Sand block at the entity's feet.
 
 </details>
+
+### `origins:variable_execute_command`
+
+Executes a command as the entity after interpolating resource variables. See [Variables](../shared_data_types#variables) for interpolation forms.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `command` | [String](../basic_concepts#string) | **required** | Command to execute |
+| `variables` | [Variables](../shared_data_types#variables) | optional | Resource values available to the command |
 
 ### `origins:exhaust`
 

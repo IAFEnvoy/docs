@@ -8,6 +8,28 @@ Meta actions are actions that execute other actions, allowing for more complex b
 These meta action types can be used in all types of actions.
 :::
 
+### `origins:for_range`
+
+Runs an action once for every integer from `0` up to the resolved range.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `range` | [Resource Reference](../shared_data_types#resource-reference) | **required** | Number of executions; negative values execute zero times |
+| `action` | Action | **required** | Action to execute |
+
+The number of executions is limited by the server `general.maxActionIterations` setting, which defaults to `10000` and has a maximum of `1000000`.
+
+### `origins:while`
+
+Runs an action while its condition remains true.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `condition` | Condition | **required** | Condition tested before every execution |
+| `action` | Action | **required** | Action to execute |
+
+The server `general.maxActionIterations` setting limits executions. A loop that reaches this limit throws an error instead of continuing indefinitely.
+
 ### `origins:and`
 
 Executes multiple actions in sequence.

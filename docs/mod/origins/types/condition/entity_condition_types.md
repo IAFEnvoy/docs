@@ -963,6 +963,42 @@ This example will check if the player has half or less of their max health.
 
 </details>
 
+### `origins:relative_resource`
+
+Compares a resource's value divided by its maximum value with a number or resource value.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+| `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
+| `relativity` | [Resource Reference](../shared_data_types#resource-reference) | **required** | Value to compare against |
+
+### `origins:empty_resource`
+
+Checks whether a resource is at or below its minimum value.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+
+### `origins:full_resource`
+
+Checks whether a resource is at or above its maximum value.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | [Wildcard Identifier](../basic_concepts#wildcard-identifier) | **required** | Resource power ID |
+
+### `origins:compare_resources`
+
+Compares two resources on the same entity.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `left_resource` | [Identifier](../basic_concepts#identifier) | **required** | Left resource power ID |
+| `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
+| `right_resource` | [Identifier](../basic_concepts#identifier) | **required** | Right resource power ID |
+
 ### `origins:resource`
 
 Checks the value of a resource.
