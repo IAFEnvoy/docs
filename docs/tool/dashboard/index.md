@@ -8,6 +8,9 @@ description: ModList Dashboard is a Go-built Minecraft Mod data dashboard with a
 
 ModList Dashboard is a full-stack project for managing and displaying Minecraft Mod statistics, editing mod metadata, and chatting with a built-in multi-AI Agent system powered by LangChainGo.
 
+> Source code: [github.com/IAFEnvoy/ModList-Dashboard](https://github.com/IAFEnvoy/ModList-Dashboard)
+> · Build & first-run guide: [project README](https://github.com/IAFEnvoy/ModList-Dashboard#readme)
+
 ## Core Features
 
 | Module | Description |
