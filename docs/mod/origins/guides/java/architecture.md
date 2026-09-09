@@ -50,11 +50,15 @@ Dynamic registries are declared in `OriginsRegistries.newDatapackRegistries()`. 
 
 When a power is granted to a player:
 
-1. `Power.grant(holder)` is called.
-2. If the `condition` field is satisfied, the power becomes **active** via `Power.active(holder)`.
-3. On specific intervals defined by `Power.tickInterval()`(default is 1), `Power.tick(holder)` runs.
+1. `Power.grant(holder)` is called. Granting is batched: for a whole origin (or a `MultiplePower` plus its children) the power is registered first and only **ticked** once the entire grant batch completes.
+2. `Power.tick(holder)` is then called (once per batch). If the `condition` field is satisfied, the power becomes **active** via `Power.active(holder)`.
+3. On specific intervals defined by `Power.tickInterval()`(default is 1), `Power.tick(holder)` keeps running.
 4. If the condition becomes false, `Power.inactive(holder)` fires.
 5. When the power is revoked, `Power.revoke(holder)` fires.
+
+:::note
+Because activation is deferred until the end of the grant batch, a power may safely reference another power in the same origin (e.g. a resource power) even if that power is declared later in the `powers` list. All powers in the batch are registered before any of them is ticked.
+:::
 
 **Components** (`ActiveComponent`, `CooldownComponent`, `ToggleComponent`, `ResourceComponent`, `InventoryComponent`, `EntitySetComponent`) are attached to each power instance and persist runtime state.
 

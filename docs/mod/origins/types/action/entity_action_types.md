@@ -89,6 +89,41 @@ This example will apply a Speed I status effect to the entity that would last fo
 
 </details>
 
+### `origins:area_of_effect`
+
+Executes a bi-entity action within a specified radius.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `radius` | [Float](../basic_concepts#float) | `16.0` | Determines the radius of the area. |
+| `bientity_action` | [Bi-entity Action](../action/bientity_action_types) | **required** | Bi-entity action to execute on the actor and entities within the radius. |
+| `bientity_condition` | [Bi-entity Condition](../condition/bientity_condition_types) | optional | If specified, only executes the action if this condition is fulfilled. |
+| `include_target` | [Boolean](../basic_concepts#boolean) | `false` | If `true`, the actor itself is also included as a target. |
+
+<details>
+<summary>Example</summary>
+
+```json
+"entity_action": {
+    "type": "origins:area_of_effect",
+    "radius": 32,
+    "bientity_action": {
+        "type": "origins:target_action",
+        "action": {
+            "type": "origins:set_on_fire",
+            "duration": 5
+        }
+    },
+    "bientity_condition": {
+        "type": "origins:can_see"
+    }
+}
+```
+
+This example will set entities within a 32 block radius on fire for 5 seconds if the entities that are within the radius can be "seen" by the entity that invoked the action.
+
+</details>
+
 ### `origins:award_stat`
 
 Increments one or more Minecraft stats. Only works on the server side.

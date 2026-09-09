@@ -266,11 +266,31 @@ Checks if the entity is colliding horizontally with a wall.
 
 Checks if a command returns a specific result.
 
+:::caution
+This condition is only effective server-side. That means client-side power types such as `origins:climbing`, `origins:entity_glow`, `origins:shader`, etc. won't work with this.
+:::
+
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `command` | [String](../basic_concepts#string) | **required** | Command to execute |
 | `comparison` | [String](../basic_concepts#string) | **required** | Comparison operator |
 | `compare_to` | [Integer](../basic_concepts#integer) | **required** | Value to compare against |
+
+<details>
+<summary>Example</summary>
+
+```json
+"condition": {
+    "type": "origins:command",
+    "command": "execute if score @s objective1 = @s objective2",
+    "comparison": "==",
+    "compare_to": 1
+}
+```
+
+This example will check if the entity has the same score in the objective1 and objective2 scoreboard objectives.
+
+</details>
 
 ### `origins:creative_flying`
 

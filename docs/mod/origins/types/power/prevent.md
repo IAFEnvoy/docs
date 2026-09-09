@@ -274,6 +274,34 @@ This example will prevent the player that has the power from interacting with a 
 
 </details>
 
+### `origins:prevent_feature_render`
+
+Configures whether specified entity features are rendered on the entity that has the power.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `armor` | [Boolean](../basic_concepts#boolean) | `true` | If `true`, renders the worn armor; if `false`, hides it. |
+| `cape` | [Boolean](../basic_concepts#boolean) | `true` | If `true`, renders the cape; if `false`, hides it. |
+| `elytra` | [Boolean](../basic_concepts#boolean) | `true` | If `true`, renders the worn elytra; if `false`, hides it. |
+| `held_item` | [Boolean](../basic_concepts#boolean) | `true` | If `true`, renders the held item; if `false`, hides it. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+    "type": "origins:prevent_feature_render",
+    "armor": false,
+    "cape": false,
+    "elytra": false,
+    "held_item": false
+}
+```
+
+This example will hide the worn armor, cape, elytra and held item of the entity that has the power.
+
+</details>
+
 ### `origins:prevent_game_event`
 
 Prevents certain game events from being detected (e.g. sculk sensors).
