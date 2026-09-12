@@ -46,5 +46,5 @@ Unless an interface is explicitly marked as a client API, do not call server lif
 - [Hotbar Entries](./hotbar.md) — how to add an entry to the client hotbar.
 - [Types Reference](../datapack/types/index.md) — every built-in action and condition type.
 - [JSON Data Formats](../datapack/json/index.md) — every field of every data table.
-- [Datapack Overview](../datapack/overview.md) — the datapack directory layout and reload behaviour.
+- [Datapack Overview](../datapack/overview.md) — the datapack directory layout and when changes take effect.
 - [KubeJS API](../kubejs/index.md) — the scripted alternative for content that does not need Java.

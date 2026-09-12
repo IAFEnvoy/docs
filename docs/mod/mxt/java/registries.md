@@ -6,7 +6,7 @@ sidebar_position: 2
 
 # Registries and Data Tables
 
-MiXianTu has two kinds of registries. Built-in registries hold the `MapCodec` implementations that a datapack selects with the `type` field, and are populated in Java code. Dynamic data tables are native datapack registries whose entries live in JSON files, are reloaded with the datapack and are synchronised to the client by the registry system.
+MiXianTu has two kinds of registries. Built-in registries hold the `MapCodec` implementations that a datapack selects with the `type` field, and are populated in Java code. Dynamic data tables are native datapack registries whose entries live in JSON files: Minecraft reads them while the world loads, and they are synchronised to the client by the registry system. Because they are read at world load, `/reload` does not re-read them — see [Loading, Reloading and Syncing](../datapack/overview.md#loading-reloading-and-syncing).
 
 ## Built-In Type Registries
 
@@ -30,7 +30,7 @@ The registry instances are declared in `MxtRegistries`, and their keys are decla
 | `MxtRegistries.NUMBER_PROVIDER_TYPE` | `mxt:number_provider_type` | Number provider codecs. |
 | `MxtRegistries.AURA_MAXIMUM_TYPE` | `mxt:aura_maximum_type` | Aura maximum codecs. |
 | `MxtRegistries.FORMULA_FUNCTION` | `mxt:formula_function` | Formula functions available to expressions. |
-| `MxtRegistries.FORMULA_VARIABLE` | `mxt:formula_variable` | Formula variables injected by the runtime. |
+| `MxtRegistries.FORMULA_VARIABLE` | `mxt:formula_variable` | Built-in formula variables. Each entry reads a number out of the objects the formula context carries, and a data pack cannot add entries; the names are listed in [Formula Variables](../datapack/types/formula_variables.md). |
 | `MxtRegistries.RESOURCE_VALUE_PROVIDER_TYPE` | `mxt:resource_value_provider_type` | Resource value provider codecs. |
 | `MxtRegistries.ENTITY_ACTION_TYPE` | `mxt:entity_action_type` | Entity action codecs. |
 | `MxtRegistries.BI_ENTITY_ACTION_TYPE` | `mxt:bi_entity_action_type` | Bi-entity action codecs. |
@@ -47,9 +47,23 @@ The registry instances are declared in `MxtRegistries`, and their keys are decla
 | `MxtRegistries.BADGE_TYPE` | `mxt:badge_type` | Badge codecs. |
 | `MxtRegistries.ITEM_MATCHER_ENTRY_TYPE` | `mxt:item_matcher_entry_type` | Item matcher entry codecs. |
 
-The built-in types are grouped and registered by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`. Registering a new built-in type means providing a `MapCodec` and adding it to the matching `DeferredRegister`; a datapack reload never adds entries to these registries.
+The built-in types are grouped and registered by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`. Registering a new built-in type means providing a `MapCodec` and adding it to the matching `DeferredRegister`; a data pack never adds entries to these registries.
 
 These registries are open to other mods: a third-party module may add its own codecs to any of them — the built-in trigger table documents this explicitly — and the new `type` ids then become available to datapacks.
+
+## Formula Variables
+
+`mxt:formula_variable` holds the built-in variables a formula can read. An entry implements `FormulaVariable` and reads its number out of the objects the `FormulaContext` carries, so nothing is precomputed:
+
+| Member | Description |
+|--------|-------------|
+| `names()` | The exact names the variable provides. They are indexed once, and a name may only be claimed by a single variable; a collision is reported. |
+| `prefixes()` | Name prefixes the variable provides, each including its separator, such as `caster_`. A requested name that starts with a prefix is handed to the variable with that prefix removed. |
+| `value(key, suffix, context)` | The value for a name the variable claimed. `key` is the name or prefix that matched and `suffix` is what follows it, so `caster_mxt_common` arrives as key `caster_` plus suffix `mxt_common`. Return `Double.NaN` to decline the name, which lets the next variable that claims it be asked; the resolver reports a declined or non-finite value once and continues with `0`. |
+
+Register an entry with `DeferredRegister.create(MxtRegistries.FORMULA_VARIABLE, MODID)`. Unavailable names and non-finite values go through `FormulaDiagnostics`, which logs the whole error in a development environment and one warning line per distinct message in production, so an addon does not need its own error policy; problems a codec can already see while parsing are reported as decode errors instead. `FormulaNames` flattens a registry ID into a formula identifier and keeps the resource and attribute name indexes.
+
+A requested name is split into the variables that claim it once per expression, not once per evaluation: `Expression` keeps the resulting binding next to its compiled exp4j expression, so a formula evaluated every tick resolves each name a single time and afterwards only re-reads the values. The names themselves are documented in [Formula Variables](../datapack/types/formula_variables.md).
 
 ## Dynamic Data Tables
 

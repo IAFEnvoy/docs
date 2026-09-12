@@ -1,10 +1,9 @@
 ---
-title: "Sect"
+title: "Sect (sect)"
 description: "Defines a sect rank ladder, its contribution tasks and its contribution exchanges through the mxt:sect datapack registry."
-sidebar_position: 34
 ---
 
-# Sect
+# Sect (sect)
 
 A sect definition holds the rank ladder, the contribution tasks and the contribution exchanges of one sect. Membership, contribution and territory are runtime state; the JSON only defines the policy those systems read.
 

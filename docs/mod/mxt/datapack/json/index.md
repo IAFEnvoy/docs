@@ -1,12 +1,13 @@
 ---
 title: "JSON Data Formats"
 description: "Reference for every JSON datapack registry provided by MiXianTu, including its file path and purpose."
-sidebar_position: 1
 ---
 
 # JSON Data Formats
 
 This section documents the JSON format of every datapack registry the mod provides. Definitions are plain JSON files loaded by the vanilla datapack registry system and become immutable after loading. Basic value shapes shared by all definitions are listed in [Shared Data Types](../types/shared_data_types.md).
+
+The pages are sorted by registry id and each title carries that id in parentheses, so the sidebar can be read as a lookup list: finding `mxt:item_binding` in a datapack leads to [Item Binding (item_binding)](./item_binding.md).
 
 ## File Paths
 
@@ -36,43 +37,44 @@ Entries listed in `disabled` are not used by the corresponding service, but they
 
 ## Registries
 
-The table below lists the 32 datapack registries the mod registers. Each one has its own page in this section. `mxt:alchemy` is listed as well even though it is a vanilla recipe type rather than a datapack registry, because its JSON is documented here too.
+The table below lists the 32 datapack registries the mod registers, in registry id order, plus the two recipe types documented in this section. `mxt:alchemy`, `mxt:spirit_shaped` and `mxt:spirit_shapeless` are vanilla recipe types rather than datapack registries, and are listed here because their JSON is documented in this section too.
 
 | Registry | Directory | Purpose |
 |----------|-----------|---------|
-| [`resource`](./resource.md) | `mxt/resource` | Entity resources such as cultivation progress, spirit power and stamina, plus inline resource bars. |
-| [`badge`](./badge.md) | `mxt/badge` | Reserved badge metadata. |
-| [`realm_stage`](./realm_stage.md) | `mxt/realm_stage` | Linear realm chains and breakthrough. |
-| [`element`](./element.md) | `mxt/element` | Element relations and aura kinds. |
-| [`spirit_root`](./spirit_root.md) | `mxt/spirit_root` | A spirit root bound to a single element. |
-| [`physique`](./physique.md) | `mxt/physique` | Physique bonuses that are independent of elements. |
 | [`ability`](./ability.md) | `mxt/ability` | Active, passive and triggered abilities. |
-| [`curse`](./curse.md) | `mxt/curse` | Curse definitions that can be referenced. |
-| [`forging_method`](./forging_method.md) | `mxt/forging_method` | A single forging strike method. |
-| [`forging_blueprint`](./forging_blueprint.md) | `mxt/forging_blueprint` | Forging targets and quality settlement. |
-| [`tool_binding`](./tool_binding.md) | `mxt/tool_binding` | Forging methods provided by tool items. |
-| [`blueprint_binding`](./blueprint_binding.md) | `mxt/blueprint_binding` | Forging blueprints provided by blueprint items. |
-| [`cultivation_technique`](./cultivation_technique.md) | `mxt/cultivation_technique` | Cultivation technique definitions. |
-| [`cultivate_action`](./cultivate_action.md) | `mxt/cultivate_action` | The cultivation process and its environment requirements. |
-| [`item_archetype`](./item_archetype.md) | `mxt/item_archetype` | Artifact archetypes and abilities. |
-| [`spirit_herb`](./spirit_herb.md) | `mxt/spirit_herb` | Spirit herb metadata for existing items. |
 | [`alchemy_recipe`](./alchemy_recipe.md) | `recipe` | Vanilla recipe type (`mxt:alchemy`), not a datapack registry. |
-| [`formation`](./formation.md) | `mxt/formation` | Formation lifecycle and aura overrides. |
-| [`tribulation`](./tribulation.md) | `mxt/tribulation` | Tribulation stages. |
-| [`creature_profile`](./creature_profile.md) | `mxt/creature_profile` | Creature profiles and entity binding conditions. |
-| [`contract_type`](./contract_type.md) | `mxt/contract_type` | Contract lifecycle. |
-| [`title`](./title.md) | `mxt/title` | Titles and passive attributes. |
-| [`sect`](./sect.md) | `mxt/sect` | Sect ranks, tasks and exchanges. |
-| [`realm_instance`](./realm_instance.md) | `mxt/realm_instance` | Realm instance strategies. |
-| [`currency`](./currency.md) | `mxt/currency` | Item currency denominations and exchange. |
-| [`item_binding`](./item_binding.md) | `mxt/item_binding` | Bindings from existing items to action arrays. |
-| [`weapon_binding`](./weapon_binding.md) | `mxt/weapon_binding` | Weapon attributes and actions for existing items. |
-| [`pill_binding`](./pill_binding.md) | `mxt/pill_binding` | Pill and pill toxicity rules for existing items. |
-| [`technique_binding`](./technique_binding.md) | `mxt/technique_binding` | Bindings from existing items to cultivation technique learning. |
 | [`aura_zone`](./aura_zone.md) | `mxt/aura_zone` | Environment aura templates. |
+| [`badge`](./badge.md) | `mxt/badge` | Reserved badge metadata. |
 | [`block_aura`](./block_aura.md) | `mxt/block_aura` | Aura provided by blocks. |
+| [`blueprint_binding`](./blueprint_binding.md) | `mxt/blueprint_binding` | Forging blueprints provided by blueprint items. |
+| [`contract_type`](./contract_type.md) | `mxt/contract_type` | Contract lifecycle. |
+| [`creature_profile`](./creature_profile.md) | `mxt/creature_profile` | Creature profiles and entity binding conditions. |
+| [`cultivate_action`](./cultivate_action.md) | `mxt/cultivate_action` | The cultivation process and its environment requirements. |
+| [`cultivation_technique`](./cultivation_technique.md) | `mxt/cultivation_technique` | Cultivation technique definitions. |
+| [`currency`](./currency.md) | `mxt/currency` | Item currency denominations and exchange. |
+| [`curse`](./curse.md) | `mxt/curse` | Curse definitions that can be referenced. |
+| [`element`](./element.md) | `mxt/element` | Element relations and aura kinds. |
+| [`forging_blueprint`](./forging_blueprint.md) | `mxt/forging_blueprint` | Forging targets and quality settlement. |
+| [`forging_method`](./forging_method.md) | `mxt/forging_method` | A single forging strike method. |
+| [`formation`](./formation.md) | `mxt/formation` | Formation lifecycle and aura overrides. |
+| [`item_archetype`](./item_archetype.md) | `mxt/item_archetype` | Artifact archetypes and abilities. |
 | [`item_aura`](./item_aura.md) | `mxt/item_aura` | Cultivation fuel provided by held items. |
+| [`item_binding`](./item_binding.md) | `mxt/item_binding` | Bindings from existing items to action arrays. |
 | [`item_quality`](./item_quality.md) | `mxt/item_quality` | Shared quality and quality conditions. |
+| [`physique`](./physique.md) | `mxt/physique` | Physique bonuses that are independent of elements. |
+| [`pill_binding`](./pill_binding.md) | `mxt/pill_binding` | Pill and pill toxicity rules for existing items. |
+| [`realm_instance`](./realm_instance.md) | `mxt/realm_instance` | Realm instance strategies. |
+| [`realm_stage`](./realm_stage.md) | `mxt/realm_stage` | Linear realm chains and breakthrough. |
+| [`resource`](./resource.md) | `mxt/resource` | Entity resources such as cultivation progress, spirit power and stamina, plus inline resource bars. |
+| [`sect`](./sect.md) | `mxt/sect` | Sect ranks, tasks and exchanges. |
+| [`spirit_crafting`](./spirit_crafting.md) | `recipe` | Vanilla recipe types (`mxt:spirit_shaped`, `mxt:spirit_shapeless`), not a datapack registry. |
+| [`spirit_herb`](./spirit_herb.md) | `mxt/spirit_herb` | Spirit herb metadata for existing items. |
+| [`spirit_root`](./spirit_root.md) | `mxt/spirit_root` | A spirit root bound to a single element. |
+| [`technique_binding`](./technique_binding.md) | `mxt/technique_binding` | Bindings from existing items to cultivation technique learning. |
+| [`title`](./title.md) | `mxt/title` | Titles and passive attributes. |
+| [`tool_binding`](./tool_binding.md) | `mxt/tool_binding` | Forging methods provided by tool items. |
+| [`tribulation`](./tribulation.md) | `mxt/tribulation` | Tribulation stages. |
+| [`weapon_binding`](./weapon_binding.md) | `mxt/weapon_binding` | Weapon attributes and actions for existing items. |
 
 ## Built-in Type Dispatch
 
@@ -105,6 +107,6 @@ Action and condition arrays are shorthand: every element is executed in order, a
 ]
 ```
 
-The concrete fields of every action follow the built-in type codecs. Built-in types are registered in groups by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`; reloading a datapack never adds entries to these built-in registries.
+The concrete fields of every action follow the built-in type codecs. Built-in types are registered in groups by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`; a data pack never adds entries to these built-in registries.
 
 See the [type reference](../types/index.md) for the available action and condition types, and [Datapack Overview](../overview.md) for loading, overriding, reference and disabled-tag rules. Advancements and loot tables are plain vanilla JSON rather than datapack registries; the types the mod adds for them are in [Loot and Advancement Criteria](../loot-and-criteria.md).

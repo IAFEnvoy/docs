@@ -48,7 +48,7 @@ Anything else is a structured provider object with an inlined `type`:
 }
 ```
 
-The values inside `params` are themselves `NumberProvider`s and override the context variables of the same name. An unregistered variable inside an expression is treated as `0`. A formula syntax error fails the datapack reload; a runtime `NaN` or infinity logs a one-line warning and returns `0`.
+The values inside `params` are themselves `NumberProvider`s and override the context variables of the same name. A variable the context cannot provide is reported when the expression is evaluated — a development environment logs the whole error, production logs one warning line per distinct message — and the expression continues with `0`. A formula syntax error is a decode error: the load fails, and it fails together with every other broken formula of that load. A runtime `NaN` or infinity is reported the same way and returns `0`.
 
 Parameter names must be valid variable names: the first character is a letter or `_`, and the rest may be letters, digits or `_`. Every key in `params` must actually appear in the expression, otherwise the load is rejected.
 
@@ -227,118 +227,19 @@ The standard exp4j functions are also available: `abs`, `acos`, `asin`, `atan`, 
 
 ## Formula Variables
 
-Formulas read named variables. An explicit value in the context always wins over the variable registry, an unknown name resolves to `0`, and `params` overrides any name.
+Formulas read named variables. An explicit value in the context always wins over the variable registry, `params` overrides any name inside its own expression, and an unknown name is reported instead of being ignored.
 
-Which names exist depends on **where the formula is evaluated**: every resource, cultivation and ability formula runs with an entity context, bi-entity formulas add the `target_` set, and each trigger adds a few names of its own. Only rely on the names that the context in question provides.
+Which names exist depends on **where the formula is evaluated**: every resource, cultivation and ability formula runs with an entity context, bi-entity formulas add the `target_` set, and each trigger adds a few names of its own.
 
-### Registry Variables
+The full list, the flattening rule for resource and attribute names, the availability matrix and the error policy are in **[Formula Variables](./formula_variables.md)**.
 
-The built-in `mxt:formula_variable` registry provides two names that work in every context:
+In short, the built-in `mxt:formula_variable` registry provides two names that work in every context:
 
 | Variable | Description |
 |----------|-------------|
 | `zero` | Always `0` |
 | `random` | A new random double between `0` and `1`, drawn from the authoritative `RandomSource` of the context |
 
-### Entity Variables
+Everything else — the `caster_` and `target_` families, the resource variables such as `realm_rank` and `absorbed_aura`, and the per-system values such as `damage` or `element_modifier` — is documented in [Formula Variables](./formula_variables.md).
 
-Whenever a context is built from a living entity (resource regeneration, cultivation, abilities, contracts, forging, alchemy), these names are added:
 
-| Variable | Description |
-|----------|-------------|
-| `caster_health` | Current health of the entity |
-| `caster_max_health` | Maximum health of the entity |
-| `caster_level` | Experience level of the entity when it is a player, otherwise `0` |
-| `caster_<resource>` | Current value of every resource the entity holds |
-| `caster_<attribute>` | Current value of every synchronized attribute of the entity |
-
-Bi-entity contexts (`target_condition`, `bi_entity_action`, and the aura ability's target action) add the same set a second time with the `target_` prefix: `target_health`, `target_max_health`, `target_level`, `target_<resource>` and `target_<attribute>`.
-
-`<resource>` and `<attribute>` are the registry ID with the namespace and path joined by `_`; `/`, `.` and `-` inside the path also become `_`:
-
-| ID | Variable |
-|----|----------|
-| `mxt:spirit_power` | `caster_mxt_spirit_power` |
-| `example:fire/qi` | `caster_example_fire_qi` |
-| `minecraft:max_health` | `caster_minecraft_max_health` |
-| `minecraft:attack_damage` | `caster_minecraft_attack_damage` |
-
-Only synchronized attributes are exposed, so an attribute that the client does not need is not available in a formula.
-
-:::warning `caster_level` is not the realm
-`caster_level` is the vanilla experience level. The realm rank is the separate `level` / `realm_rank` variable described below, and it only exists in a resource context.
-:::
-
-### Resource and Cultivation Variables
-
-Formulas evaluated for one resource — `resource.max`, `resource.regen`, the resource conversions, resource costs, realm stages, breakthrough conditions and resource bars — add the cultivation state of that resource on top of the entity context:
-
-| Variable | Description |
-|----------|-------------|
-| `realm` | Rank of the current realm in this resource's chain; `0` when the chain does not match |
-| `realm_rank` | Same value as `realm` |
-| `level` | Same value as `realm`, kept as a shorthand for realm formulas |
-| `absorbed_aura` | Accumulated cultivation progress of this resource; `0` when the chain does not match |
-| `cultivation_progress` | Same value as `absorbed_aura` |
-
-A resource definition can therefore write:
-
-```json
-{
-  "max": "100 + realm_rank * 50 + absorbed_aura * 0.5",
-  "regen": "0.25 + realm_rank * 0.1"
-}
-```
-
-### Ability Variables
-
-| Variable | Available when | Description |
-|----------|----------------|-------------|
-| `element_modifier` | The ability declares a non-empty `element_affinity` | The element affinity multiplier computed for the caster, usable to scale damage or costs by element match |
-
-Abilities of the `aura` type also evaluate the target action once per affected entity with two extra names:
-
-| Variable | Description |
-|----------|-------------|
-| `aura_radius` | The radius resolved for this aura pulse |
-| `distance` | Distance in blocks between the caster and the current target |
-
-### Trigger Variables
-
-Abilities with a `triggered` type are evaluated when the trigger fires, and the trigger adds these names to the entity context:
-
-| Trigger | Variables added | Description |
-|---------|-----------------|-------------|
-| `tick` | — | Entity context only |
-| `attack` | `target_is_living`, `target_health` | `target_is_living` is `1` when the attacked entity is a living entity |
-| `hurt` | `damage` | Damage that was actually inflicted on the caster |
-| `kill` | `target_health` | Health of the killed entity at the moment of death |
-| `death` | `victim_health` | Health of the dying entity, floored at `0` |
-| `block_break`, `block_use` | `block_x`, `block_y`, `block_z` | Coordinates of the block involved |
-| `item_use` | `use_duration` | Ticks the used item took to finish |
-| `equip` | `equipment_slot` | Ordinal of the changed equipment slot |
-| `breakthrough` | `breakthrough` | Always `1`, so it can be used as a flag |
-
-### Variables From Other Systems
-
-| Variable | Provided by | Description |
-|----------|-------------|-------------|
-| `damage` | Contract combat actions | Damage the contracted spirit beast just dealt |
-| `aura_tribulation_modifier` | Tribulation phases | Local aura influence, taken from the `tribulation_modify` rule of the aura zone |
-
-### Custom Variables
-
-`mxt:expression` accepts `params`, whose values are themselves `NumberProvider`s and replace the context variable of the same name:
-
-```json
-{
-  "type": "mxt:expression",
-  "expression": "realm_rank * scale + bonus",
-  "params": {
-    "scale": 1.5,
-    "bonus": "caster_minecraft_attack_damage * 0.5"
-  }
-}
-```
-
-Use `params` when one formula must depend on a value that the current context does not provide, or when the same expression is reused in several tables with different constants.

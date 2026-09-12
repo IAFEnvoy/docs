@@ -1,10 +1,9 @@
 ---
-title: "Aura Zone"
+title: "Aura Zone (aura_zone)"
 description: "Define an aura environment template: per-resource aura inventory, match conditions, fluctuation, rules, particles, client fog and HUD bars."
-sidebar_position: 13
 ---
 
-# Aura Zone
+# Aura Zone (aura_zone)
 
 An Aura Zone defines an aura environment template: the per-resource aura inventory supplied to a chunk, which dimensions and biomes it matches, how it fluctuates over time, which cultivation rules it applies, and how it looks on the client.
 
@@ -235,14 +234,14 @@ An active formation covers the environment within range around its core and `rad
 ## Manual Areas and KubeJS
 
 ```js
-const aura = Mxt.api().getAura(player.level, player.blockPos)
+const aura = MxtAura.get(player.level, player.blockPosition)
 console.log(aura.concentration())
 
-const area = Mxt.api().addAuraBox(
+const area = MxtAura.addBox(
   player.level, 'example:blessing_land',
   0, 64, 0, 64, 128, 64, 10
 )
-Mxt.api().removeAuraArea(player.level, area)
+MxtAura.remove(player.level, area)
 ```
 
 Manual areas are saved to the world. The larger `priority` is, the higher the precedence when manual areas of the same kind overlap.

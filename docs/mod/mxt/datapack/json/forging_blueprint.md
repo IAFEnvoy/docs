@@ -1,10 +1,9 @@
 ---
-title: "Forging Blueprint"
+title: "Forging Blueprint (forging_blueprint)"
 description: "A forging blueprint declares the materials, the allowed methods, the meter target and the quality ladder for one forged result."
-sidebar_position: 22
 ---
 
-# Forging Blueprint
+# Forging Blueprint (forging_blueprint)
 
 A forging blueprint describes one item that can be forged at the Forge Table: which materials the table must hold, which methods are allowed, what the forging meter has to reach and what quality the extra steps buy.
 

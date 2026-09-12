@@ -1,10 +1,9 @@
 ---
-title: "Pill Binding"
+title: "Pill Binding (pill_binding)"
 description: "Adds pill consumption behaviour and pill toxicity rules to an existing edible item through the mxt:pill_binding datapack registry."
-sidebar_position: 32
 ---
 
-# Pill Binding
+# Pill Binding (pill_binding)
 
 A pill binding maps one existing item to pill-only fields. Like every other binding it only matches already registered items, so the physical pill must come from Minecraft, a content mod, or KubeJS. Pill bindings add a consumption action plus the pill toxicity rules that decide when a consumed pill becomes an overdose; these fields are not mixed with the item, weapon or technique bindings.
 

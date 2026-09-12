@@ -1,10 +1,9 @@
 ---
-title: "Badge"
+title: "Badge (badge)"
 description: "Reserved badge metadata used by abilities, titles and other definitions that display a badge."
-sidebar_position: 3
 ---
 
-# Badge
+# Badge (badge)
 
 A `badge` is reserved metadata that describes how a badge is displayed. Badges are a writable datapack registry, but they are not shown automatically in selection screens or the compendium.
 

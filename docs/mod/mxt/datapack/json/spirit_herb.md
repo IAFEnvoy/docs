@@ -1,10 +1,9 @@
 ---
-title: "Spirit Herb"
+title: "Spirit Herb (spirit_herb)"
 description: "A spirit herb attaches quality and herb metadata to existing items without creating a new item."
-sidebar_position: 26
 ---
 
-# Spirit Herb
+# Spirit Herb (spirit_herb)
 
 A spirit herb marks existing items as spirit herbs for alchemy and gathering gameplay, giving them a default quality and classification metadata.
 

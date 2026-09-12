@@ -1,7 +1,6 @@
 ---
 title: "MiXianTu"
 description: "Documentation for MiXianTu, a NeoForge cultivation mod framework: installation, player content, datapack format, KubeJS API and Java API."
-sidebar_position: 1
 ---
 
 # MiXianTu
@@ -24,6 +23,7 @@ The project is still in development. Datapack formats and other interfaces are n
 | Goal | Documentation |
 |---|---|
 | Install the mod and check requirements | [Installation](./installation.md) |
+| Build your first content step by step | [Tutorials](./tutorial/index.md) |
 | Learn the keybinds, HUD, items and commands | [Player Guide](./player-guide/keys-and-hud.md) |
 | Write your first datapack | [Datapack overview](./datapack/overview.md) |
 | Look up every field of a data table | [JSON Data Formats](./datapack/json/index.md) |
@@ -77,4 +77,3 @@ The project is still in development. Datapack formats and other interfaces are n
 ## Links
 
 - **[Datapack Visual Editor](https://datapack.mcdev.tech/)**: edit this mod's datapacks in the browser as a form, with field descriptions and registry completion.
-- **Discord**: [https://discord.gg/NDzz2upqAk](https://discord.gg/NDzz2upqAk)

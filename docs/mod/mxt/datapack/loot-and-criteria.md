@@ -56,6 +56,7 @@ A loot condition uses the vanilla `"condition"` dispatch key: `{"condition": "mx
 | `mxt:realm` | The entity is in that realm, in any resource chain | `realm` |
 | `mxt:has_spirit_root` | The entity has that spirit root | `spirit_root` |
 | `mxt:has_physique` | The entity has that physique | `physique` |
+| `mxt:js` | A server script callback returns `true` | `id` |
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -72,15 +73,22 @@ When the selected entity is not present in the loot context, the condition is fa
 }
 ```
 
+`mxt:js` takes an `id` registered with `MxtLoot.condition(...)` and an optional `params` object. Unlike the built-in conditions it has no `entity` field: the callback receives the whole vanilla `LootContext` and chooses which entity to read.
+
+```json
+{"condition": "mxt:js", "id": "example:first_clear", "params": {"dungeon": "example:fire_temple"}}
+```
+
 ## Loot Functions
 
-A loot function uses the vanilla `"function"` dispatch key: `{"function": "mxt:grant_ability", ...}`. All three functions also accept the vanilla `conditions` field.
+A loot function uses the vanilla `"function"` dispatch key: `{"function": "mxt:grant_ability", ...}`. Every function also accepts the vanilla `conditions` field.
 
 | Function | Effect |
 |----------|--------|
 | `mxt:grant_ability` | Grants a persistent ability source to an entity and refreshes its trigger subscriptions |
 | `mxt:set_artifact_owner` | Assigns the dropped artifact to an entity, then runs the archetype's `refine_action` |
 | `mxt:apply_curse` | Applies a curse to an entity, with `loot` as the application source |
+| `mxt:js` | Replaces the generated stack with whatever a server script returns |
 
 ### `mxt:grant_ability`
 
@@ -127,6 +135,23 @@ If the stack already belongs to another owner, nothing happens: the drop is left
   "stacks": 2
 }
 ```
+
+### `mxt:js`
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `id` | String | **required** | Callback ID registered with `MxtLoot.function(...)` |
+| `params` | Object | `{}` | Arbitrary JSON passed to the callback |
+
+```json
+{
+  "function": "mxt:js",
+  "id": "example:bless",
+  "params": {"multiplier": 3}
+}
+```
+
+The callback receives the generated stack and the `LootContext`, and returns the stack to keep: return the argument unchanged to leave the drop alone, return a new stack to replace it, or return `null` to keep the original. A missing or failing callback leaves the stack untouched and logs a warning.
 
 ## Putting It Together
 

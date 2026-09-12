@@ -1,10 +1,9 @@
 ---
-title: "Technique Binding"
+title: "Technique Binding (technique_binding)"
 description: "Binds an existing book, jade slip or other item to a cultivation technique through the mxt:technique_binding datapack registry."
-sidebar_position: 33
 ---
 
-# Technique Binding
+# Technique Binding (technique_binding)
 
 A technique binding maps an existing book, jade slip, or other item to one `cultivation_technique`. Like every other binding it only matches already registered items, so the physical item must come from Minecraft, a content mod, or KubeJS. Right-clicking the bound item attempts to learn the technique; every learned technique remains enabled and contributes its passive effects.
 

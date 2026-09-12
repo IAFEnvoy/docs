@@ -1,10 +1,9 @@
 ---
-title: "Forging Method"
+title: "Forging Method (forging_method)"
 description: "A forging method is one hammering operation at the Forge Table, defined by its meter shift, cost and condition."
-sidebar_position: 21
 ---
 
-# Forging Method
+# Forging Method (forging_method)
 
 A forging method defines a single hammering operation that a player can perform while forging at the Forge Table: how far it moves the forging meter, what it costs and when it may be used.
 

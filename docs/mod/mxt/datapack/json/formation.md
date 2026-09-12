@@ -1,10 +1,9 @@
 ---
-title: "Formation"
+title: "Formation (formation)"
 description: "Define a formation built from a structure template, with its radius, aura capacity bonus, costs, lifecycle actions and runtime aura override."
-sidebar_position: 16
 ---
 
-# Formation
+# Formation (formation)
 
 A Formation defines a structure that players can build and activate: it declares the vanilla structure template it is built from, how far it reaches, what it consumes, the behaviours that run on activation, on every maintenance cycle and on failure, and an optional high-priority aura override for its area.
 

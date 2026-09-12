@@ -1,10 +1,9 @@
 ---
-title: "Currency"
+title: "Currency (currency)"
 description: "Defines an item-based currency denomination, its value and its one-way exchange options through the mxt:currency datapack registry."
-sidebar_position: 35
 ---
 
-# Currency
+# Currency (currency)
 
 A currency definition gives a registered item a denomination and a set of one-way exchange options. Any registered item can act as currency; the Cheque Table, the Exchange Station and the settlement service all read the same `mxt:currency` registry.
 
@@ -161,7 +160,7 @@ The disabled tag of the currency registry is located at `data/mxt/tags/mxt/curre
 
 A currency disabled through the `mxt:disabled` tag does not take part in exchanges, cheques or settlement, but it can still be referenced by other data definitions.
 
-## Validation and Reload
+## Validation and Loading
 
 - At least one of `items` and `item` must be provided; `items` is recommended because it also supports bulk matching.
 - `value` must be a positive integer.
@@ -169,4 +168,4 @@ A currency disabled through the `mxt:disabled` tag does not take part in exchang
 - `exchanges` must be present; use `[]` when no exchange is offered.
 - Every `cost` must be between `1` and `99`.
 - `result` must be a valid Item Stack.
-- After `/reload` or a server restart, definitions are re-validated and synchronized to clients.
+- Definitions are validated while the world loads and synchronised to clients on join, so an edit is applied by loading the world again.

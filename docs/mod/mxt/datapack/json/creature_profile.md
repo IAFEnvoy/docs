@@ -1,10 +1,9 @@
 ---
-title: "Creature Profile"
+title: "Creature Profile (creature_profile)"
 description: "Define a creature's realm stage, intelligence, inner core, loot table, contract tags, preferred aura elements and minimum aura requirements."
-sidebar_position: 18
 ---
 
-# Creature Profile
+# Creature Profile (creature_profile)
 
 A Creature Profile defines the cultivation profile of an existing creature type: its realm stage, intelligence, inner core, loot table, the aura elements it prefers and the minimum aura it needs to spawn or be strengthened. A profile does not create an entity type.
 

@@ -8,7 +8,7 @@ sidebar_position: 7
 
 An **entity condition** checks the state of a single entity and returns `true` or `false`. The entity being tested is supplied by whatever data table declares the condition, so the condition itself only describes what to check.
 
-Entity conditions are a Java (built-in) registry, so their `type` ids are fixed and a data pack cannot add new ones. `type` selects the built-in type and its value is one of the ids tabulated on this page, written with the `mxt` namespace. Reloading a data pack never adds or removes entries in this registry. Only Java code or the KubeJS bridge can introduce custom condition types — see the [KubeJS API](../../../kubejs/api-reference.md).
+Entity conditions are a Java (built-in) registry, so their `type` ids are fixed and a data pack cannot add new ones. `type` selects the built-in type and its value is one of the ids tabulated on this page, written with the `mxt` namespace. A data pack never adds or removes entries in this registry. Only Java code or the KubeJS bridge can introduce custom condition types — see the [KubeJS API](../../../kubejs/api-reference.md).
 
 In the table below, a field name followed by `?` is optional; every other listed field must be present. The `Fields` column lists the JSON keys taken directly from the type's codec.
 
@@ -69,7 +69,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:has_physique` | `physique` | Checks whether the entity currently holds the given [physique](../../json/physique.md). |
 | `mxt:realm` | `realm`, `comparison?` | Compares the entity's [realm](../../json/realm_stage.md) stage against `realm`, using `exact` (the default), `at_least` or `at_most`. |
 | `mxt:has_realm` | `resource` | Passes for entities that have entered a realm chain for the given [resource](../../json/resource.md). |
-| `mxt:aura_range` | `aura` | Tests the server-resolved aura concentration at the entity's position against per-resource `min` and `max` requirements. |
+| `mxt:aura_range` | `aura` | Tests the server-resolved aura concentration at the entity's position against per-resource requirements. `aura` maps a resource ID to an object with a required `max` and an optional `min` (default `0`). |
 | `mxt:resource_compare` | `resource`, `min` | Checks that the entity's value for a resource is at least `min`. |
 | `mxt:entity_tag` | `tag` | Matches the entity against an entity type tag. |
 | `mxt:formation_member` | — | Passes when the entity owns an active [formation](../../json/formation.md) in the current level. |

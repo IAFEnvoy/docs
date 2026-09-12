@@ -1,10 +1,9 @@
 ---
-title: "Physique"
+title: "Physique (physique)"
 description: "Defines a physique that grants vanilla attribute bonuses and abilities independently of any element."
-sidebar_position: 7
 ---
 
-# Physique
+# Physique (physique)
 
 A `physique` is a stackable source attached to an entity that grants vanilla attribute bonuses and abilities independently of elements.
 

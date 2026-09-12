@@ -1,7 +1,7 @@
 ---
 title: "Other Type Families"
 description: "The smaller built-in type registries of MiXianTu, with the registered IDs and JSON fields of every family."
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 # Other Type Families
@@ -26,12 +26,27 @@ Trigger matchers decide which runtime events an ability or a breakthrough condit
 | `mxt:equip` | The entity's equipment changed |
 | `mxt:death` | The entity died |
 | `mxt:breakthrough` | The entity completed a breakthrough |
+| `mxt:js` | A matcher a server script decides |
 
 ```json
 {"type": "mxt:triggered", "triggers": [{"type": "mxt:item_use"}]}
 ```
 
-None of the built-in triggers has additional fields. Server scripts can publish custom trigger signals with their own IDs; see the [KubeJS API Reference](../../kubejs/api-reference.md).
+None of the built-in triggers has additional fields.
+
+`mxt:js`:
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `signal` | Identifier | **required** | The signal this matcher listens to; subscriptions are indexed by it |
+| `id` | String | **required** | Callback ID registered with `MxtTriggers.matcher(...)` |
+| `params` | Object | `{}` | Arbitrary JSON passed to the callback |
+
+```json
+{"type": "mxt:triggered", "triggers": [{"type": "mxt:js", "signal": "example:pill_taken", "id": "example:on_pill"}]}
+```
+
+This is the only way a data pack can react to a **custom** signal id: raise it from a server script with `MxtTriggers.publish`, and either subscribe a script to it or declare this trigger on an ability or on a resource's breakthrough conditions. The callback only decides whether the signal that reached the subscription fires, so a missing callback never matches. See the [KubeJS API Reference](../../kubejs/api-reference.md).
 
 ---
 
@@ -43,6 +58,7 @@ A cost can be checked and then consumed from a player.
 |--------|--------|-------------|
 | `mxt:resource` | `resource`, `amount` | Consumes a datapack resource from the player's resource attachment |
 | `mxt:item` | `items`, `amount` | Consumes matching items from the player's inventory |
+| `mxt:js` | `id`, `params?` | Checked and paid by a server script callback |
 
 `mxt:resource`:
 
@@ -61,6 +77,19 @@ A cost can be checked and then consumed from a player.
 ```json
 {"type": "mxt:item", "items": "#minecraft:logs", "amount": 8}
 ```
+
+`mxt:js`:
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `id` | String | **required** | Callback ID registered with `MxtCosts.register(...)` |
+| `params` | Object | `{}` | Arbitrary JSON passed to the callback |
+
+```json
+{"type": "mxt:js", "id": "example:quest_token", "params": {"count": 3}}
+```
+
+A script cost is checked and then paid on the server, and it needs a player: a cost that is not a `resource` cost makes the whole ability require one. The callback receives the payer and the params, not the ability's formula context, because `Cost` is evaluated with a player alone.
 
 A `costs` array also accepts the plain `{"id": ..., "amount": ...}` shorthand, which is read as `mxt:resource`. The shorthand is kept for compatibility; new entries should write the type explicitly.
 
@@ -171,6 +200,7 @@ Selects which entities an ability's bi-entity behaviour applies to.
 |--------|--------|-------------|
 | `mxt:self` | none | Selects only the ability actor |
 | `mxt:area` | `radius`, `include_actor` | Selects entities in an actor-centred area |
+| `mxt:js` | `id`, `params?` | Selects the entities a server script returns |
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -180,6 +210,14 @@ Selects which entities an ability's bi-entity behaviour applies to.
 ```json
 {"type": "mxt:area", "radius": 6, "include_actor": true}
 ```
+
+`mxt:js` takes an `id` registered with `MxtAbilities.selector(...)` and an optional `params` object:
+
+```json
+{"type": "mxt:js", "id": "example:nearest_three", "params": {"range": 12}}
+```
+
+The callback runs on the server while the ability executes and returns an array of entities. Selection happens for every execution of the ability, so a missing callback selects nobody and logs a warning.
 
 ---
 

@@ -1,10 +1,9 @@
 ---
-title: "Block Aura"
+title: "Block Aura (block_aura)"
 description: "Define which blocks provide aura to their chunk, and how much capacity, regeneration and colour each resource gets from them."
-sidebar_position: 14
 ---
 
-# Block Aura
+# Block Aura (block_aura)
 
 A Block Aura defines which blocks act as aura sources: each matching block contributes to the aura inventory of the chunk it is in, on top of the natural environment.
 
@@ -42,7 +41,7 @@ Each `AuraValue` entry defines the resource amount a single block provides, toge
 
 ## Runtime Behaviour
 
-- The cache is rebuilt after a chunk is loaded, a block changes, or the data pack is reloaded.
+- The cache is rebuilt after a chunk is loaded, a block changes, or the data tables are loaded.
 - A spirit stone vein can provide aura far above the natural environment through several `block_aura` entries and block tags.
 - At runtime the query is performed over a 7x7x7 sub-chunk range: within the 3x3x3 range of sub-chunks around the current sub-chunk the real positions of matching blocks are used, while the outer ring approximates them with sub-chunk centres, and everything decays uniformly by `1 / max(1, distance squared)`.
 - The contribution of each source sub-chunk is roughly split according to the number of players currently visiting, while the inventory itself is still shared at the chunk level.

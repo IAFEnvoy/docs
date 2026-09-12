@@ -1,6 +1,6 @@
 ---
 title: "Datapack Overview"
-description: "How MiXianTu loads data pack JSON: file locations, IDs, pack priority, the mxt:disabled tag, holder references, validation, reloading and client sync."
+description: "How MiXianTu loads data pack JSON: file locations, IDs, pack priority, the mxt:disabled tag, holder references, validation, when changes take effect and client sync."
 sidebar_position: 1
 ---
 
@@ -48,16 +48,16 @@ JSON no longer contains a `translation_key` field. Provide the matching translat
 
 ## Loading and Overriding
 
-- The datapack registries are loaded by the native NeoForge data pack registry system. They are validated after a server reload, and a read-only snapshot is provided to the client through the vanilla synchronisation mechanism.
+- The data pack registries are loaded by the native NeoForge data pack registry system **while the world loads**. They are validated at that point, and a read-only snapshot is sent to the client on join through the vanilla synchronisation mechanism.
 - File conflicts follow Minecraft data pack priority: a higher priority data pack overrides the same path from a lower priority data pack.
 - When a vanilla tag uses `replace: false`, values are appended in data pack merge order. Apart from quality ordering tags, gameplay does not depend on tag value order.
 - Data packs are read-only. There is no generic `schema_version`, `enabled` or `tags` field in a definition.
 - Data pack objects are treated as immutable after loading; do not modify the collections returned by a codec at runtime.
-- When a **required** single holder reference does not exist, the whole data pack reload fails. Optional holders and tolerant list references are handled by their own codecs.
+- When a **required** single holder reference does not exist, the whole data pack load fails. Optional holders and tolerant list references are handled by their own codecs.
 
 :::warning
 
-The codec is the only loading contract. Defaults, field ranges and examples on this site follow the current source. Writing a field that is not listed has no effect, and writing an unknown `type` makes the reload fail.
+The codec is the only loading contract. Defaults, field ranges and examples on this site follow the current source. Writing a field that is not listed has no effect, and writing an unknown `type` makes the load fail.
 
 :::
 
@@ -79,7 +79,7 @@ data/mxt/tags/mxt/<registry>/disabled.json
 }
 ```
 
-The tag ID is `mxt:disabled`. Entries listed in it are not actively used by the matching service, but they are still kept in the registry, so other definitions can safely hold a reference to them.
+The tag ID is `mxt:disabled`. Entries listed in it are not actively used by the matching service, but they are still kept in the registry, so other definitions can safely hold a reference to them. Editing this tag is subject to the same rule as every other data pack file: it is applied when the world loads.
 
 :::note
 
@@ -147,9 +147,9 @@ Every field that has to change with level, realm or event context accepts a numb
 }
 ```
 
-Expressions use exp4j. Variables come from the formula context, and `params` can override or add variables. A `NaN` or infinity during loading makes the data pack fail; at runtime it logs a single-line warning and is treated as `0`.
+Expressions use exp4j. Variables are read out of the objects the formula context carries, and `params` can override or add variables. A `NaN` or infinity during loading makes the data pack fail; at runtime it logs a single-line warning and is treated as `0`.
 
-See [Number Provider Types](./types/number_provider_types.md) for every built-in provider and the common formula variables.
+See [Number Provider Types](./types/number_provider_types.md) for every built-in provider and [Formula Variables](./types/formula_variables.md) for the complete variable list, the availability matrix and the error policy.
 
 ## Actions and Conditions
 
@@ -162,7 +162,7 @@ Behaviours are uniformly called `action` and are split by target into entity, it
 ]
 ```
 
-Action and condition arrays are a shorthand. All built-in types are grouped and registered by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`; reloading a data pack never adds entries to those built-in registries.
+Action and condition arrays are a shorthand. All built-in types are grouped and registered by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`; a data pack never adds entries to those built-in registries.
 
 See [Types Reference](./types/index.md) for the built-in action and condition types, and [Ability](./json/ability.md) for the data shape that uses them.
 
@@ -189,13 +189,22 @@ The mod registers a small server-side diagnostic command tree:
 | `/mxt registries list` | Lists the datapack registries and their entry counts. |
 | `/mxt registries validate` | Reports the current data pack registry validation status: the number of registries, the total number of entries and the native datapack registry loading state. |
 
-Run `/mxt registries validate` after changing a data pack to confirm that the reload produced a usable registry state.
+Run `/mxt registries validate` after the world has loaded to confirm that the data pack produced a usable registry state.
 
-## Reloading and Syncing
+## Loading, Reloading and Syncing
 
-- Use `/reload` to reload the data pack. JSON parsing, holder resolution and codec validation all happen on the server.
-- The current snapshot is replaced only after `/reload` succeeds; when it fails, the old snapshot keeps being used.
-- The datapack registries are sent to the client by the vanilla synchronisation mechanism. The client HUD, fog effects and textures are only responsible for display: they never decide the result of resource deduction, breakthroughs, forging or currency exchange.
+MiXianTu data tables are native Minecraft data pack registries, and Minecraft reads those **while the world loads**. `/reload` does not re-read them: it only refreshes the vanilla reload listeners — recipes, loot tables, advancements and functions — and the KubeJS server scripts.
+
+To apply an edit to a data pack file, load the world again:
+
+| Environment | How to apply the change |
+| --- | --- |
+| Single player | Leave to the title screen and open the world again. Restarting the game works too. |
+| Server | Restart the server. |
+
+- JSON parsing, holder resolution and codec validation all happen while the world loads, and every read skips entries that carry the `mxt:disabled` tag.
+- The registries keep no previous snapshot, so an invalid definition stops the world from loading instead of being skipped. Fix or remove the file and load again; the log names the failing file and the codec error.
+- The data pack registries are synchronised to the client by the vanilla mechanism when it joins. The client HUD, fog effects and textures are only responsible for display: they never decide the result of resource deduction, breakthroughs, forging or currency exchange.
 - `/mxt aura query` queries the final aura at the current position, and `/mxt aura vein` queries spirit stone vein information.
 - The test mod data lives in `src/test-mod/resources/data/mxt_test/mxt`; starting the test server verifies the whole data pack loop.
 
@@ -203,20 +212,22 @@ A first definition is easier to write by copying a complete file: continue with 
 
 ## Error Reporting
 
-- A missing required holder reference, an unknown `type`, a malformed formula or any other codec error fails the whole reload rather than skipping the broken file.
-- A failed reload leaves the previous snapshot in place, so the game keeps running with the last good data.
-- An expression that names an unregistered variable is evaluated with `0` for that variable.
-- A `NaN` or infinity produced at runtime logs a single-line warning and is handled as `0` instead of aborting the operation.
+- A missing required holder reference, an unknown `type`, a malformed formula or any other codec error fails the whole load rather than skipping the broken file.
+- Because there is no previous snapshot to fall back on, a broken file prevents the world from loading until it is fixed; the log reports the file and the codec error.
+- Errors are collected, not thrown one at a time: the loader lists every failing entry of a load and then fails the load, so a data pack with several broken formulas shows all of them in one report instead of only the first.
+- An expression that names a variable its context cannot provide is reported when it is evaluated: a development environment logs the whole error, production logs one warning line per distinct message, and both continue with `0`.
+- A `NaN` or infinity produced at runtime is reported the same way and is handled as `0` instead of aborting the operation.
 - The loading contract is defined by the codecs, so the mod does not report fields it does not know: silently ignored unknown fields are not errors.
 
 :::info
 
-For a definition that is not finished yet, prefer adding it to the `mxt:disabled` tag instead of deleting the file, so other definitions that hold its holder reference keep resolving.
+For a definition that is not finished yet, prefer adding it to the `mxt:disabled` tag instead of deleting the file, so other definitions that hold its holder reference keep resolving. The tag only stops the entry from being used; a file that cannot be decoded is still an error.
 
 :::
 
 ## Related Pages
 
+- [Tutorials](../tutorial/index.md)
 - [Datapack Examples](./examples.md)
 - [Loot and Advancement Criteria](./loot-and-criteria.md)
 - [Registry List](./json/index.md)

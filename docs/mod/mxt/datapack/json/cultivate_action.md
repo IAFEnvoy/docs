@@ -1,10 +1,9 @@
 ---
-title: "Cultivate Action"
+title: "Cultivate Action (cultivate_action)"
 description: "Defines a named cultivation activity with its environment requirements, costs and per-tick settlement."
-sidebar_position: 9
 ---
 
-# Cultivate Action
+# Cultivate Action (cultivate_action)
 
 A `cultivate_action` defines a named cultivation activity: when cultivation may start and continue, how often absorption is settled, and which resources are consumed or gained.
 
@@ -30,7 +29,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/cultivate_act
 | `cooldown` | Integer | `0` | Cooldown in ticks after stopping. |
 | `tick_action` | `EntityAction` | `mxt:no_op` | Behaviour executed on every cultivation tick. |
 
-Its numeric fields are evaluated with the resource and cultivation variables of the resource being cultivated (`realm_rank`, `absorbed_aura`, …) in addition to the entity variables; see [Formula Variables](../types/number_provider_types.md#formula-variables).
+Its numeric fields are evaluated with the resource and cultivation variables of the resource being cultivated (`realm_rank`, `absorbed_aura`, …) in addition to the entity variables; see [Formula Variables](../types/formula_variables.md).
 
 ## Example
 

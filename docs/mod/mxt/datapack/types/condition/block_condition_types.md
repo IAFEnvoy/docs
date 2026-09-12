@@ -8,7 +8,7 @@ sidebar_position: 9
 
 A **block condition** checks a single block position in a level and returns `true` or `false`. The level and position are supplied by whatever data table declares the condition, so the condition itself only describes what to check about the block at that position.
 
-Block conditions are a Java (built-in) registry, so their `type` ids are fixed and a data pack cannot add new ones. `type` selects the built-in type and its value is one of the ids tabulated on this page, written with the `mxt` namespace. Reloading a data pack never adds or removes entries in this registry. Only Java code or the KubeJS bridge can introduce custom condition types — see the [KubeJS API](../../../kubejs/api-reference.md).
+Block conditions are a Java (built-in) registry, so their `type` ids are fixed and a data pack cannot add new ones. `type` selects the built-in type and its value is one of the ids tabulated on this page, written with the `mxt` namespace. A data pack never adds or removes entries in this registry. Only Java code or the KubeJS bridge can introduce custom condition types — see the [KubeJS API](../../../kubejs/api-reference.md).
 
 In the table below, a field name followed by `?` is optional; every other listed field must be present. The `Fields` column lists the JSON keys taken directly from the type's codec.
 
@@ -62,7 +62,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:chance` | `chance` | Passes randomly with the given probability between `0` and `1`. |
 | `mxt:constant` | `value` | Always returns the given boolean value. |
 | `mxt:block_id` | `block` | Matches the block at the position. |
-| `mxt:aura_range` | `aura` | Tests the aura concentration at the position against per-resource `min` and `max` requirements. |
+| `mxt:aura_range` | `aura` | Tests the aura concentration at the position against per-resource requirements. `aura` maps a resource ID to an object with a required `max` and an optional `min`. |
 | `mxt:block_tag` | `tag` | Matches the block against a vanilla or data pack block tag. |
 | `mxt:biome_tag` | `tag` | Matches the biome at the position against a data pack biome tag. |
 | `mxt:hardness` | `comparison`, `compare_to` | Compares the block's hardness. |

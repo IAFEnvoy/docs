@@ -47,7 +47,7 @@ MxtEvents.cultivationBreak(event => {
 })
 ```
 
-The matching data pack can bind `example:spirit_manual` to a technique and hook `example:spirit_stone` into `item_aura` or `currency`. That way the script only registers content, while the rules can still be hot-reloaded and synchronised.
+The matching data pack can bind `example:spirit_manual` to a technique and hook `example:spirit_stone` into `item_aura` or `currency`. That way the script only registers content, while the rules stay data-driven and are synchronised to every client.
 
 ## Defining a Script Action
 
@@ -68,6 +68,35 @@ Any matching data pack field can then use it through the pre-registered `mxt:js`
   "params": { "amount": 4 }
 }
 ```
+
+The callback may take a third argument: the formula context of the dispatch, which carries the values only the triggering event knows. This one scales its effect by the damage that caused it:
+
+```js
+MxtActions.entity('example:knockback_on_hit', (entity, params, context) => {
+  const damage = context.explicit('damage')
+  if (Number.isNaN(damage)) return
+  entity.push(0, params.strength * damage, 0)
+})
+```
+
+## Defining a Script Cost
+
+A cost is checked and then paid, so it registers both halves at once. The id is what a data pack puts in a `costs` array:
+
+```js
+MxtCosts.register('example:quest_token',
+  (player, params, context) => player.persistentData.getInt('tokens') >= (params.count || 1),
+  (player, params, context) => {
+    player.persistentData.putInt('tokens', player.persistentData.getInt('tokens') - (params.count || 1))
+  }
+)
+```
+
+```json
+{"type": "mxt:js", "id": "example:quest_token", "params": {"count": 3}}
+```
+
+A script cost needs a player, and its context is built from that player alone, so read player state (or the explicit values of that context) rather than an event payload.
 
 ## Running a Built-in Action from a Script
 
@@ -139,3 +168,45 @@ if (result.failure() !== null) console.warn(String(result.failure()))
 ```
 
 Only an ability the entity already holds can be cast this way, and the call only takes effect on the server.
+
+## Publishing and Waiting for a Trigger Signal
+
+A script can raise the same signal a data pack ability raises, and another script can wait for it. Subscriptions are runtime-only, so arm them from a runtime hook and re-arm them after a reload:
+
+```js
+// kubejs/server_scripts/mxt_triggers.js
+const KEY = 'example:toxicity_watch'
+
+function onPillTaken(signal) {
+  const toxicity = signal.context().formula().explicit('toxicity')
+  if (!Number.isNaN(toxicity)) console.info(`${signal.type()} with toxicity ${toxicity}`)
+}
+
+function watch(entity) {
+  // Re-registering the same key replaces the previous subscription.
+  if (!MxtTriggers.has(entity, KEY)) {
+    MxtTriggers.subscribe(entity, 'example:pill_taken', KEY, onPillTaken)
+  }
+}
+
+EntityEvents.spawned(event => watch(event.entity))
+
+// /reload re-evaluates this script and drops its subscriptions; this re-arms the players
+// who are still online.
+ServerEvents.tick(event => event.server.players.forEach(watch))
+
+// Publish from your own logic: a command handler, a quest hook, or an item use.
+function publishPillTaken(player, toxicity) {
+  MxtTriggers.publish(player, 'example:pill_taken', {
+    pill: 'example:returning_pill',
+    toxicity
+  })
+}
+
+// A quest step that must fire once removes itself after the first matching signal.
+function watchFirstPill(player) {
+  MxtTriggers.subscribeOnce(player, 'example:pill_taken', 'example:first_pill', signal => {
+    console.info(`first pill taken at ${signal.gameTime()}`)
+  })
+}
+```

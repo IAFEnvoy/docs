@@ -1,10 +1,9 @@
 ---
-title: "Alchemy Recipe"
+title: "Alchemy Recipe (alchemy_recipe)"
 description: "An alchemy recipe combines materials, aura, temperature and furnace tier to produce pills, with both outcomes decided by the recipe."
-sidebar_position: 28
 ---
 
-# Alchemy Recipe
+# Alchemy Recipe (alchemy_recipe)
 
 An alchemy recipe is a vanilla recipe type registered by the mod. It tells an alchemy workstation which materials it accepts, what temperature and furnace tier it needs, how long a batch runs and what it produces on success or on failure.
 

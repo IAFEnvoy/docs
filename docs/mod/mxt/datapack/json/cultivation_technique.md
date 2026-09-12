@@ -1,10 +1,9 @@
 ---
-title: "Cultivation Technique"
+title: "Cultivation Technique (cultivation_technique)"
 description: "Defines a cultivation technique that modifies cultivation speed and grants passive attributes and abilities."
-sidebar_position: 8
 ---
 
-# Cultivation Technique
+# Cultivation Technique (cultivation_technique)
 
 A `cultivation_technique` defines a learnable cultivation technique: its grade, learning condition, cultivation multiplier, passive attributes and granted abilities.
 

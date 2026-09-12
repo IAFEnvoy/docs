@@ -1,6 +1,6 @@
 ---
 title: "KubeJS API Reference"
-description: "Complete method reference for the MiXianTu KubeJS bridge: MxtActions, MxtConditions, MxtValues, MxtCosts, MxtResources, the runtime domain APIs and MxtEvents."
+description: "Complete method reference for the MiXianTu KubeJS bridge: MxtActions, MxtConditions, MxtValues, MxtCosts, MxtResources, the runtime domain APIs, MxtTriggers and MxtEvents."
 sidebar_position: 2
 ---
 
@@ -24,6 +24,8 @@ The identifiers below — `id`, `resource`, `ability`, `curse`, `zone` and so on
 | `MxtCurses` | Apply or explicitly remove a curse. |
 | `MxtAura` | Query, add and remove server-side aura areas. |
 | `MxtSouls` | Reclaim the transferable soul of an entity. |
+| `MxtTriggers` | Publish custom trigger signals and subscribe scripts to them. |
+| `MxtLoot` | Register script loot conditions and loot functions. |
 | `MxtEvents` | Every MiXianTu server lifecycle event. |
 
 `Entity`, `LivingEntity`, `Player`, `Level`, `BlockPos`, `ItemStack` and `DamageSource` are all vanilla Java objects exposed by KubeJS. A `JsonObject`/`JsonElement` parameter accepts a plain JavaScript object or array.
@@ -44,7 +46,7 @@ The formula context is created automatically by the called API from the entity o
 
 ### `mxt:js` Callback Definitions
 
-Actions, conditions, number providers and resource value providers all have a pre-registered `mxt:js` type. First register the callback in a server script:
+Actions, conditions, number providers, resource value providers, trigger matchers, costs, ability target selectors, loot conditions and loot functions all have a pre-registered `mxt:js` type. First register the callback in a server script:
 
 ```js
 MxtActions.entity('example:heal', (entity, params) => {
@@ -70,12 +72,24 @@ An `id` is unique **within the same callback category**. KubeJS clears every cal
 
 | Method | Callback parameters | Purpose |
 | --- | --- | --- |
-| `entity(id, callback)` | `(entity: Entity, params: object)` | Registers an entity action. |
-| `biEntity(id, callback)` | `(actor: Entity, target: Entity, params: object)` | Registers a bi-entity action. |
-| `block(id, callback)` | `(level: Level, pos: BlockPos, params: object)` | Registers a block position action. |
-| `item(id, callback)` | `(holder: Entity, stack: ItemStack, params: object)` | Registers an item action. |
+| `entity(id, callback)` | `(entity: Entity, params: object, context: FormulaContext)` | Registers an entity action. |
+| `biEntity(id, callback)` | `(actor: Entity, target: Entity, params: object, context: FormulaContext)` | Registers a bi-entity action. |
+| `block(id, callback)` | `(level: Level, pos: BlockPos, params: object, context: FormulaContext)` | Registers a block position action. |
+| `item(id, callback)` | `(holder: Entity, stack: ItemStack, params: object, context: FormulaContext)` | Registers an item action. |
 
 All four callbacks correspond to `type: "mxt:js"` in a data pack. An exception thrown by a callback is caught and written to the error log; the current action is aborted, but the server does not crash.
+
+The last argument is the live formula context of the dispatch, so a script reads the same event payload a data pack action could. This is how a script action sees a value such as `damage` that only the event knows about:
+
+```js
+MxtActions.entity('example:knockback_on_hit', (entity, params, context) => {
+  const damage = context.explicit('damage')
+  if (Number.isNaN(damage)) return
+  entity.push(0, params.strength * damage, 0)
+})
+```
+
+Register the callback with fewer parameters when the context is not needed — JavaScript ignores extra arguments. See [`FormulaContext`](#formulacontext) for the variable methods; a script can read every built-in variable but cannot register a new one.
 
 ### Running Any Built-in Action Directly
 
@@ -101,13 +115,13 @@ MxtActions.executeEntity(player, {
 
 | Method | Callback parameters | Return value |
 | --- | --- | --- |
-| `entity(id, callback)` | `(entity, params)` | `boolean` |
-| `biEntity(id, callback)` | `(actor, target, params)` | `boolean` |
-| `block(id, callback)` | `(level, pos, params)` | `boolean` |
-| `item(id, callback)` | `(holder, stack, params)` | `boolean` |
-| `damage(id, callback)` | `(source: DamageSource, amount: number, params)` | `boolean` |
+| `entity(id, callback)` | `(entity, params, context)` | `boolean` |
+| `biEntity(id, callback)` | `(actor, target, params, context)` | `boolean` |
+| `block(id, callback)` | `(level, pos, params, context)` | `boolean` |
+| `item(id, callback)` | `(holder, stack, params, context)` | `boolean` |
+| `damage(id, callback)` | `(source: DamageSource, amount: number, params, context)` | `boolean` |
 
-They correspond to the `mxt:js` built-in types of the Entity, BiEntity, Block, Item and Damage conditions respectively. Returning `true` means the condition is met; an unregistered condition and a callback that throws are both treated as `false`.
+They correspond to the `mxt:js` built-in types of the Entity, BiEntity, Block, Item and Damage conditions respectively. Returning `true` means the condition is met; an unregistered condition and a callback that throws are both treated as `false`. The trailing `context` argument is the formula context of the test, exactly as for script actions.
 
 ### Testing Any Built-in Condition Directly
 
@@ -137,15 +151,23 @@ const enoughQi = MxtConditions.testEntity(player, {
 | `number(id, callback)` | `(context: FormulaContext, params: object)` | Finite `number` | `mxt:js` number provider. |
 | `resourceValue(id, callback)` | `(holder: ResourceHolderAttachment, resource: Holder<Resource>, context: FormulaContext, params: object)` | Finite `number` | `mxt:js` resource value provider. |
 
-`FormulaContext` exposes:
+#### `FormulaContext`
+
+Every callback that receives a formula context uses the same object: `MxtValues.number`, `MxtValues.resourceValue`, and the `mxt:js` action and condition callbacks. It exposes:
 
 | Method | Description |
 | --- | --- |
-| `context.value(name)` | Gets an explicit context variable or a registered formula variable. |
-| `context.contains(name)` | Whether the variable is available. |
+| `context.value(name)` | Reads a variable: an explicit context value first, then the built-in variable registry. A name the context cannot provide is reported — a development environment logs the whole error, production logs one warning line per distinct message — and returns `0`. |
+| `context.explicit(name)` | The explicit value alone, or `NaN` when the context carries none. Use it to test whether the current event supplied a payload without asking the variable registry. |
+| `context.contains(name)` | Whether the context can provide the name right now. This never reports anything and never throws. |
+| `context.variables()` | The explicit values only: event payloads and anything a caller added. Entity and resource variables are read out of the context objects on demand and are not listed here. |
 | `context.player()` | Returns the current player, or `null` when there is none. |
-| `context.variables()` | Returns the current explicit variable map. |
+| `context.caster()` | Returns the acting entity, or `null` in a context built without one. |
+| `context.target()` | Returns the second entity of a bi-entity formula, or `null`. |
+| `context.resource()` | Returns the cultivation state bound to this evaluation, or `null` in a formula that is not tied to one resource. |
 | `context.random()` | Returns the authoritative random source used by this evaluation. |
+
+Formula variables are built in: a script can read every name listed in [Formula Variables](../datapack/types/formula_variables.md), but it cannot register a new one.
 
 In `resourceValue`, `holder` is the resource attachment and `resource` is the resource holder; they are normally used read-only, for example `holder.get(resource)`. Do not use this callback to write state.
 
@@ -155,6 +177,8 @@ In `resourceValue`, `holder` is the resource attachment and `resource` is the re
 | --- | --- | --- | --- |
 | `evaluateNumber(entity, definition)` | `Entity`, number provider object | `number` | Evaluates any registered provider. A non-finite result returns `0`. |
 | `evaluateResource(entity, resource, definition)` | `LivingEntity`, resource ID, resource value provider JSON | `number` | Evaluates the value of the given resource. An entity-aware provider reads the environment/actual aura at the current position. |
+
+A definition is decoded once per distinct JSON text and then reused, because decoding builds the whole provider tree including its expressions. A script that evaluates the same definition every tick therefore parses it once. The decoded values are dropped when the world's registries change, and a definition a script has edited into a different JSON text is decoded again.
 
 ```js
 const levelScaled = MxtValues.evaluateNumber(player, {
@@ -172,8 +196,28 @@ const actualAura = MxtValues.evaluateResource(player, 'mxt:spirit_power', {
 
 | Method | Parameters | Return value | Description |
 | --- | --- | --- | --- |
-| `check(player, definition)` | `Player`, one `Cost` JSON | `boolean` | Only checks; does not change the inventory or resources. |
-| `consume(player, definition)` | `Player`, one `Cost` JSON | `boolean` | Checks first and then pays; when it cannot be paid nothing is changed. |
+| `check(player, definition)` | `Player`, one `Cost` JSON | `boolean` | Only checks; does not change the inventory or resources. It is read-only, so a client script may call it. |
+| `consume(player, definition)` | `Player`, one `Cost` JSON | `boolean` | Checks first and then pays; when it cannot be paid nothing is changed. Server-only: on a client script it logs one warning and returns `false` without touching the player. |
+| `register(id, check, consume)` | Callback ID, `(player, params, context) => boolean`, `(player, params, context) => void` | `void` | Registers a script cost. Datapack type: `mxt:js`. |
+
+```js
+MxtCosts.register('example:quest_token',
+  (player, params, context) => {
+    const needed = params.count || 1
+    return player.persistentData.getInt('tokens') >= needed
+  },
+  (player, params, context) => {
+    const needed = params.count || 1
+    player.persistentData.putInt('tokens', player.persistentData.getInt('tokens') - needed)
+  }
+)
+```
+
+```json
+{"type": "mxt:js", "id": "example:quest_token", "params": {"count": 3}}
+```
+
+A script cost needs a player, because a cost that is not a `resource` cost makes the whole ability require one. `Cost` is checked with a player alone, so the `context` a cost callback receives is built from that player and carries no event payload; `context.value('level')` works, `context.value('damage')` does not.
 
 Full cost registry dispatch is supported. The current built-in types:
 
@@ -220,12 +264,33 @@ The accessors of the returned record are `committed()`, `failedResource()` and `
 | Method | Parameters | Return value |
 | --- | --- | --- |
 | `use(entity, ability)` | `Entity`, ability ID | `AbilityService.UseResult` |
+| `selector(id, callback)` | Callback ID, `(actor, context, params) => Entity[]` | `void` |
 
 It can only cast an ability the entity already holds, and it only takes effect on the server. The result record: `committed()` means it completed immediately, `casting()` means the cast has started, `failure()` is the failure enum, `failedResource()` is the ID of the insufficient resource, and `amounts()` are the resources actually paid.
 
 ```js
 const result = MxtAbilities.use(player, 'example:fireball')
 if (result.failure() !== null) console.warn(String(result.failure()))
+```
+
+`selector` registers the ability target selector with the datapack type `mxt:js`. Return the entities to affect as an array; `null` entries are dropped:
+
+```js
+MxtAbilities.selector('example:nearest_three', (actor, context, params) => {
+  const range = params.range || 8
+  const found = []
+  actor.level().getEntities(actor, actor.getBoundingBox().inflate(range))
+    .forEach(entity => found.push(entity))
+  found.sort((a, b) => a.distanceToSqr(actor) - b.distanceToSqr(actor))
+  return found.slice(0, 3)
+})
+```
+
+```json
+{
+  "target_selector": {"type": "mxt:js", "id": "example:nearest_three", "params": {"range": 12}},
+  "bi_entity_action": {"type": "mxt:heal", "amount": 4}
+}
 ```
 
 ### `MxtCultivation`
@@ -261,6 +326,107 @@ The accessors of the breakthrough record are `advanced()`, `failure()`, `failedR
 | Method | Parameters | Return value | Description |
 | --- | --- | --- | --- |
 | `reclaim(entity)` | `Entity` | `boolean` | Uses the authoritative soul reclaim flow. It only applies to transferable souls, and it fires the reclaim pre/post events of `soul`. |
+
+### `MxtTriggers`
+
+A trigger signal is the notification a data pack ability waits for, for example when its carrier lands a hit. `MxtTriggers` publishes the same signal from a script and lets a script wait for it, both through the runtime `TriggerDispatcher`, so script subscriptions and ability triggers observe the same dispatch.
+
+| Method | Parameters | Return value | Description |
+| --- | --- | --- | --- |
+| `matcher(id, callback)` | Callback ID, `(signal, params, context) => boolean` | `void` | Registers a datapack trigger matcher (`mxt:js`). |
+| `publish(entity, signal, values)` | `Entity`, namespaced signal ID, `object` or `null` | `boolean` | Publishes a server-authoritative signal for that entity; `false` when the entity is on the client. |
+| `subscribe(entity, signal, key, callback)` | `Entity`, signal ID, a stable key, `(signal: TriggerSignal) => void` | `boolean` | Registers a runtime subscription for that entity. |
+| `subscribeOnce(entity, signal, key, callback)` | Same | `boolean` | Registers a subscription that removes itself after the first matching signal. |
+| `unsubscribe(entity, key)` | `Entity`, the key used at registration | `boolean` | Removes one script subscription. |
+| `has(entity, key)` | `Entity`, the key used at registration | `boolean` | Whether that subscription exists right now. |
+| `subscriptions(entity)` | `Entity` | `number` | How many script subscriptions the entity currently has. |
+
+`matcher` is the data pack side of the same mechanism: a `mxt:js` trigger declares the signal it listens to and lets a callback decide whether it fires. It is how an ability or a breakthrough condition waits for a custom signal id, which the built-in `mxt:tick`-style matchers cannot express:
+
+```js
+MxtTriggers.matcher('example:on_pill', (signal, params, context) => {
+  return context.explicit('toxicity') >= (params.minimum || 0)
+})
+```
+
+```json
+{
+  "type": "mxt:triggered",
+  "triggers": [{"type": "mxt:js", "signal": "example:pill_taken", "id": "example:on_pill", "params": {"minimum": 10}}]
+}
+```
+
+The callback receives the `TriggerSignal` and the signal's formula context, so it reads the payload values a script published with `MxtTriggers.publish`. A matcher never matches when its callback is missing or throws.
+
+```js
+// kubejs/server_scripts/mxt_triggers.js
+const KEY = 'example:toxicity_watch'
+
+function onPillTaken(signal) {
+  const toxicity = signal.context().formula().explicit('toxicity')
+  if (!Number.isNaN(toxicity)) console.info(`${signal.type()} with toxicity ${toxicity}`)
+}
+
+function watch(entity) {
+  // Re-registering the same key replaces the previous subscription, so this guard only keeps
+  // the per-tick pass cheap.
+  if (!MxtTriggers.has(entity, KEY)) {
+    MxtTriggers.subscribe(entity, 'example:pill_taken', KEY, onPillTaken)
+  }
+}
+
+EntityEvents.spawned(event => watch(event.entity))
+
+// /reload re-evaluates this script, which drops its subscriptions; this re-arms the players
+// who are still online. Publishing works whether or not anything is subscribed.
+ServerEvents.tick(event => event.server.players.forEach(watch))
+
+// Publish from your own logic: a command handler, a quest hook, or an item use.
+function publishPillTaken(player, toxicity) {
+  MxtTriggers.publish(player, 'example:pill_taken', { pill: 'example:returning_pill', toxicity })
+}
+```
+
+`values` is copied into the trigger context as extension data, and every finite numeric value is also added to the trigger's formula context. A script callback therefore reads `toxicity` above through `signal.context().formula().explicit('toxicity')`, exactly like a data pack signal that carries `damage`.
+
+A key identifies one subscription per entity, so give each signal its own key: subscribing the same key again replaces the previous subscription, whichever signal it watched.
+
+The callback receives a `TriggerSignal`, whose accessors are `type()` (the signal ID), `gameTime()` and `context()`. The context exposes `actor()`, `target()`, `level()`, `position()`, `item()`, `block()`, `damageSource()` and `formula()`, plus `get(key)` (an `Optional`) and `data()` (the raw extension map) for the published values. Treat the context as read-only: it is shared with the other subscribers of the same signal.
+
+Trigger subscriptions are runtime-only and are never saved. They are dropped when the entity leaves the world, and also by a server stop, a data pack reload or a server script reload — a reload replaces the callback objects a subscription refers to. Keep a stable key and re-register from a runtime hook, as the example above does. A one-shot subscription removes itself after its first matching signal, which is enough for a quest step that must not repeat.
+
+### `MxtLoot`
+
+MiXianTu adds a few types to the vanilla loot tables; `MxtLoot` lets a script provide two of them, so an ordinary loot table can call into a server script without an item or a block being involved.
+
+| Method | Parameters | Return value | Description |
+| --- | --- | --- | --- |
+| `condition(id, callback)` | Callback ID, `(lootContext, params) => boolean` | `void` | Registers the vanilla loot condition type `mxt:js`. |
+| `function(id, callback)` | Callback ID, `(stack, lootContext, params) => ItemStack` | `void` | Registers the vanilla loot function type `mxt:js`. |
+
+```js
+// KubeJS does not bind the vanilla loot parameter keys as a global, so load the class once.
+const LootParams = Java.loadClass('net.minecraft.world.level.storage.loot.parameters.LootContextParams')
+
+MxtLoot.condition('example:first_clear', (loot, params) => {
+  const player = loot.getParam(LootParams.THIS_ENTITY)
+  return player != null && player.tags.contains(`cleared_${params.dungeon}`)
+})
+
+MxtLoot.function('example:bless', (stack, loot, params) => {
+  stack.grow((params.multiplier || 1) - 1)
+  return stack
+})
+```
+
+```json
+{
+  "conditions": [{"condition": "mxt:js", "id": "example:first_clear", "params": {"dungeon": "example:fire_temple"}}],
+  "functions": [{"function": "mxt:js", "id": "example:bless", "params": {"multiplier": 3}}]
+}
+```
+
+Both callbacks run on the server while loot is generated, and neither receives a `FormulaContext`: read the vanilla `LootContext` instead, for example with `loot.getParam(LootParams.THIS_ENTITY)`. A loot function returns the stack to keep — return its argument unchanged to leave the drop alone, return a new stack to replace it, or return `null` to keep the original. A missing callback makes a condition false and leaves a function's stack untouched, with a warning in the log.
 
 ## `MxtEvents`
 
@@ -348,16 +514,8 @@ MxtEvents.cultivationBreak(event => {
 
 Java records returned by the service APIs always use Java accessors, for example `result.committed()`, rather than assuming that JavaScript fields exist. A failure usually does not throw: check the return values such as `failure()`, `committed()`, `advanced()` and `applied()`. An exception is only thrown when an API parameter is invalid, an identifier is invalid, JSON cannot be decoded by the matching codec, or a mutable setter is called on the wrong event phase.
 
-### Custom Trigger Signals
+An operation that only makes sense on the server refuses to run from a client script and reports it once instead of throwing, so a script cannot desync a client: `MxtCosts.consume`, and every method of `MxtAbilities`, `MxtCultivation`, `MxtCurses`, `MxtAura`, `MxtSouls` and `MxtTriggers` that changes state.
 
-`MxtKubeJsApi.publishTrigger(entity, signal, values)` publishes a custom trigger signal from a server script:
-
-| Parameter | Type | Description |
-|---|---|---|
-| `entity` | `Entity` | The subject of the signal, which is also the dispatch target for subscribers; a client entity is rejected. |
-| `signal` | `Identifier` | A namespaced signal ID, for example `example:pill_taken`. |
-| `values` | `Map<String,Object>` | Key/value pairs written into the `TriggerContext` extension fields; may be `null`. |
-
-Trigger subscriptions are not saved to the world. A script that has to wait for an event across restarts should save a stable ID/phase state itself and call its registration logic again after the entity joins the world or the data pack is reloaded.
+`MxtActions.execute*` is deliberately not guarded, because the built-in actions decide their own side: an action whose JSON opts into client execution, such as a velocity action with its `client` flag, is meant to run where it is called.
 
 See [KubeJS Examples](./examples.md) for complete combinations.

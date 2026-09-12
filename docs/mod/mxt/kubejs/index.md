@@ -10,6 +10,7 @@ KubeJS is well suited to registering concrete items, blocks, recipes and content
 
 - **[KubeJS API Reference](./api-reference.md)** — the script objects, their methods and the events.
 - **[KubeJS Examples](./examples.md)** — complete scripts.
+- **[Create Items with KubeJS and Bind Them](../tutorial/create-items-with-kubejs.md)** — the same material as a step-by-step walkthrough.
 - **[Items](../player-guide/items.md)** — the items the mod itself provides.
 
 ## What the Integration Gives You
@@ -28,6 +29,8 @@ The KubeJS bridge is optional. It exposes one global object per domain instead o
 | `MxtCurses` | Apply or explicitly remove a curse. |
 | `MxtAura` | Query, add and remove server-side aura areas. |
 | `MxtSouls` | Reclaim the transferable soul of an entity. |
+| `MxtTriggers` | Publish custom trigger signals and subscribe scripts to them. |
+| `MxtLoot` | Register script loot conditions and loot functions. |
 | `MxtEvents` | Every MiXianTu server lifecycle event. |
 
 Every API that changes game state must be called from `kubejs/server_scripts/`, and it goes through the mod's existing server transactions and event flow. See the [API Reference](./api-reference.md) for the method signatures.
@@ -137,7 +140,7 @@ All four binding tables only reference items that KubeJS, vanilla or another mod
 
 ## Reloading
 
-Reloading the KubeJS item registry requires restarting the game, while MiXianTu binding data can be reloaded with `/reload`.
+Registering an item or a block happens at startup and needs a game restart. The MiXianTu binding tables are data pack registries, which Minecraft reads while the world loads, so editing them needs the world to be loaded again rather than `/reload`. What `/reload` does refresh is the KubeJS server scripts, because KubeJS clears every callback and re-runs them:
 
 ```js
 // kubejs/server_scripts/mxt_reload_notice.js
@@ -164,7 +167,7 @@ MxtActions.entity('example:heal', (entity, params) => {
 }
 ```
 
-Actions, conditions, number providers and resource value providers each have a pre-registered `mxt:js` type for this. The `id` is unique **within the same callback category**, and KubeJS clears every callback before reloading server scripts and re-runs the scripts, so keep registrations in server scripts rather than in a client script that only runs once.
+Actions, conditions, number providers and resource value providers each have a pre-registered `mxt:js` type for this. The `id` is unique **within the same callback category**, and KubeJS clears every callback before reloading server scripts and re-runs the scripts, so keep registrations in server scripts rather than in a client script that only runs once. Action and condition callbacks also receive the formula context of the dispatch as their last argument, which is how a script reads an event payload such as `damage`.
 
 All server lifecycle events are subscribed through `MxtEvents`:
 

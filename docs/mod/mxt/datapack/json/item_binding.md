@@ -1,10 +1,9 @@
 ---
-title: "Item Binding"
+title: "Item Binding (item_binding)"
 description: "Maps existing items to an ordered list of generic actions through the mxt:item_binding datapack registry."
-sidebar_position: 30
 ---
 
-# Item Binding
+# Item Binding (item_binding)
 
 An item binding maps existing items to an ordered list of generic actions. The mod does not create logical datapack items: physical items must be registered by Minecraft, a content mod, or KubeJS, and datapacks only attach MXT gameplay rules to those existing item IDs.
 

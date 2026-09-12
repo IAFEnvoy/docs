@@ -1,10 +1,9 @@
 ---
-title: "Weapon Binding"
+title: "Weapon Binding (weapon_binding)"
 description: "Adds weapon attack damage, attack speed, attributes and combat actions to an existing item through the mxt:weapon_binding datapack registry."
-sidebar_position: 31
 ---
 
-# Weapon Binding
+# Weapon Binding (weapon_binding)
 
 A weapon binding maps one existing item to weapon-only fields. Like every other binding it only matches already registered items, so the physical weapon must come from Minecraft, a content mod, or KubeJS. Weapon bindings provide attack damage, attack speed and vanilla attribute modifiers, together with use, attack and tick actions; these fields are not mixed with the item, pill or technique bindings.
 

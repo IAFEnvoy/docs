@@ -1,10 +1,9 @@
 ---
-title: "Item Aura"
+title: "Item Aura (item_aura)"
 description: "Define an existing item as aura fuel that is consumed and released into the current realm's resource bar while cultivating."
-sidebar_position: 15
 ---
 
-# Item Aura
+# Item Aura (item_aura)
 
 An Item Aura defines an existing item as aura fuel used during cultivation: while it is held, the item is consumed tick by tick and its aura is released into the resource bar bound to the current realm stage.
 
@@ -26,7 +25,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/item_aura/spi
 | `result_stack` | `ItemStackTemplate` | none | An additional return item given when the current item is fully exhausted; when it is not configured, the original item is simply removed. |
 | `exhausted_action` | Entity Action | `mxt:no_op` | The behaviour when the current fuel is exhausted. |
 
-Every entry must fill in `type`, which is the single element aura type that the item provides or consumes (for example `mxt:common`). The aura transfer interface handles one element type at a time; recipes or behaviours that need several kinds of aura should call the interface separately for each of them.
+Every entry must fill in `type`, which is the resource whose bar receives the released aura (for example `example:qi`). Elements only take part in the type check, through the resource's own `aura_type` marker. The aura transfer interface handles one resource at a time; recipes or behaviours that need several kinds of aura should call the interface separately for each of them.
 
 - `aura` must evaluate to a positive number at actual runtime; spirit stone storage counts in whole units, and the fractional part does not count towards capacity. For items that implement `SpiritItemAccess`, `aura` acts as the charging maximum of each item instead.
 - `consume_speed` must evaluate to a positive number at actual runtime.

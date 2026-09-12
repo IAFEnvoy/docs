@@ -1,10 +1,9 @@
 ---
-title: "Title"
+title: "Title (title)"
 description: "Defines an unlockable title with passive attribute modifiers, exclusivity groups and levels."
-sidebar_position: 10
 ---
 
-# Title
+# Title (title)
 
 A `title` defines an unlockable title that grants passive attributes and can be levelled up to a maximum level.
 

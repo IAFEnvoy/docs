@@ -1,10 +1,9 @@
 ---
-title: "Tribulation"
+title: "Tribulation (tribulation)"
 description: "Define a tribulation that is triggered by a condition, advances through phases and runs success or failure behaviour."
-sidebar_position: 17
 ---
 
-# Tribulation
+# Tribulation (tribulation)
 
 A Tribulation defines a heavenly trial: the condition that triggers it, the phases it advances through, the difficulty multiplier, and the behaviour that runs on success or on failure.
 

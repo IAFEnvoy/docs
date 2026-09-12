@@ -1,10 +1,9 @@
 ---
-title: "Contract Type"
+title: "Contract Type (contract_type)"
 description: "Define the owner and creature conditions, follow and combat behaviour, break behaviour and penalty for a contract between a player and a spirit beast."
-sidebar_position: 19
 ---
 
-# Contract Type
+# Contract Type (contract_type)
 
 A Contract Type defines the rules of a contract between a player and a creature: who may be an owner, which creatures may be contracted, how the spirit beast follows and fights, and what happens when the contract is broken or the creature dies.
 

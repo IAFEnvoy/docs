@@ -1,10 +1,9 @@
 ---
-title: "Item Quality"
+title: "Item Quality (item_quality)"
 description: "An item quality names a quality tier and carries the value, forging and alchemy modifiers attached to it."
-sidebar_position: 25
 ---
 
-# Item Quality
+# Item Quality (item_quality)
 
 An item quality defines one quality tier that items can carry, together with the modifiers that tier applies to currency value, forging and alchemy.
 

@@ -142,6 +142,7 @@ This is the other half of the pair: the pill grants the `example:innate_sword_bo
 
 ## Where to Go Next
 
+- [Tutorials](../tutorial/index.md) — the same content built up step by step, with verification steps.
 - [Registry List](./json/index.md) — every registry with its directory and purpose.
 - [Types Reference](./types/index.md) — the actions and conditions used above.
 - [KubeJS Examples](../kubejs/examples.md) — register the items these bindings refer to.

@@ -1,10 +1,9 @@
 ---
-title: "Realm Stage"
+title: "Realm Stage (realm_stage)"
 description: "Defines one stage of a linear realm chain, including its breakthrough requirements and passive attributes."
-sidebar_position: 4
 ---
 
-# Realm Stage
+# Realm Stage (realm_stage)
 
 A `realm_stage` defines one stage of a linear realm chain: which resource it belongs to, what it costs to break through to the next stage, and which passive modifiers it grants.
 
@@ -40,14 +39,14 @@ The filename corresponds to its ID. For example, `data/example/mxt/realm_stage/f
 {
   "resource": "example:qi",
   "aura_share_weight": 2,
-  "cultivate_condition": {"type": "mxt:aura_range", "min": 20, "max": 200},
+  "cultivate_condition": {"type": "mxt:aura_range", "aura": {"example:qi": {"min": 20, "max": 200}}},
   "next_realm": "example:qi_condensation",
   "breakthrough_exp": "1000 + level * 250",
   "max_experience": "2000 + level * 500",
   "auto_breakthrough": false,
   "breakthrough": {
     "conditions": [
-      {"type": "mxt:realm", "realm": "example:foundation"},
+      {"type": "mxt:realm", "realm": "example:foundation", "comparison": "at_least"},
       {"type": "mxt:resource_compare", "resource": "example:qi", "min": 100}
     ]
   },
@@ -62,6 +61,10 @@ The filename corresponds to its ID. For example, `data/example/mxt/realm_stage/f
 
 :::info Realm chains
 A realm stage can only bind one resource and forms a linear realm chain through `next_realm`; a player can hold several chains for different resources at the same time. The realm attachment stores the current realm `Holder`, and the server realm cache stores the realm-to-aura mapping. A realm chain can only advance in one direction through `next_realm`.
+:::
+
+:::tip Conditions on the current stage
+`mxt:realm` compares the entity's **current** stage against the given one. With the default `exact` comparison, naming the target stage inside the target stage's own `breakthrough` conditions can never pass; use `"comparison": "at_least"` to mean "this stage or later", or check a resource value instead.
 :::
 
 :::note First Breakthrough

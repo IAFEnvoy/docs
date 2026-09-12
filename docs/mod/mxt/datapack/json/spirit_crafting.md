@@ -1,10 +1,9 @@
 ---
-title: "Spirit Crafting Recipes"
+title: "Spirit Crafting Recipes (spirit_crafting)"
 description: "The Spirit Crafting Table accepts mxt:spirit_shaped and mxt:spirit_shapeless recipes, which spend aura as well as materials."
-sidebar_position: 29
 ---
 
-# Spirit Crafting Recipes
+# Spirit Crafting Recipes (spirit_crafting)
 
 The Spirit Crafting Table reuses the vanilla crafting table layout but accepts only two recipe types registered by the mod, `mxt:spirit_shaped` and `mxt:spirit_shapeless`. On top of the usual ingredients, each recipe declares an aura cost.
 
@@ -88,4 +87,4 @@ A shapeless recipe, listing one ingredient per item:
 }
 ```
 
-The aura a recipe spends belongs to a resource defined by [Resource](./resource.md), and because these are ordinary recipes they are reloaded with the rest of your datapack.
+The aura a recipe spends belongs to a resource defined by [Resource](./resource.md). Recipes are not a registry, so unlike the data tables they do reload with `/reload`.

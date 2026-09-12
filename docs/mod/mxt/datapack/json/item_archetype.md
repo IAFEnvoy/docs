@@ -1,10 +1,9 @@
 ---
-title: "Item Archetype"
+title: "Item Archetype (item_archetype)"
 description: "An item archetype gives a cultivation artifact its spirit power capacity, storage, flight and granted abilities."
-sidebar_position: 27
 ---
 
-# Item Archetype
+# Item Archetype (item_archetype)
 
 An item archetype describes the static rules of a cultivation artifact: how much spirit power it stores, how it flies and which abilities it grants.
 

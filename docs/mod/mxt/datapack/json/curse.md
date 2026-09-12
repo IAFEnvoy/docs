@@ -1,10 +1,9 @@
 ---
-title: "Curse"
+title: "Curse (curse)"
 description: "Defines a referenceable curse that can be applied, stacked, ticked and removed."
-sidebar_position: 12
 ---
 
-# Curse
+# Curse (curse)
 
 A `curse` defines a referenceable curse: how long it lasts, how it stacks, and which behaviour runs when it is applied, ticks and is removed.
 

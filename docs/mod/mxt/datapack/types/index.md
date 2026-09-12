@@ -22,7 +22,7 @@ Actions, conditions, number providers and a number of smaller families are **Jav
 The `type` key is **inlined** into the same JSON object that carries the parameters of that type. There is no wrapper object and no separate parameter section: the discriminator and the fields it selects live side by side.
 
 :::info Datapacks Cannot Add Types
-A datapack can only supply `type` and the parameters of an existing type. Reloading a datapack never adds entries to these built-in registries, and an unknown `type` ID fails the reload. New types must be registered from Java or from a script.
+A datapack can only supply `type` and the parameters of an existing type. A data pack never adds entries to these built-in registries, and an unknown `type` ID fails the load. New types must be registered from Java or from a script.
 :::
 
 Several families accept a plain JSON **shorthand** for their most common case, which is exactly equivalent to writing the type with its default fields. For example a JSON number is `mxt:constant`, a JSON string is `mxt:expression`, and the item ID `"minecraft:apple"` is `mxt:item`. Where a shorthand exists, the explicit typed object remains valid.
@@ -58,7 +58,7 @@ Action and condition **arrays are shorthand** for "all of them, in order":
 ]
 ```
 
-The concrete fields of every action and condition are defined by its built-in codec. The built-in types are registered in groups by `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions`, `MxtEntityConditions` and their sibling classes; a datapack reload does not add entries to any of those registries.
+The concrete fields of every action and condition are defined by its built-in codec. The built-in types are registered in groups by `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions`, `MxtEntityConditions` and their sibling classes; a data pack does not add entries to any of those registries.
 
 :::note
 Minecraft 26.3 also ships a vanilla registry named `number_provider_type`. MiXianTu currently registers its own registry under that name, so the two can be merged in a later version.
@@ -85,7 +85,7 @@ Minecraft 26.3 also ships a vanilla registry named `number_provider_type`. MiXia
 
 ## Number Provider Types
 
-Any number that must change with level, realm or event context is a `NumberProvider`. See [Number Provider Types](./number_provider_types.md) for the shorthand forms, the built-in providers, the formula functions and the available formula variables.
+Any number that must change with level, realm or event context is a `NumberProvider`. See [Number Provider Types](./number_provider_types.md) for the shorthand forms, the built-in providers and the formula functions, and [Formula Variables](./formula_variables.md) for every variable a formula can read, where it is available and how an unknown name is reported.
 
 ## Other Type Families
 
@@ -118,4 +118,4 @@ Custom types are registered in code, never in JSON:
 | Java registration into the built-in registries | [Registry Guide](../../java/registries.md) |
 | Script callbacks through the pre-registered `mxt:js` types | [KubeJS API Reference](../../kubejs/api-reference.md) |
 
-The `mxt:js` entry exists for entity, bi-entity, block and item actions, for entity, bi-entity, block, item and damage conditions, for number providers and for resource value providers. Callbacks are registered from `kubejs/server_scripts/`, and a missing callback makes an action do nothing, a condition return `false` and a value resolve to `0`, with a warning in the log.
+The `mxt:js` entry exists for entity, bi-entity, block and item actions, for entity, bi-entity, block, item and damage conditions, for number providers, resource value providers, trigger matchers, costs, ability target selectors, and for the loot conditions and loot functions MiXianTu adds to vanilla loot tables. Callbacks are registered from `kubejs/server_scripts/`, and a missing callback makes an action do nothing, a condition return `false`, a value resolve to `0`, a cost become unpayable, a trigger never match, a target selector select nobody and a loot function keep the stack, with a warning in the log. Action and condition callbacks also receive the formula context of the dispatch, so a script reads the same event payload a built-in type would.

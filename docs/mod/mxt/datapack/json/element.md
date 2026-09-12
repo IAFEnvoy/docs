@@ -1,10 +1,9 @@
 ---
-title: "Element"
+title: "Element (element)"
 description: "Defines an independent aura kind together with its overcoming, adapted and aura kind relations."
-sidebar_position: 5
 ---
 
-# Element
+# Element (element)
 
 An `element` defines an independent aura kind, the elements it overcomes and is adapted to, and the aura kind markers used by environment and cultivation conditions.
 

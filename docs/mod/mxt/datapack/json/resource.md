@@ -1,10 +1,9 @@
 ---
-title: "Resource"
+title: "Resource (resource)"
 description: "Defines an entity resource such as cultivation progress, spirit power or stamina, together with its inline resource bars."
-sidebar_position: 2
 ---
 
-# Resource
+# Resource (resource)
 
 A `resource` defines a numeric entity resource that can be gained, consumed, converted or displayed, such as cultivation progress, spirit power or stamina.
 
@@ -23,7 +22,9 @@ The filename corresponds to its ID. For example, `data/example/mxt/resource/qi.j
 | `max` | `NumberProvider` | **required** | Dynamic upper bound; realm and absorbed aura variables may be used. |
 | `regen` | `NumberProvider` | `0` | Natural regeneration per tick. |
 | `burst_amount` | `NumberProvider` | `0` | When greater than `0` the resource can be consumed by the Fire Spirit Power keybind and is used as the value of each spirit power ray. Each datapack should configure only one default spirit power resource with this value greater than `0`. |
+| `icon` | `HotbarIcon` | none | Optional hotbar icon for the spirit power entries; it must define exactly one of `texture` (a 16x16 GUI texture) or `item`. |
 | `particle_color` | `RGBColor` | `#FFFFFF` | Particle colour used by spirit power rays. May be written as `#RRGGBB` or as an integer in `0..16777215`. |
+| `aura_type` | `Holder<element>` | none | The element marker of this resource. It is used for aura type checks and shown next to the resource name, for example by `/mxt aura query`. |
 | `cultivation_to_resource` | Object | `multiplier=1,max_per_tick=1` | Draws resource recovery from the cultivation progress counter. |
 | `resource_to_cultivation` | Object | `multiplier=1,max_per_tick=1` | Converts the resource back into cultivation progress, only while in cultivation mode. |
 | `bars` | `List<ResourceBar>` | `[]` | Inline resource bars; when empty, the resource is not displayed. |
@@ -33,7 +34,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/resource/qi.j
 | `use_condition` | `EntityCondition` | `mxt:always_true` | Controls whether the entity can actively consume the resource and decides whether the resource bars are shown; it does not affect cultivation, environmental absorption, natural regeneration or breakthrough. |
 | `show_cultivation_info` | Boolean | `true` | Whether the character information panel shows the realm and cultivation progress of this resource. |
 
-A `CultivateConditions` object contains `conditions`, optional `triggers` and an optional `action`. Starting cultivation and the breakthrough entry point check `conditions` immediately (all of them must be satisfied); only after the breakthrough stage is reached does the current resource register runtime subscriptions from `triggers` and attempt a breakthrough once a matching event fires. Subscriptions are never serialised directly: they are rebuilt from the cultivation state after a save is loaded or a datapack is reloaded.
+A `CultivateConditions` object contains `conditions`, optional `triggers` and an optional `action`. Starting cultivation and the breakthrough entry point check `conditions` immediately (all of them must be satisfied); only after the breakthrough stage is reached does the current resource register runtime subscriptions from `triggers` and attempt a breakthrough once a matching event fires. Subscriptions are never serialised directly: they are rebuilt from the cultivation state after a save is loaded or the data tables are loaded.
 
 `cultivation_to_resource` and `resource_to_cultivation` use the following two fields:
 
@@ -74,7 +75,7 @@ Visibility types: `mxt:always`, `mxt:non_full`, `mxt:non_zero`, `mxt:recently_ch
 
 ## Example
 
-Formulas in this table can use the resource and cultivation variables of this resource (`realm`, `realm_rank`, `level`, `absorbed_aura`, `cultivation_progress`) on top of the entity variables; the full list is in [Formula Variables](../types/number_provider_types.md#formula-variables).
+Formulas in this table can use the resource and cultivation variables of this resource (`realm`, `realm_rank`, `level`, `absorbed_aura`, `cultivation_progress`) on top of the entity variables; the full list is in [Formula Variables](../types/formula_variables.md).
 
 ```json
 {

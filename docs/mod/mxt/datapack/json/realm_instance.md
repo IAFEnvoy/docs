@@ -1,10 +1,9 @@
 ---
-title: "Realm Instance"
+title: "Realm Instance (realm_instance)"
 description: "Define a secret realm instance: its target dimension, duration, maximum member count and enter and exit behaviour."
-sidebar_position: 20
 ---
 
-# Realm Instance
+# Realm Instance (realm_instance)
 
 A Realm Instance defines a separate secret realm that players enter with a Realm Token: which dimension it targets, how long it lasts, how many players may be inside, and what happens when a player enters or leaves.
 

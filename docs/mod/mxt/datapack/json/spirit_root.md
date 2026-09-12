@@ -1,10 +1,9 @@
 ---
-title: "Spirit Root"
+title: "Spirit Root (spirit_root)"
 description: "Defines a spirit root that is strongly bound to a single element and grants cultivation bonuses and abilities."
-sidebar_position: 6
 ---
 
-# Spirit Root
+# Spirit Root (spirit_root)
 
 A `spirit_root` is a stackable source attached to an entity that is strongly bound to one element and modifies cultivation and element affinity.
 

@@ -1,10 +1,9 @@
 ---
-title: "Ability"
+title: "Ability (ability)"
 description: "Defines an active, passive or triggered ability with its costs, cooldown, conditions and behaviour."
-sidebar_position: 11
 ---
 
-# Ability
+# Ability (ability)
 
 An `ability` defines an active, passive or triggered ability, including its resource costs, cooldown, availability condition and the behaviour it executes.
 
@@ -19,14 +18,16 @@ The filename corresponds to its ID. For example, `data/example/mxt/ability/fireb
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `ability` | `AbilityType` object | **required** | Built-in ability type object; the object must contain a `type` dispatch key. |
-| `costs` | `List<ResourceCost>` | `[]` | Resources deducted before the ability executes. |
+| `costs` | `List<Cost>` | `[]` | Costs paid before the ability executes. An entry is a `Cost`: `mxt:resource` (the plain `{"id": ..., "amount": ...}` shorthand is read as this), `mxt:item`, or `mxt:js` for a script-defined cost. A cost that is not a `resource` cost means the ability can only be used by a player. |
 | `cast_time` | `NumberProvider` | `0` | Cast time. |
 | `cooldown` | `NumberProvider` | `0` | Cooldown. |
+| `icon` | `HotbarIcon` | none | Optional hotbar icon for active abilities; it must define exactly one of `texture` (a 16x16 GUI texture) or `item`, because an entry with neither or both is rejected. |
 | `components` | `List<AbilityComponent>` | `[]` | State components such as cooldown, charges, toggling and duration. |
 | `modifiers` | `List<AttributeEntry>` | `[]` | Passive vanilla attribute modifiers; an entry contains `attribute`, `id`, `amount` and `operation`, plus an optional `value` formula. |
 | `damage_condition` | `DamageCondition` | `mxt:always_true` | Restriction on damage triggers. |
 | `condition` | `EntityCondition` | `mxt:always_true` | Condition for the ability to be usable. |
 | `entity_action` | `EntityAction` | `mxt:no_op` | Behaviour executed on the caster. |
+| `target_selector` | `AbilityTargetSelector` | `mxt:self` | Which entities `bi_entity_action` applies to: `mxt:self` selects only the caster, `mxt:area` takes `radius` (required, capped at `128`) and `include_actor` (default `false`), and `mxt:js` asks a server script. |
 | `target_condition` | `BiEntityCondition` | `mxt:always_true` | Target relation condition. |
 | `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | Behaviour executed on the caster and the target. |
 | `element_affinity` | `HolderOrTag<element>[]` | `[]` | Element affinity markers of the ability. |
@@ -41,6 +42,8 @@ The filename corresponds to its ID. For example, `data/example/mxt/ability/fireb
 | `mxt:composite` | `abilities` (**required**), `all_required` (default `true`) | Does not execute behaviour itself; with `all_required: false` only the first ability in the list is executed, while with `true` the costs of every ability are submitted in list order and then the behaviour of each child ability is executed in turn. |
 
 The effects of `mxt:channelled` and `mxt:composite` are both produced through the same set of fields: `entity_action` applies to the caster, `target_selector` and `bi_entity_action` apply to the selected target, while the `word` type is a terminal payload that does not execute target behaviour any more.
+
+Every entry of `mxt:triggered.triggers` is a `trigger_type` entry. Besides the built-in signals, `mxt:js` lets the ability wait for a **custom** signal a server script publishes; see [`trigger_type`](../types/other_types.md#trigger_type).
 
 ## Example
 
@@ -80,5 +83,5 @@ A top-level ability that should be a channelled ability released from the abilit
 :::info Server-authoritative
 Numeric fields of abilities uniformly use `NumberProvider`. An ability must pass its condition and all resource costs before its behaviour is executed. Ability behaviour is handled on the server; the client hotbar only sends use and cancel requests.
 
-Abilities can read the entity variables plus the ability and trigger variables (`element_modifier`, `damage`, `target_health`, …); see [Formula Variables](../types/number_provider_types.md#formula-variables).
+Abilities can read the entity variables plus the ability and trigger variables (`element_modifier`, `damage`, `target_health`, …); see [Formula Variables](../types/formula_variables.md).
 :::
