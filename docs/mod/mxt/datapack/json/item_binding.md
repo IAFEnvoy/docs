@@ -1,0 +1,113 @@
+---
+title: "Item Binding"
+description: "Maps existing items to an ordered list of generic actions through the mxt:item_binding datapack registry."
+sidebar_position: 30
+---
+
+# Item Binding
+
+An item binding maps existing items to an ordered list of generic actions. The mod does not create logical datapack items: physical items must be registered by Minecraft, a content mod, or KubeJS, and datapacks only attach MXT gameplay rules to those existing item IDs.
+
+```text
+KubeJS / mod item registry
+        -> mxt:item_binding -> actions
+        -> mxt:weapon_binding
+        -> mxt:pill_binding
+        -> mxt:technique_binding -> cultivation technique
+```
+
+`mxt:item_binding` is the generic entry point of the four bindings. The other three carry fields of their own, and no field is shared between them.
+
+## File Location
+
+Item binding JSON files go in `data/<namespace>/mxt/item_binding/` within your data pack.
+
+The filename corresponds to its ID. For example, `data/example/mxt/item_binding/root_pellet.json` has the ID `example:root_pellet`.
+
+## Fields
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `items` | `ItemMatcher` | **required** | The item IDs, item tags, or mixed array of both this binding matches |
+| `actions` | `List<EntityAction>` | `[]` | The ordered actions executed when consumption finishes or the binding event fires |
+| `quality_group` | `Tag<item_quality>` | none | The quality group in which the item is allowed to be used |
+| `conditions` | `EntityCondition[]` | `[]` | Binding use conditions; each entry may be an inline condition, or a `{condition, description}` object carrying a translation-key `description`. Described conditions are marked in the tooltip with a green `✓` or a red `✗` |
+
+### `items`
+
+Every binding uses the `items` matcher. It accepts one item ID, one item tag (such as `"#example:herbs"`), or a mixed array of both, so one binding can cover many physical items. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first; all four binding types currently use priority `0`, so registry order decides the tie.
+
+:::info Matcher Forms
+```json
+"items": "minecraft:apple"
+```
+
+```json
+"items": "#minecraft:logs"
+```
+
+```json
+"items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]
+```
+
+The matcher only references already registered items. See [Shared Data Types](../types/shared_data_types.md) for the full `ItemMatcher` description.
+:::
+
+### `quality_group`
+
+`quality_group` must be a native item-quality tag reference prefixed with `#`. Its `values` order defines the group's quality order. When no explicit `mxt:item_quality` component or forge result exists, the last member not disabled by the `mxt:disabled` tag becomes the default quality.
+
+An item cannot be used when its current quality is outside the group, the group has no usable member, a binding condition fails, or the quality's own `condition` fails. See [Item Quality](./item_quality.md).
+
+### `conditions`
+
+`conditions` is optional on every binding. Each entry may be an inline `EntityCondition`, or an object with `condition` and an optional translation-key `description`. Described entries are shown in the item tooltip with a green `✓` when true or a red `✗` when false; the description text itself keeps its normal style.
+
+Every matching binding condition and the current quality's condition must pass before the item can be used. The check blocks right-click use, block interaction, attacks, data-driven item effects, weapon tick effects, technique learning, and binding-added weapon attributes.
+
+## Example
+
+A pellet that grants a spirit root when consumed and is restricted to one quality group:
+
+```json
+// data/example/mxt/item_binding/root_pellet.json
+{
+  "items": ["kubejs:root_pellet", "#example:root_pellets"],
+  "actions": [
+    {"type": "mxt:grant_spirit_root", "spirit_root": "example:fire_root"}
+  ],
+  "quality_group": "#example:quality/root_pellet"
+}
+```
+
+A pill that first checks for an existing fire spirit root and then swaps it for a water spirit root:
+
+```json
+{
+  "items": "kubejs:root_switching_pill",
+  "conditions": [
+    {
+      "condition": {"type": "mxt:has_spirit_root", "spirit_root": "mxt:fire_root"},
+      "description": "condition.example.requires_fire_root"
+    }
+  ],
+  "actions": [
+    {"type": "mxt:remove_spirit_root", "spirit_root": "mxt:fire_root"},
+    {"type": "mxt:grant_spirit_root", "spirit_root": "mxt:water_root"}
+  ]
+}
+```
+
+The same binding type also attaches context-free permanent bonuses, such as granting a physique:
+
+```json
+// data/example/mxt/item_binding/body_pill.json
+{
+  "items": "kubejs:body_pill",
+  "actions": [
+    {"type": "mxt:grant_physique", "physique": "example:innate_sword_bone"}
+  ]
+}
+```
+
+The behaviour id used inside `actions` comes from the [Entity Action Types](../types/action/entity_action_types.md) list, and the condition ids come from the [Entity Condition Types](../types/condition/entity_condition_types.md) list.

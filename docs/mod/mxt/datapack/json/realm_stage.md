@@ -1,0 +1,69 @@
+---
+title: "Realm Stage"
+description: "Defines one stage of a linear realm chain, including its breakthrough requirements and passive attributes."
+sidebar_position: 4
+---
+
+# Realm Stage
+
+A `realm_stage` defines one stage of a linear realm chain: which resource it belongs to, what it costs to break through to the next stage, and which passive modifiers it grants.
+
+## File Location
+
+Realm stage files go in `data/<namespace>/mxt/realm_stage/` within your datapack.
+
+The filename corresponds to its ID. For example, `data/example/mxt/realm_stage/foundation.json` has the ID `example:foundation`.
+
+## Fields
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `resource` | `Holder<resource>` | **required** | The strongly bound aura/cultivation progress resource; one realm can only belong to one resource chain. |
+| `aura_share_weight` | `NumberProvider` | `1` | Weight used when sharing aura in the same chunk while `aura_zone.distribution` is `realm_weighted`. |
+| `cultivate_condition` | `EntityCondition` | `mxt:always_true` | Environment conditions that allow cultivation at this realm; for example `mxt:aura_range` can require a minimum concentration. |
+| `next_realm` | `Holder<realm_stage>` | none | The next realm of the linear chain; at most one. |
+| `breakthrough_exp` | `NumberProvider` | `0` | The minimum cultivation progress count needed to break through from the current realm to the next one. |
+| `max_experience` | `NumberProvider` | `Double.MAX_VALUE` | The maximum cultivation progress count that may be held in the current realm before advancing to the next one; once reached, no further cultivation progress is accepted. It must not be smaller than `breakthrough_exp`. |
+| `breakthrough` | `CultivateConditions` | empty object | The breakthrough conditions checked after the minimum cultivation progress is reached. |
+| `auto_breakthrough` | `Boolean` | `false` | Whether a breakthrough is attempted automatically while cultivation mode is running; when disabled, a breakthrough can only be triggered through a command, KubeJS or another server-side call. |
+| `passive_modifiers` | `List<AttributeEntry>` | `[]` | Vanilla attribute modifiers granted by the current realm; an entry contains `attribute`, the vanilla modifier `id`/`amount`/`operation` and an optional `value` formula. |
+| `costs` | `List<ResourceCost>` | `[]` | Breakthrough costs; each entry is an `id` and an `amount`. |
+| `ability_requirements` | `HolderOrTag<ability>[]` | `[]` | Abilities that must be owned before breaking through. |
+| `tribulation` | `Holder<tribulation>` | none | Optional tribulation. |
+| `breakthrough_particle` | `ParticleEffect` | none | Optional breakthrough particle; nothing is sent when it is omitted. |
+| `success_action` | `EntityAction` | `mxt:no_op` | Behaviour on a successful breakthrough. |
+| `fail_action` | `EntityAction` | `mxt:no_op` | Behaviour on a failed breakthrough. |
+
+## Example
+
+```json
+{
+  "resource": "example:qi",
+  "aura_share_weight": 2,
+  "cultivate_condition": {"type": "mxt:aura_range", "min": 20, "max": 200},
+  "next_realm": "example:qi_condensation",
+  "breakthrough_exp": "1000 + level * 250",
+  "max_experience": "2000 + level * 500",
+  "auto_breakthrough": false,
+  "breakthrough": {
+    "conditions": [
+      {"type": "mxt:realm", "realm": "example:foundation"},
+      {"type": "mxt:resource_compare", "resource": "example:qi", "min": 100}
+    ]
+  },
+  "costs": [{"id": "example:qi", "amount": 100}],
+  "success_action": {
+    "type": "mxt:grant_ability",
+    "ability": "example:body_tempering",
+    "source": "example:foundation"
+  }
+}
+```
+
+:::info Realm chains
+A realm stage can only bind one resource and forms a linear realm chain through `next_realm`; a player can hold several chains for different resources at the same time. The realm attachment stores the current realm `Holder`, and the server realm cache stores the realm-to-aura mapping. A realm chain can only advance in one direction through `next_realm`.
+:::
+
+:::note First Breakthrough
+The mortal stage uses the `start_exp` of its resource as both the first breakthrough threshold and its cap, while `first_realm` only determines the target of the first breakthrough. The first breakthrough uses the `breakthrough` conditions of the target first realm, and `start_cultivate_conditions` is only used for starting cultivation.
+:::
