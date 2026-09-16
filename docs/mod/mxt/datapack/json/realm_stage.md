@@ -17,7 +17,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/realm_stage/f
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `resource` | `Holder<resource>` | **required** | The strongly bound aura/cultivation progress resource; one realm can only belong to one resource chain. |
+| `cultivation` | `Holder<cultivation>` | **required** | The cultivation chain this stage belongs to. A stage only ever names one profile, and the profile is what names the stored value, so the chain is never keyed by the value itself. |
 | `aura_share_weight` | `NumberProvider` | `1` | Weight used when sharing aura in the same chunk while `aura_zone.distribution` is `realm_weighted`. |
 | `cultivate_condition` | `EntityCondition` | `mxt:always_true` | Environment conditions that allow cultivation at this realm; for example `mxt:aura_range` can require a minimum concentration. |
 | `next_realm` | `Holder<realm_stage>` | none | The next realm of the linear chain; at most one. |
@@ -36,8 +36,9 @@ The filename corresponds to its ID. For example, `data/example/mxt/realm_stage/f
 ## Example
 
 ```json
+// data/example/mxt/realm_stage/foundation.json
 {
-  "resource": "example:qi",
+  "cultivation": "example:qi",
   "aura_share_weight": 2,
   "cultivate_condition": {"type": "mxt:aura_range", "aura": {"example:qi": {"min": 20, "max": 200}}},
   "next_realm": "example:qi_condensation",
@@ -60,7 +61,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/realm_stage/f
 ```
 
 :::info Realm chains
-A realm stage can only bind one resource and forms a linear realm chain through `next_realm`; a player can hold several chains for different resources at the same time. The realm attachment stores the current realm `Holder`, and the server realm cache stores the realm-to-aura mapping. A realm chain can only advance in one direction through `next_realm`.
+A realm stage names exactly one cultivation profile and forms a linear chain through `next_realm`, so a chain is keyed by the profile rather than by the stored value; a profile has one chain and it only moves forward. The attachment stores the current realm and the cultivation progress under that profile, so nothing has to be resolved again to read a chain's state, and the server cache keeps the realm-to-profile mapping and the rank of every realm in its chain. A profile whose first realm is missing has no chain at all.
 :::
 
 :::tip Conditions on the current stage
@@ -68,5 +69,5 @@ A realm stage can only bind one resource and forms a linear realm chain through 
 :::
 
 :::note First Breakthrough
-The mortal stage uses the `start_exp` of its resource as both the first breakthrough threshold and its cap, while `first_realm` only determines the target of the first breakthrough. The first breakthrough uses the `breakthrough` conditions of the target first realm, and `start_cultivate_conditions` is only used for starting cultivation.
+The mortal stage uses the `start_exp` of the value's [cultivation profile](./cultivation.md) as both the first breakthrough threshold and its cap, while `first_realm` only determines the target of the first breakthrough. The first breakthrough uses the `breakthrough` conditions of the target first realm, and `start_cultivate_conditions` is only used for starting cultivation.
 :::

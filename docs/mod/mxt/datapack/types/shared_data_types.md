@@ -10,6 +10,29 @@ These are complex values that are referenced by many definitions, actions and co
 
 ---
 
+## Icon Reference
+
+Every icon field in the mod takes the same value: an object that holds **exactly one** of a GUI texture or an item. Definitions that carry one are [ability](../json/ability.md), [resource](../json/resource.md), [badge](../json/badge.md), [forging method](../json/forging_method.md) and [cultivation technique](../json/cultivation_technique.md).
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `texture` | Identifier | A 16x16 GUI texture, for example `example:textures/gui/icon/sword.png` |
+| `item` | `ItemStackTemplate` | An item, written as a bare item ID or as a full item stack template |
+
+The two keys are alternatives, not a priority order: an icon that carries neither, or both, is rejected while the datapack loads. That is why the branches are spelled out instead of taking a bare string — an item ID and a texture path are both plain strings, so a bare string could never say which one was meant.
+
+```json
+"icon": {"texture": "example:textures/gui/icon/sword.png"}
+```
+
+```json
+"icon": {"item": "minecraft:iron_ingot"}
+```
+
+An item icon is stored as a template rather than a ready-made stack, because a datapack registry is parsed before item components are bound. The client materialises it when it draws, so an icon that needs components still shows them.
+
+---
+
 ## ResourceCost
 
 Every field that **consumes** resources takes an array of resource costs. Each entry names a resource registry entry and the amount to take.
@@ -84,7 +107,7 @@ A single entry is written as an ID, and a tag reference keeps its required `#` p
 
 ```json
 {
-  "resource": "example:spirit_power",
+  "cultivation": "example:qi",
   "ability_requirements": "#example:fire_abilities"
 }
 ```

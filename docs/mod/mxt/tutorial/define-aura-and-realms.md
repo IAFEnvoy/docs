@@ -28,14 +28,15 @@ resource  example:qi          the bar fills; the overflow becomes progress
 realm_stage chain             progress + conditions + costs → next realm
 ```
 
-A player who has not entered a chain yet is **Mortal**. The Mortal state has no definition of its own: it is described by the resource, through `start_exp` (the progress needed, and the hard cap) and `first_realm` (the stage that the first breakthrough targets).
+A player who has not entered a chain yet is **Mortal**. The Mortal state has no definition of its own: it is described by the value's cultivation profile, through `start_exp` (the progress needed, and the hard cap) and `first_realm` (the stage that the first breakthrough targets).
 
 ## What You Are Building
 
 | File | Registry | Purpose |
 | --- | --- | --- |
 | `element/common.json` | `element` | Marks the aura kind that zones and cultivation actions agree on. |
-| `resource/qi.json` | `resource` | The aura pool, its bounds, its regeneration and its HUD bar. |
+| `resource/qi.json` | `resource` | The stored number, its bounds and its HUD bar. |
+| `cultivation/qi.json` | `cultivation` | The cultivation behaviour of that value: aura kind, regeneration, realm entry. |
 | `realm_stage/qi_condensation.json` | `realm_stage` | First realm, and the requirements for the second. |
 | `realm_stage/foundation.json` | `realm_stage` | Second realm. |
 | `realm_stage/core_formation.json` | `realm_stage` | Third realm, the end of the chain. |
@@ -61,13 +62,13 @@ An `element` is an aura kind: a marker plus the relations and colour attached to
 
 ## Step 2 — The Aura Resource
 
+A `resource` is only a stored number with bounds and a bar; a `cultivation` profile gives it its cultivation behaviour and points back at it. Split the two files first, then read the tables.
+
 ```json
 // data/example/mxt/resource/qi.json
 {
   "default_value": 0,
   "max": "50 + realm_rank * 50 + absorbed_aura * 0.2",
-  "regen": "0.05 + realm_rank * 0.05",
-  "aura_type": "example:common",
   "particle_color": "#66CCFF",
   "bars": [
     {
@@ -77,30 +78,43 @@ An `element` is an aura kind: a marker plus the relations and colour attached to
       "renderer": {"type": "mxt:boss_bar", "bar_index": 1},
       "value_display": "current_and_maximum"
     }
-  ],
+  ]
+}
+```
+
+```json
+// data/example/mxt/cultivation/qi.json
+{
+  "resource": "example:qi",
+  "regen": "0.05 + realm_rank * 0.05",
+  "aura_type": "example:common",
   "first_realm": "example:qi_condensation",
   "start_exp": 100
 }
 ```
 
-| Field | What it does here |
+| Resource field | What it does here |
 | --- | --- |
 | `default_value` | A new player starts empty. Required. |
-| `max` | The bar's upper bound. A formula, because `max` is evaluated in this resource's cultivation context, where `realm_rank` and `absorbed_aura` exist. Required. |
+| `max` | The bar's upper bound. A formula, because `max` is evaluated in this value's cultivation context, where `realm_rank` and `absorbed_aura` exist. Required. |
+| `particle_color` | Colour of the spirit power rays this value fires. |
+| `bars` | One self-HUD bar in the left column; `renderer` is required, and every bar needs an `anchor`. |
+
+| Cultivation field | What it does here |
+| --- | --- |
+| `resource` | Which stored value this profile describes. Required. |
 | `regen` | A slow trickle so the pool refills outside meditation. |
 | `aura_type` | The element marker of this pool; the environment and aura fuel use it for type checks. |
-| `particle_color` | Colour of the spirit power rays this resource fires. |
-| `bars` | One self-HUD bar in the left column; `renderer` is required, and every bar needs an `anchor`. |
 | `first_realm` | Where the first breakthrough goes. Without it, a Mortal can never leave the Mortal state. |
 | `start_exp` | The cultivation progress a Mortal needs, and the cap they cannot pass until they break through. |
 
-`min` defaults to `0`, and `use_condition` defaults to always true, so a Mortal can see the bar. If you would rather hide the bar until the player has entered the chain, add:
+`min` defaults to `0`, and `use_condition` defaults to always true, so a Mortal can see the bar. If you would rather hide the bar until the player has entered the chain, add it to the profile:
 
 ```json
 "use_condition": {"type": "mxt:has_realm", "resource": "example:qi"}
 ```
 
-`use_condition` only controls the display and the player's manual consumption. It never blocks cultivation, absorption or a breakthrough.
+`use_condition` only controls the display and the player's manual consumption. It never blocks cultivation, absorption or a breakthrough. The full field list is in [Cultivation Profile](../datapack/json/cultivation.md).
 
 :::tip Formulas
 
@@ -110,12 +124,12 @@ Any numeric field accepts a plain number, a formula string, or a typed provider 
 
 ## Step 3 — The Realm Chain
 
-Each `realm_stage` file is one stage. A stage is bound to exactly one resource, and `next_realm` points at a single stage, so a chain is a straight line: a player can hold one chain per resource, and each chain only moves forward.
+Each `realm_stage` file is one stage. A stage names exactly one cultivation profile, and `next_realm` points at a single stage, so a chain is a straight line: a profile has one chain, and it only moves forward. The value the profile stores is what actually fills up.
 
 ```json
 // data/example/mxt/realm_stage/qi_condensation.json
 {
-  "resource": "example:qi",
+  "cultivation": "example:qi",
   "next_realm": "example:foundation",
   "breakthrough_exp": 800,
   "max_experience": 1600,
@@ -135,7 +149,7 @@ Each `realm_stage` file is one stage. A stage is bound to exactly one resource, 
 ```json
 // data/example/mxt/realm_stage/foundation.json
 {
-  "resource": "example:qi",
+  "cultivation": "example:qi",
   "next_realm": "example:core_formation",
   "breakthrough_exp": 2000,
   "max_experience": 4000,
@@ -152,7 +166,7 @@ Each `realm_stage` file is one stage. A stage is bound to exactly one resource, 
 ```json
 // data/example/mxt/realm_stage/core_formation.json
 {
-  "resource": "example:qi",
+  "cultivation": "example:qi",
   "max_experience": 8000,
   "passive_modifiers": [
     {
@@ -168,7 +182,7 @@ Each `realm_stage` file is one stage. A stage is bound to exactly one resource, 
 Reading the three files together:
 
 - `breakthrough_exp` is the progress required to **leave** this stage, and `max_experience` is the progress cap while you are in it. They must not cross: a constant `breakthrough_exp` greater than a constant `max_experience` is rejected at load time.
-- `costs` are paid on a successful breakthrough; `breakthrough.conditions` are checked alongside the progress. Both belong to the stage you are leaving — except for the very first step, where the threshold comes from the resource's `start_exp` and the conditions come from the target's `breakthrough`.
+- `costs` are paid on a successful breakthrough; `breakthrough.conditions` are checked alongside the progress. Both belong to the stage you are leaving — except for the very first step, where the threshold comes from the cultivation profile's `start_exp` and the conditions come from the target's `breakthrough`.
 - `auto_breakthrough` defaults to `false`: the player reaches the threshold and waits. Set it to `true` if you want cultivation mode to attempt the breakthrough on its own.
 - `passive_modifiers` are vanilla attribute modifiers granted while the stage is held. `value` is an optional formula, and an entry that declares it is recalculated every tick.
 - The last stage simply has no `next_realm`, so the chain ends there.
@@ -271,7 +285,7 @@ Then, in game:
 
 1. Press the cultivate key (`C` by default) somewhere in the Overworld. The bar appears in the left column and starts filling.
 2. Keep cultivating until the bar is full; from then on the overflow becomes cultivation progress. `/mxt cultivate status` and `/mxt attachment status` show the current progress.
-3. At `100` progress — the resource's `start_exp` — the Mortal stage is capped and a breakthrough becomes possible. Because `auto_breakthrough` is `false`, trigger it yourself with `/mxt breakthrough example:qi` (it needs the `gamemaster` permission), or set `auto_breakthrough: true` and let cultivation do it.
+3. At `100` progress — the cultivation profile's `start_exp` — the Mortal stage is capped and a breakthrough becomes possible. Because `auto_breakthrough` is `false`, trigger it yourself with `/mxt breakthrough example:qi` (it needs the `gamemaster` permission), or set `auto_breakthrough: true` and let cultivation do it.
 4. On success you are in Qi Condensation: `/mxt attachment status` shows the new realm, the `50 + realm_rank * 50` maximum is larger, and the `+2 max health` modifier is applied.
 5. Climb to Foundation Establishment the same way. You will need `200` qi in the pool at the same time, because that stage's `breakthrough.conditions` ask for it, and `200` qi will be spent by `costs`.
 
@@ -285,7 +299,7 @@ Then, in game:
 
 | Symptom | Cause |
 | --- | --- |
-| Nobody can ever leave Mortal | `first_realm` is missing on the resource, so there is no stage to break through to. |
+| Nobody can ever leave Mortal | `first_realm` is missing on the cultivation profile, so there is no stage to break through to. |
 | Cultivation never starts | `aura_kinds` on the action is not fully present at the position — check that the aura zone lists the same markers. |
 | The bar never grows | `aura_costs` asks for more environment aura than the chunk holds, or `use_condition` is false. |
 | The world refuses to load | A definition failed to decode: a required holder points at an ID that does not exist, or a field has the wrong shape. The whole load fails, not just the file. |

@@ -1,18 +1,17 @@
 ---
 title: "Curios Slots"
-description: "The back_weapon, belt_item and technique Curios slots: sizes, validators, server configuration, rendering and resource-pack offsets."
+description: "The back_weapon and belt_item Curios slots: sizes, validators, server configuration, rendering and resource-pack offsets."
 sidebar_position: 4
 ---
 
 # Curios Slots
 
-MiXianTu provides player Curios slots in the order **back → belt → technique**: two `back_weapon` slots, two `belt_item` slots and four `technique` slots. All of them are physical slots — the mod does not create Curios cosmetic slots — and back and belt items are rendered directly from the physical slots.
+MiXianTu provides player Curios slots in the order **back → belt**: two `back_weapon` slots and two `belt_item` slots. All of them are physical slots — the mod does not create Curios cosmetic slots — and back and belt items are rendered directly from the physical slots.
 
 | Slot ID | Size | Order | Validators | Accepted items |
 |---|---|:---:|---|---|
 | `back_weapon` | 2 | 0 | `curios:tag`, `mxt:back_weapon_auto` | Items in the tag, plus what the automatic validator allows. |
 | `belt_item` | 2 | 1 | `curios:tag`, `mxt:belt_item_auto` | Items in the tag, plus what the automatic validator allows. |
-| `technique` | 4 | 2 | `curios:tag` | `mxt:cultivation_jade_slip` and the items in `#mxt:technique_equipable`. |
 
 The slots are registered for `minecraft:player`. The bundled `curios:tag` tags already list the vanilla swords (and the bow for the belt slot) together with the mod's own `#mxt:back_equipable` and `#mxt:belt_equipable` extension tags.
 
@@ -46,10 +45,6 @@ The `curios` section of the Jupiter server configuration file `config/mxt-server
 - `MANUAL`: only `curios:tag` items are allowed.
 - `WEAPONS_ARTIFACTS`: additionally allows weapons matched by `weapon_binding` and artifacts already bound to an `item_archetype`.
 - `ALL`: besides the tag items, every item is allowed.
-
-## The Technique Slot
-
-The `technique` slot uses `curios:tag` only. By default the tag accepts `mxt:cultivation_jade_slip` and the contents of `#mxt:technique_equipable`, which is empty in the mod itself; content packs extend it to add books, jade slips or other cultivation technique carriers.
 
 ## Visibility and Rendering
 

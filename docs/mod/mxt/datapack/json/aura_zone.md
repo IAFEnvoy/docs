@@ -46,7 +46,7 @@ A natural environment uses each resource's `amount` as its initial inventory, an
 | `regen_per_tick` | Double | Inventory regeneration per tick. |
 | `color` | `RGBColor` | Environment colour of the resource. |
 
-The keys of `aura` are resource IDs from the `mxt:resource` registry. Each resource stores its amount, maximum, regeneration speed and environment colour independently; the resource's `aura_type` is the optional `mxt:element` marker. See [Number Provider Types](../types/number_provider_types.md) for the `NumberProvider` shape used by fields such as `max`.
+The keys of `aura` are resource IDs from the `mxt:resource` registry. Each resource stores its amount, maximum, regeneration speed and environment colour independently; the element marker comes from that value's [cultivation profile](./cultivation.md), whose `aura_type` is an optional `mxt:element`. See [Number Provider Types](../types/number_provider_types.md) for the `NumberProvider` shape used by fields such as `max`.
 
 ### `fluctuation`
 

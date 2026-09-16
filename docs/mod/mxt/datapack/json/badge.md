@@ -20,10 +20,12 @@ Badge definitions use built-in `type` dispatch:
 | `type` | Fields | Default | Description |
 |--------|--------|---------|-------------|
 | `mxt:empty` | none | - | Empty placeholder badge. |
-| `mxt:sprite` | `sprite` | **required** | Shows a texture only. |
-| `mxt:tooltip` | `sprite`, `text` | `text` is an empty text | A texture with a hover tooltip. |
-| `mxt:keybind` | `sprite`, `text`, `key` | `text=""`, `key="key.mxt.primary_active"` | Records a client key mapping. |
-| `mxt:crafting_recipe` | `sprite`, `recipe`, `from_power`, `prefix`, `suffix` | `from_power=false` | Reserved recipe hint metadata. |
+| `mxt:sprite` | `icon` | **required** | Shows an icon only. |
+| `mxt:tooltip` | `icon`, `text` | `text` is an empty text | An icon with a hover tooltip. |
+| `mxt:keybind` | `icon`, `text`, `key` | `text=""`, `key="key.mxt.primary_active"` | Records a client key mapping. |
+| `mxt:crafting_recipe` | `icon`, `recipe`, `from_power`, `prefix`, `suffix` | `from_power=false` | Reserved recipe hint metadata. |
+
+`icon` is an [Icon Reference](../types/shared_data_types.md#icon-reference), so a badge can show a texture or an item.
 
 :::warning Work In Progress
 Badge is currently a reserved writable datapack registry. It is not displayed automatically in the selection screen or the compendium.
@@ -34,7 +36,7 @@ Badge is currently a reserved writable datapack registry. It is not displayed au
 ```json
 {
   "type": "mxt:tooltip",
-  "sprite": "mxt:textures/gui/badge/info.png",
+  "icon": {"texture": "mxt:textures/gui/badge/info.png"},
   "text": "badge.example.info"
 }
 ```

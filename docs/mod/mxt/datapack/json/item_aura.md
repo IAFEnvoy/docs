@@ -18,14 +18,14 @@ The filename corresponds to its ID. For example, `data/example/mxt/item_aura/spi
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `items` | `ItemMatcher` | **required** | The existing items that can act as aura fuel while held. A single item ID, an item tag, or a mixed array of both. |
-| `type` | `Holder<resource>` | **required** | The resource type that is consumed and released; elements only take part in the type check through the resource's `aura_type`. |
+| `type` | `Holder<resource>` | **required** | The resource type that is consumed and released; elements only take part in the type check through the `aura_type` of that value's [cultivation profile](./cultivation.md). |
 | `aura` | `NumberProvider` | **required** | When a stack of items is processed for the first time, the aura total per item multiplied by the stack count is written into its `mxt:item_aura.remain`. |
 | `consume_speed` | `NumberProvider` | **required** | Fuel value consumed per tick, stacked by the stack count; the total consumption time stays the same. |
 | `release_speed` | `NumberProvider` | **required** | Fuel amount released per tick into the resource bar of the current realm stage, stacked by the stack count. |
 | `result_stack` | `ItemStackTemplate` | none | An additional return item given when the current item is fully exhausted; when it is not configured, the original item is simply removed. |
 | `exhausted_action` | Entity Action | `mxt:no_op` | The behaviour when the current fuel is exhausted. |
 
-Every entry must fill in `type`, which is the resource whose bar receives the released aura (for example `example:qi`). Elements only take part in the type check, through the resource's own `aura_type` marker. The aura transfer interface handles one resource at a time; recipes or behaviours that need several kinds of aura should call the interface separately for each of them.
+Every entry must fill in `type`, which is the resource whose bar receives the released aura (for example `example:qi`). Elements only take part in the type check, through the `aura_type` of that value's [cultivation profile](./cultivation.md). The aura transfer interface handles one resource at a time; recipes or behaviours that need several kinds of aura should call the interface separately for each of them.
 
 - `aura` must evaluate to a positive number at actual runtime; spirit stone storage counts in whole units, and the fractional part does not count towards capacity. For items that implement `SpiritItemAccess`, `aura` acts as the charging maximum of each item instead.
 - `consume_speed` must evaluate to a positive number at actual runtime.

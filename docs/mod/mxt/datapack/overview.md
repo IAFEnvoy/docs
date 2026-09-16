@@ -99,7 +99,7 @@ Cross-registry fields are resolved into holders as early as possible during data
 
 ```json
 {
-  "resource": "example:spirit_power",
+  "cultivation": "example:qi",
   "ability_requirements": [
     "example:fireball",
     "#example:basic_fire_abilities"
@@ -170,8 +170,8 @@ See [Types Reference](./types/index.md) for the built-in action and condition ty
 
 | Category | Registries |
 | --- | --- |
-| Resources and cultivation | `resource`, `element`, `realm_stage`, `spirit_root`, `physique`, `cultivation_technique`, `cultivate_action` |
-| Abilities and rules | `ability`, `curse`, `formation`, `tribulation`, `badge` |
+| Resources and cultivation | `resource`, `cultivation`, `element`, `realm_stage`, `spirit_root`, `physique`, `cultivation_technique`, `skill_stage`, `cultivate_action` |
+| Abilities and rules | `ability`, `curse`, `formation`, `tribulation`, `trigger`, `badge` |
 | Aura and world | `aura_zone`, `block_aura`, `item_aura`, `realm_instance` |
 | Items and quality | `item_binding`, `weapon_binding`, `pill_binding`, `technique_binding`, `item_archetype`, `item_quality` |
 | Economy and content | `currency`, `spirit_herb`, `forging_method`, `forging_blueprint`, `creature_profile`, `contract_type`, `sect`, `title` |

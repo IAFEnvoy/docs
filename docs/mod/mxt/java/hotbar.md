@@ -23,7 +23,7 @@ public final class ExampleEntry implements HotbarEntry {
 |--------|-------------|
 | `Component name()` | The entry's display name; required. |
 | `Identifier id()` | A stable option ID used by configurable hotbar layouts; may be `null`. |
-| `Optional<HotbarIcon> icon()` | An optional icon, either an item or a texture. When it is empty the name is drawn instead. |
+| `Optional<IconReference> icon()` | An optional icon, either an item or a texture. When it is empty the name is drawn instead. |
 | `int accentColor()` | The accent colour drawn along the top of the slot. |
 | `float cooldown(Player player)` | The remaining cooldown fraction, matching vanilla item cooldown rendering: `0` means ready and `1` means the cooldown has just started. |
 | `boolean canPress(Player player)` | Prevents an entry that is still on cooldown from becoming visually pressed or sending a use request. |

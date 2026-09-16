@@ -21,7 +21,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/ability/fireb
 | `costs` | `List<Cost>` | `[]` | Costs paid before the ability executes. An entry is a `Cost`: `mxt:resource` (the plain `{"id": ..., "amount": ...}` shorthand is read as this), `mxt:item`, or `mxt:js` for a script-defined cost. A cost that is not a `resource` cost means the ability can only be used by a player. |
 | `cast_time` | `NumberProvider` | `0` | Cast time. |
 | `cooldown` | `NumberProvider` | `0` | Cooldown. |
-| `icon` | `HotbarIcon` | none | Optional hotbar icon for active abilities; it must define exactly one of `texture` (a 16x16 GUI texture) or `item`, because an entry with neither or both is rejected. |
+| `icon` | [Icon Reference](../types/shared_data_types.md#icon-reference) | none | Optional hotbar icon for active abilities; it must define exactly one of `texture` (a 16x16 GUI texture) or `item`, because an icon with neither or both is rejected. |
 | `components` | `List<AbilityComponent>` | `[]` | State components such as cooldown, charges, toggling and duration. |
 | `modifiers` | `List<AttributeEntry>` | `[]` | Passive vanilla attribute modifiers; an entry contains `attribute`, `id`, `amount` and `operation`, plus an optional `value` formula. |
 | `damage_condition` | `DamageCondition` | `mxt:always_true` | Restriction on damage triggers. |

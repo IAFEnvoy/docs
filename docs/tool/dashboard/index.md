@@ -20,6 +20,7 @@ ModList Dashboard is a full-stack project for managing and displaying Minecraft 
 | **GitHub Panel** | Aggregates Issues & Pull Requests across all repos with filtering and archive toggle |
 | **Todo System** | Independent Bug & TODO tracker with add / check / delete, login-gated |
 | **Cache Management** | One-click per-source cache clearing (database / CurseForge / GitHub / Codacy / all) from the admin menu |
+| **Badge API** | Public SVG badges (`/api/badge/...`) for mod READMEs — CurseForge / GitHub stats, loaders, license, docs, Discord. Served from cache, no login required |
 | **AI Agent** | LangChainGo-powered multi-Agent chat with native Function Calling, streaming SSE, MCP toolchain, user approval, Issue Dispatch, issue picker, and real token tracking |
 | **Drive** | Lightweight built-in file manager rooted at `data/drive` |
 | **i18n** | Built-in Chinese & English bilingual support |

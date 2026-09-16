@@ -1,6 +1,6 @@
 ---
 title: "Keys and HUD"
-description: "Default keybinds, the shared ability and spirit power hotbar, resource bars, the aura HUD and the character information panel."
+description: "Default keybinds, the shared ability and spirit power hotbar, resource bars, the aura HUD, the character information panel and the technique panel."
 sidebar_position: 2
 ---
 
@@ -14,11 +14,12 @@ MiXianTu ships the client-side controls and overlays that its framework gameplay
 |---|---|---|---|
 | `key.mxt.cultivate` | `C` | Toggle Cultivation Mode | Starts or stops cultivating. |
 | `key.mxt.information_panel` | `Z` | Open Character Information | Opens the character information panel when no other screen is open. |
+| `key.mxt.technique_panel` | unbound | Open Technique Panel | Opens the technique panel when no other screen is open. It is also reachable from a button in the character information panel, which is why it ships without a default key. |
 | `key.mxt.ability_menu` | `LAlt` | Show Ability Hotbar | Opens the shared hotbar on its ability entries. |
 | `key.mxt.spirit_burst` | `V` | Fire Spirit Power | Opens the shared hotbar on its spirit power entries; the chosen resource fires while its number key is held. |
 | `key.mxt.swap_back` | unbound | Swap Main Hand with Back Weapon Slot | Swaps the main hand stack with the first `back_weapon` Curios slot. |
 
-The first three keybinds live in the `MiXianTu` category (`key.category.mxt.general`) and the two hotbar keybinds in the `MiXianTu Hotbar` category (`key.category.mxt.hotbar`). Every one of them can be changed in the vanilla controls settings; "Swap Main Hand with Back Weapon Slot" is unbound by default. See [Curios Slots](./curios-slots.md) for the slot rules the swap keybind follows.
+The first four keybinds live in the `MiXianTu` category (`key.category.mxt.general`) and the two hotbar keybinds in the `MiXianTu Hotbar` category (`key.category.mxt.hotbar`). Every one of them can be changed in the vanilla controls settings; "Swap Main Hand with Back Weapon Slot" and "Open Technique Panel" are unbound by default. See [Curios Slots](./curios-slots.md) for the slot rules the swap keybind follows.
 
 ## Ability and Spirit Power Hotbar
 
@@ -54,10 +55,30 @@ Bars are labelled by their context, for example Stored aura, Sensed concentratio
 
 | Group | Entries |
 |---|---|
-| Basic Information | Health, food, experience level, position, dimension. |
+| Basic Information | Health, food, experience level, dimension. |
 | Cultivation Information | Realm (or Mortal), cultivation progress, whether you are currently cultivating, the breakthrough state, spirit roots, physiques and techniques. |
 
 The breakthrough line reports whether the required progress is reached and whether its conditions are met. The client setting "Information refresh interval (ticks)" (`config.mxt.client.information.refresh_interval`, 20 by default) controls how often the panel refreshes.
+
+## Technique Panel
+
+The **Techniques** panel (`screen.mxt.technique_panel`) lists every technique you have learned, one row each, and scrolls when the list is longer than the panel. Open it with its own keybind — unbound by default — or with the **Techniques** button in the character information panel.
+
+| Row part | Shows |
+|---|---|
+| Icon | The technique's icon, inside a slot frame. Reserved for per-technique art; the frame is drawn empty for now. |
+| Level | The name of the level you stand on, plus your rank in that chain, as `Level <name> (<rank>/<total>)`. A level whose data pack defines no display name falls back to the rank number. |
+| Mastery | Your mastery against what the next level asks for, as `<current> / <required>`, or `Mastered` at the top of a chain. |
+| Progress bar | How far along that requirement you are, tinted with the mastery resource's particle colour. |
+
+Hovering a row shows the technique's full name and the level's ID. A technique that defines no mastery chain is listed with `Level -` and no progress; a technique with a chain but no `mastery_resource` shows `No mastery`.
+
+Two things decide what the bar measures, and the client setting "Mastery progress display" (`config.mxt.client.techniques.progress_mode`) switches between them:
+
+- **Total mastery vs. next level** (the default) measures your stored value against the next level's requirement, so the bar spans the whole climb and the numbers match the `mastery` field of [`skill_stage`](../datapack/json/skill_stage.md).
+- **Gained since current level** subtracts what the current level already asked for, so every level starts from an empty bar.
+
+The panel is a view over synchronized state — learned techniques, their levels and their mastery values all reach the client already — so it never asks the server for anything and refreshes on the same interval as the character information panel.
 
 ## Spirit Crafting Table
 

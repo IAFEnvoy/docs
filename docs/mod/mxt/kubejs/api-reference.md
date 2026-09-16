@@ -329,7 +329,7 @@ The accessors of the breakthrough record are `advanced()`, `failure()`, `failedR
 
 ### `MxtTriggers`
 
-A trigger signal is the notification a data pack ability waits for, for example when its carrier lands a hit. `MxtTriggers` publishes the same signal from a script and lets a script wait for it, both through the runtime `TriggerDispatcher`, so script subscriptions and ability triggers observe the same dispatch.
+A trigger signal is the notification a data pack ability waits for, for example when its carrier lands a hit. `MxtTriggers` publishes the same signal from a script and lets a script wait for it, both through the runtime `TriggerDispatcher`, so script subscriptions and ability triggers observe the same dispatch. Datapack [trigger rules](../datapack/json/trigger.md) observe that same dispatch too, so a script-published signal can drive a rule and a rule's action can publish a signal a script waits for.
 
 | Method | Parameters | Return value | Description |
 | --- | --- | --- | --- |

@@ -87,7 +87,7 @@ On the client only the attributes that the client receives are readable; an attr
 
 ## Resource Variables
 
-Formulas evaluated for one resource — `resource.max`, `resource.regen`, the resource conversions, resource costs, realm stages, breakthrough thresholds and resource bars — carry the cultivation state of that resource as well:
+Formulas evaluated for one value — `resource.max`, `resource.bars`, and the fields of its [cultivation profile](../json/cultivation.md) such as `regen`, the conversions and `start_exp`, plus resource costs, realm stages and breakthrough thresholds — carry the cultivation state of that value as well:
 
 | Variable | Description |
 |----------|-------------|
@@ -97,11 +97,19 @@ Formulas evaluated for one resource — `resource.max`, `resource.regen`, the re
 | `absorbed_aura` | Accumulated cultivation progress of this resource; `0` when the chain does not match |
 | `cultivation_progress` | Same value as `absorbed_aura` |
 
-A resource definition can therefore write:
+A value's `max` and its profile's `regen` can therefore write:
 
 ```json
+// data/example/mxt/resource/qi.json
 {
-  "max": "100 + realm_rank * 50 + absorbed_aura * 0.5",
+  "max": "100 + realm_rank * 50 + absorbed_aura * 0.5"
+}
+```
+
+```json
+// data/example/mxt/cultivation/qi.json
+{
+  "resource": "example:qi",
   "regen": "0.25 + realm_rank * 0.1"
 }
 ```
@@ -133,6 +141,7 @@ An ability with a `triggered` ability type is evaluated when its trigger fires, 
 | `item_use` | `use_duration` | Ticks the used item took to finish |
 | `equip` | `equipment_slot` | Ordinal of the changed equipment slot |
 | `breakthrough` | `breakthrough` | Always `1`, so it can be used as a flag |
+| `technique_stage` | `stage` | Zero-based rank of the level that was just reached; the signal also carries the `technique` ID as an extension value for scripted matchers |
 
 ### Values From Other Systems
 

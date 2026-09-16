@@ -20,7 +20,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/forging_metho
 | `value_delta` | Integer | **required** | The forging meter shift. It must not be `0`. |
 | `costs` | `List<ResourceCost>` | `[]` | The cost of each strike. |
 | `condition` | `EntityCondition` | `mxt:always_true` | The condition for using this method. |
-| `display_icon` | Identifier | none | The item ID drawn as the icon in the interface. |
+| `icon` | [Icon Reference](../types/shared_data_types.md#icon-reference) | none | The icon drawn in the interface. An item icon also supplies the name the method is listed under. |
 | `cooldown` | Integer | `0` | The strike cooldown in ticks, range `0..72000`. Consecutive strikes by the same player on the same Forge Table are rate-limited by the server. |
 | `sound` | SoundEvent ID | `minecraft:block.anvil.place` | The sound played at the Forge Table position when a strike with this method succeeds. |
 
@@ -41,7 +41,7 @@ Write `minecraft:intentionally_empty` (the vanilla empty sound) for a method tha
   "value_delta": 2,
   "costs": [{ "id": "mxt_test:spirit_power", "amount": 1 }],
   "condition": { "type": "mxt:health", "comparison": ">=", "compare_to": 1 },
-  "display_icon": "minecraft:iron_ingot",
+  "icon": {"item": "minecraft:iron_ingot"},
   "cooldown": 10,
   "sound": "minecraft:block.anvil.land"
 }

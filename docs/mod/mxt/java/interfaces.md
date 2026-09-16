@@ -67,7 +67,7 @@ The pure client-side entry interface. It provides a name, an optional icon, an a
 |--------|-------------|
 | `Component name()` | The entry's display name. |
 | `Identifier id()` | A stable option ID used by configurable hotbar layouts; may be `null`. |
-| `Optional<HotbarIcon> icon()` | An optional icon, either an item or a texture. |
+| `Optional<IconReference> icon()` | An optional icon, either an item or a texture. |
 | `int accentColor()` | The accent colour drawn on the entry. |
 | `void onPress(Player player)` | Called when the entry is pressed. |
 | `void onPressTick(Player player)` | Called every client tick while the entry is held. |

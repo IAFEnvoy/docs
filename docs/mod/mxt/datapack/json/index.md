@@ -37,7 +37,7 @@ Entries listed in `disabled` are not used by the corresponding service, but they
 
 ## Registries
 
-The table below lists the 32 datapack registries the mod registers, in registry id order, plus the two recipe types documented in this section. `mxt:alchemy`, `mxt:spirit_shaped` and `mxt:spirit_shapeless` are vanilla recipe types rather than datapack registries, and are listed here because their JSON is documented in this section too.
+The table below lists the 35 datapack registries the mod registers, in registry id order, plus the two recipe types documented in this section. `mxt:alchemy`, `mxt:spirit_shaped` and `mxt:spirit_shapeless` are vanilla recipe types rather than datapack registries, and are listed here because their JSON is documented in this section too.
 
 | Registry | Directory | Purpose |
 |----------|-----------|---------|
@@ -50,6 +50,7 @@ The table below lists the 32 datapack registries the mod registers, in registry 
 | [`contract_type`](./contract_type.md) | `mxt/contract_type` | Contract lifecycle. |
 | [`creature_profile`](./creature_profile.md) | `mxt/creature_profile` | Creature profiles and entity binding conditions. |
 | [`cultivate_action`](./cultivate_action.md) | `mxt/cultivate_action` | The cultivation process and its environment requirements. |
+| [`cultivation`](./cultivation.md) | `mxt/cultivation` | The cultivation behaviour of one stored value. |
 | [`cultivation_technique`](./cultivation_technique.md) | `mxt/cultivation_technique` | Cultivation technique definitions. |
 | [`currency`](./currency.md) | `mxt/currency` | Item currency denominations and exchange. |
 | [`curse`](./curse.md) | `mxt/curse` | Curse definitions that can be referenced. |
@@ -67,6 +68,7 @@ The table below lists the 32 datapack registries the mod registers, in registry 
 | [`realm_stage`](./realm_stage.md) | `mxt/realm_stage` | Linear realm chains and breakthrough. |
 | [`resource`](./resource.md) | `mxt/resource` | Entity resources such as cultivation progress, spirit power and stamina, plus inline resource bars. |
 | [`sect`](./sect.md) | `mxt/sect` | Sect ranks, tasks and exchanges. |
+| [`skill_stage`](./skill_stage.md) | `mxt/skill_stage` | One level of a skill mastery chain. |
 | [`spirit_crafting`](./spirit_crafting.md) | `recipe` | Vanilla recipe types (`mxt:spirit_shaped`, `mxt:spirit_shapeless`), not a datapack registry. |
 | [`spirit_herb`](./spirit_herb.md) | `mxt/spirit_herb` | Spirit herb metadata for existing items. |
 | [`spirit_root`](./spirit_root.md) | `mxt/spirit_root` | A spirit root bound to a single element. |
@@ -74,6 +76,7 @@ The table below lists the 32 datapack registries the mod registers, in registry 
 | [`title`](./title.md) | `mxt/title` | Titles and passive attributes. |
 | [`tool_binding`](./tool_binding.md) | `mxt/tool_binding` | Forging methods provided by tool items. |
 | [`tribulation`](./tribulation.md) | `mxt/tribulation` | Tribulation stages. |
+| [`trigger`](./trigger.md) | `mxt/trigger` | Datapack event rules: a signal, a condition and an action. |
 | [`weapon_binding`](./weapon_binding.md) | `mxt/weapon_binding` | Weapon attributes and actions for existing items. |
 
 ## Built-in Type Dispatch

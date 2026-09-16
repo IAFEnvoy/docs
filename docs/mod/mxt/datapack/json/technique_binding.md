@@ -40,6 +40,8 @@ The item cannot be used when its current quality is outside the group, the group
 
 `technique` is a required holder reference to `mxt:cultivation_technique`. Its own `learn_condition`, already-learned check, exclusive-tag conflict check, and event cancellation remain authoritative. A matching technique binding claims the item interaction even when learning fails, so the item's normal right-click behavior cannot bypass these checks. See [Cultivation Technique](./cultivation_technique.md).
 
+A refusal is not silent: the action bar names the technique and the reason, whether the item gate refused (the binding conditions, the quality's condition, or the quality group) or the learning transaction did. The item gate is answered first, so an item that cannot be used at all reports that instead of the learning outcome.
+
 ## Example
 
 ```json

@@ -36,14 +36,13 @@ Do not replace vanilla tags with a custom `tags` key: tag files always live unde
 
 ## Resource: Qi
 
-Registry: `resource` — [Resource](./json/resource.md).
+Registry: `resource` — [Resource](./json/resource.md), plus its cultivation behaviour in [Cultivation Profile](./json/cultivation.md).
 
 ```json
+// data/example/mxt/resource/qi.json
 {
   "default_value": 0,
   "max": "100 + realm_rank * 20 + absorbed_aura * 0.1",
-  "regen": 0,
-  "first_realm": "example:foundation",
   "bars": [
     {
       "anchor": "left",
@@ -55,7 +54,16 @@ Registry: `resource` — [Resource](./json/resource.md).
 }
 ```
 
-The maximum is a formula that reads the realm rank and the aura the player has absorbed, and the inline bar draws the current and maximum value on a boss bar.
+```json
+// data/example/mxt/cultivation/qi.json
+{
+  "resource": "example:qi",
+  "first_realm": "example:foundation",
+  "regen": 0.25
+}
+```
+
+The maximum is a formula that reads the realm rank and the aura the player has absorbed, and the inline bar draws the current and maximum value on a boss bar. The value stores nothing about cultivation: the profile points back at it, adds a passive regeneration and enters the realm chain at `example:foundation`.
 
 ## Item Aura: Spirit Stone
 

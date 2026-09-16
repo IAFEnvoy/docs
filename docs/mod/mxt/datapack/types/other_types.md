@@ -26,6 +26,7 @@ Trigger matchers decide which runtime events an ability or a breakthrough condit
 | `mxt:equip` | The entity's equipment changed |
 | `mxt:death` | The entity died |
 | `mxt:breakthrough` | The entity completed a breakthrough |
+| `mxt:technique_stage` | A learned cultivation technique reached a new level |
 | `mxt:js` | A matcher a server script decides |
 
 ```json
@@ -102,15 +103,15 @@ Badges are reserved display metadata. They load and validate, but no compendium,
 | `type` | Fields | Default | Description |
 |--------|--------|---------|-------------|
 | `mxt:empty` | none | - | Empty placeholder badge |
-| `mxt:sprite` | `sprite` | **required** | Shows a texture only |
-| `mxt:tooltip` | `sprite`, `text` | `text` is an empty text | A texture with a hover tooltip |
-| `mxt:keybind` | `sprite`, `text`, `key` | `text=""`, `key="key.mxt.primary_active"` | Records a client key mapping |
-| `mxt:crafting_recipe` | `sprite`, `recipe`, `from_power`, `prefix`, `suffix` | `from_power=false` | Reserved recipe hint metadata |
+| `mxt:sprite` | `icon` | **required** | Shows an icon only |
+| `mxt:tooltip` | `icon`, `text` | `text` is an empty text | An icon with a hover tooltip |
+| `mxt:keybind` | `icon`, `text`, `key` | `text=""`, `key="key.mxt.primary_active"` | Records a client key mapping |
+| `mxt:crafting_recipe` | `icon`, `recipe`, `from_power`, `prefix`, `suffix` | `from_power=false` | Reserved recipe hint metadata |
 
 ```json
 {
   "type": "mxt:tooltip",
-  "sprite": "mxt:textures/gui/badge/info.png",
+  "icon": {"texture": "mxt:textures/gui/badge/info.png"},
   "text": "badge.example.info"
 }
 ```
@@ -356,7 +357,7 @@ A resource value provider resolves one number for a resource, usually for a reso
 |--------|--------|-------------|
 | `mxt:current` | none | The value stored on the entity |
 | `mxt:max` | none | The `max` of the resource definition |
-| `mxt:regen` | none | The `regen` of the resource definition |
+| `mxt:regen` | none | The `regen` of the value's [cultivation profile](../json/cultivation.md) |
 | `mxt:missing` | none | The amount missing to the maximum, never below `0` |
 | `mxt:environment_concentration` | none | The environmental template concentration at the position, excluding chunk storage and block or formation contributions |
 | `mxt:actual_concentration` | none | The final resolved concentration at the position, including every active source |
