@@ -18,7 +18,7 @@ This tutorial adds two abilities to the example pack: an active bolt cast from t
 | `data/example/mxt/ability/qi_recovery.json` | A triggered ability that reacts to being hurt. |
 | `data/example/mxt/realm_stage/foundation.json` | *(edited)* grants the bolt on breakthrough. |
 | `data/example/mxt/item_binding/root_pellet.json` | *(edited)* also grants the recovery ability. |
-| `data/example/mxt/cultivation_technique/azure_breath.json` | *(edited)* grants both once learned. |
+| `data/example/mxt/technique/azure_breath.json` | *(edited)* grants both once learned. |
 
 ## Step 1 — An Active Ability
 
@@ -26,13 +26,13 @@ This tutorial adds two abilities to the example pack: an active bolt cast from t
 // data/example/mxt/ability/qi_bolt.json
 {
   "ability": {"type": "mxt:active", "slot": "primary"},
-  "icon": {"texture": "example:textures/gui/ability/qi_bolt.png"},
+  "icon": "example:textures/gui/ability/qi_bolt.png",
   "costs": [
     {"type": "mxt:resource", "resource": "example:qi", "amount": 10}
   ],
   "cast_time": 10,
   "cooldown": 40,
-  "condition": {"type": "mxt:has_realm", "resource": "example:qi"},
+  "condition": {"type": "mxt:has_realm", "aura": "example:qi"},
   "target_selector": {"type": "mxt:area", "radius": 6, "include_actor": false},
   "bi_entity_action": {
     "type": "mxt:target_action",
@@ -45,18 +45,18 @@ This tutorial adds two abilities to the example pack: an active bolt cast from t
 | --- | --- |
 | `ability.type` | Selects the lifecycle from the built-in `ability_type` registry: `empty`, `active`, `triggered`, `modifier`, `aura`, `channelled`, `composite`, `word`. `mxt:active` is the type that appears on the ability hotbar. |
 | `ability.slot` | The hotbar slot group, `primary` by default, and it must not be blank. |
-| `icon` | Optional; it must define exactly one of `texture` (a 16x16 GUI texture) or `item`. Without it the entry is drawn with its name. |
+| `icon` | Optional. A bare string is a 16x16 GUI texture; an object is an item stack template (`{"id": ...}`, optionally `count` and `components`). Without it the entry is drawn with its name. |
 | `costs` | A list of `Cost` objects, paid before the behaviour runs. `mxt:resource` consumes a resource, `mxt:item` consumes items, and the `{"id": ..., "amount": ...}` shorthand means `mxt:resource`. |
 | `cast_time` | Cast duration in ticks; the hotbar draws a casting progress bar while it runs. |
 | `cooldown` | Cooldown in ticks, reported back to the client so the hotbar can grey the slot. |
 | `condition` | An entity condition that must pass before the ability can be used. Its only job here is to keep Mortals from throwing bolts. |
 | `target_selector` | Which entities the bi-entity behaviour applies to. `mxt:self` (the default) selects only the caster; `mxt:area` selects everything within `radius` (capped at 128), and `include_actor` decides whether the caster is part of that set. |
-| `bi_entity_action` | Run once for the caster and for each selected target. `mxt:target_action` forwards an entity action to the target — here 6 damage plus half the caster's experience level. |
+| `bi_entity_action` | Run for each selected target, and a failing one never stops the rest. `mxt:target_action` forwards an entity action to the target — here 6 damage plus half the caster's experience level. |
 | `entity_action` | Runs on the caster. It defaults to `mxt:no_op`; use it for a self-buff, a particle burst or an aura change. |
 
 Two extra fields are worth knowing about:
 
-- `components` adds state instead of a plain number: `mxt:charges` (limited uses that recharge), `mxt:toggle`, `mxt:timer`, `mxt:resource` and `mxt:target_lock`.
+- `components` adds state instead of a plain number: `mxt:charges` (limited uses that recharge), `mxt:cooldown`, `mxt:toggle`, `mxt:timer`, `mxt:resource` and `mxt:target_lock`.
 - `element_affinity` lists elements (or element tags) the ability belongs to. When it is not empty, the formula variable `element_modifier` becomes available and can scale damage or costs by how well the caster's spirit root matches.
 
 :::warning Where realm ranks come from
@@ -78,7 +78,7 @@ A triggered ability fires when the world does something to its owner. The trigge
     "chance": 1
   },
   "cooldown": 100,
-  "condition": {"type": "mxt:has_realm", "resource": "example:qi"},
+  "condition": {"type": "mxt:has_realm", "aura": "example:qi"},
   "costs": [
     {"type": "mxt:resource", "resource": "example:qi", "amount": 5}
   ],
@@ -122,7 +122,7 @@ Defining an ability does nothing on its own: an entity has to hold it. The `mxt:
 **From a spirit root, physique or technique.** Those definitions have a `granted_abilities` list that is applied while they are held:
 
 ```json
-// data/example/mxt/cultivation_technique/azure_breath.json
+// data/example/mxt/technique/azure_breath.json
 "granted_abilities": ["example:qi_bolt", "example:qi_recovery"]
 ```
 
@@ -137,7 +137,7 @@ Keep `source` stable and meaningful — the definition ID that granted the abili
 Active abilities appear on the shared client hotbar:
 
 1. `/mxt ability` opens the **Configure Hotbar** screen for the ability entries. A slot you deliberately leave empty stays empty, and a saved entry whose ability no longer exists is refilled from the current runtime list.
-2. Hold the ability keybind (`LAlt` by default, "Show Ability Hotbar") and press a number key `1`–`9` to cast the entry in that slot. Several keys can be held at once, and the client setting "Hotbar activation mode" switches between hold-to-show and press-to-toggle.
+2. Hold the ability keybind (`LAlt` by default, "Show Ability Hotbar") and press a number key `1`–`9` to cast the entry in that slot. Several keys can be held at once, and the client setting "Open Mode" switches between "Hold to Show" and "Press to Toggle".
 3. Everything is server-authoritative: the client only sends a use or cancel request, and the server decides costs, cooldowns, durations and effects. Cancelling a channelled ability works the same way.
 
 ## Step 5 — Verify

@@ -37,24 +37,22 @@ Entries listed in `disabled` are not used by the corresponding service, but they
 
 ## Registries
 
-The table below lists the 35 datapack registries the mod registers, in registry id order, plus the two recipe types documented in this section. `mxt:alchemy`, `mxt:spirit_shaped` and `mxt:spirit_shapeless` are vanilla recipe types rather than datapack registries, and are listed here because their JSON is documented in this section too.
+The table below lists the 34 datapack registries the mod registers, in registry id order, plus the two recipe types documented in this section. `mxt:alchemy`, `mxt:spirit_shaped` and `mxt:spirit_shapeless` are vanilla recipe types rather than datapack registries, and are listed here because their JSON is documented in this section too.
 
 | Registry | Directory | Purpose |
 |----------|-----------|---------|
 | [`ability`](./ability.md) | `mxt/ability` | Active, passive and triggered abilities. |
 | [`alchemy_recipe`](./alchemy_recipe.md) | `recipe` | Vanilla recipe type (`mxt:alchemy`), not a datapack registry. |
+| [`aura`](./aura.md) | `mxt/aura` | The aura identity of one stored value: what it is, its realm chain entry, regeneration, conversions and availability. |
 | [`aura_zone`](./aura_zone.md) | `mxt/aura_zone` | Environment aura templates. |
-| [`badge`](./badge.md) | `mxt/badge` | Reserved badge metadata. |
 | [`block_aura`](./block_aura.md) | `mxt/block_aura` | Aura provided by blocks. |
 | [`blueprint_binding`](./blueprint_binding.md) | `mxt/blueprint_binding` | Forging blueprints provided by blueprint items. |
 | [`contract_type`](./contract_type.md) | `mxt/contract_type` | Contract lifecycle. |
 | [`creature_profile`](./creature_profile.md) | `mxt/creature_profile` | Creature profiles and entity binding conditions. |
 | [`cultivate_action`](./cultivate_action.md) | `mxt/cultivate_action` | The cultivation process and its environment requirements. |
-| [`cultivation`](./cultivation.md) | `mxt/cultivation` | The cultivation behaviour of one stored value. |
-| [`cultivation_technique`](./cultivation_technique.md) | `mxt/cultivation_technique` | Cultivation technique definitions. |
 | [`currency`](./currency.md) | `mxt/currency` | Item currency denominations and exchange. |
 | [`curse`](./curse.md) | `mxt/curse` | Curse definitions that can be referenced. |
-| [`element`](./element.md) | `mxt/element` | Element relations and aura kinds. |
+| [`element`](./element.md) | `mxt/element` | Element relations (`overcomes`/`adapted_to`) and their display colour; an aura points at one through its `aura_type`. |
 | [`forging_blueprint`](./forging_blueprint.md) | `mxt/forging_blueprint` | Forging targets and quality settlement. |
 | [`forging_method`](./forging_method.md) | `mxt/forging_method` | A single forging strike method. |
 | [`formation`](./formation.md) | `mxt/formation` | Formation lifecycle and aura overrides. |
@@ -72,12 +70,17 @@ The table below lists the 35 datapack registries the mod registers, in registry 
 | [`spirit_crafting`](./spirit_crafting.md) | `recipe` | Vanilla recipe types (`mxt:spirit_shaped`, `mxt:spirit_shapeless`), not a datapack registry. |
 | [`spirit_herb`](./spirit_herb.md) | `mxt/spirit_herb` | Spirit herb metadata for existing items. |
 | [`spirit_root`](./spirit_root.md) | `mxt/spirit_root` | A spirit root bound to a single element. |
+| [`talisman`](./talisman.md) | `mxt/talisman` | Talisman definitions: the abilities one inscribed talisman carries. |
+| [`technique`](./technique.md) | `mxt/technique` | Cultivation technique definitions: learnable, granting abilities and cultivation modifiers by level. |
 | [`technique_binding`](./technique_binding.md) | `mxt/technique_binding` | Bindings from existing items to cultivation technique learning. |
-| [`title`](./title.md) | `mxt/title` | Titles and passive attributes. |
 | [`tool_binding`](./tool_binding.md) | `mxt/tool_binding` | Forging methods provided by tool items. |
 | [`tribulation`](./tribulation.md) | `mxt/tribulation` | Tribulation stages. |
 | [`trigger`](./trigger.md) | `mxt/trigger` | Datapack event rules: a signal, a condition and an action. |
 | [`weapon_binding`](./weapon_binding.md) | `mxt/weapon_binding` | Weapon attributes and actions for existing items. |
+
+:::note Removed registries
+`title` and `badge` once existed as reserved registries with a data structure but no gameplay consumer. Both have been **removed completely**: they are not registered, nothing reads them, and leftover `mxt/title` or `mxt/badge` files in a datapack are ignored without an error. Likewise, the registry that used to be called `mxt:cultivation` is now `mxt:aura`.
+:::
 
 ## Built-in Type Dispatch
 
@@ -99,7 +102,6 @@ The following fields use `MapCodec`s from Java built-in registries. A datapack m
 | `ResourceValueProvider` | `type` | Resource value sources read by resource bars and extensions, including environment and actual aura concentration. |
 | `ResourceBarRenderer` | `type` | Resource bar renderers. |
 | `ResourceBarVisibility` | `type` | Resource bar visibility conditions. |
-| `Badge` | `type` | Badge structures. |
 
 Action and condition arrays are shorthand: every element is executed in order, and an array of conditions means that all of them must be satisfied.
 

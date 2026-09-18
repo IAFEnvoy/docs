@@ -137,8 +137,7 @@ They correspond to the `mxt:js` built-in types of the Entity, BiEntity, Block, I
 const enoughQi = MxtConditions.testEntity(player, {
   type: 'mxt:resource_compare',
   resource: 'mxt:spirit_power',
-  comparison: '>=',
-  value: 10
+  min: 10
 })
 ```
 
@@ -222,10 +221,10 @@ A script cost needs a player, because a cost that is not a `resource` cost makes
 Full cost registry dispatch is supported. The current built-in types:
 
 ```js
-// Consume a resource. Full form.
+// Consume a resource. Typed cost form.
 { type: 'mxt:resource', resource: 'mxt:spirit_power', amount: 10 }
 
-// Consume a resource. Compatible shorthand; only the cost API may use the id field.
+// Consume a resource. The id shorthand, which is also the resource-cost form MxtResources.consume takes.
 { id: 'mxt:spirit_power', amount: 10 }
 
 // Consume items. items accepts an item ID, an item tag, or an ItemMatcher object.
@@ -240,12 +239,12 @@ A single `Cost` is the safe entry point; for several resources use `MxtResources
 | --- | --- | --- | --- |
 | `consume(entity, costs)` | `Entity`, `ResourceCost[]` | `ResourceTransactions.Result` | Pays a group of resources atomically; when any one of them is insufficient, none of the group is deducted. |
 
-Each element of `costs` follows the `ResourceCost` format, and its field name is `resource`, not `id`:
+Each element of `costs` is a resource cost, whose fields are `id` and `amount`:
 
 ```js
 const result = MxtResources.consume(player, [
-  { resource: 'mxt:spirit_power', amount: 10 },
-  { resource: 'mxt:fire_aura', amount: 'level + 2' }
+  { id: 'mxt:spirit_power', amount: 10 },
+  { id: 'mxt:fire_aura', amount: 'level + 2' }
 ])
 
 if (result.committed()) {
@@ -450,6 +449,7 @@ MxtEvents.abilityUse(event => {
 | `curseApply` | `Pre`, `Post` | `getCurse()`, `isPre()`, `getStacks()`, `setStacks(n)`, `getSource()`, `setSource(text)` | Only `Pre` can cancel and modify the stack count/source; the stack count must be greater than 0. Calling a setter on `Post` throws an exception. |
 | `resourceConsume` | `Pre`, `Post` | `isPre()`, `getAmounts()`, `setAmount(resource, amount)` | Only `Pre` can cancel and modify a single resource amount; the amount must be finite and greater than 0. |
 | `auraZone` | `enter`, `leave`, `tick`, `override` | `getKind()`, `getSource()`, `getConcentration()`, `isCultivationSuppressed()`, `getOverrideZone()` | Only `override` can be cancelled. `getOverrideZone()` returns an empty string when it is not an override. |
+| `friendRelation` | none (a judgement event) | `getJudgeId()`, `getJudge()`, `hasJudge()`, `getCandidate()`, `getResult()`, `isAnswered()`, `setFriend(friend)`, `abstain()` | A script answers for itself: `setFriend(true/false)` gives a verdict, and `abstain()` hands the question back to the player's friend list. `getResult()` returns `"true"`, `"false"` or `"default"`. The judge is given as a **UUID** (`getJudgeId()` is always present), while `getJudge()` returns `null` when that player is offline, so test it with `hasJudge()` first. It is **not cancellable** and should not return a boolean — a verdict is only written through the setters. When no script listens, the event is not dispatched at all. |
 
 The keys of a resource map are already converted to string IDs. For example:
 
@@ -462,6 +462,21 @@ MxtEvents.resourceConsume(event => {
   }
 })
 ```
+
+`friendRelation` is a **judgement**: a script changes no game state, it only answers a question, so it has no phase and no cancellation.
+
+```js
+MxtEvents.friendRelation(event => {
+  // Only this player counts as a friend; otherwise do nothing and hand the question back
+  // to the player's own friend list. To use the judge entity, check hasJudge() first:
+  // that player may be offline.
+  if (event.getCandidate().getName().getString() === 'Alice') {
+    event.setFriend(true)
+  }
+})
+```
+
+Abstaining, or calling `abstain()`, means "go by the list" and is **not** a denial. Every event is dispatched on the server.
 
 ### Generic Lifecycle Events
 
@@ -482,11 +497,11 @@ In the table below, `native` stands for `const native = event.getEvent()`. Retur
 | `abilityTriggered` | `Pre`, `Post` | `getEntity()`, `getAbility()`, `signalType()`, `context()`; `Pre` can cancel the triggered ability. The native event's `ability()` returns `Holder<Ability>`; use `HolderHelper.id(...)` or the KubeJS wrapper's `getAbility()` when you need the ID. |
 | `curseRemove` | `Pre`, `Post` | `curse()` (`Holder<Curse>`), `state()`, `reason()`, `gameTime()`, `holder()`; `Pre` can cancel the removal. reason is `EXPLICIT`, `EXPIRED`, `CLEANSED`, `REPLACED`, `CONTENT_ACTION` or `ADMIN`. |
 | `cultivationBreak` | `Pre`, `Post` | `target()` (`Holder<RealmStage>`), `threshold()`, `context()`, `spirit()`, `resources()`; `Pre` additionally has `originalCosts()`, `costs()` and `setCost(resource, amount)` and can cancel; `Post` has `paidCosts()`. |
-| `techniqueLearn` | `Pre`, `Post` | `technique()` (`Holder<CultivationTechnique>`), `spirit()`; `Pre` can cancel. |
+| `techniqueLearn` | `Pre`, `Post` | `technique()` (`Holder<Technique>`), `spirit()`; `Pre` can cancel. |
 | `alchemyCraft` | `Pre`, `Post` | `recipe()` (`RecipeHolder<AlchemyRecipe>`); `Pre.inputs()` is the list of input IDs and can cancel; `Post.spoiled()` and `Post.outputs()` are the result state. |
 | `artifactRefine` | `Pre`, `Post` | `stack()`, `owner()`; `Pre` can cancel. |
 | `forging` | `Start`, `Started`, `StrikePre`, `StrikePost`, `CompletePre`, `CompletePost`, `Cancel` | Every phase can read `player()` (`ServerPlayer`) and `pos()` (`BlockPos`, the position of the table). Per phase: `Start.blueprint()`; `Started/StrikePost/Cancel.session()`; `StrikePre.method()` (`Holder<ForgingMethod>`), `resources()`, `context()`, `costs()`, `setCosts(costs)`; `CompletePre.blueprint()`, `session()`; `CompletePost.blueprint()`, `session()`, `result()`. `Start`, `StrikePre`, `CompletePre` and `Cancel` can be cancelled. |
-| `formation` | `Activate`, `Deactivate`, `Tick` | `level()`, `controller()`, `instance()` (the formation ID comes from `instance().formation()`); `Activate` and `Tick` can be cancelled. |
+| `formation` | `Activate`, `Deactivate`, `Tick`, `TickEffects`, `UpkeepFailed` | `level()`, `controller()`, `instance()` (the formation ID comes from `instance().formation()`); `Activate`, `TickEffects` and `UpkeepFailed` can be cancelled, while `Deactivate` and `Tick` cannot. `Tick` observes a period whose upkeep has already been charged, `TickEffects` suppresses that period's effects without a refund, and cancelling `UpkeepFailed` lets the formation survive a period it could not pay for. |
 | `lifespanEnd` | `Pre`, `Post` | `entity()`, `spirit()`; `Pre` can cancel the end, and after cancelling the lifespan is set to unlimited. |
 | `realmInstance` | `EnterPre`, `EnterPost`, `Exit` | `level()`, `definition()` (`Holder<RealmInstance>`), `member()`; only `EnterPre` can be cancelled. |
 | `sect` | `JoinPre`, `JoinPost`, `LeavePre`, `LeavePost`, `PromotePre`, `PromotePost` | `sect()`, `data()`; every `*Pre` can be cancelled. |
@@ -514,7 +529,7 @@ MxtEvents.cultivationBreak(event => {
 
 Java records returned by the service APIs always use Java accessors, for example `result.committed()`, rather than assuming that JavaScript fields exist. A failure usually does not throw: check the return values such as `failure()`, `committed()`, `advanced()` and `applied()`. An exception is only thrown when an API parameter is invalid, an identifier is invalid, JSON cannot be decoded by the matching codec, or a mutable setter is called on the wrong event phase.
 
-An operation that only makes sense on the server refuses to run from a client script and reports it once instead of throwing, so a script cannot desync a client: `MxtCosts.consume`, and every method of `MxtAbilities`, `MxtCultivation`, `MxtCurses`, `MxtAura`, `MxtSouls` and `MxtTriggers` that changes state.
+An operation that only makes sense on the server refuses to run from a client script, so a script cannot desync a client: `MxtCosts.consume` and the state-changing methods of `MxtAbilities`, `MxtCultivation`, `MxtCurses`, `MxtAura`, `MxtSouls` and `MxtTriggers` return their failure result unchanged, and `MxtCosts.consume`, `MxtTriggers.subscribe` and `MxtTriggers.subscribeOnce` also write a single warning to the log instead of throwing. `MxtAura.addBox` is the exception: it needs a `ServerLevel` and throws otherwise.
 
 `MxtActions.execute*` is deliberately not guarded, because the built-in actions decide their own side: an action whose JSON opts into client execution, such as a velocity action with its `client` flag, is meant to run where it is called.
 

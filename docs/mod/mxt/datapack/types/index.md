@@ -25,7 +25,7 @@ The `type` key is **inlined** into the same JSON object that carries the paramet
 A datapack can only supply `type` and the parameters of an existing type. A data pack never adds entries to these built-in registries, and an unknown `type` ID fails the load. New types must be registered from Java or from a script.
 :::
 
-Several families accept a plain JSON **shorthand** for their most common case, which is exactly equivalent to writing the type with its default fields. For example a JSON number is `mxt:constant`, a JSON string is `mxt:expression`, and the item ID `"minecraft:apple"` is `mxt:item`. Where a shorthand exists, the explicit typed object remains valid.
+Several families accept a plain JSON **shorthand** for their most common case, which is exactly equivalent to writing the type with its default fields. For example a JSON number is `mxt:constant` and a JSON string is `mxt:expression`, while an item ID such as `"minecraft:apple"` is the item matcher entry `mxt:item`. Where a shorthand exists, the explicit typed object remains valid.
 
 ## Dispatched Fields
 
@@ -47,7 +47,6 @@ The following fields use the `MapCodec` of a Java built-in registry. Datapacks c
 | `ResourceValueProvider` | `type` | Resource value source read by resource bars and extensions, including environmental and actual aura concentration |
 | `ResourceBarRenderer` | `type` | Resource bar renderer |
 | `ResourceBarVisibility` | `type` | Resource bar visibility condition |
-| `Badge` | `type` | Badge structure |
 
 Action and condition **arrays are shorthand** for "all of them, in order":
 
@@ -61,7 +60,7 @@ Action and condition **arrays are shorthand** for "all of them, in order":
 The concrete fields of every action and condition are defined by its built-in codec. The built-in types are registered in groups by `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions`, `MxtEntityConditions` and their sibling classes; a data pack does not add entries to any of those registries.
 
 :::note
-Minecraft 26.3 also ships a vanilla registry named `number_provider_type`. MiXianTu currently registers its own registry under that name, so the two can be merged in a later version.
+MiXianTu's number provider registry is its own, keyed `mxt:number_provider_type`, and its ids all carry the `mxt` namespace, such as `mxt:constant` and `mxt:uniform`.
 :::
 
 ## Action Types
@@ -93,11 +92,11 @@ The remaining built-in families share the same dispatch rules but are small enou
 
 - `trigger_type`
 - `cost_type`
-- `badge_type`
 - `ability_type`
 - `ability_component_type`
 - `ability_target_selector_type`
 - `curse_type`
+- `formation_action_type`
 - `resource_bar_context`
 - `resource_bar_render_data_type`
 - `resource_bar_visibility_type`

@@ -24,7 +24,7 @@ A shaped recipe has the following fields.
 | `pattern` | String[] | **required** | One to three rows, each one to three characters. |
 | `key` | `Map<String, Ingredient>` | **required** | Maps every symbol used in the pattern to its ingredient. Each key must be a single non-space character. |
 | `result` | `ItemStackTemplate` | **required** | The item produced, written in the vanilla item stack template shape. |
-| `aura` | `Map<Resource, NumberProvider>` | **required** | The aura cost of one craft, per resource. It must not be empty. |
+| `aura` | `Map<Holder<aura>, NumberProvider>` | **required** | The aura cost of one craft, per aura. It must not be empty. |
 
 The pattern is matched against the 3x3 grid at every possible offset, and slots the pattern leaves out have to be empty.
 
@@ -36,7 +36,7 @@ A shapeless recipe has the following fields.
 |-------|------|---------|-------------|
 | `ingredients` | `Ingredient[]` | **required** | One to nine ingredients, matched in any order. |
 | `result` | `ItemStackTemplate` | **required** | The item produced, written in the vanilla item stack template shape. |
-| `aura` | `Map<Resource, NumberProvider>` | **required** | The aura cost of one craft, per resource. It must not be empty. |
+| `aura` | `Map<Holder<aura>, NumberProvider>` | **required** | The aura cost of one craft, per aura. It must not be empty. |
 
 The ingredients have to match the non-empty slots of the grid exactly, so a shapeless recipe may not leave unrelated items in the grid.
 
@@ -44,7 +44,9 @@ The ingredients have to match the non-empty slots of the grid exactly, so a shap
 
 Shaped recipes are checked before shapeless ones, so a shapeless recipe is only used when no shaped recipe matches.
 
-The aura a recipe declares is an amount per resource, given as a number provider; the value is evaluated when the recipe matches and rounded up. While a matching recipe is present the table accepts that recipe's aura and keeps it for that recipe only, so changing the grid or the matched recipe discards what it had stored. The cost is deducted when the result is taken out, and the input items stay in the grid.
+The aura a recipe declares is an amount per aura, given as a number provider; the value is evaluated when the recipe matches and rounded up. While a matching recipe is present the table accepts that recipe's aura and keeps it for that recipe only, so changing the grid or the matched recipe discards what it had stored. The cost is deducted when the result is taken out, and the input items stay in the grid.
+
+The keys of `aura` are `mxt:aura` entries, not stored values: what is spent is an aura, identified by its definition, and each definition names the value it is counted in through its own `resource` field.
 
 ## Example
 
@@ -87,4 +89,4 @@ A shapeless recipe, listing one ingredient per item:
 }
 ```
 
-The aura a recipe spends belongs to a resource defined by [Resource](./resource.md). Recipes are not a registry, so unlike the data tables they do reload with `/reload`.
+The aura a recipe spends belongs to an aura defined by the [`mxt:aura` registry](./aura.md), whose `resource` field names the stored value that is actually debited. Recipes are not a registry, so unlike the data tables they do reload with `/reload`.

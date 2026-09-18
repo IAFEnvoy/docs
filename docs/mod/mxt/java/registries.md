@@ -44,8 +44,8 @@ The registry instances are declared in `MxtRegistries`, and their keys are decla
 | `MxtRegistries.RESOURCE_BAR_RENDER_DATA_TYPE` | `mxt:resource_bar_render_data_type` | Resource bar render data codecs. |
 | `MxtRegistries.RESOURCE_BAR_CONTEXT` | `mxt:resource_bar_context` | Resource bar contexts. |
 | `MxtRegistries.RESOURCE_BAR_VISIBILITY_TYPE` | `mxt:resource_bar_visibility_type` | Resource bar visibility codecs. |
-| `MxtRegistries.BADGE_TYPE` | `mxt:badge_type` | Badge codecs. |
 | `MxtRegistries.ITEM_MATCHER_ENTRY_TYPE` | `mxt:item_matcher_entry_type` | Item matcher entry codecs. |
+| `MxtRegistries.FORMATION_ACTION_TYPE` | `mxt:formation_action_type` | Formation module codecs, dispatched by a module's `type`; the built-in ones are registered in `MxtFormationActionTypes`. |
 
 The built-in types are grouped and registered by classes such as `MxtEntityActions`, `MxtBiEntityActions`, `MxtBlockActions`, `MxtItemActions` and `MxtEntityConditions`. Registering a new built-in type means providing a `MapCodec` and adding it to the matching `DeferredRegister`; a data pack never adds entries to these registries.
 
@@ -80,6 +80,7 @@ Every table the mod declares is listed — with its file directory, its purpose 
 | `holder(key, id)` | Resolves an enabled entry while keeping its stable holder reference. |
 | `holders(key)` | Streams all enabled entries of a registry. |
 | `holders(access, key)` / `holders(provider, key)` | Streams enabled entries from a `RegistryAccess` or a `HolderLookup.Provider`, which is how the client reads the synchronised copy. |
+| `get(access, key, id)` / `get(access, key, holder)` | Reads an enabled value from a client-synchronised lookup. |
 | `isDisabled(key, id)` / `isDisabled(key, holder)` | Checks whether an entry carries the `mxt:disabled` tag. |
 | `isTagged(key, id, tagId)` / `isTagged(key, holder, tagId)` | Checks a native datapack tag on one entry. |
 | `size(key)` / `registry(key)` | The underlying `Registry`; only available while a server is running. |
@@ -92,4 +93,4 @@ Every table the mod declares is listed — with its file directory, its purpose 
 
 ## Codecs
 
-A definition class exposes two codecs. `CODEC` reads and writes a `Holder<Definition>` reference and is what a field or another JSON file uses to point at a definition; `DIRECT_CODEC` reads and writes the whole object and is what a datapack registry uses for the entry itself. Read `DIRECT_CODEC` when you need the values of a definition, for example `Resource.DIRECT_CODEC` or `Badge.DIRECT_CODEC`.
+A definition class exposes two codecs. `CODEC` reads and writes a `Holder<Definition>` reference and is what a field or another JSON file uses to point at a definition; `DIRECT_CODEC` reads and writes the whole object and is what a datapack registry uses for the entry itself. Read `DIRECT_CODEC` when you need the values of a definition, for example `Resource.DIRECT_CODEC` or `ItemQuality.DIRECT_CODEC`.

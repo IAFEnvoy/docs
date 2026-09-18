@@ -1,11 +1,11 @@
 ---
 title: "Aura Zone (aura_zone)"
-description: "Define an aura environment template: per-resource aura inventory, match conditions, fluctuation, rules, particles, client fog and HUD bars."
+description: "Define an aura environment template: per-aura inventory, match conditions, fluctuation, rules, particles, client fog and HUD bars."
 ---
 
 # Aura Zone (aura_zone)
 
-An Aura Zone defines an aura environment template: the per-resource aura inventory supplied to a chunk, which dimensions and biomes it matches, how it fluctuates over time, which cultivation rules it applies, and how it looks on the client.
+An Aura Zone defines an aura environment template: the per-aura inventory supplied to a chunk, which dimensions and biomes it matches, how it fluctuates over time, which cultivation rules it applies, and how it looks on the client.
 
 ## File Location
 
@@ -17,10 +17,9 @@ The filename corresponds to its ID. For example, `data/example/mxt/aura_zone/spi
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `aura` | `Map<Holder<resource>, AuraValue>` | `{}` | Independent environment inventory definition for each resource; `AuraValue` contains the amount, maximum, regeneration speed and colour. |
+| `aura` | `Map<Holder<aura>, AuraValue>` | `{}` | Independent environment inventory definition for each aura; `AuraValue` contains the amount, maximum, regeneration speed and colour. |
 | `distribution` | Enum | `equal` | How aura is shared inside one chunk when it is insufficient for several players: `random`, `equal`, `realm_weighted`. |
 | `cultivate_condition` | Entity Condition | `mxt:always_true` | The condition under which the current environment allows cultivation; checked together with the current realm stage condition. |
-| `aura_kinds` | Identifier[] | `[]` | Aura source/type markers. |
 | `dimensions` | `HolderOrTag<LevelStem>[]` | `[]` | Dimension matching. |
 | `biomes` | `HolderOrTag<Biome>[]` | `[]` | Biome matching. |
 | `fluctuation` | Object | static/0 | Day/night or moon phase fluctuation. |
@@ -35,18 +34,18 @@ The filename corresponds to its ID. For example, `data/example/mxt/aura_zone/spi
 
 The `fluctuation` field is `enable`, `cycle_type` (`day`, `moon`, `static`), `amplitude` and `offset_tick`. The `rules` field is `cultivate_suppress`, `tribulation_modify`, `spirit_plant_bonus`, `alchemy_env_bonus` and `natural_spawn_herb`.
 
-A natural environment uses each resource's `amount` as its initial inventory, and noise and fluctuation act on that resource. When `AuraValue.max` is omitted it defaults to the initial value. You can use a plain number, `{ "type": "mxt:fixed", "value": 100 }`, `{ "type": "mxt:initial_multiplier", "multiplier": 2 }` or `{ "type": "mxt:unlimited" }`. Block aura additionally raises the effective capacity of the matching resource without occupying the environment maximum. Environment priority is biome < dimension < permanent area < formation override. `priority` is only compared inside the same level: between overlapping biome templates, or between overlapping dimension templates, the highest `priority` wins; when `priority` is equal the first template in ascending template ID order is taken, so the choice between overlapping definitions is stable and reproducible. Dimension bindings still take precedence over biome bindings, and a higher biome `priority` never crosses the dimension level. Several players share the per-resource inventory of the same chunk: `random` distributes randomly, `equal` splits evenly, and `realm_weighted` distributes by realm weight.
+A natural environment uses each aura's `amount` as its initial inventory, and noise and fluctuation act on that aura. When `AuraValue.max` is omitted it defaults to the initial value. You can use a plain number, `{ "type": "mxt:fixed", "value": 100 }`, `{ "type": "mxt:initial_multiplier", "multiplier": 2 }` or `{ "type": "mxt:unlimited" }`. Block aura additionally raises the effective capacity of the matching aura without occupying the environment maximum. Environment priority is biome < dimension < permanent area < formation override. `priority` is only compared inside the same level: between overlapping biome templates, or between overlapping dimension templates, the highest `priority` wins; when `priority` is equal the first template in ascending template ID order is taken, so the choice between overlapping definitions is stable and reproducible. Dimension bindings still take precedence over biome bindings, and a higher biome `priority` never crosses the dimension level. Several players share the per-aura inventory of the same chunk: `random` distributes randomly, `equal` splits evenly, and `realm_weighted` distributes by realm weight.
 
 ### `AuraValue`
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `amount` | Double | The resource's initial environment inventory. |
+| `amount` | Double | The aura's initial environment inventory. |
 | `max` | Aura maximum | The base environment maximum of the chunk. When omitted it equals the chunk's initial environment aura; a plain number is shorthand for a fixed maximum; `{ "type": "mxt:fixed", "value": 200 }`, `{ "type": "mxt:initial_multiplier", "multiplier": 2 }` and `{ "type": "mxt:unlimited" }` are also accepted. The dispatcher comes from the built-in registry `mxt:aura_maximum_type`, so datapacks can only choose an existing algorithm. |
 | `regen_per_tick` | Double | Inventory regeneration per tick. |
-| `color` | `RGBColor` | Environment colour of the resource. |
+| `color` | `RGBColor` | Environment colour of the aura. |
 
-The keys of `aura` are resource IDs from the `mxt:resource` registry. Each resource stores its amount, maximum, regeneration speed and environment colour independently; the element marker comes from that value's [cultivation profile](./cultivation.md), whose `aura_type` is an optional `mxt:element`. See [Number Provider Types](../types/number_provider_types.md) for the `NumberProvider` shape used by fields such as `max`.
+The keys of `aura` are aura IDs from the `mxt:aura` registry. Each aura stores its amount, maximum, regeneration speed and environment colour independently; its element marker is the `aura_type` of that same `mxt:aura` definition, an optional `mxt:element`. See [Number Provider Types](../types/number_provider_types.md) for the `NumberProvider` shape used by fields such as `max`.
 
 ### `fluctuation`
 
@@ -57,7 +56,7 @@ The keys of `aura` are resource IDs from the `mxt:resource` registry. Each resou
 | `amplitude` | Double | `0` | Fluctuation amplitude. |
 | `offset_tick` | Long | `0` | Cycle sampling offset. |
 
-Fluctuation only affects the queried environment concentration; the chunk inventory is updated every second through `regen_per_tick`.
+Fluctuation only affects the queried environment concentration; the chunk inventory is topped up by `regen_per_tick × elapsed ticks`, on the period set by `aura.block_aura_tick_interval` in `config/mxt-server.json` (10 ticks by default).
 
 ### `rules`
 
@@ -88,7 +87,7 @@ Fluctuation only affects the queried environment concentration; the chunk invent
 
 The larger `noise.scale` is, the more gradual the spatial variation; built-in environments use roughly `640` to `960`. For ordinary environments it is recommended to keep `noise.amplitude` at `5`, which corresponds to a noise disturbance of roughly `-5` to `5` before truncation.
 
-When a chunk is loaded for the first time it is initialised as `max(0, (base_aura + Perlin noise) / 10 - 5)`; `noise.seed` is fully controlled by the data pack, which makes the distribution reproducible for modpacks. Negative values are clamped to zero, and the aura contribution of blocks such as spirit stone is still added on top of that.
+When a chunk is loaded for the first time it is initialised as `max(0, (initial aura + Perlin noise) / 10 - 5)`; `noise.seed` is fully controlled by the data pack, which makes the distribution reproducible for modpacks. Negative values are clamped to zero, and the aura contribution of blocks such as spirit stone is still added on top of that.
 
 ### `particle`
 
@@ -129,14 +128,14 @@ When a chunk is loaded for the first time it is initialised as `max(0, (base_aur
 
 Both HUD bars use the Origins-style 71x8 texture. `maximum` is the concentration that corresponds to a full bar and must be greater than zero; `bar_index` selects the texture row and icon, and `inverted` is optional and defaults to `false`. `anchor` is `left` or `right`, and `order` controls the bottom-to-top order of aura bars on the same side; aura bars are automatically placed above the resource bars on the same side.
 
-The server synchronises the final concentration at the current position once per second, and the client only uses the synchronised snapshot to draw the HUD and the fog. The server also synchronises the actual and environment concentration at the current position according to `aura.sync_interval` in `config/mxt-server.json`, by default once every 5 ticks. In the network sync, `actual` contains every source — environment, chunk inventory, blocks and formations — while `environment` only contains the environment template; `stored_aura` still shows the actual inventory, and `sensed_concentration` and the fog only show the value computed from the environment template. Environment fluctuation does not directly rewrite the displayed inventory, but block contributions, cultivation consumption and inventory regeneration still change the actual concentration.
+The server synchronises the actual and environment concentration at the current position according to `aura.sync_interval` in `config/mxt-server.json`, by default once every 5 ticks, and the client only uses the synchronised snapshot to draw the HUD and the fog. In the network sync, `actual` contains every source — environment, chunk inventory, blocks and formations — while `environment` only contains the environment template; `stored_aura` still shows the actual inventory, and `sensed_concentration` and the fog only show the value computed from the environment template. Environment fluctuation does not directly rewrite the displayed inventory, but block contributions, cultivation consumption and inventory regeneration still change the actual concentration.
 
 ## Example
 
 ```json
 {
   "aura": {
-    "example:spirit_power": {
+    "mxt:common": {
       "amount": 120.0,
       "max": { "type": "mxt:initial_multiplier", "multiplier": 2.0 },
       "regen_per_tick": 0.05,
@@ -146,9 +145,8 @@ The server synchronises the final concentration at the current position once per
   "distribution": "realm_weighted",
   "cultivate_condition": {
     "type": "mxt:aura_range",
-    "aura": { "example:spirit_power": { "min": 20, "max": 200 } }
+    "aura": { "mxt:common": { "min": 20, "max": 200 } }
   },
-  "aura_kinds": ["example:aura_kind/fire"],
   "dimensions": ["minecraft:the_nether"],
   "biomes": ["minecraft:badlands"],
   "fluctuation": {
@@ -209,23 +207,28 @@ The server synchronises the final concentration at the current position once per
 The environment resolution priority is fixed: biome binding < dimension binding < permanent manual area < active formation. Each later level replaces the aura types, element values, rules and display template of the previous one. The consumable aura of an ordinary chunk is still stored in the chunk attachment, so every system at the same position shares the same aura inventory.
 
 - `dimensions` and `biomes` may both be filled in; dimension matching takes precedence over biome matching. An empty list only means the template does not take part in static binding — it can still be referenced by a manual area or a formation.
-- `aura_kinds` are the aura type markers present at the current position, used for data-driven type checks; they are an all-contains relation with `cultivate_action.aura_kinds` and `alchemy_recipe.aura_kinds`. They do not represent a numeric source.
-- `cultivate_condition` is the entity condition under which this environment allows cultivation, defaulting to `mxt:always_true`. For example, `mxt:aura_range` can require the current final concentration to be within `min..max`; once the environment condition passes, each `realm_stage.cultivate_condition` is judged independently along its resource chain, and a chain that is not satisfied only skips its own regeneration and conversion.
+- There is **no environment kind field**. Which aura a place has is exactly the key set of its `aura` map; asking for "a place where cultivation or alchemy is possible" is written as a `condition` (the `start_condition`/`condition` of a [`cultivate_action`](./cultivate_action.md)) or as `minimum_aura` (alchemy), both of which speak in aura IDs.
+- `cultivate_condition` is the entity condition under which this environment allows cultivation, defaulting to `mxt:always_true`. For example, `mxt:aura_range` can require the current final concentration to be within `min..max`; once the environment condition passes, each `realm_stage.cultivate_condition` is judged independently along its aura chain, and a chain that is not satisfied only skips its own regeneration and conversion.
 - Players whose cultivation is due inside the same chunk share the aura inventory in the chunk attachment. `distribution` controls how it is allocated when the inventory is insufficient: `random` shuffles and satisfies requests in that order; `equal` (the default) splits it with max-min fairness and redistributes unused shares; `realm_weighted` distributes by the current realm's `aura_share_weight` and redistributes unused shares. When overlapping dynamic aura zones exist inside a shared chunk, the policy of the environment of the first requester after a stable sort is used.
 - The cultivation progress and `aura_gains` obtained are multiplied by the concentration multiplier at the current position. A finite maximum uses `concentration / maximum`, while an unlimited environment uses `concentration / (concentration + 1)`; when the allocated aura is less than the requested amount, the gain is additionally reduced in proportion to the actual quota.
-- `block_aura` does not occupy the environment base maximum: it adds an equal amount of storable aura capacity to the current chunk at the same time. With an environment maximum of 100 and a total block contribution of 30, the effective maximum of that chunk is 130. A recommended natural aura template sets `base_aura` to `0` and enables positive and negative noise; after the `/ 10 - 5` handling large areas have no natural aura, and `block_aura` accumulates on top of that by the number of blocks in the chunk, so a spirit stone vein can be configured far above the natural value.
+- `block_aura` does not occupy the environment base maximum: it adds an equal amount of storable aura capacity to the current chunk at the same time. With an environment maximum of 100 and a total block contribution of 30, the effective maximum of that chunk is 130. A recommended natural aura template keeps the environment `amount` low and enables positive and negative noise; after the `/ 10 - 5` handling large areas have no natural aura, and `block_aura` accumulates on top of that by the number of blocks in the chunk, so a spirit stone vein can be configured far above the natural value.
 - The block aura cache and the chunk inventory update period are controlled by `aura.block_aura_tick_interval` in `config/mxt-server.json`, which defaults to an update every 10 ticks and allows a range of 1 to 1200 ticks.
 
 ## Formation Interaction
 
-Formation definitions can add an `aura_zone`:
+A formation definition can carry an `mxt:buff` action module holding an `aura_zone`:
 
 ```json
 {
   "structure_template": "example:gathering_array",
   "radius": 8,
-  "max_bonus": { "example:spirit_power": 50 },
-  "aura_zone": "example:spirit_gathering"
+  "actions": [
+    {
+      "type": "mxt:buff",
+      "max_bonus": { "mxt:common": 50 },
+      "aura_zone": "example:spirit_gathering"
+    }
+  ]
 }
 ```
 
@@ -234,7 +237,7 @@ An active formation covers the environment within range around its core and `rad
 ## Manual Areas and KubeJS
 
 ```js
-const aura = MxtAura.get(player.level, player.blockPosition)
+const aura = MxtAura.get(player.level, player.blockPos)
 console.log(aura.concentration())
 
 const area = MxtAura.addBox(
@@ -244,7 +247,7 @@ const area = MxtAura.addBox(
 MxtAura.remove(player.level, area)
 ```
 
-Manual areas are saved to the world. The larger `priority` is, the higher the precedence when manual areas of the same kind overlap.
+Manual areas are saved to the world. `addBox` only accepts a server level and a `zone` that is a loaded `aura_zone` datapack ID, and returns the generated area ID that `remove` takes. The larger `priority` is, the higher the precedence when manual areas of the same kind overlap.
 
 The KubeJS event name is `MxtEvents.auraZone`; the event's `kind` is `enter`, `leave`, `tick` or `override`; `override` can be cancelled to refuse a formation environment override.
 
@@ -254,8 +257,7 @@ Alchemy recipes can use:
 
 ```json
 {
-  "aura_kinds": ["example:aura_kind/fire"],
-  "minimum_aura": { "example:spirit_power": 50 }
+  "minimum_aura": { "mxt:common": 50 }
 }
 ```
 
@@ -264,7 +266,7 @@ Creature profiles can use:
 ```json
 {
   "preferred_aura_elements": ["example:fire"],
-  "minimum_aura": { "example:spirit_power": 30 }
+  "minimum_aura": { "mxt:common": 30 }
 }
 ```
 

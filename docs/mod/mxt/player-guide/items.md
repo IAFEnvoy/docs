@@ -18,7 +18,7 @@ MiXianTu does not preset numbers for any gameplay system, but it does provide a 
 | Supreme Spirit Stone | `mxt:supreme_spirit_stone` | 1000 | A rare, high-value medium. |
 | Cheque | `mxt:cheque` | Set by its item component | A signable value carrier for the existing trade system. |
 
-The four spirit stones share the `SpiritStoneItem` base class and implement spirit power charge and drain. Capacity is not defined in code: it is taken from the `aura` of the matching `item_aura` entry, and after the data tables are loaded again the first real access truncates old values above the new maximum. A spirit stone without the `mxt:spirit_storage` component is treated as fully charged, while a component with `amount: 0` means empty. The Display Stand tries to charge the spirit stone it displays when it receives spirit power, and when cultivation fuel runs out the same stone is drained and returned.
+The four spirit stones share the `SpiritStoneItem` base class and implement spirit power charge and drain. Capacity is not defined in code: it is taken from the `aura` of the matching `item_aura` entry, and after the data tables are loaded again the first real access truncates old values above the new maximum. A spirit stone without the `mxt:spirit_storage` component is treated as fully charged, while an empty `amounts` map — or one that does not list that aura — means empty. The Display Stand tries to charge the spirit stone it displays when it receives spirit power, and when cultivation fuel runs out the same stone is drained and returned.
 
 The bundled `currency` datapack only defines a 10:1 two-way exchange and the values above. Content packs can overwrite these entries directly, or reference any of the four spirit stones from an `item_binding`, formation, artifact, cultivation or trade definition. The mod also registers Copper Coin, Iron Coin, Gold Coin, Diamond Coin, Emerald Coin and Netherite Coin (`mxt:copper_coin`, `mxt:iron_coin`, `mxt:gold_coin`, `mxt:diamond_coin`, `mxt:emerald_coin`, `mxt:netherite_coin`), which have no item behaviour of their own: their values and exchanges come from the same `currency` registry and its bundled entries.
 
@@ -30,6 +30,7 @@ The remaining materials carry no behaviour of their own; their use is decided by
 | Spirit Iron Nugget | `mxt:spirit_iron_nugget` |
 | Spirit Wood | `mxt:spirit_wood` |
 | Spirit Wood Core | `mxt:spirit_wood_core` |
+| Cinnabar | `mxt:cinnabar` |
 | Alchemy Dregs | `mxt:alchemy_dregs` |
 | Impurity | `mxt:impurity` |
 
@@ -41,7 +42,7 @@ Blank carriers, identity items and fixed props are ordinary items as well. Block
 | Blank carrier | Spirit Stone Bag | `mxt:spirit_stone_bag` |
 | Identity and record | Spirit Root | `mxt:spirit_root` |
 | Identity and record | Cultivation Jade Slip | `mxt:cultivation_jade_slip` |
-| Identity and record | Blank Talisman Paper | `mxt:blank_talisman_paper` |
+| Identity and record | Blank Talisman | `mxt:blank_talisman` |
 | Fixed prop | Recall Talisman | `mxt:recall_talisman` |
 | Fixed prop | Realm Reward Box | `mxt:realm_reward_box` |
 
@@ -54,12 +55,13 @@ The items below are backed by a unified server-side implementation shipped with 
 | Contract Scroll | `mxt:contract_scroll` | `mxt:contract_scroll` | Stores a `contract_type`. Using it on a creature lets `ContractService` validate and sign the contract. |
 | Beast Taming Bell | `mxt:beast_taming_bell` | none | Performs a unified recall of your own contracted spirit beast. |
 | Spirit Beast Bag | `mxt:spirit_beast_bag` | `mxt:spirit_beast` | Stores the complete persistent entity data of one contracted creature. Use it on a spirit beast to store it, and right-click an empty bag to release it. |
-| Formation Plate | `mxt:formation_plate` | `mxt:formation_plate` | Stores a `formation`. Using it on a block calls `FormationWorldService`. |
+| Formation Plate | `mxt:formation_plate` | `mxt:formation_plate` | Stores `allowed` (which formations may be run, `#tags` included) and the selected `formation`. Using it on a block calls `FormationWorldService`; a plate with no bound formation identifies the structure built in front of it. |
 | Realm Token | `mxt:realm_token` | `mxt:realm_token` | Stores a `realm_instance`. Right-click to enter the bound secret realm, and right-click inside the realm to return to the origin position. |
 | Spirit Vessel | `mxt:spirit_vessel` | `mxt:resource_container` | Stores any `resource`. Right-click releases it to the holder, sneak-right-click stores from the holder; each resource has a capacity of 1000. |
 | Wooden Token / Stone Token | `mxt:wooden_token`, `mxt:stone_token` | `mxt:token` | Carry `kind`, `value` and `owner` together for the sect, secret realm and trade permission systems. |
 | Identification Mirror | `mxt:identification_mirror` | consumes `mxt:identification` | Resolves items that carry an identification component in a unified way; the items to identify come from content packs or other mods. |
-| Talisman Brush / Talisman Ink | `mxt:talisman_brush`, `mxt:talisman_ink` | none | Generic base inputs for talisman crafting and formation content, used together with Blank Talisman Paper; the recipes come from datapacks or KubeJS. |
+| Talisman Brush / Talisman Ink | `mxt:talisman_brush`, `mxt:talisman_ink` | none | Generic base inputs for talisman crafting and formation content, used together with Blank Talisman; the recipes come from datapacks or KubeJS. |
+| Talisman | `mxt:talisman` | `mxt:talisman`, `mxt:spirit_storage` | Holds the `talisman` definitions inscribed on it, in order, plus a `mode` (`fire` by default, or `store`). Holding right-click pours spirit power in; a full carrier fires everything inscribed on it, and a sneak-use switches the mode. |
 
 Component values can be written directly with the item component syntax or from KubeJS, and the referenced datapack registry IDs are parsed by the vanilla registry codec:
 
@@ -67,8 +69,11 @@ Component values can be written directly with the item component syntax or from 
 give @s mxt:contract_scroll[mxt:contract_scroll={contract_type:"mxt_test:master_servant"}]
 give @s mxt:formation_plate[mxt:formation_plate={formation:"mxt_test:spirit_gathering"}]
 give @s mxt:realm_token[mxt:realm_token={realm:"mxt_test:trial_realm"}]
-give @s mxt:spirit_vessel[mxt:resource_container={values:{"mxt_test:qi":25.0}}]
+give @s mxt:spirit_vessel[mxt:resource_container={"mxt_test:qi":25.0}]
+give @s mxt:talisman[mxt:talisman={talismans:["mxt_test:flame_sigil"]}]
 ```
+
+The value of `mxt:resource_container` is a bare map whose keys are resource IDs; there is no `values` wrapper, and a wrongly wrapped value is silently read as one unreadable key — the container stays empty and only a warning is logged.
 
 When a Contract Scroll, Formation Plate or Realm Token has no binding definition, it fails safely and shows a message. The state of Spirit Beast Bags, Spirit Vessels and tokens is kept in ItemStack data components, and the server is the only authority.
 
@@ -78,11 +83,11 @@ When a Contract Scroll, Formation Plate or Realm Token has no binding definition
 |---|---|---|
 | Spirit Crafting Table | `mxt:spirit_crafting_table` | Reuses the vanilla crafting layout but only accepts `spirit_shaped` and `spirit_shapeless` recipes. Input items stay in the menu; aura is only accepted when a matching recipe exists, and it is deducted when the result is taken out. |
 | Forge Table | `mxt:forging_table` | The forging station: several materials are hammered into a result following a blueprint, and the quality of the result depends on the process and the number of steps. |
-| Exchange Station | `mxt:exchange_station` | A stonecutter-style menu that breaks one currency item into the smaller denominations listed in that currency's `exchanges` entries. |
+| Exchange Station | `mxt:exchange_station` | A stonecutter-style menu that offers the entries listed in that currency item's `exchanges` array, each costing a number of the input item. |
 | Trade Station | `mxt:trade_station` | A station owned by the player who placed it, which players trade with directly. |
 | System Trade Station | `mxt:system_station` | The system-owned variant of the trade station: unbreakable and it drops nothing. |
 | Cheque Table | `mxt:cheque_table` | Converts configured currency items to and from cheques. |
-| Oak / Birch / Spruce / Jungle / Acacia / Dark Oak Display Stand | `mxt:oak_display_stand`, `mxt:birch_display_stand`, `mxt:spruce_display_stand`, `mxt:jungle_display_stand`, `mxt:acacia_display_stand`, `mxt:dark_oak_display_stand` | Holds a single item and drops it above the centre of the block when it is taken out. If the item implements the spirit access interface, Jade shows the item and its spirit power percentage. |
+| Oak / Birch / Spruce / Jungle / Acacia / Dark Oak Display Stand | `mxt:oak_display_stand`, `mxt:birch_display_stand`, `mxt:spruce_display_stand`, `mxt:jungle_display_stand`, `mxt:acacia_display_stand`, `mxt:dark_oak_display_stand` | Holds a single item and drops it above the centre of the block when it is taken out. If the item implements the aura access interface, Jade shows the item and its spirit power percentage. |
 | Spirit Stone Ore | `mxt:spirit_stone_ore` | The mod's spirit stone ore block; it drops experience when mined. Aura contributions are defined by datapacks. |
 | Spirit Stone Block | `mxt:spirit_stone_block` | The storage block; the bundled `block_aura` entry makes it an aura source. |
 

@@ -63,6 +63,13 @@ Meta actions control whether, how often, in what order and at which position oth
 | `mxt:choice` | `actions` | Picks one entry from a weighted list and runs it. |
 | `mxt:offset` | `action`, `x?`, `y?`, `z?` | Applies a nested action at a relative block offset. |
 
+Each entry of a `choice` list is a weighted wrapper around a nested action:
+
+| Entry Field | Type | Default | Description |
+|-------------|------|---------|-------------|
+| `element` | Block action | **required** | The action this entry runs when it is picked. |
+| `weight` | Integer | `1` | Relative weight; larger weights are picked more often. |
+
 ## Action Types
 
 | Type | Fields | Description |

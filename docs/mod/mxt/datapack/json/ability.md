@@ -34,12 +34,22 @@ The filename corresponds to its ID. For example, `data/example/mxt/ability/fireb
 
 ### ability.type
 
-`ability.type` is an extensible built-in dispatch table, `mxt:ability_type`, with the built-in types `empty`, `active`, `triggered`, `modifier`, `aura`, `channelled`, `composite` and `word`. Two of these types change when behaviour is executed:
+`ability.type` is an extensible built-in dispatch table, `mxt:ability_type`, with the built-in types `empty`, `active`, `triggered`, `modifier`, `aura`, `channelled`, `composite` and `word`. Two of them change when behaviour is executed:
 
 | Type | Exclusive Fields | Behaviour Execution Timing |
 |------|------------------|----------------------------|
 | `mxt:channelled` | `tick_interval` (default `1`), `upkeep_costs` (default `[]`) | Executes `entity_action` and the target behaviour once on activation, then once per `tick_interval` after the upkeep resources have been deducted successfully, until it is released or the upkeep fails. It is the only behaviour entry point of a sustained effect. |
 | `mxt:composite` | `abilities` (**required**), `all_required` (default `true`) | Does not execute behaviour itself; with `all_required: false` only the first ability in the list is executed, while with `true` the costs of every ability are submitted in list order and then the behaviour of each child ability is executed in turn. |
+
+The remaining types that own fields are:
+
+| Type | Exclusive Fields | Meaning |
+|------|------------------|---------|
+| `mxt:active` | `slot` (default `primary`, must not be blank) | A hotbar ability bound to the named slot. |
+| `mxt:triggered` | `triggers` (default `[]`), `chance` (default `1`) | Runs its behaviour whenever one of its triggers fires, subject to `chance`. |
+| `mxt:modifier` | `query_tags` (default `[]`) | A passive ability whose attribute `modifiers` are read for the listed tags. |
+| `mxt:aura` | `interval` (default `20`), `radius` (default `4`) | A periodic ability applied to the entities inside `radius` every `interval` ticks. |
+| `mxt:word` | `effect` (**required**), `requires_operator` (default `true`), `amount` (default `0`) | A terminal payload. `effect` is one of the code-whitelisted word effects `self_heal` and `purge_self_curses`; a datapack cannot supply an arbitrary command. |
 
 The effects of `mxt:channelled` and `mxt:composite` are both produced through the same set of fields: `entity_action` applies to the caster, `target_selector` and `bi_entity_action` apply to the selected target, while the `word` type is a terminal payload that does not execute target behaviour any more.
 

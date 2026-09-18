@@ -23,17 +23,17 @@ The filename corresponds to its ID. For example, `data/example/mxt/weapon_bindin
 | `attributes` | `List<AttributeEntry>` | `[]` | Additional vanilla attribute modifiers; an optional `value` updates the item's attribute component every tick |
 | `use_action` | `EntityAction` | `mxt:no_op` | The right-click use action |
 | `attack_action` | `BiEntityAction` | `mxt:no_op` | The action executed on a successful hit |
-| `tick_action` | `EntityAction` | `mxt:no_op` | The action executed while the weapon is held |
+| `tick_action` | `EntityAction` | `mxt:no_op` | The action executed while the weapon is held in the main hand |
 | `quality_group` | `Tag<item_quality>` | none | The allowed quality group |
 | `conditions` | `EntityCondition[]` | `[]` | The conditions checked before use, attack and attribute application; supports inline conditions or described condition objects |
 
 ### `items`
 
-The `items` matcher accepts one item ID, one item tag (such as `"#example:fire_weapons"`), or a mixed array of both; one binding can therefore cover many physical weapons. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first, and all four binding types currently use priority `0`.
+The `items` matcher accepts one item ID, one item tag (such as `"#example:fire_weapons"`), or a mixed array of both; one binding can therefore cover many physical weapons. Any array entry may also be written as a typed object dispatched by the built-in `item_matcher_entry_type` registry (`mxt:item`, `mxt:tag`, `mxt:wildcard`, `mxt:regex` and the `mxt:spirit_storage` capability matcher); see [Shared Data Types](../types/shared_data_types.md) for the entry types. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first, and all four binding types currently use priority `0`.
 
 ### `attributes`
 
-Each entry uses the vanilla `AttributeModifier` shape: `attribute`, `id`, `amount` and `operation`, plus an optional dynamic `value` formula. An entry that declares `value` is recalculated on the server every tick from the entity context and replaces `amount`. See [Shared Data Types](../types/shared_data_types.md).
+Each entry uses the vanilla `AttributeModifier` shape: `attribute`, `id`, `amount` and `operation`, plus an optional dynamic `value` formula. An entry that declares `value` is recalculated on the server every tick from the entity context and replaces `amount`. The weapon's own `attack_damage` and `attack_speed` are installed as main-hand `ADD_VALUE` modifiers on top of the item's existing ones, so an item whose binding conditions or quality gate currently fail keeps its vanilla attributes. See [Shared Data Types](../types/shared_data_types.md).
 
 ### `quality_group`
 

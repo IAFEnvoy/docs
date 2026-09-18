@@ -12,21 +12,21 @@ These are complex values that are referenced by many definitions, actions and co
 
 ## Icon Reference
 
-Every icon field in the mod takes the same value: an object that holds **exactly one** of a GUI texture or an item. Definitions that carry one are [ability](../json/ability.md), [resource](../json/resource.md), [badge](../json/badge.md), [forging method](../json/forging_method.md) and [cultivation technique](../json/cultivation_technique.md).
+Every icon field in the mod takes the same value: **either** a GUI texture **or** an item. Definitions that carry one are [ability](../json/ability.md), [resource](../json/resource.md), [forging method](../json/forging_method.md) and [technique](../json/technique.md).
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `texture` | Identifier | A 16x16 GUI texture, for example `example:textures/gui/icon/sword.png` |
-| `item` | `ItemStackTemplate` | An item, written as a bare item ID or as a full item stack template |
+| Form | Type | Description |
+|------|------|-------------|
+| A JSON string | Identifier | A 16x16 GUI texture, for example `example:textures/gui/icon/sword.png` |
+| A JSON object | `ItemStackTemplate` | An item stack template such as `{"id": "minecraft:iron_ingot"}`, optionally with `count` and `components` |
 
-The two keys are alternatives, not a priority order: an icon that carries neither, or both, is rejected while the datapack loads. That is why the branches are spelled out instead of taking a bare string — an item ID and a texture path are both plain strings, so a bare string could never say which one was meant.
+The texture branch is tried first, and it is a plain `Identifier`, so **any bare string is a texture**. An item therefore always has to be written as an object with an `id`, because a bare item ID would be read as the path of a texture instead.
 
 ```json
-"icon": {"texture": "example:textures/gui/icon/sword.png"}
+"icon": "example:textures/gui/icon/sword.png"
 ```
 
 ```json
-"icon": {"item": "minecraft:iron_ingot"}
+"icon": {"id": "minecraft:iron_ingot"}
 ```
 
 An item icon is stored as a template rather than a ready-made stack, because a datapack registry is parsed before item components are bound. The client materialises it when it draws, so an icon that needs components still shows them.
@@ -51,31 +51,33 @@ Every field that **consumes** resources takes an array of resource costs. Each e
 
 ---
 
-## ResourceGain
+## Aura Gain
 
-Every field that **adds** resources takes an array with the same per-entry structure. Gains are less strict than costs: `0` is allowed, but a negative result is rejected.
+An aura gain names one aura and the amount of it to hand over, and it is the shape the `aura_gains` field of a [cultivate action](../json/cultivate_action.md) uses. Gains are less strict than costs: `0` is allowed, but a negative result is rejected.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `id` | `Holder<resource>` | The resource registry entry |
+| `id` | `Holder<aura>` | The aura registry entry |
 | `amount` | `NumberProvider` | The gain; it must evaluate to a finite, non-negative number |
 
 ```json
-"gains": [
+"aura_gains": [
   {"id": "example:qi", "amount": 10},
   {"id": "example:insight", "amount": "level * 0.5"}
 ]
 ```
 
+A plain counter is raised with the `mxt:add_resource` entity action instead, which takes a `resource` and an `amount` and needs no aura definition behind the value.
+
 :::tip
-A cost of `0` or less is invalid, so a cost entry can never be used to grant resources. Use a gain for that.
+A cost of `0` or less is invalid, so a cost entry can never be used to grant anything. Use a gain for that.
 :::
 
 ---
 
 ## AttributeEntry
 
-Vanilla attribute modifiers use the vanilla attribute holders such as `minecraft:generic.attack_damage`.
+Vanilla attribute modifiers use the vanilla attribute holders such as `minecraft:attack_damage`.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -83,17 +85,19 @@ Vanilla attribute modifiers use the vanilla attribute holders such as `minecraft
 | `id` | `Identifier` | **required** | Unique ID of the vanilla `AttributeModifier` |
 | `amount` | `Double` | **required** | Base value used when there is no dynamic `value` |
 | `operation` | Enum | **required** | `add_value`, `add_multiplied_base` or `add_multiplied_total` |
-| `value` | `NumberProvider` | none | When present, the value is recomputed every tick on the server from the entity context and replaces `amount` |
+| `value` | `NumberProvider` | none | When present, the value is recomputed every tick on the server and replaces `amount` |
 
 ```json
 {
-  "attribute": "minecraft:generic.max_health",
+  "attribute": "minecraft:max_health",
   "id": "example:body_tempering",
   "amount": 4,
   "operation": "add_value",
-  "value": "2 + realm_rank * 0.5"
+  "value": "2 + caster_minecraft_max_health * 0.1"
 }
 ```
+
+A dynamic `value` is evaluated with the entity alone, without a resource context, so it can read the `caster_` family but not `realm_rank` or `absorbed_aura`.
 
 ---
 
@@ -107,7 +111,7 @@ A single entry is written as an ID, and a tag reference keeps its required `#` p
 
 ```json
 {
-  "cultivation": "example:qi",
+  "aura": "example:qi",
   "ability_requirements": "#example:fire_abilities"
 }
 ```
@@ -149,6 +153,16 @@ A mixed array:
 
 ```json
 "items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]
+```
+
+Array entries may also be typed objects, which is how a wildcard, a regular expression or the capability matcher `mxt:spirit_storage` is written. See [Other Type Families](./other_types.md#item_matcher_entry_type) for the registered entry types and their fields.
+
+```json
+"items": [
+  "minecraft:apple",
+  {"type": "mxt:wildcard", "pattern": "minecraft:*_sword"},
+  {"type": "mxt:spirit_storage"}
+]
 ```
 
 A matcher only references items that are already registered; it never creates items. When several definitions match, they are selected by `priority` from low to high, and for the current data classes that priority is fixed at `0`.

@@ -62,7 +62,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:chance` | `chance` | Passes randomly with the given probability between `0` and `1`. |
 | `mxt:constant` | `value` | Always returns the given boolean value. |
 | `mxt:amount_range` | `min`, `max` | Checks that the damage amount lies between `min` and `max`. |
-| `mxt:directness` | `direct?` | Checks whether the damage source has a direct entity independent of its owner, or the opposite when `direct` is `false`. |
+| `mxt:directness` | `direct?` | Checks whether the damage source has a direct entity independent of its owner; `direct` defaults to `true`, and `false` requires the opposite. |
 | `mxt:damage_type` | `damage_type` | Matches one concrete registered damage type. |
 | `mxt:damage_type_tag` | `tag` | Matches the damage source against a damage type tag. |
 | `mxt:fire` | — | Matches damage that belongs to the vanilla fire damage tag. |
@@ -74,5 +74,5 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 :::
 
 :::note Chance and Randomness
-`mxt:chance` uses the damage source entity's random stream when one is available, so a single damage event does not roll a different result on the client and the server.
+`mxt:chance` draws from the damage source entity's own random stream when the source has one, so the roll follows that entity rather than a fresh generator. When the source has no entity at all it falls back to a new unseeded random source, so that case is not reproducible across sides.
 :::

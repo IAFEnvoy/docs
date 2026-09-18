@@ -39,7 +39,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/forging_bluep
 
 ## Step Limit
 
-`max_steps` is the **only** source of failure: once it is defined, reaching that step count without meeting the completion conditions fails the attempt. When it is not defined, the player can keep striking until the conditions are met.
+`max_steps` is the **only** source of failure: once it is defined, reaching that step count without meeting the completion conditions fails the attempt. When it is not defined, the player can keep striking until the conditions are met. Writing `0` is the same as omitting the field, because `0` is the sentinel for "no limit".
 
 ## Example
 

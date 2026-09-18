@@ -20,7 +20,7 @@ actions, conditions, quality, aura, tooltips
 
 :::warning
 
-Do not invent a `mxt:item`, `mxt:pill` or `mxt:weapon` file. Those registries do not exist. Every binding table matches items that are already registered, and if a binding names an item that does not exist, the data pack load fails.
+Do not invent a `mxt:item`, `mxt:pill` or `mxt:weapon` file. Those registries do not exist. Every binding table matches items that are already registered. A single unknown item id fails the load; an unknown id written inside an array is dropped with a log line instead, and the rest of the file still loads — so a typo in an array loses the match silently.
 
 :::
 
@@ -34,7 +34,7 @@ Do not invent a `mxt:item`, `mxt:pill` or `mxt:weapon` file. Those registries do
 | `data/example/tags/mxt/item_quality/group/pill.json` | The quality group the pills belong to. |
 | `data/example/mxt/element/fire.json` | Element used by the spirit root. |
 | `data/example/mxt/spirit_root/fire_root.json` | What the pellet grants. |
-| `data/example/mxt/cultivation_technique/azure_breath.json` | What the manual teaches. |
+| `data/example/mxt/technique/azure_breath.json` | What the manual teaches. |
 | `data/example/mxt/item_binding/qi_pill.json`, `root_pellet.json` | Consumption behaviour. |
 | `data/example/mxt/pill_binding/qi_pill.json` | Pill toxicity. |
 | `data/example/mxt/weapon_binding/spirit_sword.json` | Weapon damage, speed and combat actions. |
@@ -149,7 +149,7 @@ An `item_quality` is a tier an item can carry. Quality order and grouping are de
   "quality_group": "#example:group/pill",
   "conditions": [
     {
-      "condition": {"type": "mxt:has_realm", "resource": "example:qi"},
+      "condition": {"type": "mxt:has_realm", "aura": "example:qi"},
       "description": "condition.example.needs_qi_chain"
     }
   ],
@@ -168,7 +168,6 @@ A pellet that hands out a spirit root:
 ```json
 // data/example/mxt/element/fire.json
 {
-  "aura_kinds": ["example:fire_aura"],
   "color": "#FF6600"
 }
 ```
@@ -252,10 +251,10 @@ The `#example:group/weapon` tag from Step 2 defines which qualities this weapon 
 A technique is the logic; a technique binding is the book that teaches it.
 
 ```json
-// data/example/mxt/cultivation_technique/azure_breath.json
+// data/example/mxt/technique/azure_breath.json
 {
   "grade": "earth",
-  "learn_condition": {"type": "mxt:has_realm", "resource": "example:qi"},
+  "learn_condition": {"type": "mxt:has_realm", "aura": "example:qi"},
   "cultivation_modifier": 1.25,
   "passive_modifiers": [
     {
@@ -273,7 +272,7 @@ A technique is the logic; a technique binding is the book that teaches it.
 {
   "items": "kubejs:azure_manual",
   "technique": "example:azure_breath",
-  "conditions": [{"type": "mxt:has_realm", "resource": "example:qi"}]
+  "conditions": [{"type": "mxt:has_realm", "aura": "example:qi"}]
 }
 ```
 
@@ -285,7 +284,7 @@ Right-clicking the manual attempts to learn `example:azure_breath`. Every learne
 (restart the game)                     → the four items now exist
 (load the world again)                 → the bindings load
 /mxt registries validate               → no codec errors
-/mxt registries list                   → item_binding 2, pill_binding 1, weapon_binding 1, technique_binding 1, item_quality 2
+/mxt registries list                   → mxt:item_binding=2, mxt:pill_binding=1, mxt:weapon_binding=1, mxt:technique_binding=1, mxt:item_quality=2, …
 ```
 
 Both halves need their own restart: KubeJS registers items at startup, and the binding tables are data pack registries that Minecraft reads while the world loads. `/reload` does neither — it only refreshes recipes, loot tables, advancements, functions and the KubeJS server scripts.
@@ -303,7 +302,8 @@ Then in game:
 
 | Symptom | Cause |
 | --- | --- |
-| The world refuses to load with an unknown item | The binding names `example:qi_pill` while the script produced `kubejs:qi_pill`. Use the real registered ID. |
+| The world refuses to load with an unknown item | A binding names an item id that is not registered. As a single id this fails the load; inside an array the unreadable element is dropped with a log line instead. |
+| The rule silently never matches | `example:qi_pill` was written while the script produced `kubejs:qi_pill` (or any other typo) inside an `items` array, so that element was dropped and the file loaded without it. Use the real registered ID. |
 | The item has no behaviour at all | The rule was put in a binding table that does not match the item, or the item is not in the `quality_group` it declares. |
 | `quality_group` is rejected | It must be a `#`-prefixed tag reference, and the tag must exist. |
 | A pill cannot be eaten | `pill_binding` only matches edible items, so the item needs `.food(...)`. |

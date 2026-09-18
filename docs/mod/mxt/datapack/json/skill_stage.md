@@ -58,5 +58,5 @@ The field is loaded and validated, but nothing reads it at runtime: there is no 
 :::
 
 :::note Who advances a level
-Reaching a level is driven by the technique that owns the climb, not by the chain: a technique with a `mastery_resource` advances its holder to the next level once that resource reaches the level's `mastery` and the level's `condition` holds. An advanced level publishes `mxt:technique_stage`, and the abilities of every level reached so far are granted. See [Cultivation Technique](./cultivation_technique.md#advancement).
+Reaching a level is driven by the technique that owns the climb, not by the chain: a technique with a `mastery_resource` advances its holder to the next level once that resource reaches the level's `mastery` and the level's `condition` holds. An advanced level publishes `mxt:technique_stage`, and the abilities of every level reached so far are granted. See [Cultivation Technique](./technique.md#advancement).
 :::

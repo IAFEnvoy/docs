@@ -38,12 +38,12 @@ Anywhere an entity condition is expected, an array of conditions is also accepte
 ```json
 "condition": [
   { "type": "mxt:sneaking" },
-  { "type": "mxt:on_block" }
+  { "type": "mxt:on_block", "condition": {"type": "mxt:block_tag", "tag": "minecraft:logs"} }
 ]
 ```
 
 :::info Comparison Fields
-Several types compare a value against a number. When a type lists `comparison` and `compare_to` as separate keys, they sit directly on the condition object, as in the example above. A few types instead name a single `comparison` key whose value is one nested comparison object holding `comparison` and `compare_to`; those types say so in their description. The comparison operators are `==`, `!=`, `<`, `<=`, `>` and `>=`, and the value may be a [number provider](../number_provider_types.md) where formulas are useful.
+Several types compare a value against a number. When a type lists `comparison` and `compare_to` as separate keys, they sit directly on the condition object, as in the example above. A few types instead name a single `comparison` key whose value is one nested comparison object holding `comparison` and `compare_to`; those types say so in their description. The comparison operators are `==`, `!=`, `<`, `<=`, `>` and `>=`, and `compare_to` itself is always a plain number.
 :::
 
 :::tip Datapack Visual Editor
@@ -68,11 +68,13 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:has_spirit_root` | `spirit_root` | Checks whether the entity currently holds the given [spirit root](../../json/spirit_root.md). |
 | `mxt:has_physique` | `physique` | Checks whether the entity currently holds the given [physique](../../json/physique.md). |
 | `mxt:realm` | `realm`, `comparison?` | Compares the entity's [realm](../../json/realm_stage.md) stage against `realm`, using `exact` (the default), `at_least` or `at_most`. |
-| `mxt:has_realm` | `resource` | Passes for entities that have entered a realm chain for the given [resource](../../json/resource.md). |
-| `mxt:aura_range` | `aura` | Tests the server-resolved aura concentration at the entity's position against per-resource requirements. `aura` maps a resource ID to an object with a required `max` and an optional `min` (default `0`). |
+| `mxt:has_realm` | `aura` | Passes for entities that have entered a realm chain for the given [aura](../../json/aura.md). |
+| `mxt:aura_range` | `aura` | Tests the server-resolved aura concentration at the entity's position against per-aura requirements. `aura` maps an aura ID to an object with a required `max` and an optional `min` (default `0`); both accept a [number provider](../number_provider_types.md). |
 | `mxt:resource_compare` | `resource`, `min` | Checks that the entity's value for a resource is at least `min`. |
 | `mxt:entity_tag` | `tag` | Matches the entity against an entity type tag. |
-| `mxt:formation_member` | — | Passes when the entity owns an active [formation](../../json/formation.md) in the current level. |
+| `mxt:formation_member` | — | Passes when the entity owns any registered [formation](../../json/formation.md) in the current level. |
+| `mxt:formation_owner` | — | Passes when the entity owns the formation currently being evaluated; outside a formation context it is `false`. |
+| `mxt:formation_ally` | — | Passes when the owner of the formation currently being evaluated treats the entity as an ally. |
 | `mxt:air` | `comparison`, `compare_to` | Compares the entity's remaining air. |
 | `mxt:dimension` | `dimension`, `inverted?` | Checks the entity's dimension, or the opposite when `inverted` is `true`. |
 | `mxt:entity_type` | `entity_type` | Checks the entity's type. |
@@ -96,17 +98,17 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:block_collision` | `offset_x?`, `offset_y?`, `offset_z?` | Checks for a block collision at an offset from the entity. |
 | `mxt:can_have_effect` | `effect` | Checks whether the entity can be affected by the given status effect. |
 | `mxt:gamemode` | `gamemode` | Checks a player's game mode. |
-| `mxt:passenger` | `bientity_condition?`, `comparison`, `compare_to` | Compares the number of the entity's direct passengers that satisfy a [bi-entity condition](bientity_condition_types.md), with `comparison` as a nested comparison object. |
+| `mxt:passenger` | `bientity_condition?`, `comparison`, `compare_to` | Compares the number of the entity's direct passengers that satisfy a [bi-entity condition](bientity_condition_types.md). |
 | `mxt:attack_cooldown` | `comparison`, `compare_to` | Compares a player's current attack cooldown progress. |
 | `mxt:equipped_item` | `equipment_slot`, `item_condition?` | Checks the item in one equipment slot against an [item condition](item_condition_types.md). |
-| `mxt:in_block` | `block_condition` | Checks whether a matching block intersects the entity's hitbox. |
+| `mxt:in_block` | `block_condition` | Tests a [block condition](block_condition_types.md) against the single block at the entity's block position. |
 | `mxt:in_block_anywhere` | `block_condition`, `comparison` | Compares the number of matching blocks inside the entity's bounding box, with `comparison` as a nested comparison object. |
 | `mxt:scoreboard` | `name?`, `objective`, `comparison`, `compare_to` | Compares a scoreboard score, defaulting the score holder to the entity's scoreboard name. |
 | `mxt:riding` | `bientity_condition?` | Checks the entity's vehicle against a [bi-entity condition](bientity_condition_types.md). |
-| `mxt:riding_recursive` | `bientity_condition?`, `comparison`, `compare_to` | Compares the number of vehicles in the whole riding chain that satisfy a bi-entity condition, with `comparison` as a nested comparison object. |
-| `mxt:passenger_recursive` | `bientity_condition?`, `comparison`, `compare_to` | Compares the number of nested passengers that satisfy a bi-entity condition, with `comparison` as a nested comparison object. |
+| `mxt:riding_recursive` | `bientity_condition?`, `comparison`, `compare_to` | Compares the number of vehicles in the whole riding chain that satisfy a bi-entity condition. |
+| `mxt:passenger_recursive` | `bientity_condition?`, `comparison`, `compare_to` | Compares the number of nested passengers that satisfy a bi-entity condition. |
 | `mxt:riding_root` | `bientity_condition?` | Tests a bi-entity condition against the vehicle at the root of the entity's riding chain. |
 
 :::note Type References
-`ability`, `curse`, `spirit_root`, `physique`, `realm`, `resource` and `formation` accept the ids of the matching data pack registries, so they can point at content added by any data pack, not only at entries shipped with the mod.
+`ability`, `curse`, `spirit_root`, `physique`, `realm`, `aura` and `resource` accept the ids of the matching data pack registries, so they can point at content added by any data pack, not only at entries shipped with the mod.
 :::

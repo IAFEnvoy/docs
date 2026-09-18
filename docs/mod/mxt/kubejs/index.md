@@ -8,6 +8,7 @@ sidebar_position: 1
 
 KubeJS is well suited to registering concrete items, blocks, recipes and content objects; MiXianTu reads those objects and gives them rules through binding tables. Do not modify server attachments directly in a script, and do not bypass cost validation.
 
+- **[KubeJS Items and Bindings](./items.md)** — register an item in a startup script and attach rules to it with the binding tables.
 - **[KubeJS API Reference](./api-reference.md)** — the script objects, their methods and the events.
 - **[KubeJS Examples](./examples.md)** — complete scripts.
 - **[Create Items with KubeJS and Bind Them](../tutorial/create-items-with-kubejs.md)** — the same material as a step-by-step walkthrough.
@@ -167,7 +168,7 @@ MxtActions.entity('example:heal', (entity, params) => {
 }
 ```
 
-Actions, conditions, number providers and resource value providers each have a pre-registered `mxt:js` type for this. The `id` is unique **within the same callback category**, and KubeJS clears every callback before reloading server scripts and re-runs the scripts, so keep registrations in server scripts rather than in a client script that only runs once. Action and condition callbacks also receive the formula context of the dispatch as their last argument, which is how a script reads an event payload such as `damage`.
+Actions, conditions, number providers, resource value providers, trigger matchers, costs, ability target selectors, loot conditions and loot functions each have a pre-registered `mxt:js` type for this. The `id` is unique **within the same callback category**, and KubeJS clears every callback before reloading server scripts and re-runs the scripts, so keep registrations in server scripts rather than in a client script that only runs once. Action and condition callbacks also receive the formula context of the dispatch as their last argument, which is how a script reads an event payload such as `damage`.
 
 All server lifecycle events are subscribed through `MxtEvents`:
 

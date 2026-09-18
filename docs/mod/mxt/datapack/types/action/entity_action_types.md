@@ -63,6 +63,13 @@ Meta actions control whether, how often and in what order other entity actions r
 | `mxt:if_else` | `condition`, `if_action`, `else_action?` | Runs `if_action` when the entity condition passes, otherwise `else_action`. |
 | `mxt:choice` | `actions` | Picks one entry from a weighted list and runs it. |
 
+Each entry of a `choice` list is a weighted wrapper around a nested action:
+
+| Entry Field | Type | Default | Description |
+|-------------|------|---------|-------------|
+| `element` | Entity action | **required** | The action this entry runs when it is picked. |
+| `weight` | Integer | `1` | Relative weight; larger weights are picked more often. |
+
 ## Action Types
 
 | Type | Fields | Description |
@@ -86,7 +93,7 @@ Meta actions control whether, how often and in what order other entity actions r
 | `mxt:teleport` | `x`, `y`, `z` | Moves the entity within its current level. |
 | `mxt:knockback` | `x`, `y`, `z` | Adds a bounded velocity vector; collision and fall handling stay vanilla-owned. |
 | `mxt:modify_component` | `ability`, `component`, `value` | Updates a declared ability component state without allowing arbitrary component writes. |
-| `mxt:spawn_entity` | `entity_type`, `x`, `y`, `z` | Spawns a registered entity at an offset from the acting entity's position. |
+| `mxt:spawn_entity` | `entity_type`, `x`, `y`, `z` | Spawns a registered entity at the given absolute position in the acting entity's level, matching its rotation. |
 | `mxt:spawn_projectile` | `entity_type`, `velocity_x`, `velocity_y`, `velocity_z` | Creates a projectile entity, assigns the acting entity as owner and gives it a formula-driven velocity. |
 | `mxt:add_experience` | `points?`, `levels?` | Adds experience points or levels to a player. |
 | `mxt:add_velocity` | `x?`, `y?`, `z?`, `space?`, `set?` | Adds velocity to the entity, or sets it when `set` is `true`. |
@@ -109,7 +116,16 @@ Meta actions control whether, how often and in what order other entity actions r
 | `mxt:explode` | `power`, `interaction?`, `indestructible?`, `create_fire?` | Creates an explosion at the entity's location. |
 | `mxt:spawn_particles` | `particle`, `bientity_condition?`, `count`, `speed?`, `force?`, `spread?`, `offset_x?`, `offset_y?`, `offset_z?` | Spawns particles around the entity, optionally only for viewers that match a bi-entity condition. |
 | `mxt:spawn_effect_cloud` | `radius?`, `radius_on_use?`, `wait_time?`, `effects?` | Creates a vanilla area effect cloud at the acting entity's position. |
+| `mxt:spawn_lightning` | `offset_x?`, `offset_y?`, `offset_z?`, `color?`, `alpha?`, `thickness?`, `damage?`, `visual_only?`, `cause?` | Strikes a coloured lightning bolt at an offset from the acting position; what the bolt then does is the vanilla bolt's own behaviour. |
 
 :::note Nested Values
-`mxt:if_else` takes an [entity condition](../condition/entity_condition_types.md); `mxt:passenger_action` and `mxt:riding_action` take both an entity action and a [bi-entity condition](../condition/bientity_condition_types.md); `mxt:explode` filters protected blocks with a [block condition](../condition/block_condition_types.md).
+`mxt:if_else` takes an [entity condition](../condition/entity_condition_types.md); `mxt:passenger_action` and `mxt:riding_action` take an entity action, a [bi-entity action](bientity_action_types.md) and a [bi-entity condition](../condition/bientity_condition_types.md); `mxt:explode` filters protected blocks with a [block condition](../condition/block_condition_types.md).
+:::
+
+:::note Element Shapes and Defaults
+`mxt:apply_curses` takes a list of curse entries that carry no `type` key of their own: `curse` (required), `stacks?` (default `1`) and `duration_ticks?`.
+
+`mxt:spawn_lightning` needs no fields at all; its bolt is placed at the acting position plus the offsets, which default to `0`. `color` accepts the same `#RRGGBB` or integer form as an aura colour, `alpha` is `0..1`, and `damage` defaults to `5`. `visual_only` keeps the bolt decorative, and `cause` attributes it to the player, who then becomes the source of the damage it deals.
+
+`mxt:set_no_gravity` defaults `no_gravity` to `true`, so omitting the field removes gravity from the entity rather than restoring it.
 :::

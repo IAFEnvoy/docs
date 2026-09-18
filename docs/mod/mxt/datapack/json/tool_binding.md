@@ -17,7 +17,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/tool_binding/
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `methods` | `Holder<forging_method>[]` | **required** | The forging methods this tool unlocks. It must not be empty or contain duplicates. |
+| `methods` | `Holder<forging_method>[]` | **required** | The forging methods this tool unlocks. A definition that leaves it empty or repeats a method fails to load. |
 
 ## Usage
 

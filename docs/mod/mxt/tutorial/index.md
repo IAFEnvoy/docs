@@ -15,9 +15,10 @@ Every tutorial extends the same small content pack in the `example` namespace, a
 ```text
 data/example/
 ├── mxt/
-│   ├── element/common.json                  Aura kind marker
+│   ├── element/common.json                  Element named by the qi aura
 │   ├── element/fire.json                    Element for the fire spirit root
-│   ├── resource/qi.json                     The aura pool
+│   ├── resource/qi.json                     The stored value
+│   ├── aura/qi.json                         The aura the value carries, and its realm chain entry
 │   ├── realm_stage/qi_condensation.json     Realm chain
 │   ├── realm_stage/foundation.json
 │   ├── realm_stage/core_formation.json
@@ -27,7 +28,7 @@ data/example/
 │   ├── block_aura/spirit_stone_ore.json     Blocks that emit aura
 │   ├── item_aura/spirit_stone.json          Items that act as cultivation fuel
 │   ├── spirit_root/fire_root.json           Granted by a pill
-│   ├── cultivation_technique/azure_breath.json
+│   ├── technique/azure_breath.json
 │   ├── ability/qi_bolt.json                 An active ability
 │   ├── ability/qi_recovery.json             A triggered ability
 │   ├── item_quality/common.json             Quality tiers
@@ -46,7 +47,7 @@ data/example/
 
 | Tutorial | You build | Read it when |
 | --- | --- | --- |
-| [Define Aura and Realms](./define-aura-and-realms.md) | An aura resource, a linear realm chain, a cultivation action and a minimal aura zone — the core cultivation loop. | You want a player to be able to cultivate and break through. |
+| [Define Aura and Realms](./define-aura-and-realms.md) | An element, an aura resource, a linear realm chain, a cultivation action and a minimal aura zone — the core cultivation loop. | You want a player to be able to cultivate and break through. |
 | [Build the Aura Environment](./aura-environment.md) | Layered aura zones, block aura, item fuel, noise, fluctuation, fog and HUD bars. | The basic loop works and you want the world to matter. |
 | [Create Items with KubeJS and Bind Them](./create-items-with-kubejs.md) | Real items registered by a script, plus the four binding tables, quality tiers and recipes that give them gameplay. | You need pills, weapons or manuals of your own. |
 | [Add an Ability](./add-an-ability.md) | An active ability, a triggered ability, and the ways to grant them. | You want something for the player to spend aura on. |
@@ -57,8 +58,8 @@ data/example/
 - **File locations.** Data pack files go under `data/<namespace>/mxt/<registry>/<path>.json`; tags go under `data/<namespace>/tags/...`. The full list is in [JSON Data Formats](../datapack/json/index.md).
 - **Applying changes.** MiXianTu data tables are native data pack registries, which Minecraft reads **while the world loads**, so `/reload` does not re-read them. After editing a data pack file, leave to the title screen and open the world again (or restart the server). `/reload` only refreshes recipes, loot tables, advancements, functions and the KubeJS server scripts. Registering new items or blocks with KubeJS also needs a game restart.
 - **Broken files block the world.** There is no previous snapshot to fall back on: if a definition fails to decode, the world will not load until the file is fixed. The log names the file and the codec error, so keep the last working copy of a file you are editing.
-- **Verifying.** `/mxt registries validate` reports whether the registries loaded, and `/mxt registries list` shows entry counts. The other commands are listed in [Commands](../player-guide/commands.md).
-- **Version.** The mod is still in development and the data pack format is not frozen. These pages follow the current source; when a field changes, the reference page changes with it.
+- **Verifying.** `/mxt registries validate` reports the registry count, the total entry count and whether validation passed, and `/mxt registries list` prints each registry id with its entry count. The other commands are listed in [Commands](../player-guide/commands.md).
+- **Version.** These pages follow version `1.0-alpha.2` of the mod, which is still in development and whose data pack format is not frozen; when a field changes, the reference page changes with it.
 
 ## Where to Go Next
 

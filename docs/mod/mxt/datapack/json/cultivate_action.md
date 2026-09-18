@@ -5,7 +5,13 @@ description: "Defines a named cultivation activity with its environment requirem
 
 # Cultivate Action (cultivate_action)
 
-A `cultivate_action` defines a named cultivation activity: when cultivation may start and continue, how often absorption is settled, and which resources are consumed or gained.
+A `cultivate_action` defines a named cultivation activity: when cultivation may start and continue, how often absorption is settled, and which aura is consumed or gained.
+
+:::warning Marked for possible removal
+
+`CultivateAction` carries a `//TODO::May be removed`. It is the datapack-shaped spelling of "what an entity does while cultivating"; if that whole process is ever folded back into the state attachment (progress, realm and fuel all live there), this registry would go away together with `CultivationModeService`, `CultivationActionService`, `AuraDistributionService`, the `cultivate_*` fields on the `mxt:cultivation` attachment and the `/mxt cultivate` toggle. **Declaring one is fully supported today** — just do not treat it as a foundation that cannot move.
+
+:::
 
 ## File Location
 
@@ -18,18 +24,19 @@ The filename corresponds to its ID. For example, `data/example/mxt/cultivate_act
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `default` | Boolean | `false` | Whether this is the default behaviour when no cultivation behaviour has been selected; when nothing is marked, the first behaviour in the registry is used. |
-| `start_condition` | `EntityCondition` | `mxt:always_true` | Condition for starting cultivation. |
-| `condition` | `EntityCondition` | `mxt:always_true` | Condition for continuing cultivation; cultivation only continues while the condition is true. |
+| `start_condition` | `EntityCondition` | `mxt:always_true` | Condition for starting cultivation, checked once when cultivation starts. |
+| `condition` | `EntityCondition` | `mxt:always_true` | Condition for continuing cultivation, checked before every settlement; cultivation is aborted while the condition is false. |
 | `tick_interval` | Integer | `20` | Absorption settlement interval, range `1..72000`. |
-| `aura_kinds` | Identifier[] | `[]` | Aura kinds that must all be present. |
 | `costs` | `List<ResourceCost>` | `[]` | Resources consumed by each cultivation tick. |
 | `absorb_amount` | `NumberProvider` | `1` | Multiplier for the natural recovery of the current realm resource during cultivation; the resource bar is filled first and the overflow enters cultivation progress. |
-| `aura_costs` | `Map<Holder<resource>, NumberProvider>` | `{}` | Environment resources consumed by each cultivation tick; each resource is allocated independently, and a shortage of one entry only reduces that entry's contribution. |
-| `aura_gains` | `List<ResourceGain>` | `[]` | Additional resources gained. |
-| `cooldown` | Integer | `0` | Cooldown in ticks after stopping. |
+| `aura_costs` | `Map<Holder<aura>, NumberProvider>` | `{}` | Environment aura consumed by each cultivation tick; each aura is allocated independently, and a shortage of one entry only reduces that entry's contribution. |
+| `aura_gains` | `List<AuraGain>` | `[]` | Additional aura gained. Each entry is `{id, amount}`, whose `id` is a `Holder<aura>`. |
+| `cooldown` | Integer | `0` | Cooldown in ticks after stopping, range `0..72000`. |
 | `tick_action` | `EntityAction` | `mxt:no_op` | Behaviour executed on every cultivation tick. |
 
-Its numeric fields are evaluated with the resource and cultivation variables of the resource being cultivated (`realm_rank`, `absorbed_aura`, …) in addition to the entity variables; see [Formula Variables](../types/formula_variables.md).
+There is no separate "environment kind" field: where a technique may be practised is expressed entirely by `start_condition` (checked once at the start) and `condition` (checked before every settlement), both of which can read the environment — `mxt:aura_range` requires a concentration range of some aura, `mxt:dimension` requires a dimension, and block or biome conditions require the place underfoot. This is the other side of `aura_zone.cultivate_condition`: that one is the environment declaring whether cultivation is allowed here, these two are the technique declaring what it needs.
+
+Its numeric fields are evaluated with the resource and cultivation variables of the value being cultivated (`realm_rank`, `absorbed_aura`, …) in addition to the entity variables; see [Formula Variables](../types/formula_variables.md).
 
 ## Example
 
@@ -39,11 +46,10 @@ Its numeric fields are evaluated with the resource and cultivation variables of 
   "start_condition": {"type": "mxt:always_true"},
   "condition": {"type": "mxt:always_true"},
   "tick_interval": 20,
-  "aura_kinds": ["example:fire_aura"],
   "costs": [{"id": "example:stamina", "amount": 1}],
   "absorb_amount": 1.5,
-  "aura_costs": {"example:qi": 2},
-  "aura_gains": [{"id": "example:qi", "amount": "1 + realm_rank * 0.1"}],
+  "aura_costs": {"mxt:common": 2},
+  "aura_gains": [{"id": "mxt:common", "amount": "1 + realm_rank * 0.1"}],
   "cooldown": 100,
   "tick_action": {"type": "mxt:no_op"}
 }

@@ -96,23 +96,49 @@ A `costs` array also accepts the plain `{"id": ..., "amount": ...}` shorthand, w
 
 ---
 
-## `badge_type`
+## `formation_action_type`
 
-Badges are reserved display metadata. They load and validate, but no compendium, selection screen or gameplay object consumes them yet.
+The `actions` array of a [formation](../json/formation.md) holds these functional modules. A datapack never adds one; it picks an existing module by writing its id in the module's `type`.
 
-| `type` | Fields | Default | Description |
-|--------|--------|---------|-------------|
-| `mxt:empty` | none | - | Empty placeholder badge |
-| `mxt:sprite` | `icon` | **required** | Shows an icon only |
-| `mxt:tooltip` | `icon`, `text` | `text` is an empty text | An icon with a hover tooltip |
-| `mxt:keybind` | `icon`, `text`, `key` | `text=""`, `key="key.mxt.primary_active"` | Records a client key mapping |
-| `mxt:crafting_recipe` | `icon`, `recipe`, `from_power`, `prefix`, `suffix` | `from_power=false` | Reserved recipe hint metadata |
+| `type` | Fields | Description |
+|--------|--------|-------------|
+| `mxt:none` | none | No module behaviour. |
+| `mxt:attack` | `damage?`, `damage_type?`, `attribute_to_owner?`, `effects?` | Attacks entities inside the radius. |
+| `mxt:buff` | `abilities?`, `target?`, `aura_zone?`, `max_bonus?` | Grants abilities, overrides the local aura template and raises aura capacities. |
+| `mxt:protection` | `block_break?`, `block_place?`, `block_interact?`, `explosions?`, `mob_griefing?`, `entity_interact?`, `attack_entity?`, `item_use?`, `spare_friends?`, `delegate_to_claims?` | Denies the listed kinds of interference inside the radius. |
+| `mxt:range_display` | `particle`, `interval_periods?`, `points?`, `shape?` | Draws the radius outline with particles. |
+
+| `type` | Field | Type | Default | Description |
+|--------|-------|------|---------|-------------|
+| `mxt:attack` | `damage` | `NumberProvider` | `0` | Damage per application |
+| `mxt:attack` | `damage_type` | `Holder<damage_type>` | none | Damage type used for the hit |
+| `mxt:attack` | `attribute_to_owner` | Boolean | `true` | Whether the formation owner is credited as the attacker |
+| `mxt:attack` | `effects` | List of effect actions | `[]` | Status effects applied on each hit |
+| `mxt:buff` | `abilities` | List of `Holder<ability>` | `[]` | Abilities granted to matching entities |
+| `mxt:buff` | `target` | Enum | `all` | Which entities the module applies to: `all`, `allies` or `owner` |
+| `mxt:buff` | `aura_zone` | `AuraZone` | none | Inline aura template applied inside the radius |
+| `mxt:buff` | `max_bonus` | Map of aura to `NumberProvider` | `{}` | Extra aura capacity per aura |
+| `mxt:protection` | `block_break` | Boolean | `true` | Deny block breaking |
+| `mxt:protection` | `block_place` | Boolean | `true` | Deny block placing |
+| `mxt:protection` | `block_interact` | Boolean | `true` | Deny block interaction |
+| `mxt:protection` | `explosions` | Boolean | `true` | Deny explosions |
+| `mxt:protection` | `mob_griefing` | Boolean | `true` | Deny mob griefing |
+| `mxt:protection` | `entity_interact` | Boolean | `true` | Deny entity interaction |
+| `mxt:protection` | `attack_entity` | Boolean | `true` | Deny attacking entities |
+| `mxt:protection` | `item_use` | Boolean | `true` | Deny item use |
+| `mxt:protection` | `spare_friends` | Boolean | `true` | Exempt the owner's friends |
+| `mxt:protection` | `delegate_to_claims` | Boolean | `false` | Hand protection over to a land-claim mod |
+| `mxt:range_display` | `particle` | Particle options | **required** | Particle drawn along the outline |
+| `mxt:range_display` | `interval_periods` | Integer `1..1200` | `1` | Maintenance periods between redraws |
+| `mxt:range_display` | `points` | Integer `1..512` | `32` | Number of points on the outline |
+| `mxt:range_display` | `shape` | Enum | `ring` | Outline shape: `ring` or `sphere` |
 
 ```json
 {
-  "type": "mxt:tooltip",
-  "icon": {"texture": "mxt:textures/gui/badge/info.png"},
-  "text": "badge.example.info"
+  "actions": [
+    {"type": "mxt:protection", "delegate_to_claims": true},
+    {"type": "mxt:range_display", "particle": {"type": "minecraft:end_rod"}, "shape": "ring"}
+  ]
 }
 ```
 
@@ -357,7 +383,7 @@ A resource value provider resolves one number for a resource, usually for a reso
 |--------|--------|-------------|
 | `mxt:current` | none | The value stored on the entity |
 | `mxt:max` | none | The `max` of the resource definition |
-| `mxt:regen` | none | The `regen` of the value's [cultivation profile](../json/cultivation.md) |
+| `mxt:regen` | none | The `regen` of the value's [cultivation profile](../json/aura.md) |
 | `mxt:missing` | none | The amount missing to the maximum, never below `0` |
 | `mxt:environment_concentration` | none | The environmental template concentration at the position, excluding chunk storage and block or formation contributions |
 | `mxt:actual_concentration` | none | The final resolved concentration at the position, including every active source |
@@ -411,6 +437,7 @@ These entries make up an [ItemMatcher](./shared_data_types.md#itemmatcher). An i
 | `mxt:tag` | `tag` | Matches every item in an item tag |
 | `mxt:wildcard` | `pattern` | Matches item IDs with `*` and `?` wildcards |
 | `mxt:regex` | `pattern` | Matches item IDs with a regular expression |
+| `mxt:spirit_storage` | none | Matches every item that stores aura, that is, every item implementing `ItemAuraAccess` |
 
 | `type` | Field | Type | Default | Description |
 |--------|-------|------|---------|-------------|
@@ -418,8 +445,9 @@ These entries make up an [ItemMatcher](./shared_data_types.md#itemmatcher). An i
 | `mxt:tag` | `tag` | Item tag ID | **required** | Tag reference; the shorthand form is the `#`-prefixed string |
 | `mxt:wildcard` | `pattern` | String | **required** | `*` matches any run of characters and `?` matches one character; must not be empty |
 | `mxt:regex` | `pattern` | String | **required** | A full regular expression matched against the item ID; must not be empty |
+| `mxt:spirit_storage` | — | — | — | Fieldless; `{"type": "mxt:spirit_storage"}` is the whole entry |
 
-Wildcard and regex entries are matched against the item ID, such as `minecraft:apple`, not against display names.
+Wildcard and regex entries are matched against the item ID, such as `minecraft:apple`, not against display names. `mxt:spirit_storage` is the one entry that matches by capability rather than by ID, so an item added later that implements `ItemAuraAccess` is covered without editing the file that declared the matcher.
 
 ```json
 "items": [

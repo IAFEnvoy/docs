@@ -88,11 +88,13 @@ A JSON number is equivalent to this type.
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `variable` | String | **required** | Name of the context variable to read |
-| `fallback` | Double | `0` | Value used when the context does not contain the variable |
+| `fallback` | Double | `0` | Value used when no variable provides that name at all |
 
 ```json
 {"type": "mxt:context_variable", "variable": "absorbed_aura", "fallback": 0}
 ```
+
+`fallback` covers a name that no variable provides at all. A name that a variable does provide but this particular context cannot supply is still reported and read as `0`, exactly like an expression would.
 
 ### `mxt:sum`
 
@@ -174,7 +176,7 @@ Each branch has its own fields:
   "type": "mxt:conditional",
   "branches": [
     {"condition": {"type": "mxt:sneaking"}, "value": 4},
-    {"condition": {"type": "mxt:has_realm", "resource": "example:qi"}, "value": "level + 1"}
+    {"condition": {"type": "mxt:has_realm", "aura": "example:qi"}, "value": "level + 1"}
   ],
   "fallback": 1
 }
@@ -221,7 +223,7 @@ Formulas are evaluated with exp4j. The mod registers these additional functions 
 | `min(a, b)` | 2 | Smaller of the two values |
 | `max(a, b)` | 2 | Larger of the two values |
 
-The standard exp4j functions are also available: `abs`, `acos`, `asin`, `atan`, `cbrt`, `ceil`, `cos`, `cosh`, `exp`, `floor`, `log`, `log10`, `sin`, `sinh`, `sqrt`, `tan` and `tanh`. The constants `pi` and `e` are recognized as well.
+The standard exp4j functions are also available: `abs`, `acos`, `asin`, `atan`, `cbrt`, `ceil`, `cos`, `cosh`, `cot`, `exp`, `expm1`, `floor`, `log`, `log10`, `log1p`, `log2`, `pow`, `signum`, `sin`, `sinh`, `sqrt`, `tan` and `tanh`. The constants `pi` and `e` are recognized as well. The mod's own name scanner recognizes the four functions above plus `abs`, `acos`, `asin`, `atan`, `cbrt`, `ceil`, `cos`, `cosh`, `exp`, `floor`, `log`, `log10`, `sin`, `sinh`, `sqrt`, `tan` and `tanh`, so an expression that uses one of the remaining exp4j functions can still be reported as reading an unknown variable.
 
 ---
 

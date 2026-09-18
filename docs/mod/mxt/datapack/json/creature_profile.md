@@ -25,7 +25,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/creature_prof
 | `contract_tags` | Identifier[] | `[]` | The tags that can be used for contract matching. |
 | `entity_type_tags` | `HolderOrTag<EntityType>[]` | `[]` | The creature types or tags this profile applies to. |
 | `preferred_aura_elements` | `HolderOrTag<element>[]` | `[]` | The preferred aura elements. |
-| `minimum_aura` | `Map<Holder<resource>, NumberProvider>` | `{}` | The minimum value of each resource required to spawn or be strengthened. |
+| `minimum_aura` | `Map<Holder<aura>, NumberProvider>` | `{}` | The minimum amount of each aura required to spawn or be strengthened. The keys are `mxt:aura` entries, not stored values. |
 
 :::note
 
@@ -44,6 +44,6 @@ The realm stage field is named `realm_stages` and takes an array of realm stages
   "contract_tags": ["example:contract/master_servant"],
   "entity_type_tags": ["minecraft:wolf", "#example:spirit_wolves"],
   "preferred_aura_elements": ["example:fire", "#example:warm_elements"],
-  "minimum_aura": { "example:spirit_power": 10.0 }
+  "minimum_aura": { "mxt:common": 10.0 }
 }
 ```

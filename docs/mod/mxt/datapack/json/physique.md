@@ -36,7 +36,7 @@ Granting and removing both spirit roots and physiques is done with entity action
 
 ```json
 {
-  "attribute_modifiers": [{"attribute": "minecraft:generic.max_health", "id": "example:physique/blazing_body", "amount": 2, "operation": "add_value"}],
+  "attribute_modifiers": [{"attribute": "minecraft:max_health", "id": "example:physique/blazing_body", "amount": 2, "operation": "add_value"}],
   "granted_abilities": [],
   "holder_condition": {"type": "mxt:has_spirit_root", "spirit_root": "example:fire_root"}
 }

@@ -34,17 +34,21 @@ data/<namespace>/tags/mxt/<registry>/<tag path>.json
 
 ## IDs and Translation Keys
 
-The display name of a data-driven definition is generated automatically from its identifier: `Identifier.toLanguageKey` builds `<category>.<namespace>.<path>` for the registry category, with `/` in the path turned into `.`.
+The display name of a data-driven definition is generated automatically from its identifier: `Identifier.toLanguageKey` builds `<category>.<namespace>.<path>` for the registry category.
 
-For example, `example:qi` produces `resource.example.qi`.
+The category defaults to the registry's own path, so `mxt:fire` in `mxt:aura` is `aura.mxt.fire`. The single override is `mxt:item_quality`, whose definitions are always translated under `quality` (`quality.example.refined`).
+
+A `/` inside the path stays in the key: `Identifier#toLanguageKey` does not turn it into `.`, so `example:foo/bar` produces `resource.example.foo/bar`. Keep definition files out of subdirectories.
 
 JSON no longer contains a `translation_key` field. Provide the matching translation in `assets/<namespace>/lang/en_us.json` (and `zh_cn.json` if you ship it).
 
 ```json
 {
-  "resource.example.qi": "Qi"
+  "aura.example.fire": "Fire Aura"
 }
 ```
+
+Registry titles use their own fixed key, `mxt.registry.<registry path>` — `mxt.registry.aura`, `mxt.registry.item_quality` and so on. The mod ships those; a data pack only supplies the key described above.
 
 ## Loading and Overriding
 
@@ -99,7 +103,7 @@ Cross-registry fields are resolved into holders as early as possible during data
 
 ```json
 {
-  "cultivation": "example:qi",
+  "aura": "example:qi",
   "ability_requirements": [
     "example:fireball",
     "#example:basic_fire_abilities"
@@ -168,13 +172,17 @@ See [Types Reference](./types/index.md) for the built-in action and condition ty
 
 ## Registry Index
 
+The mod registers **34** data pack registries, all of them declared in `MxtDatapackRegistries`:
+
 | Category | Registries |
 | --- | --- |
-| Resources and cultivation | `resource`, `cultivation`, `element`, `realm_stage`, `spirit_root`, `physique`, `cultivation_technique`, `skill_stage`, `cultivate_action` |
-| Abilities and rules | `ability`, `curse`, `formation`, `tribulation`, `trigger`, `badge` |
+| Resources and cultivation | `resource`, `aura`, `element`, `realm_stage`, `spirit_root`, `physique`, `technique`, `skill_stage`, `cultivate_action` |
+| Abilities and rules | `ability`, `curse`, `formation`, `tribulation`, `trigger`, `talisman` |
 | Aura and world | `aura_zone`, `block_aura`, `item_aura`, `realm_instance` |
 | Items and quality | `item_binding`, `weapon_binding`, `pill_binding`, `technique_binding`, `item_archetype`, `item_quality` |
-| Economy and content | `currency`, `spirit_herb`, `forging_method`, `forging_blueprint`, `creature_profile`, `contract_type`, `sect`, `title` |
+| Economy and content | `currency`, `spirit_herb`, `forging_method`, `forging_blueprint`, `tool_binding`, `blueprint_binding`, `creature_profile`, `contract_type`, `sect` |
+
+`mxt:aura` is the registry that used to be called `mxt:cultivation`; it holds the aura identity and cultivation behaviour of one stored value, while the value itself lives in `resource`. `title` and `badge` no longer exist. Alchemy recipes use the vanilla recipe system (`mxt:alchemy`) rather than a data pack registry.
 
 [Registry List](./json/index.md) lists every registry with its directory and purpose, and links to the field reference of each one.
 

@@ -60,4 +60,4 @@ An `InformationEntry` holds `name` (nullable), `value`, `color` (default `0xFFE0
 | `lineWithDefinitions(InformationCollector collector, String key, Collection<? extends Holder<?>> values, String category)` | Adds one line that joins every value, preceded by the translated key |
 | `joinDefinitions(Collection<? extends Holder<?>> values, String category)` | The joined text on its own, for use inside a larger line |
 
-`category` is the registry the holders belong to, such as `"spirit_root"`, `"physique"` or `"cultivation_technique"`.
+`category` is the registry the holders belong to, such as `"spirit_root"`, `"physique"` or `"technique"`.

@@ -115,8 +115,7 @@ The `definition` object has the same shape as a single action inside a data pack
 const enoughQi = MxtConditions.testEntity(player, {
   type: 'mxt:resource_compare',
   resource: 'mxt:spirit_power',
-  comparison: '>=',
-  value: 10
+  min: 10
 })
 ```
 
@@ -136,8 +135,8 @@ const actualAura = MxtValues.evaluateResource(player, 'mxt:spirit_power', {
 
 ```js
 const result = MxtResources.consume(player, [
-  { resource: 'mxt:spirit_power', amount: 10 },
-  { resource: 'mxt:fire_aura', amount: 'level + 2' }
+  { id: 'mxt:spirit_power', amount: 10 },
+  { id: 'mxt:fire_aura', amount: 'level + 2' }
 ])
 
 if (result.committed()) {
@@ -147,14 +146,14 @@ if (result.committed()) {
 }
 ```
 
-When any one of the resources is insufficient, none of them is deducted. Note that a `ResourceCost` uses the `resource` field, while only the cost API may use the `id` shorthand:
+When any one of the resources is insufficient, none of them is deducted. Each entry of a `MxtResources.consume` array is a resource cost, so its fields are `id` and `amount`. The single `Cost` API also accepts the typed form with a `resource` field:
 
 ```js
-// Consume a resource. Full form.
-{ type: 'mxt:resource', resource: 'mxt:spirit_power', amount: 10 }
-
-// Consume a resource. Compatible shorthand; only the cost API may use the id field.
+// Consume a resource. Resource cost in MxtResources.consume, and the id shorthand of the cost API.
 { id: 'mxt:spirit_power', amount: 10 }
+
+// Consume a resource, typed form accepted by the single Cost API.
+{ type: 'mxt:resource', resource: 'mxt:spirit_power', amount: 10 }
 
 // Consume items. items accepts an item ID, an item tag, or an ItemMatcher object.
 { type: 'mxt:item', items: ['minecraft:emerald', '#c:mystic_gems'], amount: 2 }

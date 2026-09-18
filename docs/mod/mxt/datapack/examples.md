@@ -36,7 +36,7 @@ Do not replace vanilla tags with a custom `tags` key: tag files always live unde
 
 ## Resource: Qi
 
-Registry: `resource` — [Resource](./json/resource.md), plus its cultivation behaviour in [Cultivation Profile](./json/cultivation.md).
+Registry: `resource` — [Resource](./json/resource.md), plus its cultivation behaviour in [Aura (aura)](./json/aura.md).
 
 ```json
 // data/example/mxt/resource/qi.json
@@ -45,6 +45,7 @@ Registry: `resource` — [Resource](./json/resource.md), plus its cultivation be
   "max": "100 + realm_rank * 20 + absorbed_aura * 0.1",
   "bars": [
     {
+      "context": "mxt:self_hud",
       "anchor": "left",
       "order": 10,
       "renderer": {"type": "mxt:boss_bar", "bar_index": 1},
@@ -55,7 +56,7 @@ Registry: `resource` — [Resource](./json/resource.md), plus its cultivation be
 ```
 
 ```json
-// data/example/mxt/cultivation/qi.json
+// data/example/mxt/aura/qi.json
 {
   "resource": "example:qi",
   "first_realm": "example:foundation",
@@ -63,13 +64,14 @@ Registry: `resource` — [Resource](./json/resource.md), plus its cultivation be
 }
 ```
 
-The maximum is a formula that reads the realm rank and the aura the player has absorbed, and the inline bar draws the current and maximum value on a boss bar. The value stores nothing about cultivation: the profile points back at it, adds a passive regeneration and enters the realm chain at `example:foundation`.
+The maximum is a formula that reads the realm rank and the aura the player has absorbed, and the inline bar draws the current and maximum value on a boss bar. The value stores nothing about cultivation: the `aura` definition points back at it through `resource`, adds a passive regeneration and enters the realm chain at `example:foundation`.
 
 ## Item Aura: Spirit Stone
 
 Registry: `item_aura` — [Item Aura](./json/item_aura.md).
 
 ```json
+// data/example/mxt/item_aura/spirit_stone.json
 {
   "items": "mxt:spirit_stone",
   "type": "example:spirit_power",
@@ -80,23 +82,26 @@ Registry: `item_aura` — [Item Aura](./json/item_aura.md).
 }
 ```
 
-`items` uses an [item matcher](./overview.md#holders-tags-and-matchers), so an item tag works here as well as a single item ID.
+`items` uses an [item matcher](./overview.md#holders-tags-and-matchers), so an item tag works here as well as a single item ID. `type` is the **aura** the item carries, not the stored value: the value itself is read from that aura's `resource`.
 
 ## Cultivation Action: Meditation
 
 Registry: `cultivate_action` — [Cultivate Action](./json/cultivate_action.md).
 
 ```json
+// data/example/mxt/cultivate_action/meditation.json
 {
-  "aura_kinds": ["example:common"],
+  "start_condition": {"type": "mxt:aura_range", "aura": {"example:spirit_power": {"min": 90, "max": 100000}}},
+  "condition": {"type": "mxt:aura_range", "aura": {"example:spirit_power": {"min": 90, "max": 100000}}},
   "absorb_amount": "1 + level * 0.1",
   "aura_costs": {"example:spirit_power": 1},
+  "aura_gains": [{"id": "example:qi", "amount": "2 + level * 0.1"}],
   "tick_interval": 20,
   "tick_action": {"type": "mxt:no_op"}
 }
 ```
 
-The action only absorbs aura whose kind is listed in `aura_kinds`, and the amount scales with the player's level.
+There is no environment-kind field: where the action may be practised is said with `start_condition`, checked once when it starts, and `condition`, checked before every tick. Both read the environment and can demand a concentration, a dimension, a block or a biome. The amount absorbed scales with the player's level.
 
 ## Item Binding: Granting a Spirit Root
 

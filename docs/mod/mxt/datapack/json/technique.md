@@ -1,17 +1,17 @@
 ---
-title: "Cultivation Technique (cultivation_technique)"
+title: "Technique (technique)"
 description: "Defines a cultivation technique that modifies cultivation speed and grants passive attributes and abilities."
 ---
 
-# Cultivation Technique (cultivation_technique)
+# Technique (technique)
 
-A `cultivation_technique` defines a learnable cultivation technique: its grade, learning condition, cultivation multiplier, passive attributes and granted abilities.
+A `technique` defines a learnable cultivation technique: its grade, learning condition, cultivation multiplier, passive attributes and granted abilities.
 
 ## File Location
 
-Cultivation technique files go in `data/<namespace>/mxt/cultivation_technique/` within your datapack.
+Cultivation technique files go in `data/<namespace>/mxt/technique/` within your datapack. The registry is `mxt:technique`; earlier versions called it `cultivation_technique`.
 
-The filename corresponds to its ID. For example, `data/example/mxt/cultivation_technique/vital_breath.json` has the ID `example:vital_breath`.
+The filename corresponds to its ID. For example, `data/example/mxt/technique/vital_breath.json` has the ID `example:vital_breath`.
 
 ## Fields
 
@@ -48,7 +48,7 @@ A learned technique advances one level at a time, at most once per level per che
 - the holder's stored value for that resource is at least the next level's `mastery`, and
 - the next level's `condition` passes.
 
-Abilities are then recalculated from the new level: `granted_abilities` plus every `ability` of the levels reached so far, since `ability` is a minimum requirement. Advancing publishes [`mxt:technique_stage`](./trigger.md) so other content can react. Because the levels live on the chain and the mastery value lives on a resource, a content pack can grow mastery however it likes — a [trigger rule](./trigger.md) that adds to the resource, a cultivation profile, or a script:
+Abilities are then recalculated from the new level: `granted_abilities` plus every `ability` of the levels reached so far, since `ability` is a minimum requirement. Advancing publishes [`mxt:technique_stage`](./trigger.md) so other content can react. Because the levels live on the chain and the mastery value lives on a resource, a content pack can grow mastery however it likes — a [trigger rule](./trigger.md) that adds to the resource, an [aura definition](./aura.md), or a script:
 
 ```json
 // data/example/mxt/trigger/mastery_from_combat.json
@@ -69,17 +69,17 @@ Every learned cultivation technique is active at the same time.
 ```json
 {
   "grade": "earth",
-  "learn_condition": {"type": "mxt:has_realm", "resource": "example:qi"},
+  "learn_condition": {"type": "mxt:has_realm", "aura": "example:qi"},
   "exclusive_tags": ["example:fire_technique"],
   "cultivation_modifier": 1.5,
   "passive_modifiers": [
-    {"attribute": "minecraft:generic.max_health", "id": "example:technique/vital_breath", "amount": 2, "operation": "add_value"}
+    {"attribute": "minecraft:max_health", "id": "example:technique/vital_breath", "amount": 2, "operation": "add_value"}
   ],
   "granted_abilities": ["example:vital_breath_active"],
   "default_stage": "example:vital_breath_1",
   "configuration": {
     "example:vital_breath_1": {
-      "condition": {"type": "mxt:has_realm", "resource": "example:qi"},
+      "condition": {"type": "mxt:has_realm", "aura": "example:qi"},
       "ability": "example:vital_breath_bolt"
     },
     "example:vital_breath_2": {

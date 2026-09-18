@@ -5,7 +5,7 @@ description: "Defines a stored numeric value and its inline resource bars."
 
 # Resource (resource)
 
-A `resource` is a number the mod keeps per entity: its bounds, and how it is displayed. It stores nothing about where that number comes from or what it is used for — everything that turns a value into a cultivation resource (its realm chain, regeneration, aura, conversions, use gate) lives in a [cultivation profile](./cultivation.md) that references it. A resource without a profile is a plain counter.
+A `resource` is a number the mod keeps per entity: its bounds, and how it is displayed. It stores nothing about where that number comes from or what it is used for — everything that turns a value into an aura (its realm chain, regeneration, element marker, conversions, use gate) lives in an [aura](./aura.md) definition that references it. A resource without an aura definition is a plain counter.
 
 ## File Location
 
@@ -24,7 +24,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/resource/qi.j
 | `particle_color` | `RGBColor` | `#FFFFFF` | Particle colour used by spirit power rays. May be written as `#RRGGBB` or as an integer in `0..16777215`. |
 | `bars` | `List<ResourceBar>` | `[]` | Inline resource bars; when empty, the value is not displayed. |
 
-Values are always clamped to `[min, max]`, and an out-of-range change is rejected rather than silently reduced. A value can be spent as a `ResourceCost`, compared with `mxt:resource_compare`, read by formulas through `caster_<name>`, stored in items through the spirit access interface, and changed by the `mxt:add_resource` action.
+Values are always clamped to `[min, max]`, and an out-of-range change is rejected rather than silently reduced. A value can be spent as a `ResourceCost`, compared with `mxt:resource_compare`, read by formulas through `caster_<name>`, changed by the `mxt:add_resource` action, and stored in items through the aura access interfaces (`AuraAccess`/`ItemAuraAccess`) — which exchange auras, so a value needs an [aura](./aura.md) definition to have an aura identity at all. It can still enter the player's own pool without one, because a pool is keyed by the value.
 
 ### bars
 
@@ -75,10 +75,10 @@ Visibility types: `mxt:always`, `mxt:non_full`, `mxt:non_zero`, `mxt:recently_ch
 }
 ```
 
-The `max` formula uses the cultivation variables of the value, which are available whenever the formula is evaluated for a value that has a [cultivation profile](./cultivation.md); the full list is in [Formula Variables](../types/formula_variables.md).
+The `max` formula uses the cultivation variables of the value, which are available whenever the formula is evaluated for a value that has an [aura definition](./aura.md); the full list is in [Formula Variables](../types/formula_variables.md).
 
 :::info Server-authoritative
-Every stored value is server-authoritative and synchronised to the client together with the bounds that were resolved for it, so the client never evaluates a bound formula on its own. Passive regeneration and the exchange with cultivation progress belong to the cultivation profile and are settled on the server as well.
+Every stored value is server-authoritative and synchronised to the client together with the bounds that were resolved for it, so the client never evaluates a bound formula on its own. Passive regeneration and the exchange with cultivation progress belong to the aura definition and are settled on the server as well.
 :::
 
 :::info Aura concentration providers
@@ -86,5 +86,5 @@ The resource value providers `mxt:environment_concentration` and `mxt:actual_con
 :::
 
 :::note Display Names
-Data-driven definitions no longer fill in a `translation_key`. Display names are generated automatically from the definition identifier through the vanilla `Identifier.toLanguageKey`, for example `example:qi` corresponds to `resource.example.qi` in the `resource` category; `/` in the path becomes `.`. Datapack authors only need to provide that key in their language file.
+Data-driven definitions do not fill in a `translation_key` — that field does not exist. A definition's display name is generated from its identifier as `<category>.<namespace>.<path>`, where the category is the registry's own path, so `example:qi` in `mxt:resource` is `resource.example.qi`. The one override is `mxt:item_quality`, which is translated under `quality`. A `/` in the path is **kept as written**, not turned into `.` (`example:foo/bar` gives `resource.example.foo/bar`), so avoid subdirectories in definition filenames. Registry titles use `mxt.registry.<registry path>`, for example `mxt.registry.aura`.
 :::

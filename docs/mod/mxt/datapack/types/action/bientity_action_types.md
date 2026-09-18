@@ -35,6 +35,8 @@ Because actions are used as values inside other data tables, the same structure 
 }
 ```
 
+The nested `action` of `mxt:actor_action` is an [entity action](entity_action_types.md), so it takes entity action ids; a bi-entity action id such as `mxt:heal_target` would be wrong in that position.
+
 Anywhere a bi-entity action is expected, an array of actions is also accepted. The array is shorthand for `mxt:sequence` and runs its entries in order:
 
 ```json
@@ -64,6 +66,13 @@ Meta actions control whether, how often and in what order other bi-entity action
 | `mxt:chance` | `action`, `chance`, `fail_action?` | Runs `action` with probability `chance`, otherwise runs `fail_action`. |
 | `mxt:if_else` | `condition`, `if_action`, `else_action?` | Runs `if_action` when the bi-entity condition passes, otherwise `else_action`. |
 | `mxt:choice` | `actions` | Picks one entry from a weighted list and runs it. |
+
+Each entry of a `choice` list is a weighted wrapper around a nested action:
+
+| Entry Field | Type | Default | Description |
+|-------------|------|---------|-------------|
+| `element` | Bi-entity action | **required** | The action this entry runs when it is picked. |
+| `weight` | Integer | `1` | Relative weight; larger weights are picked more often. |
 
 ## Action Types
 

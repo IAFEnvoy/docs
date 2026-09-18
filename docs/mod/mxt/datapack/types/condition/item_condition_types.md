@@ -65,7 +65,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:owned_by` | — | Passes when the stack's artifact owner is the current holder. |
 | `mxt:energy_range` | `min`, `max` | Checks that the stack's artifact spirit energy lies between `min` and `max`. |
 | `mxt:item_tag` | `tag` | Matches the stack against a vanilla or data pack item tag. |
-| `mxt:item_matcher` | `items` | Matches any item id or item tag listed in one entry. |
+| `mxt:item_matcher` | `items` | Matches any item id, item tag or typed matcher entry listed in one value. |
 | `mxt:amount` | `comparison`, `compare_to` | Compares the stack's count. |
 | `mxt:fuel` | `comparison`, `compare_to` | Compares the stack's furnace burn time. |
 | `mxt:is_equipable` | `slot?` | Checks that the stack has an equippable component, optionally for one specific equipment slot. |
@@ -81,7 +81,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:spirit_storage_not_full` | — | Matches chargeable items whose stored spirit power is below their capacity. |
 
 :::note `mxt:item_matcher`
-The `items` field accepts a single value or an array, and the array may freely mix item ids and item tags. It is the most compact way to accept a set of items that is not already covered by an existing tag.
+The `items` field accepts a single value or an array, and the array may freely mix item ids, item tags and typed matcher entries. The typed entries are `mxt:item`, `mxt:tag`, `mxt:wildcard`, `mxt:regex` and the fieldless `mxt:spirit_storage`, which matches every item that stores aura; see [Other Type Families](../other_types.md#item_matcher_entry_type). It is the most compact way to accept a set of items that is not already covered by an existing tag.
 :::
 
 :::note `mxt:durability` Compared With `mxt:relative_durability`

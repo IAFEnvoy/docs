@@ -23,7 +23,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/item_archetyp
 | `flight_speed` | `NumberProvider` | `0` | The flight speed. A value of `0` means the artifact provides no flight. |
 | `flight_costs` | `List<ResourceCost>` | `[]` | The flight cost. |
 | `granted_abilities` | `Holder<ability>[]` | `[]` | The abilities the artifact grants. |
-| `refine_action` | ItemAction | no operation | The action run on the holder and on the item when the artifact is refined. |
+| `refine_action` | ItemAction | `mxt:no_op` | The action run on the holder and on the item when the artifact is refined. |
 
 ## Refine Action
 

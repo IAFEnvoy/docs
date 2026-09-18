@@ -28,7 +28,7 @@ The filename corresponds to its ID. For example, `data/example/mxt/pill_binding/
 
 ### `items`
 
-The `items` matcher accepts one item ID, one item tag (such as `"#example:pills"`), or a mixed array of both; one binding can therefore cover many physical pills. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first, and all four binding types currently use priority `0`.
+The `items` matcher accepts one item ID, one item tag (such as `"#example:pills"`), or a mixed array of both; one binding can therefore cover many physical pills. Any array entry may also be written as a typed object dispatched by the built-in `item_matcher_entry_type` registry (`mxt:item`, `mxt:tag`, `mxt:wildcard`, `mxt:regex` and the `mxt:spirit_storage` capability matcher); see [Shared Data Types](../types/shared_data_types.md) for the entry types. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first, and all four binding types currently use priority `0`.
 
 ### `quality_group`
 

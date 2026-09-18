@@ -22,7 +22,7 @@ Its definition ID is `example:iron_coin`.
 | Field | Type | Description |
 |-------|------|-------------|
 | `items` | `ItemMatcher` | One of `items` or `item`. A single item ID, an item tag, or a mixed array of both |
-| `item` | Item ID | One of `items` or `item`. The single-item shorthand; older examples may still use it |
+| `item` | Item ID | One of `items` or `item`. The single-item shorthand, expanded to a one-entry `items` matcher; older examples still use it |
 | `value` | Long | **required**, must be greater than `0`. The value of one item, used for cheques and general settlement |
 | `unavailable_when` | `ItemCondition[]` | Optional. When any `condition` holds for the current item stack, the current currency value of that item is `0` and the matching `reason` is displayed |
 | `exchanges` | Exchange array | **required**, may be empty. Once the item is placed into the Exchange Station, all of its entries are displayed |
@@ -162,7 +162,7 @@ A currency disabled through the `mxt:disabled` tag does not take part in exchang
 
 ## Validation and Loading
 
-- At least one of `items` and `item` must be provided; `items` is recommended because it also supports bulk matching.
+- At least one of `items` and `item` must be provided, and the matcher it produces must not be empty; `items` is recommended because it also supports bulk matching.
 - `value` must be a positive integer.
 - When any condition inside `unavailable_when` holds, that stack does not take part in currency settlement.
 - `exchanges` must be present; use `[]` when no exchange is offered.

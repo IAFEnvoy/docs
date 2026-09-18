@@ -62,5 +62,5 @@ Rules are indexed by the signal their trigger names while the server cache is bu
 :::
 
 :::tip Growing a technique's mastery
-A rule is the natural place to grow the resource a [cultivation technique](./cultivation_technique.md#advancement) measures its mastery with — that is what makes the technique advance without any code. The reverse direction works too: a technique that reaches a new level publishes `mxt:technique_stage`, so a rule can react to the promotion itself, with `stage` (the rank reached) available as a formula value.
+A rule is the natural place to grow the resource a [cultivation technique](./technique.md#advancement) measures its mastery with — that is what makes the technique advance without any code. The reverse direction works too: a technique that reaches a new level publishes `mxt:technique_stage`, so a rule can react to the promotion itself, with `stage` (the rank reached) available as a formula value.
 :::

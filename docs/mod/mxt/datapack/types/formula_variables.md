@@ -87,7 +87,7 @@ On the client only the attributes that the client receives are readable; an attr
 
 ## Resource Variables
 
-Formulas evaluated for one value — `resource.max`, `resource.bars`, and the fields of its [cultivation profile](../json/cultivation.md) such as `regen`, the conversions and `start_exp`, plus resource costs, realm stages and breakthrough thresholds — carry the cultivation state of that value as well:
+Formulas evaluated for one value — `resource.max`, `resource.bars`, and the fields of its [aura definition](../json/aura.md) such as `regen`, the conversions and `start_exp`, plus resource costs, realm stages and breakthrough thresholds — carry the cultivation state of that value as well:
 
 | Variable | Description |
 |----------|-------------|
@@ -97,7 +97,7 @@ Formulas evaluated for one value — `resource.max`, `resource.bars`, and the fi
 | `absorbed_aura` | Accumulated cultivation progress of this resource; `0` when the chain does not match |
 | `cultivation_progress` | Same value as `absorbed_aura` |
 
-A value's `max` and its profile's `regen` can therefore write:
+A value's `max` and its aura definition's `regen` can therefore write:
 
 ```json
 // data/example/mxt/resource/qi.json
@@ -107,7 +107,7 @@ A value's `max` and its profile's `regen` can therefore write:
 ```
 
 ```json
-// data/example/mxt/cultivation/qi.json
+// data/example/mxt/aura/qi.json
 {
   "resource": "example:qi",
   "regen": "0.25 + realm_rank * 0.1"

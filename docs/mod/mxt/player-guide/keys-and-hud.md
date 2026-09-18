@@ -26,8 +26,8 @@ The first four keybinds live in the `MiXianTu` category (`key.category.mxt.gener
 Abilities and spirit power share one client hotbar. Opening one automatically closes the other.
 
 - Number keys `1`–`9` select entries, and several number keys can be held at the same time.
-- The vanilla `1`–`9` hotbar selection is intercepted while the hotbar is open; the mouse wheel still switches inventory slots. The client setting "Allow number keys to switch hotbar slots while open" (`config.mxt.client.hotbar.allow_vanilla_selection`, off by default) restores vanilla number-key selection.
-- The client setting "Hotbar activation mode" (`config.mxt.client.hotbar.mode`) chooses between "Hold to show" (the default) and "Press to toggle".
+- The vanilla `1`–`9` hotbar selection is intercepted while the hotbar is open; the mouse wheel still switches inventory slots. The client setting "Vanilla Number Keys" (`config.mxt.client.hotbar.allow_vanilla_selection`, off by default) restores vanilla number-key selection.
+- The client setting "Open Mode" (`config.mxt.client.hotbar.mode`) chooses between "Hold to Show" (the default) and "Press to Toggle".
 - While the ability hotbar is open, a casting progress bar is drawn above it.
 
 The hotbar shows up to nine entries. The **Configure Hotbar** screen (`screen.mxt.hotbar_configuration`) chooses which entries appear in which slot: open it with `/mxt aura` for the spirit power entries and `/mxt ability` for the ability entries. A saved entry whose definition no longer exists in the current datapack is filled from the current runtime entries, while a slot deliberately left empty stays empty.
@@ -40,12 +40,12 @@ Entries and casting are server-authoritative: the client sends a request, and th
 
 ## Resource Bars and Aura HUD
 
-Resource bars and the aura concentration bar are driven by server-synced state; the client only draws them. The server periodically syncs the aura at your position (`aura.sync_interval` in `config/mxt-server.json`), and fog and particles never decide aura values in reverse.
+Resource bars and the aura concentration bar are driven by server-synced state; the client only draws them. The server syncs the aura at your position every `aura.sync_interval` ticks (`config/mxt-server.json`, 5 by default), and fog and particles never decide aura values in reverse.
 
 | Client setting | Effect |
 |---|---|
-| "Show resource bar names" (`config.mxt.client.resource_bars.show_names`) | Shows the name next to each resource bar. |
-| "Resource bar icon layout" (`config.mxt.client.resource_bars.icon_layout`) | Draws the icons on "Two sides" (default) or in the "Center". |
+| "Show Names" (`config.mxt.client.resource_bars.show_names`) | Shows the name next to each resource bar. |
+| "Icon Layout" (`config.mxt.client.resource_bars.icon_layout`) | Draws the icons on "Two Sides" (default) or in the "Center". |
 
 Bars are labelled by their context, for example Stored aura, Sensed concentration, and environmental or actual concentration of a resource. A bar can also be drawn for a target or a boss. To inspect raw values instead, use `/mxt resourcebar` and `/mxt aura query` — see [Commands](./commands.md).
 
@@ -58,7 +58,7 @@ Bars are labelled by their context, for example Stored aura, Sensed concentratio
 | Basic Information | Health, food, experience level, dimension. |
 | Cultivation Information | Realm (or Mortal), cultivation progress, whether you are currently cultivating, the breakthrough state, spirit roots, physiques and techniques. |
 
-The breakthrough line reports whether the required progress is reached and whether its conditions are met. The client setting "Information refresh interval (ticks)" (`config.mxt.client.information.refresh_interval`, 20 by default) controls how often the panel refreshes.
+The breakthrough line reports whether the required progress is reached and whether its conditions are met. The client setting "Refresh Interval" (`config.mxt.client.information.refresh_interval`, 20 by default) controls how often the panel refreshes.
 
 ## Technique Panel
 
@@ -66,17 +66,17 @@ The **Techniques** panel (`screen.mxt.technique_panel`) lists every technique yo
 
 | Row part | Shows |
 |---|---|
-| Icon | The technique's icon, inside a slot frame. Reserved for per-technique art; the frame is drawn empty for now. |
+| Icon | The technique's icon, inside a slot frame. A technique that defines no `icon` leaves the frame empty. |
 | Level | The name of the level you stand on, plus your rank in that chain, as `Level <name> (<rank>/<total>)`. A level whose data pack defines no display name falls back to the rank number. |
 | Mastery | Your mastery against what the next level asks for, as `<current> / <required>`, or `Mastered` at the top of a chain. |
 | Progress bar | How far along that requirement you are, tinted with the mastery resource's particle colour. |
 
 Hovering a row shows the technique's full name and the level's ID. A technique that defines no mastery chain is listed with `Level -` and no progress; a technique with a chain but no `mastery_resource` shows `No mastery`.
 
-Two things decide what the bar measures, and the client setting "Mastery progress display" (`config.mxt.client.techniques.progress_mode`) switches between them:
+Two things decide what the bar measures, and the client setting "Progress Display" (`config.mxt.client.techniques.progress_mode`) switches between them:
 
-- **Total mastery vs. next level** (the default) measures your stored value against the next level's requirement, so the bar spans the whole climb and the numbers match the `mastery` field of [`skill_stage`](../datapack/json/skill_stage.md).
-- **Gained since current level** subtracts what the current level already asked for, so every level starts from an empty bar.
+- **Total Mastery** (the default) measures your stored value against the next level's requirement, so the bar spans the whole climb and the numbers match the `mastery` field of [`skill_stage`](../datapack/json/skill_stage.md).
+- **Within Level** subtracts what the current level already asked for, so every level starts from an empty bar.
 
 The panel is a view over synchronized state — learned techniques, their levels and their mastery values all reach the client already — so it never asks the server for anything and refreshes on the same interval as the character information panel.
 
@@ -90,7 +90,7 @@ A Display Stand (`mxt:oak_display_stand` and the five other wood variants) holds
 
 - Using an item on an empty stand places one of that item on the stand.
 - Using the stand again returns the displayed item, which drops above the centre of the block. Breaking the stand also drops it.
-- If the displayed item implements the spirit access interface, Jade shows the item and its spirit power percentage, and the stand tries to charge a displayed spirit stone whenever it receives spirit power.
+- If the displayed item implements the aura access interface, Jade shows the item and its spirit power percentage, and the stand tries to charge a displayed spirit stone whenever it receives spirit power.
 
 See [Items and Blocks](./items.md) for the full block list.
 

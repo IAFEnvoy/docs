@@ -5,7 +5,7 @@ description: "Maps existing items to an ordered list of generic actions through 
 
 # Item Binding (item_binding)
 
-An item binding maps existing items to an ordered list of generic actions. The mod does not create logical datapack items: physical items must be registered by Minecraft, a content mod, or KubeJS, and datapacks only attach MXT gameplay rules to those existing item IDs.
+An item binding maps existing items to an ordered list of generic actions, run after vanilla consumption finishes. The mod does not create logical datapack items: physical items must be registered by Minecraft, a content mod, or KubeJS, and datapacks only attach MXT gameplay rules to those existing item IDs.
 
 ```text
 KubeJS / mod item registry
@@ -28,13 +28,13 @@ The filename corresponds to its ID. For example, `data/example/mxt/item_binding/
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `items` | `ItemMatcher` | **required** | The item IDs, item tags, or mixed array of both this binding matches |
-| `actions` | `List<EntityAction>` | `[]` | The ordered actions executed when consumption finishes or the binding event fires |
+| `actions` | `List<EntityAction>` | `[]` | The ordered actions executed after vanilla consumption finishes |
 | `quality_group` | `Tag<item_quality>` | none | The quality group in which the item is allowed to be used |
 | `conditions` | `EntityCondition[]` | `[]` | Binding use conditions; each entry may be an inline condition, or a `{condition, description}` object carrying a translation-key `description`. Described conditions are marked in the tooltip with a green `✓` or a red `✗` |
 
 ### `items`
 
-Every binding uses the `items` matcher. It accepts one item ID, one item tag (such as `"#example:herbs"`), or a mixed array of both, so one binding can cover many physical items. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first; all four binding types currently use priority `0`, so registry order decides the tie.
+Every binding uses the `items` matcher. It accepts one item ID, one item tag (such as `"#example:herbs"`), or a mixed array of both, so one binding can cover many physical items. Any array entry may also be written as an object whose `type` is dispatched by the built-in `item_matcher_entry_type` registry, which adds wildcard, regular expression and capability matchers on top of the two shorthand forms. When multiple bindings match an item, the matcher selects the definition with the lowest `priority` first; all four binding types currently use priority `0`, so registry order decides the tie.
 
 :::info Matcher Forms
 ```json
@@ -49,7 +49,19 @@ Every binding uses the `items` matcher. It accepts one item ID, one item tag (su
 "items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]
 ```
 
-The matcher only references already registered items. See [Shared Data Types](../types/shared_data_types.md) for the full `ItemMatcher` description.
+```json
+"items": [{"type": "mxt:wildcard", "pattern": "mxt:*_spirit_stone"}]
+```
+
+| `type` | Field | Matches |
+|--------|-------|---------|
+| `mxt:item` | `item` | One item; the expanded form of the bare ID shorthand |
+| `mxt:tag` | `tag` | One item tag; the expanded form of the `#` shorthand |
+| `mxt:wildcard` | `pattern` | Item IDs through `*` and `?` wildcards |
+| `mxt:regex` | `pattern` | Item IDs through a full regular expression |
+| `mxt:spirit_storage` | none | Every item implementing `ItemAuraAccess`, the capability matcher that covers items added later |
+
+The matcher only references already registered items. See [Shared Data Types](../types/shared_data_types.md) for the full `ItemMatcher` description and [Other Type Families](../types/other_types.md#item_matcher_entry_type) for the entry types.
 :::
 
 ### `quality_group`
@@ -57,6 +69,8 @@ The matcher only references already registered items. See [Shared Data Types](..
 `quality_group` must be a native item-quality tag reference prefixed with `#`. Its `values` order defines the group's quality order. When no explicit `mxt:item_quality` component or forge result exists, the last member not disabled by the `mxt:disabled` tag becomes the default quality.
 
 An item cannot be used when its current quality is outside the group, the group has no usable member, a binding condition fails, or the quality's own `condition` fails. See [Item Quality](./item_quality.md).
+
+A quality definition's display name is translated under the `quality` category rather than the registry path, so `example:refined` in `mxt:item_quality` is looked up as `quality.example.refined`.
 
 ### `conditions`
 

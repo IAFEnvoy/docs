@@ -40,7 +40,6 @@ That is why the two zones here are both biome-level: the forest template simply 
       "color": "#7FE3C4"
     }
   },
-  "aura_kinds": ["example:common_aura"],
   "biomes": ["#minecraft:is_forest"],
   "priority": 10,
   "distribution": "realm_weighted",
@@ -76,14 +75,13 @@ That is why the two zones here are both biome-level: the forest template simply 
 
 | Field | Effect |
 | --- | --- |
-| `aura` | Per-resource inventory: `amount`, `max`, `regen_per_tick` and the environment `color`. `max` accepts a number, `mxt:fixed`, `mxt:initial_multiplier` or `mxt:unlimited`. |
-| `aura_kinds` | The aura kinds present here. They are matched as a set against `cultivate_action.aura_kinds` and `alchemy_recipe.aura_kinds`; they are markers, not sources of value. |
+| `aura` | Per-aura inventory: `amount`, `max`, `regen_per_tick` and the environment `color`. `max` accepts a number, `mxt:fixed`, `mxt:initial_multiplier` or `mxt:unlimited`. The key set is the whole vocabulary of the zone: an environment has exactly the auras it lists, and each one's element is its own `aura_type` in the `aura` registry. |
 | `priority` | Used only against other templates of the same level. |
 | `distribution` | `random`, `equal` or `realm_weighted`; it decides who gets how much when the chunk inventory cannot satisfy everyone. `realm_weighted` uses `aura_share_weight` from each player's realm stage. |
-| `cultivate_condition` | An entity condition the environment must satisfy for cultivation. Note that `mxt:aura_range` requires `max` on every resource entry. |
+| `cultivate_condition` | An entity condition the environment must satisfy for cultivation. Note that `mxt:aura_range` requires `max` on every aura entry. |
 | `fluctuation` | Multiplies the concentration by `1 + amplitude * sin(2π * (time + offset_tick) / cycle)`, with a 24000-tick day cycle or a 192000-tick moon cycle. It only affects the queried concentration, never the stored inventory. |
 | `noise` | A seeded, reproducible Perlin offset so the map has gradients instead of hard borders. `scale` around `640`–`960` is recommended; `amplitude: 5` gives roughly a `-5..5` disturbance before the `/ 10 - 5` transform. |
-| `element_fit_bonus` / `element_conflict_penalty` | Multipliers applied when a player's spirit root element matches or clashes with the environment. |
+| `element_fit_bonus` / `element_conflict_penalty` | Adjust the cultivation modifier of a spirit root: `+ element_fit_bonus` when an aura whose `aura_type` is that root's element is present at the position, and `- element_conflict_penalty` when it is not. Both default to `0`. |
 | `client_render` | Fog colour, the distance it is applied over (`8..256`) and how strongly it replaces the vanilla fog (`0..1`). The strength is also scaled by the concentration, so thin aura looks fainter. |
 | `client_hud` | Two optional bars: `stored_aura` reads the chunk inventory, `sensed_concentration` reads the environment template. They are drawn above the resource bars of the same side. |
 
@@ -110,12 +108,11 @@ A spirit stone vein should be worth more than the ground it sits in.
   "blocks": ["mxt:spirit_stone_ore", "mxt:spirit_stone_block"],
   "aura": {
     "example:qi": {"amount": 5.0, "max": 5.0, "regen_per_tick": 0.01}
-  },
-  "aura_kinds": ["example:common_aura"]
+  }
 }
 ```
 
-- `blocks` takes block IDs and block tags; every matching block in a chunk contributes once.
+- `blocks` is required and takes block IDs and block tags; every matching block in a chunk contributes once. `aura` is the per-aura contribution and maps an aura ID to an `amount`, so it needs no separate kind marker.
 - The contribution does **not** consume the environment maximum: it raises the chunk's effective capacity by the same amount. An environment maximum of `30` with `30` points of ore becomes `60`.
 - Queries look at a 7x7x7 range of sub-chunks: the inner 3x3x3 uses real block positions, the outer ring approximates with sub-chunk centres, and all of it decays by `1 / max(1, distance²)`.
 - The cache is rebuilt when a chunk loads, when a block changes and when the data tables are loaded, and the interval is `aura.block_aura_tick_interval` in `config/mxt-server.json` (default `10` ticks, `1..1200`).
@@ -147,12 +144,12 @@ With `amount: 0`, most chunks sit at `0` after the `/ 10 - 5` transform, and onl
 }
 ```
 
-- `items` is the usual item matcher, so one file can cover a whole tag of fuel items.
-- `type` is the **resource** that receives the released aura — not an element.
-- `aura` is the total per item, written into a server-side `mxt:item_aura` component on the stack when processing starts; the whole stack moves into the `mxt:float_holding_item` attachment for the duration.
+- `items` is the usual item matcher, so one file can cover a whole tag of fuel items. It is required, as are `type`, `aura`, `consume_speed` and `release_speed`; `result_stack` and `exhausted_action` are optional.
+- `type` is the **aura** this item carries — the `mxt:aura` entry, not an element. The value the released aura is counted in is that aura's own `resource`, and its element is that aura's `aura_type`.
+- `aura` is the total per item, written into a server-side `mxt:item_aura` component (`remain`) on the stack when processing starts; the whole stack moves into the `mxt:float_holding_item` attachment for the duration. For an item that implements `ItemAuraAccess` it is instead the per-item charge ceiling.
 - Each tick the definition matched at that moment subtracts `consume_speed × stack size` from the remaining aura and charges `release_speed × stack size` into the realm's resource bar. Holding more items drains faster but lasts the same number of ticks.
 - A half-used stack is resumed before a fresh one is taken, and fresh stacks are taken in main hand, off hand, inventory order. When cultivation stops, the player logs out or dies, the stack is returned unchanged.
-- On exhaustion the item is removed and `result_stack` (if configured) is given back. Items implementing `SpiritItemAccess` behave differently: they are charged and drained in place instead of being consumed.
+- On exhaustion the item is removed and `result_stack` (if configured) is given back. Items implementing `ItemAuraAccess` (a spirit stone, for example) behave differently: they are charged and drained in place instead of being consumed, and a stack that carries no `mxt:spirit_storage` component counts as full.
 
 :::note
 
@@ -175,10 +172,10 @@ The client does not draw a fuel bar, and never consumes items on its own.
 On the command line:
 
 ```text
-/mxt aura query              → every resource at your feet, with its element marker
-/mxt aura query example:qi   → one resource
+/mxt aura query              → every aura at your feet, with its element marker
+/mxt aura query example:qi   → one aura
 /mxt aura vein               → the size and tier of the connected spirit stone vein you stand on
-/mxt aura cache clear 8      → rebuild the cached aura of nearby chunks (radius in chunks, 0..32)
+/mxt aura cache clear 8      → rebuild the cached aura of nearby chunks (radius in chunks, default 3, 0..32)
 ```
 
 ## Step 5 — Areas From a Script
@@ -196,7 +193,7 @@ const area = MxtAura.addBox(
 console.info(`Created aura area ${area}`)
 
 // Read the resolved aura at a position, including every source.
-const aura = MxtAura.get(player.level, player.blockPosition)
+const aura = MxtAura.get(player.level, player.blockPosition())
 console.info(`Concentration: ${aura.concentration()}, maximum: ${aura.maximum()}`)
 
 // Later, or from another script:
@@ -213,16 +210,23 @@ MxtEvents.auraZone(event => {
 })
 ```
 
-Formations can also carry their own zone, which is the top level of the resolution order:
+Formations can also carry their own zone, which is the top level of the resolution order. The zone and the capacity bonus both live in a `mxt:buff` action on the formation:
 
 ```json
 {
   "structure_template": "example:gathering_array",
   "radius": 8,
-  "max_bonus": {"example:qi": 50},
-  "aura_zone": "example:misty_valley"
+  "actions": [
+    {
+      "type": "mxt:buff",
+      "max_bonus": {"example:qi": 50},
+      "aura_zone": "example:misty_valley"
+    }
+  ]
 }
 ```
+
+An active formation covers the area around its controller, so its `aura_zone` overrides every lower level, while `max_bonus` is added to the effective chunk maximum of the auras it names.
 
 ## Step 6 — Verify
 

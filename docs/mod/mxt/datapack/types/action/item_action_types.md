@@ -62,6 +62,13 @@ Meta actions control whether, how often and in what order other item actions run
 | `mxt:if_else` | `condition`, `if_action`, `else_action?` | Runs `if_action` when the item condition passes, otherwise `else_action`. |
 | `mxt:choice` | `actions` | Picks one entry from a weighted list and runs it. |
 
+Each entry of a `choice` list is a weighted wrapper around a nested action:
+
+| Entry Field | Type | Default | Description |
+|-------------|------|---------|-------------|
+| `element` | Item action | **required** | The action this entry runs when it is picked. |
+| `weight` | Integer | `1` | Relative weight; larger weights are picked more often. |
+
 ## Action Types
 
 | Type | Fields | Description |

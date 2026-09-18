@@ -66,6 +66,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:distance` | `maximum` | Checks that the distance between the actor and the target is at most `maximum`. |
 | `mxt:team` | `same_team?` | Compares the actor's alliance with the target; with the default `same_team` of `true` it requires an alliance, and with `false` it requires the opposite. |
 | `mxt:relation` | `allied?` | Compares the actor's ally relationship with the target; with the default `allied` of `true` it requires an ally, and with `false` it requires a non-ally. |
+| `mxt:friend` | — | Passes when the actor considers the target a friend. |
 | `mxt:element_overcomes` | — | Passes when at least one of the actor's spirit root elements overcomes an element of the target's spirit roots. |
 | `mxt:can_see` | `shape_type?`, `fluid_handling?` | Checks that the target is within 128 blocks of the actor in the same level and that no block clips the line between their eye positions. |
 | `mxt:actor_condition` | `condition` | Tests an [entity condition](entity_condition_types.md) against the actor. |
@@ -74,11 +75,11 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:either` | `condition` | Passes when the entity condition passes for the actor **or** for the target. |
 | `mxt:riding_recursive` | — | Passes when the target appears anywhere in the actor's riding chain, not only as the direct vehicle. |
 | `mxt:same_team` | — | Passes when the actor is on a scoreboard team and is allied to the target. |
-| `mxt:relative_rotation` | `axis?`, `actor_rotation?`, `target_rotation?`, `comparison` | Compares the actor's and the target's rotation vectors, with `comparison` as a nested comparison object. |
+| `mxt:relative_rotation` | `axis?`, `actor_rotation?`, `target_rotation?`, `comparison`, `compare_to` | Compares the actor's and the target's rotation vectors. |
 | `mxt:undirected` | `condition` | Passes when the nested bi-entity condition passes in either direction. |
 
 :::note `mxt:can_see` Values
-`shape_type` uses the vanilla clip shape and defaults to `visual`, so transparent blocks such as glass do not block the check. `fluid_handling` defaults to `none`; the other vanilla fluid modes are `source_only`, `any` and `water`. `mxt:relative_rotation` restricts the comparison with `axis` and chooses which rotation each endpoint contributes through `actor_rotation` and `target_rotation`.
+`shape_type` uses the vanilla clip shape and defaults to `visual`, so transparent blocks such as glass do not block the check. `fluid_handling` defaults to `none`; the other vanilla fluid modes are `source_only`, `any` and `water`. `mxt:relative_rotation` restricts the axes with `axis`, which is an array of `x`, `y` and `z` and defaults to all three, and chooses which rotation each endpoint contributes through `actor_rotation` (`head` by default) and `target_rotation` (`body` by default).
 :::
 
 :::note Similar Types

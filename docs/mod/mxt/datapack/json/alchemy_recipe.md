@@ -31,8 +31,7 @@ Every file declares the mod's recipe type:
 | `temperature_tolerance` | `NumberProvider` | `0` | How far the workstation temperature may deviate from `target_temperature`. A tick outside the tolerance spoils the batch. |
 | `minimum_furnace_tier` | Integer | `0` | The minimum furnace tier of the workstation. A lower tier rejects the start. |
 | `duration` | `NumberProvider` | **required** | The number of ticks the batch runs. It must be finite and greater than `0`. |
-| `aura_kinds` | `Identifier[]` | `[]` | The aura kinds the workstation position must provide. Every listed kind has to be present. |
-| `minimum_aura` | `Map<Resource, NumberProvider>` | `{}` | The minimum amount of each resource at the workstation position. Every listed entry has to be satisfied. |
+| `minimum_aura` | `Map<Holder<aura>, NumberProvider>` | `{}` | The minimum amount of each aura at the workstation position. Every listed entry has to be satisfied. |
 | `success_outputs` | `Identifier[]` | **required** | The item IDs produced when the batch finishes unspoiled. At least one entry; each ID yields one item. |
 | `failure_outputs` | `Identifier[]` | `[]` | The item IDs produced when the batch is spoiled. Each ID yields one item. |
 | `success_action` | `EntityAction` | `mxt:no_op` | The action run on the owner when the batch finishes unspoiled. |
@@ -42,9 +41,13 @@ Every file declares the mod's recipe type:
 
 ## Behaviour
 
-A batch can start when the workstation holds exactly the declared `inputs`, its furnace tier is at least `minimum_furnace_tier`, and the aura at its position satisfies both `minimum_aura` and `aura_kinds`. It then runs for `duration` ticks while the workstation temperature is compared against `target_temperature` within `temperature_tolerance`; a single tick outside the tolerance spoils the rest of the batch. When the last tick passes, the recipe emits `success_outputs` or `failure_outputs` depending on whether it was spoiled, and then runs the matching entity action on the owner and the matching block action at the workstation.
+A batch can start when the workstation holds exactly the declared `inputs`, its furnace tier is at least `minimum_furnace_tier`, and the aura at its position satisfies `minimum_aura`. It then runs for `duration` ticks while the workstation temperature is compared against `target_temperature` within `temperature_tolerance`; a single tick outside the tolerance spoils the rest of the batch. When the last tick passes, the recipe emits `success_outputs` or `failure_outputs` depending on whether it was spoiled, and then runs the matching entity action on the owner and the matching block action at the workstation.
 
-The workstation environment is described by [Aura Zone](./aura_zone.md): the aura and aura kinds the recipe asks for are read from the position, and that format also has an `alchemy_env_bonus` rule that marks an area as favourable for alchemy, whose consumer is still being built.
+The workstation environment is described by [Aura Zone](./aura_zone.md): the aura the recipe asks for is read from the position, and that format also has an `alchemy_env_bonus` rule that marks an area as favourable for alchemy, whose consumer is still being built.
+
+:::warning Unresolvable aura keys are dropped
+`minimum_aura` is decoded as a map, and an entry whose key is not a resolvable `aura` ID is dropped with a warning in the log instead of failing the load. A typo therefore reads as "this aura is not required" rather than as an error.
+:::
 
 ## Example
 
@@ -56,7 +59,6 @@ The workstation environment is described by [Aura Zone](./aura_zone.md): the aur
   "temperature_tolerance": 50,
   "minimum_furnace_tier": 1,
   "duration": 200,
-  "aura_kinds": ["example:aura_kind/fire"],
   "minimum_aura": { "mxt:common": 200 },
   "success_outputs": ["minecraft:honey_bottle"],
   "failure_outputs": ["minecraft:glass_bottle"],

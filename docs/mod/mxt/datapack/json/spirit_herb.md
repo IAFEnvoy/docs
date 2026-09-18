@@ -45,4 +45,4 @@ The spirit herb age, growth and drop lifecycle are still being built. Binding, q
 
 :::
 
-The `items` matcher is the shared item matcher used by several formats; it accepts a single item ID, a single `#namespace:tag` or a list of both. The quality it points at is defined by [Item Quality](./item_quality.md), and herbs are intended as materials for [Alchemy Recipe](./alchemy_recipe.md).
+The `items` matcher is the shared item matcher used by several formats; it accepts a single item ID, a single `#namespace:tag` or a list of both, and an array entry may also be a typed object dispatched by the built-in `item_matcher_entry_type` registry. See [Shared Data Types](../types/shared_data_types.md). The quality it points at is defined by [Item Quality](./item_quality.md), where a spirit herb's `quality` is also the last fallback an item's resolved quality uses when no component, forge result or quality group decides it. Herbs are intended as materials for [Alchemy Recipe](./alchemy_recipe.md).

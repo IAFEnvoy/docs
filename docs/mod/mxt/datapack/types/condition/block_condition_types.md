@@ -43,7 +43,7 @@ Anywhere a block condition is expected, an array of conditions is also accepted.
 ```
 
 :::info Comparison Fields
-Several types compare a value against a number. When a type lists `comparison` and `compare_to` as separate keys, they sit directly on the condition object, as in the example above. `mxt:adjacent` instead names a single `comparison` key whose value is one nested comparison object holding `comparison` and `compare_to`. The comparison operators are `==`, `!=`, `<`, `<=`, `>` and `>=`.
+Several types compare a value against a number. The `comparison` operator and the number it is compared against, `compare_to`, always sit directly on the condition object as two separate keys, as in the example above. The comparison operators are `==`, `!=`, `<`, `<=`, `>` and `>=`, and `compare_to` is always a plain number.
 :::
 
 :::tip Datapack Visual Editor
@@ -62,7 +62,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:chance` | `chance` | Passes randomly with the given probability between `0` and `1`. |
 | `mxt:constant` | `value` | Always returns the given boolean value. |
 | `mxt:block_id` | `block` | Matches the block at the position. |
-| `mxt:aura_range` | `aura` | Tests the aura concentration at the position against per-resource requirements. `aura` maps a resource ID to an object with a required `max` and an optional `min`. |
+| `mxt:aura_range` | `aura` | Tests the aura concentration at the position against per-aura requirements. `aura` maps an aura ID to an object with a required `max` and an optional `min`. |
 | `mxt:block_tag` | `tag` | Matches the block against a vanilla or data pack block tag. |
 | `mxt:biome_tag` | `tag` | Matches the biome at the position against a data pack biome tag. |
 | `mxt:hardness` | `comparison`, `compare_to` | Compares the block's hardness. |
@@ -71,11 +71,11 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) shows the field list 
 | `mxt:slipperiness` | `comparison`, `compare_to` | Compares the block's slipperiness. |
 | `mxt:blast_resistance` | `comparison`, `compare_to` | Compares the block's blast resistance. |
 | `mxt:movement_blocking` | — | Passes when the block blocks motion and has a non-empty collision shape. |
-| `mxt:adjacent` | `adjacent_condition`, `comparison` | Compares the number of adjacent blocks that match a nested block condition, with `comparison` as a nested comparison object. |
+| `mxt:adjacent` | `adjacent_condition`, `comparison`, `compare_to` | Compares the number of adjacent blocks that match a nested block condition. |
 | `mxt:offset` | `condition`, `x?`, `y?`, `z?` | Tests a nested block condition at a relative offset from the position. |
 
 :::info `mxt:aura_range`
-`aura` is a map from a [resource](../../json/resource.md) to a requirement object with an optional `min` (default `0`) and a required `max`, both of which accept a [number provider](../number_provider_types.md). The condition passes when every listed pool lies inside its range.
+`aura` is a map from an [aura](../../json/aura.md) to a requirement object with an optional `min` (default `0`) and a required `max`, both of which accept a [number provider](../number_provider_types.md). The condition passes when every listed pool lies inside its range.
 :::
 
 :::note `mxt:light_level` and `mxt:adjacent`
