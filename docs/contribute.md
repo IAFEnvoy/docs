@@ -15,10 +15,7 @@ Thanks very much to the following users to maintain this documentation together:
 
 This documentation allows everyone to contribute with PR on GitHub. But something you need to pay attention:
 
-1. Not all documentations are in the [main repo](https://github.com/IAFEnvoy/docs). For better permission management, part documentations are splited into other repos. Main repo will update manually every period of time.
-
-- `Ice And Fire Community Edition`: https://github.com/IAFEnvoy/IAF-Docs
-- `Avaritia Series`: https://github.com/Nova-Committee/Avaritia-Docs
+1. All documentation, including Ice And Fire Community Edition, is maintained directly in the [main repo](https://github.com/IAFEnvoy/docs). Please submit documentation changes there.
 
 2. Requirements for non-text files quote:
 
