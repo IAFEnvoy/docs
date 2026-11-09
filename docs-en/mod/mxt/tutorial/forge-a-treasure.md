@@ -1,0 +1,309 @@
+---
+title: Forge a Treasure
+description: Build a forge-table production line out of striking methods, tool bindings and a blueprint — the meter, the target range, the finish pattern, the quality ladder and the failure settlement.
+---
+
+# Forge a Treasure
+
+<span id="forge-a-treasure" />
+
+The Forge Table does not craft an item, it **hammers** one: you feed it materials, it hands the player a target from a blueprint, and the player pushes a numeric meter into a range with one method at a time. The quality of the piece is then decided by **how many spare strikes** it took. The same blueprint can produce a plain item or a flawless one, and the only difference is the process.
+
+The data splits into four places: `forging_method` is a single strike, `tool_binding` is a **registry keyed by tool item** that lists the methods it unlocks, `forging_blueprint` says *what materials* and *what shape the meter has to end in*, and `blueprint_binding` is a **registry keyed by blueprint item** that lists the blueprints it offers. Both binding registries claim items from the definition through `items` (a single id, a `#item tag` or an array), and the item needs **no component at all** — a stack only carries a list component when you want that particular stack to bring one extra method or blueprint.
+
+This tutorial adds an iron-sword line to the example pack: four methods, one smith's hammer, one blueprint item and three quality tiers.
+
+## What You Are Building {#what-you-are-building}
+
+| File | Purpose |
+| --- | --- |
+| `data/example/mxt/forging_method/light_strike.json` | Light strike: meter `-1`. |
+| `data/example/mxt/forging_method/heavy_strike.json` | Heavy strike: meter `+2`, with a cost, a condition, a cooldown and a sound. |
+| `data/example/mxt/forging_method/quench.json` | Quench: meter `-1`, no cost. |
+| `data/example/mxt/forging_method/temper.json` | Temper: meter `+2`, no cost. |
+| `data/example/mxt/tool_binding/smith_hammer.json` | Which four methods the hammer unlocks. |
+| `data/example/mxt/forging_blueprint/spirit_sword.json` | Materials, allowed methods, meter, finish pattern, quality ladder, failure settlement. |
+| `data/example/mxt/blueprint_binding/sword_manual.json` | Which blueprint the blueprint item offers. |
+| `data/example/mxt/quality/flawless.json` | The top tier of the quality ladder. |
+
+## Step 1 — What One Strike Is {#step-1-—-what-one-strike-is}
+
+A method is "what pressing the button does": which way the meter moves, what it costs, when it is allowed, and what it sounds like.
+
+```json
+// data/example/mxt/forging_method/light_strike.json
+{
+  "value_delta": -1,
+  "icon": { "id": "minecraft:feather" }
+}
+```
+
+```json
+// data/example/mxt/forging_method/heavy_strike.json
+{
+  "value_delta": 2,
+  "costs": [{ "id": "example:qi", "amount": 1 }],
+  "condition": { "type": "mxt:health", "comparison": ">=", "compare_to": 10 },
+  "icon": { "id": "minecraft:iron_ingot" },
+  "cooldown": 10,
+  "sound": "minecraft:block.anvil.land"
+}
+```
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `value_delta` | Integer | **required** | The meter shift. It must not be `0`. |
+| `costs` | `List<Cost>` | `[]` | What one strike costs, paid by the player who strikes, all or nothing as one array; the five shapes are on [Shared Data Types · `Cost`](../datapack/types/shared_data_types.md#cost) and the types on [Costs (cost_type)](../datapack/types/other/cost-type.md). |
+| `condition` | `EntityCondition` | `mxt:always` | When the method may be used. It is tested against the **player** (see [Entity Conditions](../datapack/types/condition/entity_condition_types.md)). |
+| `icon` | icon reference | none | What the list draws, and **what the method is called in that list**. |
+| `cooldown` | Integer | `0` | Cooldown in ticks, range `0..72000`. |
+| `sound` | SoundEvent ID | `minecraft:block.anvil.place` | Played at the table, to everyone nearby, **after** a strike that actually happened. |
+
+Three things that are easy to get wrong:
+
+- **`icon` is not decoration.** The method's name in the selector list is its icon item's own name; with no `icon`, or with a texture icon, the list shows the registry id instead. Give it an icon if you want the list to be readable.
+- **An out-of-bounds strike is simply refused.** Before every strike the game checks whether the value would still be inside the meter afterwards; if not, the strike does not happen. A heavy strike can never be used to shove the value back into the range from outside.
+- **The cooldown is recorded before the cost and the condition are checked.** A strike refused for lack of aura or for a failed condition still burns that cooldown.
+
+The sound is resolved by name at load time, so a typo rejects **the whole method entry** instead of playing nothing; write `minecraft:intentionally_empty` to be deliberately silent.
+
+## Step 2 — The Tool and the Blueprint Item {#step-2-—-the-tool-and-the-blueprint-item}
+
+Two registries keyed by item: the definition names the tool or blueprint item (or the family of them) it covers through `items`, and gives the set below:
+
+```json
+// data/example/mxt/tool_binding/smith_hammer.json
+{
+  "items": "example:smith_hammer",
+  "methods": [
+    "example:heavy_strike", "example:light_strike",
+    "example:quench", "example:temper"
+  ]
+}
+```
+
+```json
+// data/example/mxt/blueprint_binding/sword_manual.json
+{
+  "items": "example:sword_manual",
+  "blueprints": ["example:spirit_sword"]
+}
+```
+
+The two definitions live at `data/example/mxt/tool_binding/<name>.json` and `data/example/mxt/blueprint_binding/<name>.json`, their entry ids are `example:<name>`, and one file is one definition. `items` and `methods` / `blueprints` are all required and must not be empty; `priority` is optional.
+
+**That is what makes the tool and blueprint items work**: whichever definition's `items` matches the item is in effect as soon as it goes into the matching Forge Table slot, and the item never copies the definition, so a definition can be rewritten without touching the item.
+
+**Usable methods = the blueprint's `allowed_methods` ∩ the union of every placed tool's `methods`.** When the blueprint declares no `allowed_methods` its side restricts nothing, and the list is the tools' union.
+
+### Adding Something to Individual Stacks {#adding-something-to-individual-stacks}
+
+In the common case this section needs nothing at all: a definition in the registry already claims the item. There are two ways to attach something to **one stack**:
+
+**For testing, the `/give` component syntax** (no code, and you can edit the definition and try again straight away):
+
+```text
+/give @s minecraft:iron_ingot[mxt:forging_methods=["example:heavy_strike","example:light_strike"]]
+/give @s minecraft:paper[mxt:forging_blueprints=["example:spirit_sword"]]
+```
+
+**A real pack does not need this route at all**: writing the tool or blueprint item id into the definition's `items` is enough, and nothing changes where the item is registered. (The items themselves come from the content pack, for instance through [KubeJS](./create-items-with-kubejs.md); this tutorial only writes registry definitions, which is also why the component form above is the quickest way to try things before those items exist.)
+
+:::tip Both routes point at the same definitions
+
+`items` names **items** (`example:smith_hammer`), while a stack's component names **registry entries** (`example:heavy_strike` belongs to the `forging_method` registry). A definition's `methods` / `blueprints` and a stack's list are **unioned**, so the tool slot simply asks whether the stack resolves to at least one method; mistype either id and that entry does not resolve.
+
+:::
+
+## Step 3 — The Blueprint: Materials, Meter and Target {#step-3-—-the-blueprint-materials-meter-and-target}
+
+```json
+// data/example/mxt/forging_blueprint/spirit_sword.json
+{
+  "input": [
+    { "ingredient": "minecraft:iron_ingot", "count": 2 },
+    { "ingredient": "minecraft:stick", "count": 1 }
+  ],
+  "allowed_methods": [
+    "example:light_strike", "example:heavy_strike",
+    "example:quench", "example:temper"
+  ],
+  "meter_min": -8,
+  "meter_max": 8,
+  "target_min": 2,
+  "target_max": 4,
+  "result": "minecraft:iron_sword"
+}
+```
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `input` | `List<SizedIngredient>` | **required** | The material requirement: `ingredient` (a vanilla material — an item id, a `#item tag`, or a custom ingredient) plus `count` (a positive integer, default `1`). |
+| `allowed_methods` | `HolderSet<forging_method>` | empty | A list of ids, a single `"#namespace:tag"`, or omitted entirely. **Omitted or empty means no restriction.** |
+| `meter_min` / `meter_max` | Integer | **required** | The two ends of the meter. They must **cross zero** (one negative, one positive). |
+| `target_min` / `target_max` | Integer | **required** | The target range, inside the meter bounds. |
+| `result` | Identifier | **required** | What a success produces. |
+
+`input` is **order-independent**: the twelve input slots only have to hold at least the declared amount of every entry (**summed across slots**), and which slot it comes from changes nothing. It is also a **strict** list — an empty list, more than 15 entries, or the same `ingredient` (with the same `count`) written twice all make the whole definition fail to load. Every entry needs its `ingredient`: leave it out and the whole definition is refused at load time. `count` is a positive integer (at least `1`) and defaults to `1`. "The same item twice" cannot be decided — a material is a vanilla `Ingredient`, and two materials may legitimately overlap. Cost lists decode just as strictly: a malformed cost entry fails the load instead of being dropped silently.
+
+`ingredient` is a **vanilla material**, so it can match by item or by stack: an item id or a `#item tag` looks at the item only, while **gating a material on its tier** is written with this mod's `mxt:quality` ingredient — the one place "this material must be at least tier three" is expressible:
+
+```json
+"input": [
+  {
+    "ingredient": {
+      "neoforge:ingredient_type": "mxt:quality",
+      "items": "example:spirit_iron_ingot",
+      "min_quality": "example:tier_3"
+    },
+    "count": 2
+  }
+]
+```
+
+What a session locks is **the stacks actually taken**, so the quality the settlement reads (Step 4) is the real one rather than a flattened same-named item.
+
+:::warning The meter and target constraints work both ways
+
+`meter_min` must be negative and `meter_max` positive, with `target_min`/`target_max` sandwiched between them. On top of that, **starting a session** runs a breadth-first search: can this blueprint's allowed methods reach the target range without leaving the meter and while satisfying the finish pattern? If not, the "use blueprint" press is refused.
+
+:::
+
+## Step 4 — Finish Pattern, Extra Steps and Quality {#step-4-—-finish-pattern-extra-steps-and-quality}
+
+Add the finish pattern and the quality ladder to the same blueprint:
+
+```json
+"finish_pattern": {
+  "steps": [
+    "example:light_strike", "example:heavy_strike", "example:light_strike",
+    "example:heavy_strike", "example:light_strike", "example:heavy_strike"
+  ],
+  "required_suffix_steps": 2
+},
+"max_steps": 24,
+"quality_by_extra_steps": [
+  { "max_extra_steps": 0, "quality": "example:flawless" },
+  { "max_extra_steps": 4, "quality": "example:refined" },
+  { "max_extra_steps": 2147483647, "quality": "example:common" }
+]
+```
+
+```json
+// data/example/mxt/quality/flawless.json
+{
+  "color": "#FFAA00"
+}
+```
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `finish_pattern.steps` | six methods | `[]` | The finish pattern. When it is checked it must hold **exactly six** entries. |
+| `finish_pattern.required_suffix_steps` | Integer | `0` | How many trailing entries are checked, `0..6`. |
+| `max_steps` | Integer | none | The step limit. **Omitted, the blueprint can never fail on step count.** |
+| `quality_by_extra_steps` | `List<QualityThreshold>` | **required** | Extra steps to quality, ascending. **The last entry must be `2147483647`.** |
+
+`required_suffix_steps` checks only the **last N** entries of the pattern: on screen only those N cells of the "target" row carry an icon, and the earlier ones are drawn as barriers — neither shown nor checked. The blueprint above asks for the last two strikes to be light-then-heavy.
+
+**Extra steps = actual steps − the shortest solution.** The shortest solution is computed when the session starts (that same search from Step 3), and it is *not* "how far past the target you went". The blueprint above has a three-strike optimum (heavy → light → heavy, landing on 3), so zero extra steps is a flawless piece.
+
+- The quality is the first entry with `extra steps ≤ max_extra_steps`, so the list must be **ascending** and must end with `2147483647`.
+- A tier's colour is written on the **quality definition's** own `color` (optional): with one, the item name in a tooltip, the quality line in that tooltip, the entry names in the picker's quality category and the tier table in a blueprint's tooltip are all tinted; without one they keep their usual styling (it is not a default white). That tier table is visible in the Forge Table's blueprint tooltip, and once a piece is finished the readout shows the tier it came out as.
+- **A material's quality divides those extra steps.** When `forging_modifier` on an `quality` is above `1`, the same extra steps are read as fewer and buy a better tier. Among several materials the **lowest** tier wins (a piece is only as good as its worst material), materials that resolve no quality are skipped, and a missing or unusable modifier behaves as `1`.
+- What is read is **the material stacks this session locked** — the ones actually taken at settlement — and not the tool or blueprint slots: those two are never consumed and stay editable during a session, so their quality at settlement would describe the table as it is now. An `mxt:quality` component on a material stack therefore counts, and so does the fallback tier that item is given in [default_quality](../datapack/json/default_quality.md). A ladder plays no part here: its name is written on the `quality` tier itself, and a binding declares no ladder.
+
+:::tip Completion is automatic
+
+After every strike the server checks the session again: value inside the target range and the finish pattern matched, and it **settles at once**, writing the result into the output slot. There is no "finish" button in the interface (the protocol has a `FINISH` request, but the screen never sends it).
+
+The flip side: a blueprint whose target range contains `0` and which requires no finish pattern completes the instant you press "use blueprint".
+
+:::
+
+`max_steps` is the **only** failure source: writing 24 means "the 25th strike fails it". The check runs before that strike, so the click that triggers the failure is not itself counted — it only settles the session as a failure.
+
+## Step 5 — Settling Success and Failure {#step-5-—-settling-success-and-failure}
+
+```json
+"result": "minecraft:iron_sword",
+"complete_action": { "type": "mxt:add_resource", "resource": "example:qi", "amount": 5 },
+"fail_action": {
+  "type": "mxt:apply_effect",
+  "effect": "minecraft:weakness",
+  "duration_ticks": 100
+},
+"failure_settlement": {
+  "result": "minecraft:iron_nugget",
+  "input_return_ratio": 0.25,
+  "material_loss_ratio": 0.75
+}
+```
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `complete_action` | `EntityAction` | `mxt:no_op` | Run against the **player** on success. |
+| `fail_action` | `EntityAction` | `mxt:no_op` | Run against the player on failure. |
+| `failure_settlement.result` | Identifier | none | The scrap item a failure may produce. |
+| `failure_settlement.input_return_ratio` | Double | `0` | Chance the whole material list comes back, `0..1`. |
+| `failure_settlement.material_loss_ratio` | Double | `1` | The loss ratio; its complement, `1 −` it, is the chance of producing the scrap item. |
+
+A failure settlement is **two independent rolls**: first `input_return_ratio` decides whether the locked materials go back into the input slots (whatever does not fit is dropped to the player), then `1 − material_loss_ratio` decides whether a scrap item is handed over as well. "Materials returned *and* scrap produced" is therefore a real outcome. Omitting `failure_settlement` entirely gives the default `destroy_input()`: nothing comes back.
+
+The **cancel** button does **not** go through this settlement. It goes through a cancellation policy (by default the session's locked materials go back into the input slots), but `fail_action` still runs — cancelling counts as having produced nothing. That policy is a Java-side seam, so a data pack cannot change it.
+
+## Verify {#verify}
+
+```text
+/give @s mxt:forging_table
+/give @s example:smith_hammer
+/give @s example:sword_manual
+/mxt registries validate
+/mxt registries list
+```
+
+If those two items are not registered yet, either use vanilla items in the definitions' `items`, or put the component straight onto a vanilla stack:
+
+```text
+/give @s minecraft:iron_ingot[mxt:forging_methods=["example:heavy_strike","example:light_strike","example:quench","example:temper"]]
+/give @s minecraft:paper[mxt:forging_blueprints=["example:spirit_sword"]]
+```
+
+1. Place the Forge Table and open it. Three slots on the left take blueprints, three on the right take tools, the 4×3 block in the middle is the material input, and the result goes in the output slot on the right.
+2. Put two iron ingots and a stick into the input slots. The left list now shows the result item's icon — a blueprint is **named after what it produces** in that list. Hover it: the material list appears, with a green `✔` and a have/need count for everything you hold, a red `✖` otherwise, and the step limit underneath.
+3. Pick the blueprint and press "use blueprint". The materials are taken and the session starts: the meter gains a green target band, a grey zero mark and a red current value.
+4. Pick a method in the right list (the icon is its `icon`; hovering shows "value change: +2") and press "use method". The value moves and the "current" row underneath records the last six strikes; with a method picked, a yellow predicted mark also appears on the meter.
+5. Push the value into the green band with the last two strikes being light-then-heavy. The session settles itself, the piece lands in the output slot, and its tooltip gains a quality line — the quality name it shows is generated from the entry id, `mxt.quality.example.flawless` (give that key a translation in your own language file; `flawless.json` cannot carry a name, since the definition has no `name` field).
+6. Forge a second one, deliberately taking a few extra strikes, and compare the two qualities. Press "cancel" in the middle of a session to see the materials come back through the cancellation policy.
+7. `/mxt registries validate` should report no errors, and `/mxt registries list` should show the entry counts of `mxt:forging_method`, `mxt:forging_blueprint`, `mxt:tool_binding` and `mxt:blueprint_binding`.
+
+:::tip Automation, and where refusals go
+
+Hoppers may fill the input slots; the result can only be pulled out by a hopper **below** the table. A running session locks the inputs and the blueprint slots, but never the tool slots — so dropping in a second hammer widens the method list immediately.
+
+One reality you have to know: **a refused request never shows a message.** The reason a "use blueprint" or "use method" press failed (materials short, output occupied, out of bounds, cooling down, blueprint unreachable) only goes into the server log, on the `forging SELECT/STRIKE … outcome=` line. All the player sees is "nothing happened", and the reason is in the log.
+
+:::
+
+## Common Mistakes {#common-mistakes}
+
+| Symptom | Cause |
+| --- | --- |
+| The left list is empty | Nothing is in the blueprint slots, or no `blueprint_binding` definition's `items` matches what is there and the stack carries no `mxt:forging_blueprints` component of its own. **There is no "list the whole registry" fallback**: three empty slots mean no blueprints. |
+| A method is missing from the right list | The intersection is empty: the blueprint's `allowed_methods` does not contain it, or no placed tool unlocks it. |
+| The blueprint fails to load | `input` empty, over 15 entries, a literally repeated entry, a missing `ingredient`; `meter_min`/`meter_max` that do not cross zero; a quality ladder that is not ascending or does not end at `2147483647`; a `finish_pattern` that is checked but is not six entries long. |
+| The "use blueprint" button is greyed out | Materials short (hover the blueprint to see which line is `✖`), something in the output slot, or a session is already running. |
+| "use blueprint" does nothing | The server refused. Besides materials and the output slot, the usual cause is an **unreachable target range**: no solution exists with this blueprint's methods and finish pattern. |
+| It never completes | The finish pattern names a method no tool unlocks, or the value never enters the range — remember that an out-of-bounds strike is refused outright. |
+| The step limit is reached with no result | `max_steps` was hit while the piece was still incomplete: the **next** strike fails the session and the `failure_settlement` runs. |
+| Every piece has the same quality | You always take the shortest solution (so extra steps stay at zero), or the materials resolve no quality — give a material a tier either with an `mxt:quality` component on the stack or in [default_quality](../datapack/json/default_quality.md), since a herb definition declares no tier of its own, see Step 4. |
+| A method suddenly stops being usable | The usable set is recomputed on every strike and tool slots are never locked: removing a hammer removes its methods. |
+| Pressing during the cooldown does nothing | `cooldown` is tracked per (player, table) and is checked **before** the condition and the cost, so a refused strike still spends it. |
+| Materials did not come back | The input slots were full, and the remainder was dropped at the player's feet. |
+
+## Next {#next}
+
+- [forging_blueprint](../datapack/json/forging_blueprint.md) — the full field table and validation rules.
+- [forging_method](../datapack/json/forging_method.md) and [tool_binding](../datapack/json/tool_binding.md) — the methods and the tools that unlock them.
+- [blueprint_binding](../datapack/json/blueprint_binding.md) — how the registry writes definitions for blueprint items, and how a stack's own list adds to them.
+- [quality](../datapack/json/quality.md) — `forging_modifier`, the ladder's order and entry tier, and the order qualities are resolved in.
+- [MxtEvents: Events](../kubejs/api/events.md) — read or rewrite a strike's cost, or veto a phase from a script.

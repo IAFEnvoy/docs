@@ -51,6 +51,8 @@ Use the package scripts: `scripts/docusaurus.mjs` synchronizes translations befo
 
 Documents are organized under `tutorial/`, `library/`, `mod/` and `tool/`. All documentation, including Ice And Fire Community Edition, is maintained directly in this repository.
 
+MiXianTu's bilingual documentation is maintained under `docs-en/mod/mxt/` and `docs-zh/mod/mxt/`. Its chapter order and nested references live in `src/data/mxt-sidebar.json`; the formation and talisman editors live in `src/components/mxt-tools/`. The former standalone site's VitePress runtime is not required.
+
 `i18n/`, `.docusaurus/`, `build/` and `node_modules/` are generated or installed directories and are not committed.
 
 ## Translation workflow
@@ -80,7 +82,7 @@ The selection page in `src/pages/language.jsx` uses the site's Layout, CSS, card
 
 Global styles belong in `src/css/custom.css`. Standalone pages use CSS Modules for their layout and reuse the site theme for colors and controls.
 
-The document wrapper and CSS extraction plugin support scoped project styles, with an empty loader map and no sample CSS installed. See the [directory-style guide](src/theme/DocItem/styles/README.md) to add project styles and verify that they load separately and do not affect other pages.
+The document wrapper and CSS extraction plugin load scoped project styles separately, including MiXianTu's Songyan light and dark theme. See the [directory-style guide](src/theme/DocItem/styles/README.md) for the active themes and instructions for verifying that they do not affect other pages.
 
 ## Build and deployment
 

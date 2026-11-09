@@ -1,0 +1,206 @@
+---
+title: Write a Cost
+description: "The one cost array the whole pack reuses: the five shapes, where each of the four types charges, duplicate targets, ordered deductions and their failure boundary, the failure text a player sees, and how to register a script cost."
+---
+
+# Write a Cost
+
+<span id="write-a-cost" />
+
+**A cost has no file of its own.** `Cost` is one array shared by more than a dozen fields — abilities, cultivation, formations, forging, contracts, talismans and value upgrades all write it — and every entry in it says "take one thing, this much of it". There is exactly one shape, and once you know it you can write the "what does this cost" half of the whole pack.
+
+This tutorial is about that array alone: what it looks like, where each of the four types charges, how several payments inside one action become one boundary, and what happens when it cannot be paid. **When a particular module pays its own `costs` field, and whether its cooldown or condition comes first, belongs to that module's page** — this page does not go into it and only lists where to read on under `## Next`.
+
+## What You Are Building {#what-you-are-building}
+
+| File | Purpose |
+| --- | --- |
+| `data/example/saturn/ability/qi_bolt.json` | *(edited)* Replaces the qi bolt's `costs` with an array that carries all four types. |
+| `kubejs/server_scripts/mxt_costs.js` | *(new)* Registers one script cost with `MxtCosts.register`, so the script side can implement a price of its own. |
+
+The example pack is already set up and the `example:qi_bolt` ability already exists — it is in the file tree under `## Conventions`. The page also uses the `example:qi` value and the `example:qi` aura; [Define Aura and Realms](./define-aura-and-realms.md) writes both.
+
+This page **adds no registry file at all**.
+
+## Step 1 — The Array and the Shorthand {#step-1-—-the-array-and-the-shorthand}
+
+Every field that needs something spent is the same array, one `Cost` per entry:
+
+```json
+"costs": [
+  {"id": "example:qi", "amount": 10}
+]
+```
+
+An entry with only `id` and `amount` is the **shorthand**, and it is read as `saturn:resource` — "take 10 of the `example:qi` value out of the payer's account". The long form says exactly the same thing:
+
+```json
+"costs": [
+  {"type": "mxt:resource", "resource": "example:qi", "amount": 10}
+]
+```
+
+The shorthand is the door left open for the older writing; the two mix freely in one array, and `MxtCosts` and `MxtResources.consume` both accept them.
+
+`amount` is always a [number provider](../datapack/types/number_provider_types.md): a constant, a formula string or a built-in provider. It **has to evaluate to a finite positive number at use time** — a value that is not finite, or is `0` or negative, makes that entry unpayable (the failure reason is `INVALID_AMOUNT`) rather than charging nothing.
+
+```json
+"costs": [
+  {"id": "example:qi", "amount": "5 * caster_example_qi"}
+]
+```
+
+A formula string works for `amount` too (the entry above is one), and a formula is evaluated against the **payer**. `Cost` is only ever checked with a payer, so it does not see an event payload: names the payer's own context offers are readable, anything an event injects is not — the script callback side says it plainly: `context.value('level')` works and `context.value('damage')` does not. Before a name is used in a cost, check whether the payer is what offers it.
+
+## Step 2 — Four Types, One Job Each {#step-2-—-four-types-one-job-each}
+
+The four that write `type` are dispatched by the built-in `saturn:cost_type` registry; the mod registers them and a data pack may only choose among them, never add one:
+
+| `type` | Fields | Where it charges |
+| --- | --- | --- |
+| `saturn:resource` | `resource`, `amount` | The payer's own account for that value. |
+| `mxt:aura` | `aura`, `amount` | By aura identity; which store it takes from depends on the paying channel, see below. |
+| `mxt:item` | `items`, `amount` | Matching items, rounded up. |
+| `mxt:js` | `id`, `params` | Handed to a server script callback. |
+
+```json
+"costs": [
+  {"type": "mxt:resource", "resource": "example:qi", "amount": 10},
+  {"type": "mxt:aura", "aura": "example:qi", "amount": 2},
+  {"type": "mxt:item", "items": ["minecraft:emerald", "#c:gems"], "amount": 2},
+  {"type": "saturn:js", "id": "example:quest_token", "params": {"count": 3}}
+]
+```
+
+**`saturn:resource` names a value; `mxt:aura` names an aura identity** — two different things. An aura is an identity and a value is a stored amount: the aura definition says which value that aura is measured in, so when the payer pays an `mxt:aura` entry out of their own pocket, what actually comes out is that value.
+
+An `mxt:item` entry's `items` is an [`ItemMatcher`](../datapack/types/other/item-matcher.md): a bare item id, an `#item tag`, or matching entries that write a `type`, all mixed in one array. Its `amount` is **rounded up**, so `1.5` takes 2; a rounded amount that is not positive or not finite means the entry cannot be paid, not that it takes nothing.
+
+`mxt:aura` can do one thing the other three cannot: **it can charge more than one store.** When the payer pays it themselves, it takes the value that aura is measured in; when the venue pays it out of the **shared aura pool** (an aura entry of a cultivation's `costs`), the amounts are first scaled by each cultivator's share of the pool in that chunk and the pool then pays all-or-nothing; and when a **block entity's own store** pays it (the `aura` of a spirit-crafting recipe), it takes that aura itself in whole units rounded up. The same `mxt:aura` entry charges whichever of those the call site offers — the entry does not carry that choice.
+
+The `aura` of a spirit-crafting recipe **accepts `mxt:aura` entries only**, and any other type in it is a load error. It also accepts the map form: the keys are aura ids and the values are number providers.
+
+## Step 3 — Hang the Array on an Ability {#step-3-—-hang-the-array-on-an-ability}
+
+Open the qi bolt the example pack already has and replace nothing but `costs`:
+
+```json
+// data/example/saturn/ability/qi_bolt.json
+{
+  "type": "mxt:active",
+  "icon": "example:textures/gui/ability/qi_bolt.png",
+  "costs": [
+    {"id": "example:qi", "amount": 10},
+    {"type": "mxt:aura", "aura": "example:qi", "amount": 2},
+    {"type": "mxt:item", "items": ["minecraft:emerald", "#c:gems"], "amount": 2}
+  ],
+  "cooldown": 40,
+  "condition": {"type": "mxt:has_realm", "aura": "example:qi"}
+}
+```
+
+Every other field stays as it was: renaming one or leaving one out changes nothing about the array itself — whichever field carries `costs` is what pays it. An ability is the example here because it is the easiest thing to try in game, but only `costs` was replaced.
+
+This shape is not only for abilities: realm stages, cultivation, formations, forging methods, contracts, talismans, quality and spirit-crafting recipes all take one array of `Cost`; the ability one is shared by every ability type, which is why `mxt:mount`'s per-tick fuel and `mxt:upkeep`'s per-period fee are written here too. The four entries are on [Cost Types](../datapack/types/other/cost-type.md).
+
+## Step 4 — Simulate Before Ordered Deductions {#step-4-—-simulate-before-ordered-deductions}
+
+**One array is one bill.** If any entry cannot be paid, the whole array charges nothing — the entries that could have been paid are left alone too:
+
+```text
+costs = [qi ×10, aura example:qi ×2, emerald ×2]
+20 qi on you, no emeralds      →  not one point of qi is taken
+```
+
+Prefer one entry for each target's whole fee. Repeated targets are diagnosed before execution with WARN in development mode and DEBUG in production. Entries are neither merged nor reordered, and arbitrary overlap between item matchers is not guaranteed to be detected.
+
+Fees from multiple contexts can share a payment. Cultivation's environment aura and body costs, for example, share simulation and deduction. Every payment follows three steps:
+
+1. Diagnose repeated deduction targets.
+2. Simulate each entry in array order. If any entry refuses, nothing is deducted and business effects do not run.
+3. Once all pass, attempt real deductions in the same order. A real failure or runtime exception only logs WARN and continues with later fees and business effects, without propagation, rollback or cancellation. Scripts run at their array positions.
+
+With a balance of 5 and fees of 4 and 3, both simulations can pass. The first real fee takes 4, the second only warns, payment succeeds, and known spending is 4. Success does not promise full collection; avoid duplicate and overlapping demands.
+
+## Step 5 — What the Player Sees When It Cannot Be Paid {#step-5-—-what-the-player-sees-when-it-cannot-be-paid}
+
+Payment happens before the action, so a refusal looks like "nothing happened, plus one line of explanation":
+
+| What the player sees | When |
+| --- | --- |
+| `资源不足` / `某某 不足` (not enough of a resource, named when it can be) | The payer's own account for that value is short (`INSUFFICIENT_RESOURCE`). |
+| `消耗付不出（物品或其它代价不足）` (the cost cannot be paid) | Every other channel: not enough items, no player inventory to take from, or no such channel. |
+| `灵气不足` / `灵气不足，无法继续修炼` (not enough aura) | The shared aura pool or the block store is short. |
+| `该道法配置无效` / `这门技能的数值配置有误` (the numbers are wrong) | Some `amount` cannot evaluate to a finite positive number. |
+
+**The refusal happens before the action runs**, and that matters more than the wording: an ability is not put on cooldown before the money is taken, a talisman is not burned before the error, and a formation is not activated before it falls behind on its fee. `CostFailure` is an enum value, not an exception — the same definition always loads, it simply stops cleanly at the step where it ran out.
+
+A missing channel is **only ever reported as "cannot be paid", never as "the definition is broken"**: `mxt:item` needs a player inventory, so a payer who is not a player (or a formation with no owner) simply cannot pay it, and `mxt:js` needs a player. The payer itself is **a living entity** — a player, a creature or a summon; it does not have to be a player.
+
+The other way round, **an entry that cannot be decoded fails the whole definition** (an unknown `type` or a missing required field will do it): the `costs` array **does not use** the tolerant-list convention, so there is no "log a warning and drop that entry".
+
+## Step 6 — Script Costs {#step-6-—-script-costs}
+
+The `mxt:js` type is the door for a script that implements a price of its own, and it is registered from a server script:
+
+```js
+// kubejs/server_scripts/mxt_costs.js
+MxtCosts.register('example:quest_token',
+  (player, params, context) => {
+    const needed = params.count || 1
+    return player.persistentData.getInt('tokens') >= needed
+  },
+  (player, params, context) => {
+    const needed = params.count || 1
+    player.persistentData.putInt('tokens', player.persistentData.getInt('tokens') - needed)
+  }
+)
+```
+
+The callback signature is `(player, params, context)`: the first is the check `(player, params, context) => boolean`, the second the payment `(player, params, context) => void`. `player` is the payer, `params` is exactly the `params` object from the JSON (an empty object `{}` when the field is left out), and `context` is built from that payer — `context.value('level')` works and `context.value('damage')` does not, for the same reason as in Step 1: a `Cost` is evaluated with the payer alone.
+
+Then the data pack side writes:
+
+```json
+{"type": "saturn:js", "id": "example:quest_token", "params": {"count": 3}}
+```
+
+Three things to remember: **do not register the same id twice** (the later registration replaces the earlier one); **an entry whose callback was never registered can never be paid**, and the log writes `Unknown KubeJS cost` with that id and that the cost cannot be paid — the type still loads, there is just nobody to answer for it; and **this type does not need KubeJS to be present**: `mxt:js` is registered unconditionally, so a pack that uses it always loads and merely fails to pay while the script is absent.
+
+## Verify {#verify}
+
+Data pack registries are read while the world loads, so `/reload` is not enough: leave to the title screen and open the world again (or restart the server). Scripts under `kubejs/server_scripts/` are different — `/reload` empties every callback and runs them again, so an edited `MxtCosts.register` takes effect on `/reload` (only **startup scripts**, the ones registering items or blocks, need a game restart).
+
+```text
+(load the world again)
+/mxt registries validate           → nothing reported
+/mxt resource example:qi set 500   → plenty of value, so each entry can be tried
+```
+
+1. Learn `example:qi_bolt` (or grant it to yourself) and press it on the wheel: `example:qi` drops by 12 in one go and the emeralds in your inventory drop by 2.
+2. `/mxt resource example:qi set 11` and press it again: the ability does not fire, the chat line reports the shortage, and **not one emerald is taken** — a simulation refusal prevents the real pass.
+3. `/mxt resource example:qi set 12` and press it again: it succeeds and the account lands exactly on zero. 10 + 2 = 12 is the resource entry and the aura entry adding up.
+4. Change the item entry's `amount` to `1.5`, open the world again and press it: 2 emeralds are taken, rounded up.
+5. Change some `amount` to `0`, open the world again and press it: that entry cannot produce a usable amount and the whole array cannot be paid; the line reports an invalid configuration, not "charge 0".
+6. Copy `{"id": "example:qi", "amount": 10}` into a second entry and open the world: the definition still loads, but the payment logs one warning that both entries take the same target.
+7. Add `{"type": "saturn:js", "id": "example:quest_token", "params": {"count": 3}}` to the ability, comment the whole `register` call in `mxt_costs.js` out and run `/reload`: the log says that no one registered this script cost (the message starts with `Unknown KubeJS cost`) and the ability cannot be paid; put the registration back, `/reload` again, and it fires once there are 3 `tokens`.
+
+## Common Mistakes {#common-mistakes}
+
+| Symptom | Cause |
+| --- | --- |
+| One warning in the log about two entries taking the same target | One array writes to one store twice (the same value, the same aura, the same script id, two item entries, or an `mxt:aura` together with the `saturn:resource` it is measured in). The definition loads; development logs WARN and production logs DEBUG. Both passes keep array order without merging. Prefer one entry for a target's whole fee. |
+| `Every entry of an aura cost list must be an mxt:aura cost` | A spirit-crafting recipe's `aura` carries another type. That field accepts `mxt:aura` only. |
+| `Unknown KubeJS cost` (with that id, and that the cost cannot be paid) | The script cost's callback was never registered (the script did not load, the id is misspelled, or it was registered from a client script). The type itself still loads. |
+| The whole definition fails to load | One entry of the `costs` array cannot be decoded (an unknown `type`, a missing required field). This array does not use the tolerant-list convention and does not drop just that entry. |
+| The cost is never collected | The payer offers no such channel: `mxt:item` and `mxt:js` need a player. That is reported as "cannot be paid", not as a broken definition. |
+| The cost is charged twice | Each `MxtCosts.consume` call is independent. Use `MxtResources` to simulate an entire array together; real failures still only warn and continue. |
+| Deduction logs WARN but the business effect still runs | Simulation passed; real failures continue without rollback or cancellation. Only known spending is reported. Check duplicate fees, stock changes and script callbacks. |
+| Editing the data pack files changes nothing | Data pack registries are read when the world loads, and `/reload` does not read them again. Server scripts are the other way round: `/reload` runs them again. |
+
+## Next {#next}
+
+- [cost_type (Costs)](../datapack/types/other/cost-type.md) — the field lists, defaults and checks of the four types.
+- [Shared Data Types · `Cost`](../datapack/types/shared_data_types.md#cost) — the channel rules, the load-time validation, and which fields are deliberately *not* a `Cost`.
+- [`MxtCosts`: A Single Cost](../kubejs/api/costs.md) — `register` / `check` / `consume` on the script side, plus [`MxtResources`](../kubejs/api/resources.md) for paying several entries in one go.
+- [Define an Ability](./add-an-ability.md) — when one module pays its `costs`, and how that orders against its cooldown and condition.

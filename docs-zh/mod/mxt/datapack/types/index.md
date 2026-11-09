@@ -1,0 +1,97 @@
+---
+title: 类型参考
+description: MiXianTu 内置类型分派的工作方式，以及每一族类型的文档位置。
+---
+
+# 类型参考
+
+<span id="类型参考" />
+
+行为、条件、数值提供器这些东西都是**由代码持有的类型表**：模组把每个条目注册在一个 ID 下，数据包写 `type` 来选其中一个。
+
+```json
+{
+  "type": "mxt:heal",
+  "amount": 2
+}
+```
+
+`type` 就写在带参数的那个对象里，和它的参数平级，没有外面再包一层。
+
+数据包**只能选已有类型**，不能新增：未知的 `type` 会在加载期报错。新类型只能在代码或脚本里注册。
+
+`type` 一律写完整 ID：内置类型都在 `mxt:` 命名空间下，写成 `"and"` 会被当作 `minecraft:and`，加载期以「找不到这个 `type`」报错。
+
+几个类型族接受**简写**：JSON 数字就是 `mxt:constant`，字符串就是 `mxt:expression`，`"minecraft:apple"` 这样的物品 ID 就是匹配器条目 `mxt:item`。能简写的地方，写全类型对象也一样有效。
+
+**一个分派注册表一页，挂在写出它的那个定义页下面**：技能类型、技能目标选择器、数据存储与载具渲染器在 [`ability`](../json/ability.md) 页下；诅咒类型在 [`curse`](../json/curse.md) 页下；阵法功能在 [`formation`](../json/formation.md) 页下；阵法的笔画类型在 [`formation_shape`](../json/formation_shape.md) 页下；天劫节拍在 [`tribulation`](../json/tribulation.md) 页下；秘境生成方式在 [`secret_realm`](../json/secret_realm.md) 页下；资源条的四族（上下文、绘制器、显示条件、数值来源）在 [`resource`](../json/resource.md) 页下；环境上限在 [`aura_zone`](../json/aura_zone.md) 页下；触发器在 [`trigger`](../json/trigger.md) 页下。行为、条件、消耗、物品匹配器、数值提供器与公式变量被满包引用、没有唯一归属，因此留在这个分组里。
+
+## 参与分派的字段 {#参与分派的字段}
+
+| 字段 | 一族类型 | 见 |
+| --- | --- | --- |
+| `type`（技能顶层） | 技能类型 `saturn:ability_type` | [技能类型](./other/ability.md) |
+| `render.type` | 载具渲染器 `mxt:mount_render_type` | [载具渲染器](./other/mount-render.md) |
+| `type` | 目标选择器 `saturn:ability_target_selector_type` | [技能目标选择器](./other/ability-selector.md) |
+| `type` | 状态种类 `saturn:data_storage_type` | [数据存储](./other/data-storage.md) |
+| `type` | 诅咒类型 `mxt:curse_type` | [诅咒类型](./other/curse.md) |
+| `type` | 触发器 `saturn:trigger_type` | [触发器](./other/trigger-type.md) |
+| `type` | 消耗 `saturn:cost_type` | [消耗](./other/cost-type.md) |
+| `type` | 阵法功能模块 `mxt:formation_action_type` | [阵法功能](./other/formation-action.md) |
+| `type`（图形里的每一笔） | 阵法笔画 `mxt:formation_stroke_type` | [阵法笔画类型](./other/formation-stroke-type.md) |
+| `type` | 天劫节拍 `saturn:timeline_entry_type` | [天劫节拍](./other/timeline-entry.md) |
+| `type` | 秘境生成方式 `mxt:secret_realm_generation_type` | [秘境生成方式](./other/secret-realm-generation.md) |
+| `type` | 资源数值来源 `saturn:resource_value_provider_type` | [资源数值来源](./other/resource-value-provider.md) |
+| `type` | 环境上限 `mxt:aura_maximum_type` | [环境上限](./other/aura-maximum.md) |
+| `context`（ID 字符串） | 资源条上下文 `saturn:resource_bar_context` | [资源条上下文](./other/resource-bar-context.md) |
+| `renderer.type` | 资源条绘制器 `saturn:resource_bar_render_data_type` | [资源条绘制器](./other/resource-bar-render.md) |
+| `visibility.type` | 资源条显示条件 `saturn:resource_bar_visibility_type` | [资源条显示条件](./other/resource-bar-visibility.md) |
+| `type` | 物品匹配器条目 `saturn:item_matcher_entry_type` | [物品匹配器](./other/item-matcher.md) |
+| `type` | 实体行为 | [实体行为](./action/entity_action_types.md) |
+| `type` | 双实体行为 | [双实体行为](./action/bientity_action_types.md) |
+| `type` | 方块行为 | [方块行为](./action/block_action_types.md) |
+| `type` | 物品行为 | [物品行为](./action/item_action_types.md) |
+| `type` | 实体条件 | [实体条件](./condition/entity_condition_types.md) |
+| `type` | 双实体条件 | [双实体条件](./condition/bientity_condition_types.md) |
+| `type` | 方块条件 | [方块条件](./condition/block_condition_types.md) |
+| `type` | 物品条件 | [物品条件](./condition/item_condition_types.md) |
+| `type` | 伤害条件 | [伤害条件](./condition/damage_condition_types.md) |
+| `type` | 数值提供器 `saturn:number_provider_type` | [数值提供器](./number_provider_types.md) |
+| 名字（不是字段） | 公式变量 `saturn:formula_variable` | [公式变量](./formula_variables.md) |
+
+行为和条件的**数组是简写**，表示按顺序全跑一遍：
+
+```json
+"entity_action": [
+  {"type": "mxt:heal", "amount": 2},
+  {"type": "mxt:apply_curse", "curse": "example:burning", "stacks": 1}
+]
+```
+
+## 共享数据类型 {#共享数据类型}
+
+许多字段共用同一批复杂值，单独记在[共享数据类型](./shared_data_types.md)里：`Cost`、`AuraGain`、`AttributeEntry`、图标引用、Holder 与标签的写法、`ItemMatcher`，以及公式的写法。
+
+## 交给脚本的类型 {#交给脚本的类型}
+
+除个别例外，每一族都预注册了一个 `mxt:js` 类型，它也是唯一能把行为交给脚本的类型。脚本在 `kubejs/server_scripts/` 里注册回调用它，数据包按 `id` 引用：
+
+| 分派 | `mxt:js` 的字段 | 注册方法 |
+| --- | --- | --- |
+| 实体 / 双实体 / 方块 / 物品行为 | `id`、`params` | `MxtActions.entity` / `biEntity` / `block` / `item` |
+| 实体 / 双实体 / 方块 / 物品 / 伤害条件 | `id`、`params` | `MxtConditions.entity` / `biEntity` / `block` / `item` / `damage` |
+| 数值提供器 | `id`、`params` | `MxtValues.number` |
+| 资源数值来源 | `id`、`params` | `MxtValues.resourceValue` |
+| 消耗 | `id`、`params` | `MxtCosts.register` |
+| 触发器 | `signal`、`id`、`params` | `MxtTriggers.matcher` |
+| 技能目标选择器 | `id`、`params` | `MxtAbilities.selector` |
+| 原版战利品条件 / 函数 | `id`、`params` | `MxtLoot.condition` / `MxtLoot.function` |
+
+`mxt:js` 的触发器要多写一个 `signal`：运行时要按信号分层派发。回调都在服务端跑。回调缺失或抛异常时各自退化成安全值（行为什么也不做、条件为假、数值为 `0`、消耗付不出、触发器不匹配、选择器选不出实体），并记一条警告。
+
+`Trigger` 之所以要 `signal`，是因为运行时按「信号 → 所有者 → 订阅」分层索引派发。除 `Cost` 之外，回调都能拿到本次派发的公式上下文；`Cost` 只用玩家求值，所以它的上下文仅由该玩家构建、不含事件载荷。战利品条件与函数写在原版战利品表里（`condition` / `function` 两个分派键），同样只在服务端生成战利品时执行。
+
+## 相关 {#相关}
+
+- [技能定义](../json/ability.md) —— 技能类型写在哪、通用字段有哪些
+- [数组与简写](../overview.md) —— 行为、条件数组怎么合并

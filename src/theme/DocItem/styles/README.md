@@ -8,6 +8,7 @@
 | `mod/origins` | `origins.css` | Ore，固定深色像素风格 |
 | `mod/origins-js` | `origins.css` | 与 Origins 共用 Ore |
 | `mod/system` | `system.css` | ApricityUI t08-arwes，不透明深色青色边框 |
+| `mod/mxt` | `mxt.css` | 松烟 / Songyan，继承原 MXT 文档站的浅色纸面与深色墨绿 |
 
 主题来自 `E:\Website\Theme\iron-oath` 和 `E:\Website\Theme\t01-ore`，适配 Docusaurus 的 `--ifm-*` 变量及正文、导航、侧栏、卡片、提示、表格和代码块；不直接加载测试台或示例页面的样式。Ore 在站点的两种模式下均保留原有深色配色，不修改用户保存的全站深浅偏好。
 
@@ -16,6 +17,8 @@ System 参考 AUI 的 `common/src/main/resources/assets/apricityui/apricity/apri
 本地字体和许可放在 `assets/` 中。铁誓标题使用 Cinzel 与 Noto Serif SC 的 Unicode 分片；Ore 的像素字体只用于标题和按钮。两套主题的正文均使用系统字体，代码保留等宽字体，手机输入保持 16px，不依赖外部字体 CDN。构建器会处理相对字体路径，并生成带内容哈希的资源网址。
 
 ## 添加样式
+
+MXT 的 `mxt.css` 保留松烟主题的配色、标题字体、纸面纹理、表格和命令树，并将原 VitePress 选择器适配为 Docusaurus 组件。所有规则限定在 `html.dir-mod-mxt` 下，深浅色跟随本站 `data-theme`，不另外存储主题偏好。两个编辑器的样式位于 `src/components/mxt-tools/tools.css`，复用同一套松烟变量。
 
 1. 在此目录创建项目 CSS，例如 `ice-and-fire-ce.css`。
 2. 在 `src/theme/DocItem/index.jsx` 的 `styles` 中注册文档 ID 前两段对应的加载函数：

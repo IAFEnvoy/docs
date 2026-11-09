@@ -1,0 +1,54 @@
+---
+title: Network Protocol and Server Authority
+description: "The mod's C2S and S2C payloads, the server-side re-resolution rule they follow, and the one exception that carries item contents."
+---
+
+# Network Protocol and Server Authority
+
+<span id="network-protocol-and-server-authority" />
+
+The client sends intentions only; the server re-resolves the IDs, re-checks the attachments and the conditions, and then settles. The main C2S payloads are:
+
+| Payload | Purpose |
+|---------|---------|
+| `WheelActionC2SPayload` | One wheel entry was picked: `(source, kind, id)` - which source, which kind, which id (resolved by the client from the cell it stood on at that moment). Abilities and spirit power **share this one channel** (artifact abilities are abilities); the server first re-reads that source (the saved layout for the main wheel, the current grants for a derived source), drops the whole request when the source does not hold the entry, and only then dispatches on `kind` (`runtime/ability/AbilityActivationService` for an ability - where `mxt:active` and the targeted cast `mxt:targeted` each become a cast, and `mxt:flight_control` / `mxt:storage` each do their own thing - and `SpiritBurstService.fireOnce` for an aura). **The request only says "this cell was pressed"**: which way a switch should go, and which window should open, are the server's question to the implementation. **The cell number never travels here** - it is only stored. |
+| `BackSlotSwapC2SPayload` | Swapping the main hand and the back slot. |
+| `ForgingActionC2SPayload` | Forging start, strike, finish and cancel. |
+| `ChequeActionC2SPayload` | Depositing into and withdrawing from a cheque table. |
+| `StationTradeC2SPayload` | Settling a trade station. |
+| `PlayerTradeActionC2SPayload` | Changing the requesting side's own state in an open one-to-one trade. |
+| `CultivationToggleC2SPayload` | Requesting a toggle of the cultivation mode. |
+| `AlchemyActionC2SPayload` | The three things the furnace monitor screen does: `(containerId, action, temperature)` - `containerId` is the **furnace monitor menu's** container id (the server uses it to confirm the packet came from the furnace actually open right now, and re-checks that the access position is still in range and that the block there still has this role), `action` is one of `TEMPERATURE` / `START` / `ABORT`, and `temperature` is read only for `TEMPERATURE`. `TEMPERATURE` asks for the set temperature to become that value, and the server judges "finite, and between `0` and the settable ceiling" again before accepting (the packet never carries the furnace temperature itself, which the server advances on its own); `START` goes to `AlchemyWorkstationService.start` and `ABORT` to `AlchemyWorkstationService.abort`. A refusal changes no state in any of the three cases: `START` sends one action-bar line, whether a temperature write was accepted or refused travels back in the following state payload and is drawn on the input box and the Set button of the monitor screen, and `ABORT` gets no receipt at all. |
+| `WheelActionC2SPayload` | One wheel entry was picked: `(source, kind, id, enabled)` - which source, which kind, which id, plus an **optional** direction. An empty `enabled` means "this cell was pressed" (what the wheel sends; the direction stays the server's question), while a filled-in one is a **directed request** for a named state (screens and scripts; it is addressed by id and does not re-read the page it came from, but the ability's own gate still decides - and asking for the state it is already in does nothing). The old `FlightToggleC2SPayload` was merged into this field. |
+| `WheelLayoutC2SPayload` | Sending the **complete twelve-cell main-wheel layout** back to the server when the wheel editor closes; the server validates every id before storing it on the player. The pages behind it have no packet, because they are not stored. |
+| `WheelSelectionC2SPayload` | The chosen cell changed (`Optional<Integer>`, the **cell number**, empty meaning nothing is chosen); cells are numbered straight through the wheel and pages come and go with the gear, so what is stored is a place. The server only range-checks it - it resolves nothing and warns about nothing, since "this place holds nothing right now" is a legitimate state (the client falls back to the last cell holding anything). |
+| `OwnerNameC2SPayload` | Asking what an owner UUID is called (the id alone). The server answers from its online player list and its persisted name cache, and **never asks the session service** — that is a web request, and the handler runs on the main thread. |
+| `FlightDescendC2SPayload` | The **held state** of the flight descend key (`key.mxt.flight_descend`, `X` by default, rebindable): one packet on press and one on release, plus one when boarding. It is not a vanilla input, so this is the only way the server hears it; the server writes it onto the driver's flight record (dropped when nothing is flying) and the server-side flight tick reads it every tick. |
+
+Take `WheelActionC2SPayload` as the example: one round trip looks like this — the client reports which kind and which id, and the server resolves it into a definition itself and decides whether it may be used:
+
+```mermaid
+sequenceDiagram
+    participant Wheel as Client wheel
+    participant Net as NetworkManager
+    participant Handler as ServerNetworkHandler
+    participant Ability as AbilityService
+    participant Holder as Ability attachment
+    Wheel->>Net: kind + id only: use this ability
+    Net->>Handler: dispatched on the main thread
+    Handler->>Handler: the server re-resolves that id
+    Handler->>Ability: use(ability, player, attachment, resources)
+    Ability->>Holder: granted? on cooldown? resources enough?
+    alt accepted
+        Ability->>Holder: commit: pay and record the cooldown
+        Holder-->>Wheel: attachment and resources sync back
+    else refused
+        Ability-->>Wheel: a reason only, nothing changed
+    end
+```
+
+The server synchronises the dynamic registries, the resource/aura state it needs (`AuraStateS2CPayload`) and the attachments to the client, and pushes `AlchemyStateS2CPayload` (the furnace monitor readout: `(containerId, view)`, where `view` is the server-computed read-only reading - the furnace name and quality, the phase, the status line, whether a batch may start, whether it is locked (a batch is running), whether the structure is formed and how many main and auxiliary slots there are, plus one set of numbers: current temperature, set temperature, settable ceiling, the recipe's target temperature and tolerance, remaining and total duration, and the out-of-range tick count; the client only paints it and never re-evaluates a recipe) and `OwnerNameS2CPayload` (answering the request above: the name when the server knows it, nothing when it has never seen that player — the client remembers that answer too, so a session asks once and the tooltip can read the name on the next frame) when it needs to. Never treat a value that came from the client as a trusted result; a payload should carry IDs, choices and action intentions only. **The wheel editor itself is not on this path**: it is opened by the client command `/wheel` (or the `key.mxt.wheel_configuration` key, unbound by default), and the server neither takes part nor has a payload for opening it - what the editor saves travels on the two rows above, which have nothing to do with opening it.
+
+**An S2C payload's type is registered on both sides, but its handler only on the client.** The server is the side that encodes it, so it has to know the codec; it never handles one, and a handler such as `ClientNetworkHandler` touches client-only classes like `Screen`. A dedicated server's class loader refuses to load those at all, so merely constructing the handler while registering is enough to make the server crash during mod loading with `NoClassDefFoundError: net/minecraft/client/gui/screens/Screen`. `NetworkManager` therefore branches on `FMLEnvironment.getDist()`: the client registers with the `playToClient` overload that takes a handler, and the server uses the one that does not, registering the type alone.
+
+**The one exception is the item picker.** It borrows the vanilla `ServerboundSetCreativeModeSlotPacket`, so the item contents really do come from the client and travel through no mod payload at all. That channel is guarded by the server's own capability switch: the packet is stopped at the **decode layer** by `GameProtocols.HAS_INFINITE_MATERIALS` (if the server does not consider the player to be in creative mode, the whole packet is dropped without a disconnect), and `handleSetCreativeModeSlot` checks `hasInfiniteMaterials()` a second time and validates the item's features and its stack limit. Do **not** imitate it when adding a mod payload — anything that cannot get the same gate must go through "the client reports IDs only, the server resolves them itself". See [Client Screens](./screens.md) for the full analysis.

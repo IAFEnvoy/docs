@@ -1,0 +1,35 @@
+---
+title: /realm
+---
+
+# `/realm`
+
+<span id="realm" />
+
+`/realm` manages the **linear realm chain** (`mxt:realm_stage`). **A realm stage and a secret realm are two different things**: a stage is one rung of the cultivation chain of a `resource`, while a secret realm (`mxt:secret_realm`) is an instance dimension created on demand, managed through [`/mxt secret_realm`](./mxt.md#secret-realm).
+
+<div className="cmd-tree">
+
+- `/realm ...`
+
+  - `... set <realm>`
+
+    Sets **your own** current stage to one rung of the chain and resets that chain's progress to zero.
+
+  - `... chain <realm>`
+
+    Prints the **whole realm chain** that stage is on.
+
+</div>
+
+`set` needs the `gamemaster` permission, `chain` needs none. A stage that is not part of a currently valid cultivation chain is refused by `set` with the reason, and `chain` reports that no usable realm chain contains it.
+
+## What a realm chain is {#what-a-realm-chain-is}
+
+A realm chain belongs to an **aura definition**: every [realm_stage](../../datapack/json/realm_stage.md) points back at one [aura](../../datapack/json/aura.md) with its `aura` field, that definition's `first_realm` is the entrance of the chain, and the stages are linked by `next_realm` into a line that only moves forward — one chain per definition, and one entity may hold several chains at once. The full rules are on [Define Aura and Realms](../../tutorial/define-aura-and-realms.md).
+
+`chain` reads the definitions rather than who currently holds which stage, so what it answers is "what comes before this rung, and what comes after it" — the quickest way to check a `next_realm` for typos. It only walks the stages the registry actually holds: a stage a `neoforge:conditions` block keeps out of the registry (or a file that was deleted) breaks the chain there (the server refuses to index such a chain for the same reason). The header names the chain's identity, which is the ID of the `mxt:aura` entry the chain belongs to; the stages **before** it are grey, the stage itself is green and the stages **after** it are white.
+
+`set` is an administrative entry point for tuning data: it does not run the cultivation or breakthrough checks, it only asks whether the stage is on a currently valid chain. `chain` is a pure query, and neither command needs the executor to hold anything.
+
+The top-level `/realm` alias is controlled by the **Command Aliases** tab of the server configuration (the entry is named `realm`, and it defaults to on); switching it off leaves `/mxt realm` fully usable.

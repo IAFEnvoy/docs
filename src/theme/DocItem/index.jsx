@@ -10,6 +10,7 @@ const styles = {
   'mod/origins': () => import('./styles/origins.css'),
   'mod/origins-js': () => import('./styles/origins.css'),
   'mod/system': () => import('./styles/system.css'),
+  'mod/mxt': () => import('./styles/mxt.css'),
 };
 
 export default function DirectoryDocItem(props) {

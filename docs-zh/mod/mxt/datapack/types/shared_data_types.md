@@ -1,0 +1,196 @@
+---
+title: 共享数据类型
+description: 多个注册表共用的复杂值：Cost、AuraGain、AttributeEntry、图标引用、Holder 与标签、ItemMatcher。
+---
+
+# 共享数据类型
+
+<span id="共享数据类型" />
+
+这些值不属于某一个注册表，而是被许多字段共用。写一个字段前先在这里对一下形状。
+
+## 基础类型 {#基础类型}
+
+| 类型 | JSON 形状 | 说明 |
+| --- | --- | --- |
+| `String` | `"fire"` | 普通字符串。 |
+| `Boolean` | `true` | 布尔值。 |
+| `Integer` | `20` | 整数，范围以字段表为准。 |
+| `Long` | `100000` | 长整数，范围以字段表为准。 |
+| `Double` | `1.5` | 双精度数；加载阶段拒绝 `NaN` 和无穷大。 |
+| `Identifier` | `"example:fire"` | 带命名空间的资源 ID。 |
+| 注册表条目引用 | `"example:resource"` | 指向注册表的一个条目，写条目自己的 id。 |
+| 标签引用 | `"#example:fire"` | 原版标签，`#` 不能省略。 |
+| 条目或标签 | 字符串或字符串数组 | 单个 id、单个 `#标签`，或两者混在一个数组里。 |
+| `ItemMatcher` | ID、标签或混合数组 | 所有按物品认领的注册表（`artifact`、`pill_binding`、`technique_binding`、`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`）的认领字段（`currency` 用 `item`，其余用 `items`）；匹配现有物品，不创建物品。 |
+| `Text Component` | 字符串或文本对象 | 支持翻译键字符串和原版文本组件。 |
+| `RGBColor` | `"#RRGGBB"` | 颜色，用原版十六进制写法：`#RRGGBB`（整数与 `[r,g,b]` 浮点数组也接受）。**值域是 RGB、没有 alpha**，写下的颜色一律按不透明处理——要透明度的字段自己另开键（雷的 `alpha` 是发光强度，不是颜色透明度）。 |
+| `ItemStackTemplate` | `{"id":"minecraft:stone"}` 或 `"minecraft:stone"` | 物品堆模板：可只写裸物品 ID，也可写对象（`id` 必填，可带 `count` 与 `components`）。数据包注册表**早于物品组件绑定**解析，所以数据包定义里的物品堆一律用它。 |
+| `ItemStack` | `{"id":"minecraft:amethyst_shard"}` | 原版物品堆，**必须写成对象**（`id` 必填，可带 `count` 与 `components`），不接受裸物品 ID 字符串；它要求物品组件已绑定，所以只用于附件与存档状态，数据包定义请用 `ItemStackTemplate`。 |
+| `NumberProvider` | 数字、字符串或对象 | 常量、exp4j 表达式或固有数值提供器，见[数值提供器](./number_provider_types.md)。 |
+| `EntityAction` | 对象或对象数组 | 对实体执行行为；数组按顺序执行。 |
+| `BiEntityAction` | 对象或对象数组 | 对来源实体和目标实体执行行为。 |
+| `BlockAction` | 对象或对象数组 | 对方块位置执行行为。 |
+| `ItemAction` | 对象或对象数组 | 对物品堆执行行为。 |
+| `EntityCondition` | 对象或对象数组 | 数组表示全部条件都必须满足。 |
+| `Weighted` | `{"value": …, "weight": 3}` | 加权列表的一项，全模组只有这一种形状：`value` 必填、`weight` 可选（默认 `1`）。权重 `≤0` 的条目算 `0`（永远不会被选中）。整表权重全为 `0` 时按用法分两支：`mxt:choice` 的 `actions` **等概率**抽一项，写错的表照样能跑；`mxt:weighted_list` 的 `distribution` 一项都不抽，记一条警告后按 `0` 求值（权重之和溢出整数范围时同样按 `0`）。用在 `mxt:choice` 的 `actions` 与 `mxt:weighted_list` 的 `distribution`。`secret_realm` 的 `entry` 数组是唯一例外：`weight` 直接写在落点对象上（它还要带 `pos`、随机半径等字段），而且**负权重在那里的加载期被拒绝**，不按 `0` 算；`0` 一样表示不会被选中。 |
+
+## `Cost` {#cost}
+
+需要**消耗**东西的字段统一是同一个数组，每项是下面五种之一，同一个 `type` 分派：
+
+| 写法 | 字段 | 说明 |
+| --- | --- | --- |
+| `{"id": "example:qi", "amount": 5}` | `id`、`amount` | 简写，等价于 `saturn:resource`；定义 id 写在 `id` 里。 |
+| `{"type": "mxt:resource", ...}` | `resource`、`amount` | 消耗一个数值；数值定义 id 写在 `resource` 里。 |
+| `{"type": "mxt:aura", ...}` | `aura`、`amount` | 消耗一门灵气；灵气 id 写在 `aura` 里。扣什么由通道决定：付款者支付时扣**这门灵气所度量的那个数值**，从共享灵气池或方块存量支付时扣这门灵气本身。 |
+| `{"type": "mxt:item", ...}` | `items`、`amount` | 消耗物品；`items` 是物品/标签匹配列表（物品 id、`#标签`，或带 `type` 的匹配条目，见下面的 [`ItemMatcher`](#itemmatcher)）。 |
+| `{"type": "saturn:js", ...}` | `id`、`params` | 交给服务端脚本；`id` 是 `MxtCosts.register` 注册的回调 id，`params` 可省略。 |
+
+`amount` 一律是数值提供器，使用时必须求值为**有限正数**，否则这一项付不出。`saturn:resource` 与 `mxt:aura` 问的是两件不同的事：前者点的是一个**数值**，后者点的是一门**灵气身份**。
+
+```json
+"costs": [
+  {"id": "example:qi", "amount": 5},
+  {"type": "mxt:resource", "resource": "example:stamina", "amount": "5 + level"},
+  {"type": "mxt:aura", "aura": "example:fire_qi", "amount": 2},
+  {"type": "mxt:item", "items": ["minecraft:emerald", "#c:gems"], "amount": 2}
+]
+```
+
+规则：
+
+:::warning 一项一个目标
+一份数组里，同一个数值、同一门灵气、同一个脚本 id 各只写一次，物品条目最多一项。**同一个数值经由两条路径写两次也算同一个目标**：一个 `mxt:aura` 与它度量的那个 `saturn:resource` 落在同一门数值上，付款会把它们当成一个目标。
+
+写重了**不是加载错误**：付款前检查重复目标，开发环境输出 WARN、运行环境输出 DEBUG。条目不合并、不重排，脚本也保持数组位置；不同物品匹配器的交叠不保证被识别。
+
+一个目标尽量一次性写完费用。余额 5、费用 4 和 3 时，逐条模拟都能通过，但实扣第二条会失败；它只输出 WARN，付款成功，已知支出为 4。边界见[技术细节 · 消耗](../../technical/cost.md)。
+:::
+
+- **三步处理**：先诊断重复目标，再按原序逐条模拟；任意模拟失败则整笔不扣。全部通过后按相同顺序实扣，实扣失败或运行时异常只输出固定 WARN，继续后续费用与业务效果，不抛出、不回滚、不取消。
+- **同一目标仍独立执行**：一个 `saturn:resource` 与用它度量的 `mxt:aura` 共享余额，只作重复诊断，不合计扣款。报价汇总与实际扣除凭据是两种用途，付款成功不保证所有费用收齐。
+- 付款者是**活着的实体**（玩家、生物、召唤物都算），不一定是玩家。一项能不能付，取决于付款处提供哪些通道：
+
+| 写法 | 从哪里扣 |
+| --- | --- |
+| `saturn:resource` | 付款者自己的数值账户。 |
+| `mxt:aura` | 扣该灵气所度量的那个数值：付款者自己支付时从数值账户出；由场地从**共享灵气池**支付时（修炼 `costs` 里的灵气条目），先按同区块多人修炼的池子分配份额缩放，再由池子全有或全无地扣；从**方块实体的自有存量**支付时（灵气合成配方的 `aura`），扣这门灵气本身、保留小数。 |
+| `mxt:item` | 需要玩家背包。付款者不是玩家（或阵法没有阵主）就是**付不出**，不是定义有问题。 |
+| `mxt:js` | 需要玩家，并且在其它通道全部付完之后**最后**运行。脚本消耗不做暂存，所以脚本必须自己对它保持幂等。 |
+
+缺少某个通道只会被报成「付不出」，永远不会被报成定义坏了。**解不出来的条目会让整份定义加载失败**（未知 `type`、缺必填字段都会）：`costs` 数组不套用容错列表的口径，不存在「打一条警告然后把这一项丢掉」。
+
+用这个数组的字段共 11 个：`ability.costs`（**所有技能类型共用**，所以 `mxt:mount` 的每 tick 燃料与 `mxt:upkeep` 的每周期费用也写在这里）、`mxt:channelled` 的 `upkeep_costs`、`realm_stage.costs`、`cultivation.costs`（灵气条目由场地付、其余由修炼者付）、`formation.activation_costs` 与 `formation.maintenance_costs`、`forging_method.costs`、`contract_type.costs`（签订契约的代价，由主人支付）、`talisman.costs`（`mxt:aura` 条目从载体自己的存量扣，其余向持有者收）、`quality.upgrade_costs`，以及灵气合成配方（`mxt:spirit_shaped` / `mxt:spirit_shapeless`）的 `aura`。其中灵气合成配方的 `aura` **只收 `mxt:aura` 条目**（写其它类型是加载错误），它也接受 `{"<灵气 id>": 数值提供器}` 的映射写法。
+
+**下面这些故意不是 `Cost`**，别去「修」它们：`talisman.capacity` 是个 **倍率**（double ≥ 1），它说的是「载体装得下几次发动的灵气」而不是「要扣什么」——容量的灵气身份来自同一条符 `costs` 里的灵气条目；`alchemy` 配方的 `minimum_aura` 与 `creature_profile.minimum_aura` 是要求，从不被消耗。**画符扣的颜料是符笔自己的存量**（组件 `mxt:brush_pigment`，加料照原版储物袋那套点击）：付款者是那支笔而不是玩家，写进 `costs` 就得凭空造一个付款者，所以它按每一笔的长度从那口存量里直接扣。货币系统与这套形状无关：`currency` 的 `exchanges[].cost` 是「一次兑换要几个货币物品」的整数价格（`1..99`），`quality.value_multiplier` 是价值修正，两者都不是 `Cost`。
+
+## `AuraGain` {#auragain}
+
+`cultivation.aura_gains` 用的是 `AuraGain`：字段名同样是 `id` 与 `amount`，但 `id` 指向一门灵气，`amount` 允许 `0`（有限非负即可）。它是另一种类型，与 `Cost` 无关，也不会进扣费事务。
+
+这个列表是**容错**的：解不出来的条目会被丢弃并打一条 `Ignoring invalid list element` 警告，其余条目照常生效。
+
+给任意数值加值时用的是 **`mxt:add_resource` 行为**而不是数组，它的字段是 `resource` 与 `amount`，`amount` 可以是负数：
+
+```json
+{"type": "mxt:add_resource", "resource": "example:qi", "amount": 2}
+```
+
+## `AttributeEntry` {#attributeentry}
+
+属性修正条目。属性 ID 用原版的，例如 `minecraft:attack_damage`。
+
+| 字段 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| `attribute` | Identifier | **必填** | 要改的原版属性 ID。 |
+| `id` | Identifier | **必填** | 这条属性修正的唯一 ID。 |
+| `amount` | Double | **必填** | 没有动态 `value` 时使用的基础值。 |
+| `operation` | Enum | **必填** | `add_value`、`add_multiplied_base` 或 `add_multiplied_total`。 |
+| `value` | 数值提供器 | 无 | 填写后每 tick 在服务端按实体上下文重新计算，替代 `amount`。 |
+
+## 图标引用 {#图标引用}
+
+全模组的图标字段都是同一个值，**直接内联**：贴图写成一个字符串，物品写成一个对象。带这个字段的定义有 `ability`、`resource`、`forging_method` 与 `technique`。
+
+| 写法 | 类型 | 说明 |
+| --- | --- | --- |
+| 字符串 | Identifier | 16x16 的 GUI 贴图，例如 `example:textures/gui/icon/sword.png`。 |
+| 对象 | `ItemStackTemplate` | 物品，写完整的物品堆模板 `{"id": ...}`，可带 `count` 与 `components`。 |
+
+两支是**按解析顺序**区分的：先试贴图，再试物品。因为两者都接受**字符串**，裸字符串会被贴图分支先拿走，所以**物品必须写成对象形式** `{"id": ...}`——写裸字符串只会得到一张同名的贴图，而不是物品。
+
+```json
+"icon": "example:textures/gui/icon/sword.png"
+```
+
+```json
+"icon": { "id": "minecraft:iron_ingot" }
+```
+
+```json
+"icon": { "id": "minecraft:diamond_sword", "count": 1, "components": { "minecraft:custom_name": "青霄" } }
+```
+
+物品图标存的是**模板**而不是现成的堆，因为数据包注册表在物品组件绑定之前就解析完了；客户端绘制时才实体化，所以需要组件的图标也能正确显示。
+
+### SpriteIcon {#spriteicon}
+
+**资源条的贴图是另一种图标**（`SpriteIcon`）：`mxt:boss_bar` 的 `sprite_location` 与 `mxt:textured_bar` 的 `background_sprite` / `fill_sprite` 用它，因为一整套资源条不能只画 16x16。它**不是**上面那种图标引用（`ability.icon` / `resource.icon` 是一张 16x16 贴图或一个物品，只画一格、没有 `region` / `width` / `height`，也不认 `{"sprite": ...}`），反过来它也写不成物品。两者名字像、用途不同，别混。两种写法：
+
+| 写法 | 类型 | 说明 |
+| --- | --- | --- |
+| 字符串 | Identifier | 沿用这个字段本来的含义：`sprite_location` 是**贴图路径**（默认 `mxt:textures/gui/resource_bar.png`，一张 25 格图集），`background_sprite` / `fill_sprite` 是 **GUI 图集精灵**。 |
+| 对象 | 贴图或精灵 | `{"sprite": ...}` 是 GUI 图集精灵；`{"texture": ...}` 是贴图，可带 `region`（`u` / `v` / `texture_width` / `texture_height`，默认起点 `0,0`、整图 `256×256`）。两者都可带 `width` / `height`（画出来的**目标**尺寸，必须成对；省略＝按条自己的宽高画）。 |
+
+`mxt:boss_bar` 的 `sprite_location` **只接受贴图**（它要把图集切成背景 / 填充 / 图标三种格子，精灵没有这个概念）；`mxt:textured_bar` 的两个字段两种都接受。精灵不能声明 `region`——图集已经知道它在哪。`width` / `height` 是**画出来的目标尺寸**，不是裁剪，而且只有背景那一侧会读：`background_sprite` 与 `mxt:boss_bar` 的图集贴图可以写，**`fill_sprite` 上写的尺寸不会被读**——填充是按条自己的进度裁出来的，给它一个固定尺寸没有意义，那两个键只是被解码、不参与绘制。
+
+下面几条是**加载期错误**，会被明确拒绝：`mxt:boss_bar` 的 `sprite_location` 写精灵、精灵带 `region`、`width` / `height` 只写一个。
+
+## Holder、标签与匹配器 {#holder、标签与匹配器}
+
+跨注册表字段都在数据包加载阶段解析成条目引用，不在运行时重复查询注册表。
+
+### 单值和标签 {#单值和标签}
+
+```json
+{
+  "aura": "example:qi",
+  "ability_requirements": "#example:fire_abilities"
+}
+```
+
+### 混合数组 {#混合数组}
+
+支持 ID、标签混合的字段可以直接写数组：
+
+```json
+{
+  "ability_requirements": [
+    "example:fireball",
+    "#example:basic_fire_abilities"
+  ]
+}
+```
+
+数组里每一项保留为条目或标签；重复值不会自动改变语义。**列表是有容错的**：容错列表里的坏条目会被丢掉并打一条 `Ignoring invalid list element` 警告，同一个列表里其余的条目照常生效；某个字段用不用这套口径，字段表会写明。
+
+### `ItemMatcher` {#itemmatcher}
+
+按物品认领的注册表——`artifact`、`pill_binding`、`item_aura`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`——都用 `items` 字段收下面三种写法（`technique_binding` 的 `items` 是可选的第二条路，见[功法绑定](../json/technique_binding.md)；`currency` 是例外，字段叫 `item`）。三张按方块认领的注册表（`block_aura`、`heat_source`、`spirit_herb`）形状相同，只是字段叫 `blocks`。写法与文件路径见[数据包开发总览](../overview.md)。
+
+```json
+"items": "minecraft:apple"
+```
+
+```json
+"items": "#minecraft:logs"
+```
+
+```json
+"items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]
+```
+
+匹配器只引用已经注册的物品。多个定义同时命中同一个目标时，按各自声明的 `priority` **从高到低**选择（字段默认 `0`；上面那十张按物品认领的注册表都接受它，按方块认领的 `heat_source` 与 `spirit_herb` 也接受）。同分回落到注册表顺序。「谁赢」由定义自己写死、与文件名无关（与 `aura_zone`、`element_reaction` 的 `priority` 同一个方向）。**这与匹配条目是哪一种无关**：一条定义只要命中就按它自己声明的那个数参与排序，点名物品并不会让它更靠前。`block_aura` 没有 `priority`，命中同一个方块的多条定义都生效、相加。
+
+数组里的每一项也可以写成带 `type` 的对象，类型由固有注册表 `item_matcher_entry_type` 分派；每一种 `type` 的字段、默认值与匹配规则见[物品匹配器类型](./other/item-matcher.md)。

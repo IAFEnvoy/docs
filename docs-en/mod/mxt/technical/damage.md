@@ -1,0 +1,230 @@
+---
+title: Damage System
+description: A source-level walkthrough of the damage pipeline — how one strike is split into shaping and reduction, how a strike's element is read back from its damage type, which dealing paths were folded in, and what the design costs.
+---
+
+# Damage System
+
+<span id="damage-system" />
+
+This page covers the whole thread in one place: **how to write it in a datapack** (declaring a hit's damage type and element, and which dealing paths are folded into the pipeline) and **why** it is built the way it is in the code.
+
+## Where the code lives {#where-the-code-lives}
+
+| Class | Responsibility |
+| --- | --- |
+| `runtime.damage.DamageCalculationService` | The one public exit: computes both layers, builds the damage source, applies the hit. |
+| `runtime.damage.DamageElements` | The reverse index behind "what is this strike made of": damage type → the elements that claim it. |
+| `runtime.damage.DamageEventBridge` | Where the reduction layer is attached, on `LivingIncomingDamageEvent`. |
+| `runtime.element.ElementReactionService` | Element buildup and reactions, also fed by that same event. |
+
+The package prefix is `com.iafenvoy.mxt`; every file is under `src/main/java/com/iafenvoy/mxt/`.
+
+## The timeline of one strike {#the-timeline-of-one-strike}
+
+```mermaid
+flowchart TD
+    A["mxt:damage / mxt:damage_target / mxt:explode<br/>a formation attack module / an action in a tribulation timeline"] --> DEAL
+    DEAL["DamageCalculationService#deal<br/>server only; returns 0 on a client"] --> TAG{"Is the damage type in mxt:no_bonus?"}
+    TAG -->|yes| RAW["hurtServer with the number as handed in<br/>no shaping, no reduction, no element"]
+    TAG -->|no| STRIKE["DamageElements#strike(level, damageType, attacker)<br/>what this strike is made of"]
+    STRIKE --> OUT["outgoing: base value × damage_multiplier × element_modifier<br/>× the attacker's damage_dealt_multiplier × the attacker's overcomes<br/>the last two are 1.0 when nobody is credited"]
+    OUT --> SRC["source: damage type and kill credit"]
+    SRC --> HURT["Entity#hurtServer<br/>vanilla runs immunity and resistances first, then fires the event"]
+    RAW --> HURT
+    HURT --> EV["LivingIncomingDamageEvent"]
+    EV --> TAG2{"Is the damage type in mxt:no_bonus?"}
+    TAG2 -->|yes| RAW2["passed through untouched<br/>not even an element is left behind"]
+    TAG2 -->|no| BRIDGE["DamageEventBridge#onIncomingDamage"]
+    BRIDGE --> IN["incoming: × the target's adapted_to<br/>× the target's damage_taken_multiplier"]
+    BRIDGE --> REACT["ElementReactionService#applyFromStrike<br/>element buildup and reactions"]
+```
+
+Layer one has exactly one entry point, `deal`, so no path this mod deals damage through can miss it. Layer two has exactly one entry point, the event, so every hit that reaches an entity — a vanilla fall, another mod's sword, our own fireball — passes through the same reduction.
+
+## Why it has to be two layers {#why-it-has-to-be-two-layers}
+
+Both layers read the same answer to "what is this strike made of", but they compute it next to two different entities. That is forced by the data, not a matter of taste:
+
+- **Shaping needs information only the dealing side has**: which ability is being cast, what progression level multiplier this casting carries, what the attacker's spirit roots are, and who the target is. The defender-side event sees a `DamageSource` and a number, and cannot reconstruct any of that.
+- **Reduction needs information only the receiving side has**: the target's own adaptation relations, and **every** hit that arrives — including vanilla's and other mods', which never go through `deal` at all. Putting it at the dealing side would make it apply to our own attacks only.
+
+The cost is that the two must not overlap: `DamageEventBridge` therefore lives on an event that fires exactly once per damage sequence, and no dealing path applies reduction on its own.
+
+## Layer one: shaping {#layer-one-shaping}
+
+:::info Two multipliers, one source now
+
+An ability cast **only writes damage_multiplier**: the progression multiplier and the one computed from the element affinity are already multiplied together at cast time (see [ability_affinity](../datapack/json/ability_affinity.md)), so the separate lement_modifier step in the timeline below is 1 for a cast. The pipeline still reads it - another entry point (a script, the public API) may set it - but a data pack should not rely on it.
+
+:::
+
+```java
+public static double outgoing(@Nullable Entity attacker, Entity target, double amount,
+                              @Nullable FormulaContext context, Set<Holder<Element>> elements) {
+    if (!Double.isFinite(amount) || amount <= 0.0D) return 0.0D;
+    double pair = attacker == null ? 1.0D : physiqueMultiplier(attacker, true) * overcomeMultiplier(elements, target);
+    double result = amount * masteryMultiplier(context) * elementMultiplier(context)
+            * selfConflictMultiplier(attacker) * pair;
+    return Double.isFinite(result) && result > 0.0D ? result : 0.0D;
+}
+```
+
+The order of operations is fixed: **the base value from the pack or a formula → × `damage_multiplier` → × `element_modifier` → × the self-conflict factor (`conflict_multiplier`) → × the attacker's `damage_dealt_multiplier` → × the attacker's `overcomes`**. The last two are the `pair` above: **with nobody credited it is `1.0` outright** (see below). The target's `adapted_to` and `damage_taken_multiplier` only enter afterwards, in layer two.
+
+The diagram below lays that fixed order out end to end and marks where the pack's own multiplications stop and the pipeline's begin:
+
+```mermaid
+flowchart LR
+    BASE["Base value<br/>from the pack or a formula"] --> SPLIT["The boundary<br/>the pipeline multiplies these"]
+    SPLIT --> MULT["× damage_multiplier<br/>the progression level of this casting"]
+    MULT --> ELEM["× element_modifier<br/>this casting, from the roots<br/>do not write it yourself"]
+    ELEM --> CONFLICT["× conflict_multiplier<br/>when a root conflicts with the held item's element"]
+    CONFLICT --> DEALT["× damage_dealt_multiplier<br/>the attacker's active physiques"]
+    DEALT --> OVER["× overcomes<br/>attacking and defending pairs"]
+    OVER --> ADAPT["× adapted_to<br/>the defender's side only"]
+    ADAPT --> TAKEN["× damage_taken_multiplier<br/>the target's active physiques"]
+    TAKEN --> DONE["The result of layer two<br/>what the hit is finally worth"]
+```
+
+- **`damage_multiplier` belongs to the casting.** Casting an ability writes it into the formula context, and the value is read at runtime from the level the holder currently stands on: it walks every progression the holder carries, keeps the ones whose current level actually grants this ability, and takes the **largest** multiplier among them — several owners do not stack their multipliers, because only one strike is being dealt. A `progression` defaults `damage_multiplier` to `1.0`, and a negative or non-finite value is rejected while loading.
+- **The spirit-root half is folded into `damage_multiplier` now.** At cast time the `element_ability_modifier` of the matching roots is combined per that entry's `mode` (average or best) in [ability_affinity](../datapack/json/ability_affinity.md), multiplied by the progression multiplier, and written into `damage_multiplier`. So a formula must **not** write any affinity multiplier, and there is no `element_modifier` to read. Damage that does not come from a casting (a formation tick, a curse, a vanilla attack) starts from `1.0`; a root that writes the multiplier as `0` means "this element of mine deals nothing".
+- **`damage_dealt_multiplier` / `damage_taken_multiplier` belong to the person.** They come from active `physique` definitions: layer one reads the attacker's "dealt" multiplier and layer two reads the target's "taken" one, and several active physiques **multiply** (each one is an independent source). They are evaluated in the **holder's own** formula context rather than the other side's — how much this body takes cannot depend on who is asking. A literal number is validated as finite and non-negative while loading, and a negative or non-finite value produced by a formula counts as "no contribution" (the same rule, for the same class of formula, as passive attributes); `0` is legal and means immunity, or that nothing can be dealt.
+- **`conflict_multiplier` belongs to the element being wielded**: when an active spirit root of the attacker lists **the element of their main-hand item** in `conflicting_elements`, that element's own `conflict_multiplier` (default `1.0`) is multiplied in. The item's element is read the way [weapon_binding](../datapack/json/weapon_binding.md) describes it — the stack's own `mxt:element` component unioned with the `element` a definition declares, falling back to the `aura_type` of the aura the stack carries only when neither exists. It is applied **once per element** however many roots conflict with it (two conflicting roots would otherwise square it), and it deliberately does **not** require the strike to be made of that element: fighting your own weapon weakens whatever you channel through it, which is the point of the rule. A pack that never writes the field is never affected by it.
+- **The element factor belongs to both sides.** `overcomeMultiplier` runs a **double loop over the attacking and defending element sets, multiplying every pair**, and each pair goes through `Element#overcomeMultiplier`, which multiplies every matching relation in that element's `overcomes`. An empty set on either side (no spirit roots, no elements), or a target that is not a `LivingEntity`, reads as `1.0` — "there is no relation to apply".
+- **Backlash and self-damage read no element edge, but they keep "what this casting is worth".** When `mxt:damage` lands on the caster themself the attacker is `null` (`DamageAction#attacker` returns `null` as soon as `caster == entity`), so both of the last two factors in `outgoing` read `1.0`: no relation is applied and the "dealt" multiplier has nothing to be read from either (there is no attacker). That holds even when the strike carries an element of its own through a declared `damage_type` / `element` — a relation is a relation between two entities, and one entity is not a pair. `damage_multiplier` and `element_modifier` still apply: the stronger the technique and the better the root fits, the heavier the backlash, because that is the worth of the casting, not a property of the strike. Layer two still runs as well, because adaptation and `damage_taken_multiplier` are properties of the body that takes the hit.
+- **Nothing is clamped.** Anything non-finite or ≤ 0 counts as "no damage"; otherwise the number is returned as computed. Numeric discipline is the pack's job (a multiplier must be finite and non-negative, but `0.0` is legal and means "no damage").
+
+## Layer two: reduction {#layer-two-reduction}
+
+```java
+public static double incoming(LivingEntity target, Set<Holder<Element>> attacking, double amount) {
+    if (!Double.isFinite(amount) || amount <= 0.0D) return 0.0D;
+    double result = amount * adaptationMultiplier(target, attacking) * physiqueMultiplier(target, false);
+    return Double.isFinite(result) && result > 0.0D ? result : 0.0D;
+}
+```
+
+- **Only the target's `adapted_to` is read.** `adaptationMultiplier` also multiplies pair by pair, but takes only the defending side's relations. Being overcome is the attacker's advantage, not a second bonus for the defender, so `overcomes` does not take part in this layer.
+- **The target's own `damage_taken_multiplier` is read here too**, and `physiqueMultiplier` looks only at the physique definitions rather than at who is attacking: a layer of physical reduction, a layer of attribute resistance or a one-off "unyielding body" all sit on the same table and behave the same whoever deals the hit. It likewise has no special case between `1.0` and `0.0` — `0.0` is immunity.
+- **It runs once.** `LivingIncomingDamageEvent` fires exactly once per damage sequence, whoever dealt the hit — that is what keeps this layer from being applied twice.
+- **This layer never cancels.** Refusing a hit belongs to the protection and invulnerability rules (`FormationProtection`, vanilla resistances); a relation only changes what the hit is worth. The listener therefore starts with "if it is already cancelled, do nothing": a cancelled sequence applies nothing, so rewriting its amount would only rewrite a number nobody reads.
+- **A hit dropped by the invulnerability timer still goes through this layer.** Vanilla discards a repeated small hit *after* the event fires, so "no health lost" does not mean "nothing was computed" — the reduced amount goes nowhere, but the element has already been built up on the target (next section).
+- **Clients are skipped outright** (`target.level().isClientSide()`), so a client never treats a server-only registry as authoritative.
+
+## What this strike is made of {#what-this-strike-is-made-of}
+
+An element is **read only from the damage type**, and that is the foundation of the whole design: layer two is handed nothing but a `DamageSource`, so if the element could not be looked up from `typeHolder()`, there would be no way to reduce by it.
+
+`DamageElements` keeps a reverse index: `Map<damage-type registry instance, Map<Holder<DamageType>, List<Holder<Element>>>>`.
+
+- **Claims** come from an element's `damage_types` field, either a concrete type or a tag (a tag expands to every matching type in the registry). When several elements claim one type, **all of them are kept** and every claim multiplies — the same rule several spirit roots already follow — and a warning is logged, because that is usually a pack mistake.
+- **The index lives as long as the registry instance, and is dropped wholesale on every data pack load.** It is keyed on the damage type registry instance and `ServerCache` explicitly calls `invalidate()` when a pack loads, so it never outlives the pack that built it; at most four registries are cached, and the whole cache is rebuilt once it overflows. The index is built from the `damage_types` each element in the registry declares, so a change to what an element claims takes a data pack load to show up in the reverse index.
+- **Fallback order**: a claimed damage type uses its claimants; an unclaimed one falls back to the **attacker's spirit-root elements**; with no attacker either (a fall, a cactus, unattributed environmental damage) the set is empty, both layers read `1.0`, and the `mxt:element` condition returns `false`. That is how "a strike nobody can classify has no element" is implemented — rather than inventing a default element. Layer one also has a rule that is **independent of the element set**: with nobody credited, `overcomes` stays out even when a declared type gives the strike an element (previous section).
+- **The origin also decides whether anything is left behind.** `DamageElements` hands out the elements and their origin together (`Strike(elements, origin)`), and there are exactly two origins: `TYPE` (a damage type claimed them) and `ROOTS` (they fell back to the attacker's spirit roots). `DamageEventBridge` reduces with either, but only hands the `TYPE` reading to `ElementReactionService#applyFromStrike` — the fire in a body decides how hard a hit lands and does not set anyone alight. That is what keeps "a root shapes the damage, a weapon leaves the mark" apart, and why a strike has to declare what it is made of before it can start a reaction.
+- **`resolveType` turns a declaration into a type.** `mxt:damage` / `mxt:damage_target` use a declared `damage_type` verbatim; with only `element` they take the first type that element claims; with both they check that the element **really** claims that type — a mismatch logs one line per distinct complaint but **never fails the load**.
+- **Why the check cannot happen at load time**: datapack registries load in parallel, so a cross-registry value is not necessarily bound yet, and the same pack would pass or fail depending on which page finished first. So the check runs on first use instead, reports each distinct complaint once, and lets the run continue.
+- **With no server, the answer is an empty set rather than an exception**: a client-side script asking what a hit is made of must not be able to bring the client down.
+
+## Sources and credit {#sources-and-credit}
+
+`DamageCalculationService#source` is the only place a damage source is built; call sites do not each decide attribution:
+
+- A declared `damage_type` → `new DamageSource(type, attacker)`, so the kill counts as the attacker's.
+- No declared type → vanilla's `playerAttack` / `mobAttack`, or `generic` when there is no attacker.
+
+Keeping this here rather than at every call site makes "who this hit belongs to" and "what this hit is worth" come from one place. One consequence is easy to forget: vanilla only scales `playerAttack` / `mobAttack` damage by difficulty when the **victim is a player**, so a source that must not vary with difficulty has to declare its own `damage_type`.
+
+**The return value of `deal` is "the amount handed to the target", not "the health actually lost".** When `hurtServer` returns `false` — invulnerability ticks, immunity, a cancelled event — `deal` still returns `shaped`. A caller that wants to know whether the hit landed should look at the `hurtServer` result or the events, not at this number.
+
+## The paths that were folded in {#the-paths-that-were-folded-in}
+
+| Entry point | How it reaches layer one | Credit |
+| --- | --- | --- |
+| `mxt:damage` (entity action) | `DamageAction#execute` → `deal` | The caster, unless they are the target; self-damage has none |
+| `mxt:damage_target` (bi-entity action) | `DamageTargetBiEntityAction#execute` → `deal(ctx.actor(), …)` | The actor |
+| `mxt:explode` (entity action) | A `ShapedCalculator` wraps vanilla's explosion calculator; only `getEntityDamageAmount` goes through `outgoing` | The caster, as the explosion's cause |
+| A formation `attack` module | `FormationActionRunner#attack` → `deal` | Decided by `attribute_to_owner` (default `true`) |
+| Actions inside a tribulation timeline | The timeline runs the same `mxt:damage`-style actions | Whatever the action itself says |
+
+**Deliberately outside layer one**: `mxt:spawn_lightning` (vanilla computes the bolt's damage, and `cause` only decides attribution) and the block form of `mxt:explode` — neither goes through `deal` at all. A projectile spawned by `mxt:spawn_projectile` records the caster as its owner but still leaves its impact damage to vanilla (an arrow's power is not datapack-driven). All of them still pass through layer two, so as long as an element claims those damage types (lightning, explosion, lava, fall…), their element is still computed; the projectile case additionally still has the attacker, so its element is read either way.
+
+**Why the explosion wraps a calculator**: vanilla computes a separate damage number per entity, and the only place to intervene is `ExplosionDamageCalculator#getEntityDamageAmount`. So `mxt:explode` wraps the vanilla calculator and overrides that one method — block destruction and "should this entity be damaged" are forwarded unchanged. Without it, a caster's explosion would be the one hit in the mod that ignores their progression level and their spirit roots.
+
+## Declaring a hit in the datapack {#declaring-a-hit-in-the-datapack}
+
+`mxt:damage` and `mxt:damage_target` each take two optional fields that declare what the hit *is*:
+
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `damage_type` | `Holder<damage_type>` | none | The damage type of this hit. With it the source is built from it; without it an attributed hit uses the vanilla player/mob attack source (`generic` when `mxt:damage` has no attribution). |
+| `element` | `HolderOrTag<element>[]` | `[]` | The element declaration of this hit. Writing only `element` makes the damage type the first type that element claims; when it is written together with `damage_type`, the **first strike that actually uses them** checks that the element really claims that type and logs one line per distinct mismatch. |
+
+The element is still **only read from the damage type**, so `element` is not a second source of truth: it writes the author's intent into the definition and lets the runtime check it, so a declared element whose type nobody claims is reported the first time it is used rather than quietly computing a wrong number in combat. That check deliberately cannot live at load time — the value behind a declared element is not necessarily bound yet while another datapack registry page is decoded, so the same pack would pass or fail depending on which page finished first. The reduction layer is the reason the element has to be readable from a damage type at all: it receives nothing but a `DamageSource`.
+
+> Without a declared `damage_type`, attributed damage uses vanilla's `playerAttack` / `mobAttack` source: kill credit goes to the attacker, and vanilla scales that damage by difficulty **only when the victim is a player**. Write a `damage_type` when you want a source whose damage does not move with the difficulty.
+
+Three things that are not part of this pipeline, worth saying out loud:
+
+- **The damage type → element mapping is declared entirely by data packs.** `element.damage_types` is the only place that says a type means an element, and the mod hard-codes no mapping at all. A claim wins; the attacker's spirit roots are the fallback when nobody claims the type.
+- **Artifacts (`artifact`) contribute no attack or defence numbers of their own** — they reach combat through the abilities they grant and the attributes they carry.
+- **Damage the framework never shaped still passes layer two**: adaptation is a property of the entity rather than of this mod's attacks.
+
+## The pass-through tag: `mxt:no_bonus` {#the-pass-through-tag-mxt-no-bonus}
+
+Some damage should never be touched by any of this, so the mod keeps a tag on the vanilla `damage_type` registry:
+
+```text
+data/mxt/tags/damage_type/no_bonus.json
+```
+
+```json
+{
+  "replace": false,
+  "values": [
+    "minecraft:out_of_world",
+    "mxt:lifespan"
+  ]
+}
+```
+
+A damage type listed there **skips both layers**: no `damage_multiplier`, no `element_modifier`, no `overcomes`, no `adapted_to`, no physique multiplier — and **no element is left on the target either** (`ElementReactionService` does not take part at all). The number is handed to vanilla exactly as it arrived, and **vanilla's own mitigation still applies** (armour, enchantments, resistance, absorption, invulnerability ticks). The tag says "this hit is not the mod's to scale", not "this hit is immune".
+
+A few things to know:
+
+- **It is decided by damage type, so every source is treated alike**: this mod's actions, another mod's hit and vanilla environmental damage all pass through if their type is in the tag. The three execution points are `deal` (layer one), `DamageEventBridge` (layer two and element buildup) and the damage calculator of `mxt:explode`, all sharing one predicate.
+- **The default holds two: the void, `minecraft:out_of_world`, and `mxt:lifespan`**: the 4 damage per tick for falling out of the world is an execution by position, with no "who is stronger" to speak of, and any scaling or reduction would make being killed by the void depend on a technique or a physique; `mxt:lifespan` is the cause this mod uses for a **non-player creature whose lifespan runs out** (the death message key is `death.attack.mxt.lifespan`), and it is a one-hit kill that should not be swayed by a technique, a physique or an element relation either. A player whose lifespan runs out never takes this damage — a player is turned into a spectator.
+- **A pack can add to it**: the same tag path with `"replace": false` appends to the defaults, and `"replace": true` replaces them outright (which also takes the void back out).
+- **It changes neither credit nor kill statistics** — it only keeps the hit out of the bonus arithmetic.
+
+:::tip Trying it in game
+The test module ships `/mxt_test damage`, which drives both layers against throwaway entities with known element edges and reports whether the amounts it measured are the ones it expected. It also runs two more legs: "damage with nobody credited reads no relation but keeps the casting's bonus", and "a type in `mxt:no_bonus` passes through" (the latter also asserts that the shipped default tag was actually loaded).
+:::
+
+## Element buildup and reactions {#element-buildup-and-reactions}
+
+In the same event, the element set used for reduction is handed straight to `ElementReactionService#applyFromStrike`: it builds up each element on the target by that element's own `damage_attachment`, then tries to fire an element reaction (reactions have their own chain limit so they cannot cascade forever). **The source is read once and used twice** so that "the element used to reduce" and "the element used to accumulate" cannot be two different answers.
+
+Three rules apply to that step:
+
+- **Only a declared element accumulates.** The origin comes from the same reading (`DamageElements.Strike`'s `origin`), and only `Origin.TYPE` (a claimed damage type) is handed to the buildup — `Origin.ROOTS` (the attacker's spirit roots) takes part in reduction alone. The fire in a body does not set anyone alight; weapons and techniques do.
+- **The artifacts the victim carries decide how much gets through.** The amount is first multiplied by `DamageCalculationService#attachmentMultiplier(target)`: the `attachment_multiplier` declared by the **artifacts** the target carries (both hands and the Curios slots), multiplied together (only artifacts carry this field — `item_binding` and `weapon_binding` no longer do), where `0.5` lets half through and `0` lets none. This is the item-side answer to resisting an elemental reaction — it slows the **buildup**, so a reaction answers later or never; what the reaction **does** (its damage, for instance) is not its business and stays with the reaction's `action` and layer two.
+- **How much also depends on which damage type the strike was.** The amount is not the element's alone: a claimed type (or tag) may carry its own `damage_attachment` (see [element](../datapack/json/element.md), "A claimed type is a group"). The pipeline resolves it in the **same reading that classifies the strike** (`Strike` carries the elements, the origin and the amounts), so "a lava bath builds up slower than a fireball" is one line in a pack.
+
+This lives here for the same reason the reduction does: a lava bath and another mod's fire spell build up fire on a body exactly like our own fireball, as long as their damage types are claimed.
+
+## Costs and limits {#costs-and-limits}
+
+- **Every hit computes.** The reverse index is cached (built once per datapack reload), but `Elements#of` reads the spirit-root registry and builds a set every call, and both multipliers are O(n×m) double loops with no memoisation. Hits are far rarer than ticks, so this is an accepted trade-off; a caller asking the same question repeatedly inside one settlement has to hold on to the answer itself.
+- **The first build is synchronous**: the first strike of a session walks the whole element registry once inside a lock and freezes the result; everything after that is a lookup.
+- **Pack mistakes only log.** A declaration that disagrees with its type, several elements claiming one type, a tag-only element declaration that cannot name a type — each reports once and the run continues. Check the log after editing elements; do not expect a failed start.
+- **No floor on reduction and no ceiling on multiplication**: several elements being overcome multiply repeatedly. Capping or flooring is the pack's job.
+- **Ordering on `LivingIncomingDamageEvent` is undefined**: this mod declares no priority, so another mod that edits `amount` on the same event has no guaranteed order relative to this layer.
+
+## See also {#see-also}
+
+- [element](../datapack/json/element.md) — every field of `overcomes` / `adapted_to` / `damage_types` / `attachment_*`, and how a damage type gets claimed.
+- [progression](../datapack/json/progression.md) — how `damage_multiplier` is chosen.
+- [Formula Variables](../datapack/types/formula_variables.md) — reading `damage_multiplier` inside a definition's own formulas.
+- [Entity Actions](../datapack/types/action/entity_action_types.md) and [Bi-entity Actions](../datapack/types/action/bientity_action_types.md) — the full field tables of `mxt:damage` and `mxt:damage_target`.
+- [Java API](../java/api.md) — `DamageCalculationService` and its method signatures.

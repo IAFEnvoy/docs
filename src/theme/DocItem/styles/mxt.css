@@ -1,0 +1,329 @@
+/* Songyan palette migrated from the MiXianTu VitePress site. */
+html.dir-mod-mxt {
+  color-scheme: light;
+  --ink: #303c33;
+  --ink-muted: #73796c;
+  --ink-dark: #293a30;
+  --ink-on-accent: #fffdf5;
+  --canvas: #f5f2e9;
+  --surface: #fffdf7;
+  --surface-deep: #e9e8dc;
+  --surface-soft: #f0efe4;
+  --edge: #d7d9c9;
+  --edge-light: #e7e7db;
+  --green: #436650;
+  --green-hover: #34553f;
+  --green-shadow: #284230;
+  --purple: #7c6882;
+  --purple-hover: #695370;
+  --purple-shadow: #57445e;
+  --gold: #997232;
+  --gold-shadow: #735622;
+  --red: #ad513e;
+  --red-hover: #94402e;
+  --red-shadow: #763427;
+  --blue: #4c737e;
+  --success: #436650;
+  --warning: #936725;
+  --danger: #ad513e;
+  --info: #4c737e;
+  --focus: #8a9d71;
+  --gray-10: #fcfaf3;
+  --gray-20: #efeee4;
+  --gray-30: #e1e2d6;
+  --gray-40: #cdd0c0;
+  --gray-50: #b0b6a5;
+  --gray-60: #909985;
+  --gray-70: #737e69;
+  --gray-80: #586451;
+  --gray-90: #3d4a38;
+  --gray-100: #263022;
+  --green-30: #e8ecdf;
+  --green-40: #c6d2b9;
+  --green-50: #8fa588;
+  --green-60: #64805f;
+  --green-70: #436650;
+  --red-10: #f5e8df;
+  --red-30: #e7c0ad;
+  --red-50: #c47e65;
+  --red-60: #ad513e;
+  --red-80: #763427;
+  --blue-10: #e7eff0;
+  --blue-20: #b8cfd0;
+  --blue-30: #4c737e;
+  --yellow-10: #f5edda;
+  --yellow-20: #d2b777;
+  --orange-20: #c48655;
+  --purple-10: #eee8f0;
+  --gold-vip: #997232;
+  --disabled-background: #ecece2;
+  --disabled-border: #dedfd3;
+  --disabled-shadow: transparent;
+  --disabled-foreground: #9a9e91;
+  --overlay: rgba(33, 47, 34, .36);
+  --overlay-soft: rgba(245, 242, 233, .86);
+  --rarity-common: #586451;
+  --rarity-uncommon: #436650;
+  --rarity-rare: #4c737e;
+  --rarity-epic: #7c6882;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --font-sm: 13px;
+  --font-md: 16px;
+  --font-lg: 20px;
+  --font-xl: 28px;
+  --font-body: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  --font-display: "STXingkai", "华文行楷", "STKaiti", "华文楷体", "KaiTi", "楷体", "Songti SC", "SimSun", serif;
+  --font-mono: "Cascadia Code", Consolas, monospace;
+  --motion-fast: 160ms;
+  --size-unit: 2px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --shadow: 0 6px 24px rgba(49, 65, 40, .055);
+  --tint-green: #e7eddf;
+  --tint-purple: #eee8f0;
+  --tint-gold: #f3ecd9;
+  --tint-red: #f4e7df;
+  --tint-blue: #e7eef0;
+  --edge-green: #dce5d2;
+  --edge-purple: #e0d6e5;
+  --edge-gold: #eadfbe;
+  --edge-red: #ecd7cb;
+  --edge-blue: #d5e2e5;
+  --edge-hover: #a7b29b;
+  --selection: #d7dfc8;
+  --switch-off: #c4cabb;
+  --tooltip-surface: #34523d;
+  --tooltip-ink: #fffdf5;
+  --shimmer: #ffffff80;
+  --paper-line: rgba(100, 112, 83, .035);
+}
+
+html.dir-mod-mxt[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #d8decd;
+  --ink-muted: #9da997;
+  --ink-dark: #e6e9db;
+  --ink-on-accent: #17251b;
+  --canvas: #171e1a;
+  --surface: #202923;
+  --surface-deep: #2b362d;
+  --surface-soft: #252f27;
+  --edge: #3b483b;
+  --edge-light: #303d32;
+  --green: #a4bf91;
+  --green-hover: #bdd1ad;
+  --green-shadow: #71895f;
+  --purple: #b6a1c0;
+  --purple-hover: #cab6d3;
+  --purple-shadow: #897396;
+  --gold: #d3b578;
+  --gold-shadow: #a28655;
+  --red: #dd9780;
+  --red-hover: #eab19c;
+  --red-shadow: #a8715c;
+  --blue: #9ebfc3;
+  --success: #a4bf91;
+  --warning: #d3b578;
+  --danger: #dd9780;
+  --info: #9ebfc3;
+  --focus: #a4bf91;
+  --gray-10: #e6e9db;
+  --gray-20: #cdd4c2;
+  --gray-30: #b5bfaa;
+  --gray-40: #9ca88f;
+  --gray-50: #829175;
+  --gray-60: #68795c;
+  --gray-70: #506145;
+  --gray-80: #3b4b34;
+  --gray-90: #293625;
+  --gray-100: #171e1a;
+  --green-30: #303e2d;
+  --green-40: #4e6442;
+  --green-50: #71895f;
+  --green-60: #8ca578;
+  --green-70: #a4bf91;
+  --red-10: #392b25;
+  --red-30: #6b4738;
+  --red-50: #a8715c;
+  --red-60: #dd9780;
+  --red-80: #eab19c;
+  --blue-10: #27383a;
+  --blue-20: #567c80;
+  --blue-30: #9ebfc3;
+  --yellow-10: #383425;
+  --yellow-20: #b59b63;
+  --orange-20: #cc9d74;
+  --purple-10: #342d3a;
+  --gold-vip: #d3b578;
+  --disabled-background: #29312a;
+  --disabled-border: #364036;
+  --disabled-shadow: transparent;
+  --disabled-foreground: #717d6c;
+  --overlay: rgba(4, 10, 6, .65);
+  --overlay-soft: rgba(23, 30, 26, .9);
+  --rarity-common: #c1cbb8;
+  --rarity-uncommon: #a4bf91;
+  --rarity-rare: #9ebfc3;
+  --rarity-epic: #b6a1c0;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .14);
+  --tint-green: #303e2d;
+  --tint-purple: #342d3a;
+  --tint-gold: #383425;
+  --tint-red: #392b25;
+  --tint-blue: #27383a;
+  --edge-green: #44543c;
+  --edge-purple: #4d4055;
+  --edge-gold: #554b32;
+  --edge-red: #5c4032;
+  --edge-blue: #3a5255;
+  --edge-hover: #708267;
+  --selection: #465d3b;
+  --switch-off: #4b5949;
+  --tooltip-surface: #c1d0b2;
+  --tooltip-ink: #17251b;
+  --shimmer: #b3c2a51a;
+  --paper-line: rgba(159, 183, 140, .025);
+}
+
+/* Docusaurus keeps its layout; Songyan supplies the document and component palette. */
+html.dir-mod-mxt {
+  --ifm-color-primary: var(--green);
+  --ifm-color-primary-dark: var(--green-hover);
+  --ifm-color-primary-darker: var(--green-hover);
+  --ifm-color-primary-darkest: var(--green-shadow);
+  --ifm-color-primary-light: var(--green);
+  --ifm-color-primary-lighter: var(--green);
+  --ifm-color-primary-lightest: var(--green);
+  --ifm-background-color: var(--canvas);
+  --ifm-background-surface-color: var(--surface);
+  --ifm-font-color-base: var(--ink);
+  --ifm-heading-color: var(--ink-dark);
+  --ifm-font-family-base: var(--font-body);
+  --ifm-font-family-monospace: var(--font-mono);
+  --ifm-navbar-background-color: var(--canvas);
+  --ifm-navbar-link-color: var(--ink);
+  --ifm-menu-color: var(--ink-muted);
+  --ifm-menu-color-background-active: var(--tint-green);
+  --ifm-menu-color-background-hover: var(--surface-soft);
+  --ifm-toc-border-color: var(--edge);
+  --ifm-toc-link-color: var(--ink-muted);
+  --ifm-color-emphasis-100: var(--surface-soft);
+  --ifm-color-emphasis-200: var(--edge-light);
+  --ifm-color-emphasis-300: var(--edge);
+  --ifm-color-emphasis-600: var(--ink-muted);
+  --ifm-color-emphasis-700: var(--ink);
+  --ifm-color-emphasis-800: var(--ink);
+  --ifm-color-emphasis-900: var(--ink-dark);
+  --ifm-code-background: var(--surface-soft);
+  --ifm-pre-background: var(--surface-soft);
+  --ifm-footer-background-color: var(--surface-soft);
+  --ifm-footer-color: var(--ink-muted);
+  --ifm-footer-title-color: var(--ink-dark);
+  --ifm-footer-link-color: var(--green);
+  --ifm-card-background-color: var(--surface);
+  --ifm-global-radius: var(--radius-sm);
+  --ifm-table-border-color: var(--edge);
+  --ifm-table-stripe-background: var(--surface-soft);
+}
+
+html.dir-mod-mxt body {
+  background-image: radial-gradient(var(--paper-line) .7px, transparent .7px);
+  background-size: 5px 5px;
+}
+
+html.dir-mod-mxt ::selection {
+  background: var(--selection);
+  color: var(--ink-dark);
+}
+
+html.dir-mod-mxt .theme-doc-sidebar-container {
+  background: var(--surface-soft);
+  border-color: var(--edge);
+}
+
+html.dir-mod-mxt .navbar__title,
+html.dir-mod-mxt .theme-doc-markdown :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ink-dark);
+  font-family: var(--font-display);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+html.dir-mod-mxt .theme-doc-markdown h1 {
+  font-size: 36px;
+  line-height: 1.45;
+  letter-spacing: .02em;
+}
+
+html.dir-mod-mxt .theme-doc-markdown h2 { font-size: 28px; line-height: 1.5; }
+html.dir-mod-mxt .theme-doc-markdown h3 { font-size: 23px; }
+html.dir-mod-mxt .theme-doc-markdown h1 code { font-family: var(--font-mono); font-size: .8em; }
+html.dir-mod-mxt .theme-doc-markdown a:not(.hash-link) { color: var(--green); }
+
+html.dir-mod-mxt .cmd-tree ul { list-style: none; margin: 0; padding-left: 1.6em; }
+html.dir-mod-mxt .cmd-tree > ul { padding-left: 0; }
+html.dir-mod-mxt .cmd-tree li { margin: 0; padding-top: .5em; }
+html.dir-mod-mxt .cmd-tree li > p { margin: 0; }
+html.dir-mod-mxt .cmd-tree li > p + p { margin-top: .25em; }
+
+html.dir-mod-mxt .theme-doc-markdown table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+}
+
+html.dir-mod-mxt .theme-doc-markdown th { background: var(--surface-deep); font-weight: 500; }
+html.dir-mod-mxt .theme-doc-markdown :is(th, td) { border-color: var(--edge); }
+html.dir-mod-mxt .theme-doc-markdown tr:nth-child(2n) { background: var(--surface-soft); }
+html.dir-mod-mxt .theme-doc-markdown tr:hover { background: var(--tint-green); }
+
+html.dir-mod-mxt .theme-code-block {
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+}
+
+html.dir-mod-mxt .theme-code-block pre,
+html.dir-mod-mxt .theme-code-block code {
+  background: var(--surface-soft);
+  text-shadow: none;
+}
+
+html.dir-mod-mxt .theme-code-block [class*='codeBlockTitle'] { background: var(--surface-deep); border-color: var(--edge); }
+html.dir-mod-mxt .theme-doc-markdown > blockquote { border-color: var(--edge); background: var(--surface-soft); color: var(--ink-muted); }
+html.dir-mod-mxt .alert { color: var(--ink); border-radius: var(--radius-sm); box-shadow: none; }
+html.dir-mod-mxt .alert--info { --ifm-alert-background-color: var(--tint-blue); --ifm-alert-border-color: var(--blue); }
+html.dir-mod-mxt .alert--secondary { --ifm-alert-background-color: var(--surface-soft); --ifm-alert-border-color: var(--edge); }
+html.dir-mod-mxt .alert--success { --ifm-alert-background-color: var(--tint-green); --ifm-alert-border-color: var(--green); }
+html.dir-mod-mxt .alert--warning { --ifm-alert-background-color: var(--tint-gold); --ifm-alert-border-color: var(--warning); }
+html.dir-mod-mxt .alert--danger { --ifm-alert-background-color: var(--tint-red); --ifm-alert-border-color: var(--danger); }
+
+html.dir-mod-mxt .mxt-tool-open { margin: 0 0 14px; text-align: right; }
+html.dir-mod-mxt .mxt-tool-open a {
+  display: inline-flex;
+  padding: 5px 12px;
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+}
+html.dir-mod-mxt .mxt-tool-open a:hover { border-color: var(--edge-hover); background: var(--surface-soft); color: var(--green); }
+
+/* Standalone editors keep their translated document route and discard the surrounding chrome. */
+html.dir-mod-mxt:has(.mxt-tool--standalone) :is(.navbar, .footer, .theme-doc-breadcrumbs, .theme-doc-footer, .pagination-nav) { display: none; }
+html.dir-mod-mxt:has(.mxt-tool--standalone) main { max-width: none; padding: 0; }
+html.dir-mod-mxt:has(.mxt-tool--standalone) main > .container { max-width: 1440px; }
+html.dir-mod-mxt:has(.mxt-tool--standalone) [class*='docItemCol'] { max-width: 100% !important; }
+html.dir-mod-mxt .mxt-bare { padding: 22px 26px 30px; }
+
+@media (max-width: 640px) {
+  html.dir-mod-mxt .theme-doc-markdown h1 { font-size: 30px; }
+  html.dir-mod-mxt .theme-doc-markdown h2 { font-size: 25px; }
+  html.dir-mod-mxt .mxt-bare { padding: 12px; }
+}

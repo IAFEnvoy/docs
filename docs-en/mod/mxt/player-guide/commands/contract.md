@@ -1,0 +1,80 @@
+---
+title: /contract
+---
+
+# `/contract`
+
+<span id="contract" />
+
+Inspects and operates spirit-beast contracts: the list, one record, binding, release, recall, orders and a progression level. Every node also exists as `/mxt contract …`.
+
+<div className="cmd-tree">
+
+- `/contract ...`
+
+  - `... list [<player>]`
+
+    Lists the spirit beasts of that player from the **owner index**: contract type, beast UUID and whether it is loaded right now. Without `player` it is your own list, and no permission is needed.
+
+  - `... info <target>`
+
+    Reads the contract record on the target: type, owner, when it was signed, recall state, the cooldown left and the order in force.
+
+  - `... bind <player> <target> <contract_type> [force]`
+
+    Binds the target creature to `<player>` (gamemaster permission), through exactly the same flow as the Contract Scroll, with the price paid by that player. `force` skips the price and the per-owner limit.
+
+  - `... break <target> [force]`
+
+    Releases the target from its contract (gamemaster permission) while the beast lives. `force` skips the "must be the owner" check.
+
+  - `... recall <target> [force]`
+
+    Makes the target answer a recall, the same as picking its "recall" cell on the Beast Taming Bell's wheel. `force` skips the recall cooldown.
+
+  - `... behavior <target> <behavior> [force]`
+
+    Gives the target one order (gamemaster permission) through exactly the same flow as the bell's wheel.
+
+  - `... level <target> <level> [force]`
+
+    Writes the target's **progression record** to one level (gamemaster permission).
+
+</div>
+
+The index behind `list` is a name list rather than the truth, so every row is checked back against the record on the creature and a row that no longer matches is dropped on the spot. When the creature's profile declares a progression chain, `info` prints two more lines - the level it stands on and what the next one is (or "already the highest level"), plus how much mastery is still missing (the current value, what that level asks for, and which `resource` measures it).
+
+For `behavior`, the argument is a code-side order id; the built-ins are `mxt:follow` / `mxt:wander` / `mxt:stay` / `mxt:recall` and they are what completion offers. A creature that does not take that order answers "it does not take that order". `mxt:recall` is **momentary** and equivalent to `recall` above. `force` skips the "must be the owner" check (and the cooldown for a recall).
+
+For `level`, the chain's owner is the target's own creature profile, so naming the level is enough: it has to be **on its own chain** (a level that is not is refused with "that level is not on its chain", and `force` skips that check), and writing it rebuilds what it grants and publishes one `mxt:progression_level` signal, the same road a natural advancement takes. A target with no profile, or a profile that declares no chain, answers "it owns no progression chain". It **ignores** that level's own `mastery` and `condition` - those are the gates of natural advancement, and this is the debugging entry.
+
+## Who can be contracted {#who-can-be-contracted}
+
+**Eligibility is a code fact**: the target creature must implement `com.iafenvoy.mxt.api.Contractable` itself (see [Interfaces](../../java/interfaces/index.md)). No data pack can grant it, so **vanilla creatures can never be contracted** - `bind` on a wolf answers "it cannot be contracted".
+
+What a data pack can do is **narrow** it: a [contract_type](../../datapack/json/contract_type.md) can restrict "which kind of creature signs this contract" with its own **entity type tag** `#<namespace>:contract/<path>`, restrict both sides with `owner_condition` / `creature_condition`, and charge a price with `costs`. **A tag that is absent, or written empty, places no restriction** (every creature implementing the interface may sign).
+
+## The order of a binding {#the-order-of-a-binding}
+
+`bind` (and the Contract Scroll) asks in a fixed order, and **the payment comes last**:
+
+1. Does it already have a contract? → Can it be contracted at all?
+2. The interface's `acceptsContract` → `owner_condition` → `creature_condition` → the per-owner limit `max_owned`;
+3. The `Pre` event (cancellable, and **nothing has been paid yet**);
+4. The `costs` payment → the record is written → the owner index is written → the creature's `onContractBound`.
+
+The price is paid by the **owner** and may use the owner's resource account, inventory and script channels (the beast pays nothing). Payment sits after the event because the script channel cannot be refunded: returning money after a cancellation is not something the framework can do.
+
+## Release and death are two roads {#release-and-death-are-two-roads}
+
+`break` lets a living beast leave its contract: the contract type's `release_action` runs, the creature's `onContractReleased` is called, and then the record and the owner index are cleared. A beast that dies takes the other road: `death_action` runs, `onContractDeath` is called, and the record and index are cleared just the same, with the inner core still dropping (extra loot belongs to vanilla loot tables; see [Creature Profile](../../datapack/json/creature_profile.md)). **Each action field answers exactly one moment**, so no single action has to serve two.
+
+## Recall {#recall}
+
+`recall` only **sets the recall latch** (exactly what ringing the bell does); the actual movement happens on the beast's next tick and is landed by the operations interface the creature implements itself - the default implementation teleports it to its owner. The contract type's `recall_cooldown` is the shortest gap between two recalls, decided from the timestamp in the record; `force` is an operator's way around that wait. While the owner is offline or in another dimension the latch simply stays set until they are back.
+
+## Orders {#orders}
+
+The orders an owner can give are **follow / wander / stay / recall**, and they are answered by **the creature's own code** (`ContractOperations.behaviors()`) rather than by a data pack field; a content mod may add one of its own. **There is only one copy of the order in force**, on the beast's contract record, and an old save or an id that no longer resolves reads as follow.
+
+The player's entry point is the **Beast Taming Bell**: right-clicking one of your own bound beasts tunes the bell to it (the bell remembers its name and the orders it takes), and right-clicking with nothing in front opens the wheel on the "contract beast" page - picking a cell gives that order. **Follow / wander / stay** stay in force (the next one replaces them); **recall** happens once and leaves the current order alone. This `behavior` command is the operator's way in. A contract type's `follow_action` only runs while the order in force is follow.

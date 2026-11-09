@@ -57,7 +57,8 @@ sidebar_position: 1
 - 已发布的文档 ID、文件路径、slug 和被引用的锚点应保持稳定。确需移动或改名时，检查两种语言及所有引用；翻译标题时注意显式保留需要稳定的锚点。
 - 旧 `/docs/…` 网址通过 `plugins/legacy-links.cjs` 显示语言选择页，用户选择后只添加 `/en` 或 `/zh` 前缀，保留后续路径、查询参数和锚点。不要添加逐页猜测映射。静态构建按文档路由生成旧网址入口；任意旧路径的兜底依赖静态托管使用根目录 `404.html`。
 - `sidebars.js` 自动生成四类侧边栏。通过 `_category_.json` 设置分类标签、顺序和入口；通过 `src/data/sidebar-labels.json` 本地化目录标签。
-- `mod` 侧边栏最外层按文档 ID 中的英文项目目录名排序，两种语言顺序一致；项目内部继续遵循 `sidebar_position` 和 `_category_.json` 的顺序。
+- `mod` 侧边栏最外层按稳定的英文项目名排序，两种语言顺序一致；通常取文档 ID 中的英文目录名，缩写目录可通过 `customProps.sortName` 指定全名（如 `mxt` 使用 `MiXianTu`）。项目内部继续遵循 `sidebar_position` 和 `_category_.json` 的顺序。
+- MXT 文档维护在两种语言的 `mod/mxt/` 下；其多层目录与中英文标签由 `src/data/mxt-sidebar.json` 统一维护，`scripts/mxt-sidebar.cjs` 保留类型族挂在对应 JSON 定义页下面的结构。新增 MXT 页面时同步登记该清单。两个图形编辑器使用 `src/components/MxtToolFrame.jsx` 与 `mxt-tools/` 中的模块，独立页以 `-full.md` 结尾，不出现在侧边栏中。
 - 新分类沿用侧边栏生成器的唯一键规则。不同项目中相同的“API 参考”“安装”等标签不能产生重复翻译键。
 - 文档之间优先使用相对 Markdown 链接，如 `./install.md`、`../../json/origin.md`。避免写死本站域名或依赖旧源码目录的绝对文件路径。
 - React 内部导航使用 `@docusaurus/Link`，静态资源按需使用 `useBaseUrl`；避免原生 `<a href="/">` 将中文页面带回英文首页。
@@ -116,7 +117,7 @@ rg --files docs-en -g '*.md' -g '*.mdx' -g '!_*.md' -g '!_*.mdx' |
 - 新增项目样式时增加独立 CSS 文件，并在 `DocItem` 的加载映射中登记。中英文页面复用同一套目录样式。
 - 所有项目样式必须限定作用域，例如 `html.dir-mod-ice-and-fire-ce`。包装组件同时维护 HTML 和 body 上的 `dir-…`、`lang-en`、`lang-zh` 类，离开页面时清理。
 - 动态导入的 CSS 会留在浏览器中；隔离依靠作用域与类名清理。避免无前缀的 `h2`、`a`、`:root` 等规则影响其他项目。
-- `src/theme/DocItem/styles/` 目前只保留 `README.md`，加载映射为空，测试配色、标题边框和中文行距覆盖已移除。添加正式样式前参考该说明；共享基础规则放在 `src/css/custom.css`，项目主题色直接维护所需的 `--ifm-*` 变量，不再依赖 `--doc-accent` 转换规则。
+- `src/theme/DocItem/styles/` 的正式主题及适用目录见其中的 `README.md`。MXT 使用从原独立站迁入的松烟主题，两种语言共用、深浅色跟随本站。共享基础规则放在 `src/css/custom.css`，项目主题色直接维护所需的 `--ifm-*` 变量，不再依赖 `--doc-accent` 转换规则。
 - 保留 `plugins/directory-styles.cjs` 的 CSS 提取配置。Docusaurus 默认会合并动态导入的 CSS，单写 `import()` 不能保证最终文件按目录分开。
 - 保留原始主题组件提供的文档上下文、元数据和布局；优先包装原组件，避免用空壳替换整个 `DocItem`。
 

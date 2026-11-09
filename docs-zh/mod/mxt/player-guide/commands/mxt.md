@@ -1,0 +1,121 @@
+---
+title: /mxt
+---
+
+# `/mxt`
+
+<span id="mxt" />
+
+本模组的根命令：注册表、附件、性能分析、数值、修炼、境界、寿元、契约、秘境、灵魂、触发器与裂隙。每个面向玩家的分组都有自己的一页，这里只列形状。
+
+<div className="cmd-tree">
+
+- `/mxt ...`
+
+  - `... registries list`
+
+    列出动态注册表及条目数量。
+
+  - `... registries validate`
+
+    校验数据包定义，并把本次构建**发现的全部问题一次列出**：每条都带出错的文件路径；没有问题时报告注册表与条目数量。
+
+  - `... attachment status`
+
+    查看自身附件数量和修炼数据。
+
+  - `... debug ...`
+
+    模块性能分析，见下。
+
+    - `... on` / `... off`
+
+      开启或关闭模块性能分析，普通模式默认关闭，开发模式启动时自动开启，需要 3 级管理员权限。
+
+    - `... status [sources...]`
+
+      查询最近 240 tick 的各模块耗时，需要 3 级管理员权限。
+
+    - `... gui`
+
+      打开性能分析列表与图表，仅玩家可用，需要 3 级管理员权限。
+
+  - `... resource ...`
+
+    资源账户：列出全部[资源条](./resource.md)或读一份数值、看它的条、改写它。见 [`/resource`](./resource.md)。
+
+  - `... cultivate ...`
+
+    修炼状态与手动点名一条法门。见 [`/cultivate`](./cultivate.md)。
+
+  - `... breakthrough <aura>`
+
+    尝试突破到这门**灵气**（`mxt:aura` 条目，补全给的就是它）所通往的境界。缺哪一种修炼资源由境界自己声明，失败时会点名。见 [`/breakthrough`](./breakthrough.md)。
+
+  - `... realm ...`
+
+    设置自己的线性境界。见 [`/realm`](./realm.md)。
+
+  - `... lifespan ...`
+
+    读与改写寿元账本，并让目标当场转世。见 [`/lifespan`](./lifespan.md)。
+
+  - `... contract ...`
+
+    灵兽契约的名单、记录与操作。见 [`/contract`](./contract.md)。
+
+  - `... secret_realm ...`
+
+    秘境定义、实例、进出与维护。见 [`/secret_realm`](./secret_realm.md)。
+
+  - `... soul create [<targets>]`
+
+    为目标生物或玩家生成保存完整实体快照的灵魂体，需要 2 级管理员权限；省略目标时作用于自己。
+
+  - `... soul reclaim [<targets>]`
+
+    回收目标原实体关联的已加载灵魂体，需要 2 级管理员权限；不加载区块，不恢复身体。详见[灵魂体](../soul.md)。
+
+  - `... trigger ...`
+
+    运行中的触发器订阅与数据包规则。
+
+    - `... list [<entity>]`
+
+      列出该实体当前的运行时触发器订阅：模块/标识/信号/状态。订阅从不存档，这是运行中的服务器里唯一能看见它们的地方；不填实体时用自己。
+
+    - `... rules <signal>`
+
+      按执行顺序列出响应某个信号的数据包规则，以及每条规则的行为类型。
+
+    - `... publish <signal> [<entity>]`
+
+      手动发布一个信号（需要 gamemaster 权限），不必等待真实事件就能检查规则或订阅；既没有订阅也没有规则监听时会明确提示。
+
+  - `... rift ...`
+
+    2 级 OP 的传送门创建、编辑、目标、变换与导出入口，见[裂隙](../rift.md)。
+
+</div>
+
+## debug {#debug}
+
+整棵命令树和 GUI 数据接收都需要 3 级管理员权限（`admin`）。这组命令没有顶层别名。
+
+按步骤开启记录与使用图表，见[开发模式教程](../../tutorial/dev-mode.md)。
+
+性能分析在普通模式默认关闭，用 `/mxt debug on` 开始记录。开发模式下，服务器启动时会自动开启记录；开发启动环境或启用服务端配置「调试 → 调试模式」均属于开发模式。手动 `/mxt debug off` 后保持关闭，直到再次执行开启指令或重启服务器时重新按开发模式决定初始状态。
+
+用 `/mxt debug gui` 打开列表。每行显示本地化模块名称和 min / avg / max（毫秒），右侧是最近 240 tick 的柱图；可以按模块名称、最小、平均或最大耗时排序，并切换升降序。图表固定为 240 px 宽，纵轴上限标在图表左侧顶部。页面紧凑居中，窄窗口将名称与统计放到图表上方。
+
+`/mxt debug status` 按需计算最近 240 tick 的 min、avg、max、50%、95%、99%、调用次数与有效 tick 数。可以用空格指定多个 Source，支持补全，例如 `/mxt debug status server/cost server/economy/change`；省略参数则查询全部 Source。不完整的 tick 不参与统计，完整的空闲 tick 计为零。
+
+## secret_realm {#secret-realm}
+
+整棵子树需要 2 级 OP。`definitions` 查询定义；`list`、`info` 查询实例；`enter` 按定义进入，`join` 点名实例；`check` 检查落点，`anchor` 调整实例入口；`exit` 返回，`destroy` 结束实例。参数和排错说明见 [`/secret_realm`](./secret_realm.md)。
+
+## rift {#rift}
+
+裂隙是以 UUID 管理的平面多边形门。整棵子树需要 2 级 OP：`spawn`、`edit`、`info`、`target`、`enabled`、`duration`、`copy`、`transform`、`remove`、`export` 调用同一套校验与传送规则。
+
+机制见[裂隙](../rift.md)，逐条命令见 [`/rift`](./rift.md)。

@@ -141,7 +141,7 @@ const config = {
             items: [
               { to: '/docs/mod/dragon-mounts-reforged', label: 'Dragon Mounts: Reforged' },
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
-              { href: 'https://mxt.iafenvoy.com/', label: 'MiXianTu' },
+              { to: '/docs/mod/mxt', label: 'MiXianTu' },
               { to: '/docs/mod/mite', label: 'MITE: Reforged' },
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
               { to: '/docs/mod/origins-js', label: 'Origins JS' },

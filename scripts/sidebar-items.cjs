@@ -1,4 +1,5 @@
 const labels = require('../src/data/sidebar-labels.json');
+const mxtSidebar = require('./mxt-sidebar.cjs');
 
 function documentId(item) {
   if (item.type === 'doc') return item.id;
@@ -12,12 +13,14 @@ function documentId(item) {
 
 module.exports = async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}) {
   const items = await defaultSidebarItemsGenerator(args);
+  const locale = args.docs.some(doc => /[/\\]i18n[/\\]zh[/\\]/.test(doc.source)) ? 'zh' : 'en';
   if (args.item.dirName === 'mod') {
+    const mxtIndex = items.findIndex(item => documentId(item)?.startsWith('mod/mxt/'));
+    if (mxtIndex !== -1) items[mxtIndex] = mxtSidebar(args.docs, locale);
     // Project directory names are English and stay the same in both locales.
-    const name = item => documentId(item)?.split('/')[1] ?? item.label;
+    const name = item => item.customProps?.sortName ?? documentId(item)?.split('/')[1] ?? item.label;
     items.sort((a, b) => name(a).localeCompare(name(b), 'en', {sensitivity: 'base', numeric: true}));
   }
-  const locale = args.docs.some(doc => /[/\\]i18n[/\\]zh[/\\]/.test(doc.source)) ? 'zh' : 'en';
   const docs = new Map(args.docs.map(doc => [doc.id, doc]));
   const translateLabel = label => labels[locale][label] ?? label;
   function localize(item, parentKey = args.item.dirName) {

@@ -1,0 +1,255 @@
+/*
+ * The two authoring tools under /tools/ (a formation figure, a drawing's strokes) are plain DOM code mounted into a
+ * page, so their chrome is styled here rather than in a component. Everything reads the songyan tokens out of
+ * the scoped mxt.css, so the tools follow the site's light/dark switch without a palette of their own.
+ */
+
+html.dir-mod-mxt .mxt-tool {
+  container-type: inline-size;
+  margin: 24px 0 8px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+html.dir-mod-mxt .mxt-tool *,
+html.dir-mod-mxt .mxt-tool *::before,
+html.dir-mod-mxt .mxt-tool *::after {
+  box-sizing: border-box;
+}
+
+html.dir-mod-mxt .mxt-tool-grid {
+  display: grid;
+  grid-template-columns: auto minmax(300px, 470px);
+  gap: 20px;
+  align-items: start;
+}
+
+html.dir-mod-mxt .mxt-tool-board {
+  min-width: 0;
+}
+
+html.dir-mod-mxt .mxt-tool-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* The board is a viewport, not a page: a fixed dark ground reads the same in both modes and matches the dust. */
+html.dir-mod-mxt .mxt-tool #board {
+  display: block;
+  max-width: 100%;
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+html.dir-mod-mxt .mxt-tool #strip {
+  display: block;
+  width: 100%;
+  height: 30px;
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+html.dir-mod-mxt .mxt-tool .group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+}
+
+html.dir-mod-mxt .mxt-tool .group .title {
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+html.dir-mod-mxt .mxt-tool input[type="number"] {
+  width: 64px;
+}
+
+html.dir-mod-mxt .mxt-tool input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.dir-mod-mxt .mxt-tool select,
+html.dir-mod-mxt .mxt-tool textarea {
+  padding: 4px 6px;
+  border: 1px solid var(--edge);
+  border-radius: 2px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool input[type="color"] {
+  width: 34px;
+  height: 26px;
+  padding: 2px;
+}
+
+html.dir-mod-mxt .mxt-tool input[type="range"] {
+  width: 130px;
+  margin: 0;
+}
+
+html.dir-mod-mxt .mxt-tool button {
+  padding: 4px 10px;
+  border: 1px solid var(--edge);
+  border-radius: 2px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
+}
+
+html.dir-mod-mxt .mxt-tool button:hover {
+  border-color: var(--edge-hover);
+  background: var(--surface-soft);
+  color: var(--green);
+}
+
+html.dir-mod-mxt .mxt-tool button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+html.dir-mod-mxt .mxt-tool .readout {
+  margin-top: 6px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+html.dir-mod-mxt .mxt-tool #selected {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool #warnings {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool #warnings div {
+  color: var(--danger);
+}
+
+html.dir-mod-mxt .mxt-tool #warnings div.ok {
+  color: var(--ink-muted);
+}
+
+html.dir-mod-mxt .mxt-tool #list {
+  margin: 0;
+  padding: 0;
+  max-height: 150px;
+  overflow: auto;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+}
+
+html.dir-mod-mxt .mxt-tool #list:empty {
+  display: none;
+}
+
+html.dir-mod-mxt .mxt-tool #list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--edge-light);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+html.dir-mod-mxt .mxt-tool #list li:last-child {
+  border-bottom: 0;
+}
+
+html.dir-mod-mxt .mxt-tool #list li:hover {
+  background: var(--surface-soft);
+}
+
+html.dir-mod-mxt .mxt-tool #list li.picked {
+  background: var(--tint-green);
+  color: var(--green);
+}
+
+html.dir-mod-mxt .mxt-tool #list li span {
+  flex: 1;
+}
+
+html.dir-mod-mxt .mxt-tool #list li button {
+  padding: 1px 6px;
+}
+
+html.dir-mod-mxt .mxt-tool .swatch {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--edge);
+  border-radius: 2px;
+}
+
+html.dir-mod-mxt .mxt-tool #json {
+  width: 100%;
+  height: 200px;
+  resize: vertical;
+  overflow: auto;
+  white-space: pre;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool .hint {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool--talisman-strokes #board {
+  width: 270px;
+  height: 630px;
+}
+
+html.dir-mod-mxt .mxt-tool--talisman-strokes .mxt-tool-grid {
+  grid-template-columns: auto minmax(300px, 430px);
+}
+
+@container (max-width: 900px) {
+  html.dir-mod-mxt .mxt-tool-grid,
+  html.dir-mod-mxt .mxt-tool--talisman-strokes .mxt-tool-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  html.dir-mod-mxt .mxt-tool input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  html.dir-mod-mxt .mxt-tool select,
+  html.dir-mod-mxt .mxt-tool textarea {
+    font-size: 16px;
+  }
+}
+

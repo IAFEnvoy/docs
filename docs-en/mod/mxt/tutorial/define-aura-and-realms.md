@@ -1,0 +1,321 @@
+---
+title: Define Aura and Realms
+description: "Build the core cultivation loop from JSON: an aura, an element, a linear realm chain, a cultivation action, a minimal aura zone, and how to verify each step in game."
+---
+
+# Define Aura and Realms
+
+<span id="define-aura-and-realms" />
+
+This tutorial builds the smallest cultivation loop MiXianTu can run: a stored **resource** the player fills, an **aura** definition that turns that number into an aura with a realm chain, a **cultivation action** that moves aura into it, and a tiny **aura zone** so the world actually contains aura. When you are done, a player can press the cultivate key, watch a bar fill, and break through to their first realm.
+
+Nothing here is specific to a setting: the numbers below are placeholders you are expected to replace.
+
+:::info Before you start
+
+Read [Datapack Overview](../datapack/overview.md) first if you have not yet. It explains where files go, how definition IDs work, why a missing holder reference fails the whole load, and when your edits take effect.
+
+:::
+
+## The Shape of the Core Loop {#the-shape-of-the-core-loop}
+
+```text
+aura_zone / block_aura        the world supplies aura per chunk
+        ↓
+cultivation              the player absorbs it while cultivating
+        ↓
+aura  example:qi              the definition that turns the stored number into an aura
+        ↓
+resource  example:qi          the bar fills; the overflow becomes progress
+        ↓
+realm_stage chain             progress + conditions + costs → next realm
+```
+
+A player who has not entered a chain yet is **Mortal**. The Mortal state has no definition of its own and no threshold of its own: it reads the stage `first_realm` names, using that stage's `breakthrough_exp` / `max_experience` as its own gate and cap.
+
+## What You Are Building {#what-you-are-building}
+
+| File | Registry | Purpose |
+| --- | --- | --- |
+| `element/common.json` | `element` | The element the qi aura names, with its relations and colour. |
+| `resource/qi.json` | `resource` | The stored number, its bounds and its HUD bar. |
+| `aura/qi.json` | `aura` | The aura definition laid on that value: element marker, regeneration, realm entry. |
+| `realm_stage/qi_condensation.json` | `realm_stage` | First realm, and the requirements for the second. |
+| `realm_stage/foundation.json` | `realm_stage` | Second realm. |
+| `realm_stage/core_formation.json` | `realm_stage` | Third realm, the end of the chain. |
+| `cultivation/meditation.json` | `cultivation` | What the player does while cultivating. |
+| `aura_zone/common_land.json` | `aura_zone` | A plains-level supply of aura in the Overworld. |
+| `assets/example/lang/en_us.json` | — | Names for the IDs above. |
+
+## Step 1 — The Element {#step-1-—-the-element}
+
+A definition's aura is a separate `aura` entry, and the `element` registry is what it points at through `aura_type`. An `element` holds only relations and a colour: which elements it `overcomes`, which it is `adapted_to`, what each of those edges is worth in damage, and the colour used by aura-cost text. Start with a minimal one.
+
+```json
+// data/example/mxt/element/common.json
+{
+  "color": "#66CCFF"
+}
+```
+
+`overcomes` and `adapted_to` are optional relations to other elements. Each entry names the elements it points at (`elements`, one id, an array, or `#` tags) together with what the edge is worth (`multiplier`, a finite non-negative number), and the [damage system](../technical/damage.md) reads them on the attacking and defending side of a hit respectively; leave them out until you have more than one element. The full field list is in [Element](../datapack/json/element.md).
+
+## Step 2 — The Aura and Its Value {#step-2-—-the-aura-and-its-value}
+
+A `resource` is only a stored number with bounds and a bar; an `aura` gives that number its aura identity and cultivation behaviour and points back at it, one to one. Write both files first, then read the tables.
+
+```json
+// data/example/saturn/resource/qi.json
+{
+  "default_value": 0,
+  "max": "50 + realm_rank * 50 + absorbed_aura * 0.2",
+  "particle_color": "#66CCFF",
+  "bars": [
+    {
+      "context": "mxt:self_hud",
+      "anchor": "left",
+      "order": 0,
+      "renderer": {"type": "mxt:boss_bar", "bar_index": 1},
+      "value_display": "current_and_maximum"
+    }
+  ]
+}
+```
+
+```json
+// data/example/mxt/aura/qi.json
+{
+  "resource": "example:qi",
+  "regen": "0.05 + realm_rank * 0.05",
+  "aura_type": "example:common",
+  "first_realm": "example:qi_condensation"
+}
+```
+
+| Resource field | What it does here |
+| --- | --- |
+| `default_value` | A new player starts empty. Required. |
+| `max` | The bar's upper bound. A formula, because `max` is evaluated in this value's aura context, where `realm_rank` and `absorbed_aura` exist. Required. |
+| `particle_color` | Colour of the spirit power rays this value fires. |
+| `bars` | One self-HUD bar in the left column; `renderer` is required, and every bar needs an `anchor`. |
+
+| Aura field | What it does here |
+| --- | --- |
+| `resource` | Which stored value this aura describes. Required, and a value may have at most one aura. |
+| `regen` | A slow trickle so the pool refills outside meditation. |
+| `aura_type` | The element this aura names; the environment and aura fuel use it for type checks, and it is shown next to the name by `/mxt aura query`. |
+| `first_realm` | Where the first breakthrough goes. Without it, a Mortal can never leave the Mortal state. |
+
+A few aura fields this tutorial does not spell out - the conversions between progress and the stored number, the value of one spirit burst ray, the conditions checked before cultivation, and the panel switch - are listed in full in [Aura](../datapack/json/aura.md).
+
+`min` defaults to `0`, and `use_condition` defaults to always true, so a Mortal can see the bar. If you would rather hide the bar until the player has entered the chain, add it to the aura:
+
+```json
+"use_condition": {"type": "mxt:has_realm", "aura": "example:qi"}
+```
+
+`use_condition` only controls the display and the player's manual consumption. It never blocks cultivation, absorption or a breakthrough. The full field list is in [Aura](../datapack/json/aura.md).
+
+:::tip Formulas
+
+Any numeric field accepts a plain number, a formula string, or a typed provider object. Formulas are evaluated with exp4j and can use `round`, `clamp`, `min`, `max`, `pi` and `e` on top of the context variables. See [Formula Variables](../datapack/types/formula_variables.md).
+
+:::
+
+## Step 3 — The Realm Chain {#step-3-—-the-realm-chain}
+
+Each `realm_stage` file is one stage. A stage names exactly one aura, and `next_realm` points at a single stage, so a chain is a straight line: an aura has one chain, and it only moves forward. The value the aura stores is what actually fills up.
+
+```json
+// data/example/mxt/realm_stage/qi_condensation.json
+{
+  "aura": "example:qi",
+  "next_realm": "example:foundation",
+  "breakthrough_exp": 800,
+  "max_experience": 1600,
+  "passive_modifiers": [
+    {
+      "attribute": "minecraft:max_health",
+      "id": "example:realm/qi_condensation",
+      "amount": 2,
+      "operation": "add_value"
+    }
+  ],
+  "costs": [{"id": "example:qi", "amount": 50}],
+  "auto_breakthrough": false
+}
+```
+
+```json
+// data/example/mxt/realm_stage/foundation.json
+{
+  "aura": "example:qi",
+  "next_realm": "example:core_formation",
+  "breakthrough_exp": 2000,
+  "max_experience": 4000,
+  "breakthrough": {
+    "conditions": [
+      {"type": "mxt:resource_compare", "resource": "example:qi", "min": 200}
+    ]
+  },
+  "costs": [{"id": "example:qi", "amount": 200}],
+  "auto_breakthrough": false
+}
+```
+
+```json
+// data/example/mxt/realm_stage/core_formation.json
+{
+  "aura": "example:qi",
+  "max_experience": 8000,
+  "passive_modifiers": [
+    {
+      "attribute": "minecraft:max_health",
+      "id": "example:realm/core_formation",
+      "amount": 6,
+      "operation": "add_value"
+    }
+  ]
+}
+```
+
+:::warning Breaking from A to B reads B's JSON
+Everything one breakthrough reads is written **on B**: the threshold, the cap, the conditions, the costs, the automatic switch and the success or failure actions, each explained below. Writing those same fields on A has no effect on that step at all, so when you add a stage, **write its own gate on it instead of going back to edit the stage below**. With Reincarnation installed, configure lifespan actions in `success_action`; see [Realm Stages](../datapack/json/realm_stage.md) for an example combining actions.
+:::
+
+Reading the three files together — every line below is the copy read for the step from the stage below into this one:
+
+- `breakthrough_exp` is the progress required to break through to this stage, and `max_experience` is the progress cap before breaking through to it. They must not cross: a constant `breakthrough_exp` greater than a constant `max_experience` is rejected at load time.
+- So the `800` in `qi_condensation.json` means "a mortal needs 800 to break through to qi condensation", and the `2000` in `foundation.json` means "qi condensation needs 2000 to break through to foundation".
+- `costs` and `breakthrough.conditions` are written on **the stage the breakthrough arrives at** too: `costs` are paid by the one breaking through, and `conditions` are checked alongside the progress. The `200` qi on the foundation stage is what breaking through to foundation costs, not what leaving qi condensation costs.
+- A mortal has no stage below, so it reads the first realm's copy: the mortal gate of `800` and the cap of `1600` both come from the `qi_condensation` stage, and there is nowhere else to write a mortal threshold.
+- The optional `minor_stages` is only a **count**: an integer N means "N layers" (`0` by default, range `0..1024`), and there is **no way to write the names** — each layer's name is always generated from this stage's name key as `realm_stage.mxt.<namespace>.<path>.minor_stage.<index>`, counting from `0`. Write it as an integer; an array of names fails the whole definition's decode. It is read in three places: the information panel prints the current one after the realm name, formulas gain a 0-based `minor_stage`, and `minor_stage_abilities` uses that index to unlock abilities by layer (cumulative, and an unlock is permanent). The count comes from the stage **you stand on**, while the even split uses the `breakthrough_exp` of the stage **being climbed towards**; it changes no threshold, cost or settlement.
+- `auto_breakthrough` defaults to `false`: the player reaches the threshold and waits. Set it to `true` if you want cultivation mode to attempt the breakthrough on its own. `true` on `foundation` means "breaking through to foundation may happen automatically".
+- `passive_modifiers` are vanilla attribute modifiers granted while the stage is held. `value` is an optional formula, and an entry that declares it is recalculated every tick.
+- The last stage simply has no `next_realm`, so the chain ends there.
+
+:::warning Realm conditions are not `caster_level`
+
+Inside a resource, realm or breakthrough formula, `level`, `realm` and `realm_rank` are all the rank in the chain. Inside an *entity* formula such as an ability amount, `caster_level` is the vanilla experience level and there is no realm rank at all. Use `realm_rank` in resource and realm fields to keep the intent obvious.
+
+:::
+
+## Step 4 — A Cultivation Action {#step-4-—-a-cultivation-action}
+
+A `cultivation` is a named activity. The player selects one, and it settles on a fixed interval; with several methods in one pack, the ones that **apply right now** are filtered out first (both `start_condition` and `cultivate_condition` have to hold), then the highest `priority` among them wins, an equal one falling back to registry order; when none applies, the answer is "no method can be practised right now".
+
+```json
+// data/example/mxt/cultivation/meditation.json
+{
+  "priority": 1,
+  "tick_interval": 20,
+  "absorb_amount": 1.5,
+  "costs": [{"type": "mxt:aura", "aura": "example:qi", "amount": 1}],
+  "cooldown": 100
+}
+```
+
+| Field | Effect |
+| --- | --- |
+| `priority` | The order among several methods: the higher number wins, an equal one falling back to registry order. It only orders the methods that **apply right now**. Defaults to `0`. |
+| `tick_interval` | Settlement interval in ticks, `1..72000`; `20` means once per second. Defaults to `20`. |
+| `absorb_amount` | Multiplier for the natural recovery of the current realm's value; the bar fills first and the overflow becomes cultivation progress. Defaults to `1`. |
+| `costs` | What each tick spends: an `mxt:aura` entry comes out of the **shared aura pool** at the cultivator's position (`[{"type": "mxt:aura", "aura": "example:qi", "amount": 1}]`) and every other entry out of the cultivator's own account. When several players cultivate in the same chunk each aura entry is scaled by the pool's allocation first, and the pool is then charged **all or nothing**. |
+| `cooldown` | Ticks before cultivation can start again after it stops. Defaults to `0`. |
+
+`start_condition` and `tick_condition` decide whether cultivation may start and continue; both default to always true, and both can read the environment. There is no "aura kind" field: an action that should only run in the right place asks for that place directly, for example with `mxt:aura_range` (a concentration range for one aura, where `max` is required on every entry) or `mxt:dimension`. `costs` (paid by the cultivating entity each tick, one `Cost` array and all or nothing), `aura_gains` (extra aura added per tick), `tick_action` (an entity action run on **every** tick) and `cultivate_action` (an entity action run only on a **tick that settles**) are the remaining fields.
+
+## Step 5 — A Minimal Aura Zone {#step-5-—-a-minimal-aura-zone}
+
+Without an aura zone the world contains no aura, so there is nothing for the meditation action to absorb.
+
+```json
+// data/example/mxt/aura_zone/common_land.json
+{
+  "aura": {
+    "example:qi": {
+      "amount": 200,
+      "max": {"type": "mxt:initial_multiplier", "multiplier": 2},
+      "regen_per_tick": 0.05,
+      "color": "#66CCFF"
+    }
+  },
+  "distribution": "equal",
+  "biomes": ["#minecraft:is_overworld"]
+}
+```
+
+- `aura` is the per-aura environment inventory, stored per chunk and shared by everyone in that chunk. Its key set is the whole vocabulary of the zone: an environment has exactly the auras it lists. The element each of them belongs to comes from that aura's own `aura_type`, so there is nothing extra to declare here.
+- `amount` is the *base* aura of the template, not the number the HUD shows: with no noise configured the initial concentration is `max(0, amount / 10 - 5)`, so `200` starts around `15`, and `max` resolves from that initial value — here `initial_multiplier: 2`, so the chunk can hold up to about `30`.
+- `regen_per_tick` refills the chunk inventory over time.
+- `distribution` decides how several players split an insufficient inventory: `random`, `equal` or `realm_weighted`.
+- `biomes` and `dimensions` decide where the template applies; `#minecraft:is_overworld` covers every Overworld biome. A dimension-level binding beats a biome-level one, and both sit below manual areas and formations.
+- `cultivate_condition` is the condition the environment itself puts on cultivation; it defaults to always true, and a zone that wants to require a concentration writes `mxt:aura_range` here. The action's own `start_condition`/`tick_condition` are the other side of the same test.
+
+The aura environment has enough depth to deserve its own page — that is [Define the Aura Environment](./aura-environment.md), where you will add denser zones, block sources, item fuel and the client-side fog and HUD.
+
+## Step 6 — Names {#step-6-—-names}
+
+Display names are always generated from the definition ID, and you have **nowhere to write a name into the JSON**: a definition has no `name` / `description` field, and writing one is not read. The only way a pack gives a definition words is by translating the generated key. Add the keys to your own language file:
+
+```json
+// assets/example/lang/en_us.json
+{
+  "saturn.resource.example.qi": "Spirit Qi",
+  "mxt.aura.example.qi": "Spirit Qi",
+  "mxt.realm_stage.example.qi_condensation": "Qi Condensation",
+  "mxt.realm_stage.example.foundation": "Foundation Establishment",
+  "mxt.realm_stage.example.core_formation": "Core Formation",
+  "mxt.element.example.common": "Common Aura",
+  "mxt.cultivation.example.meditation": "Meditation"
+}
+```
+
+The pattern is always `<registry namespace>.<category>.<namespace>.<path>`, where the category is the registry's own path and the registry namespace is that registry's own namespace: the mod's own registries start with `mxt.`, while the ones hosted by the library (`saturn:resource` / `saturn:ability` / `saturn:trigger`) start with `saturn.`, so `example:qi` in `resource` is `saturn.resource.example.qi` and the same id in `aura` is `mxt.aura.example.qi`. A path containing `/` keeps the slash: `example:realm/qi` is `mxt.realm_stage.example.realm/qi`. A definition without a key still works; the game simply shows the raw key.
+
+A description uses the **name key with `.description` appended**: `mxt_test:poor` in `quality` has the name key `mxt.quality.mxt_test.poor` and the description key `mxt.quality.mxt_test.poor.description`; a `realm_stage`'s minor stage name key is `realm_stage.mxt.<namespace>.<path>.minor_stage.<index>`. **The places that draw a description are `quality` (the line under the quality name), `contract_type` (a contract scroll's tooltip), `pill` (the tooltip of an item the pill claims) and `technique` (a manual's tooltip, and the chat line a read prints)** — and only when that key is actually translated; every other registry's description key is generated but drawn by no screen or tooltip.
+
+## Verify {#verify}
+
+Data pack registries are read while the world loads, so `/reload` is not enough: leave to the title screen and open the world again (or restart the server) and watch the log for codec errors. A file that cannot be decoded stops the world from loading, so if the world refuses to open, read the last error in the log and fix that file first.
+
+```text
+(load the world again)
+/mxt registries validate          → registries loaded, no errors
+/mxt registries list              → mxt:resource=1, mxt:aura=1, mxt:realm_stage=3, mxt:element=1, mxt:cultivation=1, mxt:aura_zone=1, … (every registry the mod registers is listed, most of them empty)
+/mxt resource example:qi          → 0
+/mxt aura query example:qi        → the aura inventory of your chunk
+/mxt cultivate status             → the selected behaviour and the progress per aura
+```
+
+Then, in game:
+
+1. Press the cultivate key (`C` by default) somewhere in the Overworld. The bar appears in the left column and starts filling.
+2. Keep cultivating until the bar is full; from then on the overflow becomes cultivation progress. `/mxt cultivate status` and `/mxt attachment status` show the current progress.
+3. At `800` progress — the target stage `qi_condensation`'s `breakthrough_exp` — a breakthrough becomes possible (progress may still climb to that stage's `max_experience` of `1600`, but crossing the line is enough to attempt it). Because the target stage's `auto_breakthrough` is `false`, trigger it yourself with `/mxt breakthrough example:qi` (it needs the `gamemaster` permission), or set `auto_breakthrough: true` on it and let cultivation do it.
+4. On success you are in Qi Condensation: `/mxt attachment status` shows the new realm, the `realm_rank` term of the `50 + realm_rank * 50` maximum moves from a mortal's `0` to `1` (so the maximum rises by `50`), and the `+2 max health` modifier is applied.
+5. Climb to Foundation Establishment the same way. You will need `200` qi in the pool at the same time, because that stage's `breakthrough.conditions` ask for it, and `200` qi will be spent by `costs`.
+
+:::tip Faster testing
+
+`/mxt resource example:qi set 500` (also `gamemaster`) fills the pool instantly so you can check the cost and condition gates without waiting. `/realm set example:foundation` (= `/mxt realm set …`) jumps the chain to a stage directly, which is useful when you are tuning later stages, and `/realm chain example:foundation` prints the whole chain that stage is on — the stage itself green, the ones before it grey and the ones after it white — which makes a mistyped `next_realm` obvious at a glance.
+
+:::
+
+## Common Mistakes {#common-mistakes}
+
+| Symptom | Cause |
+| --- | --- |
+| Nobody can ever leave Mortal | `first_realm` is missing on the aura, so there is no stage to break through to. |
+| Cultivation never starts | The action's `start_condition` or `tick_condition` is not satisfied — write a `mxt:aura_range` or a biome condition for the place you want, because there is no aura-kind vocabulary to match against. |
+| The bar never grows | The shared aura pool cannot pay the aura entries of `costs` (it does not hold enough, or other cultivators in the chunk take their share), or `use_condition` is false. |
+| The world refuses to load | A definition failed to decode: a required holder points at an ID that does not exist, or a field has the wrong shape. The whole load fails, not just the file. |
+| `breakthrough_exp` greater than `max_experience` | This stage can never be broken through to; the codec rejects it at load time when both are constants. Write the gate on the **current** stage (the one the breakthrough arrives at), not on the stage below. |
+| The realm condition never passes | `breakthrough` lives on the target stage, but it is evaluated while the body still stands on the stage below, and `mxt:realm` compares what you currently stand in — so naming that target stage inside its own conditions can never pass (the mortal step is the one exception). Name the stage below, or use `"comparison": ">="`, or check a value. |
+
+## Next {#next}
+
+- [Write a Dual Cultivation Method](./dual-cultivation.md) — add a method to the same pack that only yields while somebody is beside you.
+- [Define the Aura Environment](./aura-environment.md) — make the concentration vary by place, block and time, and put it on the HUD.
+- [Resource](../datapack/json/resource.md) and [Realm Stage](../datapack/json/realm_stage.md) — every remaining field, including resource bars, conversions and tribulations.
+- [Define an Element Reaction](./define-an-element-reaction.md) — how a second element claims damage types, and what attachments do once they add up.

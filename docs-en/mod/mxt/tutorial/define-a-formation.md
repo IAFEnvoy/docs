@@ -1,0 +1,230 @@
+---
+title: Define a Formation
+description: Start from a structure, a radius and its costs, add a buff module and an aura zone, then activate it with a plate, see where the upkeep comes from, and learn what happens when the structure breaks.
+---
+
+# Define a Formation
+
+<span id="define-a-formation" />
+
+A formation is something the player **builds**: they lay out the blocks you described, touch it with a formation plate, and from then on it pays upkeep every 20 ticks and does its work inside a radius. **The structure is blocks, the behaviour is modules, the lifetime is costs** — all three live in one JSON file.
+
+This tutorial adds two formations to the example pack: a spirit-gathering array (an aura zone plus a buff for the people inside) and a ward (protection that keeps outsiders from breaking in).
+
+## What You Are Building {#what-you-are-building}
+
+| File | Purpose |
+| --- | --- |
+| `data/example/mxt/formation/spirit_gathering_array.json` | The array: structure, radius, upkeep, buff module. |
+| `data/example/mxt/formation/ward_array.json` | The ward: a protection module reacting to block events. |
+
+## Step 1 — Structure and Radius {#step-1-—-structure-and-radius}
+
+```json
+// data/example/mxt/formation/spirit_gathering_array.json
+{
+  "structure": [
+    {"offset": [0, 0, 0], "state": "minecraft:gold_block"},
+    {"offset": [1, 0, 0], "state": "minecraft:iron_block"},
+    {"offset": [-1, 0, 0], "state": "minecraft:iron_block"},
+    {"offset": [0, 0, 1], "state": "minecraft:iron_block"},
+    {"offset": [0, 0, -1], "state": "minecraft:iron_block"}
+  ],
+  "radius": 12
+}
+```
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `structure` | `List<RequiredBlock>` | `[]` | An inline structure: each entry is an `offset` (integer triple, relative to the controller) plus a `state`. |
+| `structure_template` | `Identifier` | none | Use a structure template instead of an inline structure. **Exactly one of the two** must be present: both or neither fails to load. |
+| `radius` | `NumberProvider` | **required** | Working radius in blocks. The radius is a **sphere**, not a block selection. |
+
+The structure check is **exact per block**: `state` is a block id, or the vanilla `{"Name": "…", "Properties": {…}}` form when properties matter. `offset [0,0,0]` is the controller — **it does not require a block there**, so leaving it as air is a perfectly good design (many arrays are a ring around empty space).
+
+The controller has a 3×3×3 tolerance: clicking one block off is not a failure, because the nearest position whose structure matches wins, and the clicked position itself always wins when it works.
+
+## Step 2 — Adding a Buff Module {#step-2-—-adding-a-buff-module}
+
+```json
+"actions": [
+  {
+    "type": "mxt:buff",
+    "abilities": ["example:body_tempering"],
+    "target": "allies"
+  },
+  {
+    "type": "mxt:aura",
+    "aura_zone": "example:misty_valley",
+    "max_bonus": {"example:qi": 40}
+  },
+  {
+    "type": "mxt:particle",
+    "shape": "mxt:five"
+  }
+]
+```
+
+`mxt:buff` is the module most arrays want:
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `abilities` | `HolderOrTag<ability>[]` | `[]` | Abilities granted to the targets inside, written as anywhere else. |
+| `target` | `all\|allies\|owner` | `all` | Who benefits. `allies` consults the foe identification system (below). |
+
+`mxt:aura` is about the **ground itself**: `aura_zone` replaces the aura resolved inside the radius with that zone (required), and `max_bonus` raises the **ceiling** of an aura the zone already has (`{"example:qi": 40}`) — an aura the zone does not list cannot be raised.
+
+`mxt:particle` only makes the array **visible**: `shape` is required and names a [figure definition](../datapack/json/formation_shape.md) (the mod ships `mxt:five` / `mxt:six` / `mxt:eight`, and a pack can write its own ring and polylines, **each stroke's colour, density, dust size, start angle and growth window written there**), `duration_ticks` defaults to `0` (no animation; a value grows the figure out of the controller over that many ticks, on the client's own timer), and `interval_ticks` to `10` (a keep-alive every 10 ticks; the minimum, and a multiple of 10).
+
+The module comes from the built-in `formation_action_type` registry, ten in total; which fields each one reads and which beat it answers are on [Formation Actions](../datapack/types/other/formation-action.md).
+
+:::tip `target: allies` and foe identification
+
+`allies` goes through `FriendService`: only entities **any owner** counts as their own get the buff (ownership is a set of UUIDs, and the friend judgement asks every one of them in turn), and an entity **nobody can identify (`DEFAULT`) does not** — handing a stranger the owner's bonus is the failure this avoids. Config adds a second layer: `spare_friends` and **Server Config → Formations → Friend or Foe**. See [Foe Identification](../technical/identification.md).
+
+:::
+
+## Step 3 — Attack and Protection Modules {#step-3-—-attack-and-protection-modules}
+
+```json
+// data/example/mxt/formation/ward_array.json
+{
+  "structure_template": "example:ward",
+  "radius": 16,
+  "spare_friends": true,
+  "actions": [
+    {
+      "type": "mxt:protection",
+      "block_break": true,
+      "block_place": true,
+      "explosions": true,
+      "attack_entity": false,
+      "spare_friends": true
+    },
+    {
+      "type": "mxt:attack",
+      "damage": 4,
+      "damage_type": "minecraft:magic",
+      "attribute_to_owner": true,
+      "target_condition": {"type": "mxt:not", "condition": {"type": "mxt:formation_ally"}}
+    }
+  ]
+}
+```
+
+**`mxt:attack`** says how hard it hits, never whom — that is what per-entity conditions are for:
+
+| Field | Default | Effect |
+| --- | --- | --- |
+| `damage` | `0` | Damage per settlement. |
+| `damage_type` | none | The damage type of the strike; without it the vanilla player/mob attack source is used. |
+| `attribute_to_owner` | `true` | Whether the **first** owner (the one at the head of the ownership list, who raised the array) is credited (kill credit and aggro follow them). |
+| `target_condition` | always true | A per-entity condition; **the condition runs first, the damage second**. |
+| `effects` | `[]` | Effects applied alongside; they still fire when `damage` is 0. |
+
+**`mxt:protection`** answers block and entity events: every guard defaults to `true`, so turn the rest off to guard breaking only, and `delegate_to_claims` defaults to `false` (hand the decision to a claim plugin). All eight switches are on [Formation Actions · `mxt:protection`](../datapack/types/other/formation-action.md#mxt-protection).
+
+At the top level there is also **`spare_friends`** (default `false`): when true, the runtime lets **every owner** and their friends through. Note that it is a different field from the same-named one inside the module — the top-level one decides whether the whole array skips friends, the module one decides whether protection stops them. Identification itself is also gated by **Server Config → Formations → Friend or Foe**: with that off, the top-level switch does nothing (and `DEFAULT` still stands the array down).
+
+**Ownership is a set of UUIDs**: an array can have several owners and every one of them counts. Activating it writes the player who raised it; after that, add or remove owners with `/mxt formation owners <pos> add|remove <player>` (needs the `gamemaster` permission), and `/mxt formation list` prints the whole list comma-separated.
+
+## Step 4 — Costs, Storage and Activation {#step-4-—-costs-storage-and-activation}
+
+```json
+"activation_costs": [{"id": "example:qi", "amount": 200}],
+"maintenance_costs": [{"id": "example:qi", "amount": 2}],
+"storage": {"capacity": {"example:qi": 600}}
+```
+
+| Field | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `activation_costs` | `List<Cost>` | `[]` | Paid once on activation out of the **activator's** own account; a whole array is all or nothing, so one entry that cannot be paid consumes nothing. See [Shared Data Types · `Cost`](../datapack/types/shared_data_types.md#cost). |
+| `maintenance_costs` | `List<Cost>` | `[]` | Paid once per period; this is what decides how long the array lasts. The aura the array's own blocks supply is offset first and the owner pays the rest, and `mxt:item` / `mxt:js` entries can never be paid here. |
+| `storage` | object | none (off) | If present it must carry `capacity`: `Map<aura, NumberProvider>`. |
+
+:::warning A malformed cost entry fails the load
+
+Every entry of these two lists has to decode: a misspelled field name (`{"id": "example:qi", "amont": 200}`) is no longer "log it and drop it, so the array is free" — it makes the whole definition **fail to load**. A malformed cost entry is **not** dropped silently.
+
+`structure` and `actions` are strict lists in the same way. **Check the log after editing a formation**, not just whether it activates.
+
+:::
+
+Activation runs: occupancy → structure → claims → radius → event → pay the activation cost → write the index → mark the chunk's aura dirty → the block action of `mxt:activate`. Every period (20 ticks) it then looks for money in this order: **vein absorption → storage → the owner**. So an array can feed itself from the ley line under it; when that is not enough it eats into storage, then charges the owner, and if nothing can pay, a cancellable "upkeep failed" event fires and the array is dismantled unless somebody stops it.
+
+`storage` exists so an array can keep running while its owner is away; capacity is tracked per aura, and whatever is left in it **dissipates** when the array comes down.
+
+Activation and dismantling need no commands:
+
+1. Get a formation plate (`mxt:formation_plate`).
+2. `/mxt formation bind example:spirit_gathering_array` writes the formation into the plate in your main hand (gamemaster permission).
+3. Right-click the controller while holding the bound plate. **An unbound plate identifies the formation under your feet by itself** (it compares every structure its allow list admits and the nearest wins; on by default, switchable with **Server Config → Formations → Plate Auto-Detect**).
+4. Use the plate on an active controller again to dismantle it. You must be the owner or an operator; with **Server Config → Formations → Teammates Can Dismantle** on, the owner's friends may do it too.
+
+## Step 5 — Letting the Owner Be Affected Too {#step-5-—-letting-the-owner-be-affected-too}
+
+To make an array do something to the owner's own side, use the three generic beat modules: `mxt:activate` (arriving), `mxt:tick` (every period) and `mxt:inactivate` (leaving), each carrying one block action for the array itself and one entity action for the entities. They are ordinary block and entity actions, so a formation is exactly as expressive as the action types are.
+
+A useful opener: a sound on the way in and on the way out.
+
+```json
+"actions": [
+  {
+    "type": "mxt:activate",
+    "entity_action": {
+      "type": "mxt:play_sound",
+      "sound": "minecraft:block.beacon.activate",
+      "volume": 0.6,
+      "pitch": 1.4
+    }
+  },
+  {
+    "type": "mxt:inactivate",
+    "entity_action": {
+      "type": "mxt:play_sound",
+      "sound": "minecraft:block.beacon.deactivate",
+      "volume": 0.4,
+      "pitch": 0.8
+    }
+  }
+]
+```
+
+The per-entity half fires only for entities **actually inside the sphere** and only for loaded entities; an unloaded chunk produces a spurious leave-and-enter pair, so the arriving half should be **idempotent** — replaying a sound is fine, handing out a reward again is not.
+
+## Verify {#verify}
+
+```text
+/mxt registries validate
+/mxt formation bind example:spirit_gathering_array
+/mxt formation list
+/mxt formation info
+```
+
+1. Lay out the structure and run `/mxt formation bind …` to write it into the plate.
+2. Right-click the controller to activate. `/mxt formation list` then lists the id, controller position, radius, ownership list and the **number of upkeep periods already paid**.
+3. Stand inside: `/mxt formation info` reports the arrays covering you (all of them when they overlap).
+4. Watch the aura: if `aura_zone` points at a zone, query the aura inside the array and outside it and compare.
+5. Break one block of the structure: nothing is announced, but once the next period's check fails the array is **dismantled silently** — it disappears from `list` and `info` stops reporting it.
+6. To finish by hand, use the plate on the active controller once more.
+
+## Common Mistakes {#common-mistakes}
+
+| Symptom | Cause |
+| --- | --- |
+| The definition fails to load with a `structure_template` / `structure` error | Both were written, or neither; it must be **exactly one**. |
+| Right-clicking the controller reports a structure mismatch | Blocks are compared exactly, so a differing block state (stair facing, open trapdoor) is not a match. |
+| Activation reports an invalid radius | `radius` is not finite, or is ≤ 0. |
+| The costs seem never to be paid | The upkeep comes out of the ground, the store and the owner's account only, so `mxt:item` and `mxt:js` entries can never be paid there. A misspelled field name now **fails the load** instead of quietly making the array free. |
+| It vanishes right after activating | The structure was broken after activation: it is checked every 20 ticks and dismantled silently on failure. |
+| Protection lets one outsider through | Identification judged that entity `TRUE` (a friend); the top-level `spare_friends` together with **Server Config → Formations → Friend or Foe** decides this. |
+| Nobody inside gets the buff | `target` is `allies` and nobody can be identified as one (`DEFAULT` grants nothing). |
+| The aura zone has no effect | `aura_zone` takes a zone id, not an aura id; a zone that does not exist fails to parse. |
+| `bind` says the plate cannot activate that formation | The formation is not in the plate's allow list (and with `empty_plate_allows_all` off, an empty list admits nothing). |
+
+## Next {#next}
+
+- [formation](../datapack/json/formation.md) — the full field list, structure templates, aura overrides and diagnostics.
+- [Foe Identification](../technical/identification.md) — the judgement behind `spare_friends` and `target: allies`.
+- [Aura Calculation](../technical/aura.md) — how aura zones and a formation drawing the environment actually work.
+- [Commands](../player-guide/commands/formation.md) — every `/formation` subcommand and the plate's behaviour.

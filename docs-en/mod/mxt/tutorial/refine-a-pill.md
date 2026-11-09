@@ -1,0 +1,278 @@
+---
+title: Refine a Pill
+description: Hand-build a 3x3x3 furnace, write a recipe that settles on the actual medicinal properties, heat it into the target range with a heat block, and wire the result up to a pill and its toxicity.
+---
+
+# Refine a Pill
+
+<span id="refine-a-pill" />
+
+Alchemy is not "place one block and start brewing". A furnace is a **fixed 3x3x3 you build by hand**: a core, an input store on each side, an output store on top, and 18 casing blocks. A recipe does not match a list of item IDs either — the server settles the result on the **actual medicinal properties** in the slots at the moment the player presses Start on the core.
+
+This page adds one minimal production line to the example pack: two medicinal properties, three herbs (all bound to existing items), one furnace spec, one wall material, one recipe and one pill with toxicity.
+
+## What You Are Building {#what-you-are-building}
+
+| File | Purpose |
+| --- | --- |
+| `data/example/mxt/medicinal_property/nourish.json` | The main-ingredient property. |
+| `data/example/mxt/medicinal_property/calm.json` | The auxiliary property. |
+| `data/example/mxt/quality/common.json` | The tier the furnace specification uses; keep the one you already have when the example pack has it. |
+| `data/example/mxt/spirit_herb/herb_a.json` | Main herb: 3 `nourish` power per item, hot. |
+| `data/example/mxt/spirit_herb/herb_c.json` | Auxiliary herb: 3 `calm` power per item, cold. |
+| `data/example/mxt/spirit_herb/herb_d.json` | Catalyst: 1 harmonising power per item, neutral. |
+| `data/example/mxt/alchemy_furnace/basic.json` | The furnace spec: slots, capacity and cooling. |
+| `data/example/mxt/alchemy_wall_material/basic_wall.json` | The temperature the wall material withstands. |
+| `data/example/mxt/heat_source/magma_block.json` | The heat block: how hot magma blocks can get, and how much they add per tick. |
+| `data/example/recipe/warming.json` | The recipe: property thresholds, thermal tolerance, target heat and tolerance, duration and outputs. |
+| `data/example/mxt/pill/warming_pill.json` | What the pill does: effect, toxicity and overdose. |
+| `data/example/mxt/pill_binding/warming_pill.json` | The pill binding: claims this item family and gives it a use cap and cooldown. |
+
+## Step 1 — Write the Properties First {#step-1-—-write-the-properties-first}
+
+A medicinal property is an **empty table** that is nothing but an identity, and a recipe refers to it by ID. It is **not an element**: do not reuse an element, aura or resource ID, and do not look for a bundled list of properties such as "blood-quickening" or "qi-gathering".
+
+```json
+// data/example/mxt/medicinal_property/nourish.json
+{}
+```
+
+Write a second file, `calm.json`, the same way. A medicinal property definition has **no fields at all** (writing one is not read): its name and description are always derived from the registered id, so `nourish` has the name key `mxt.medicinal_property.example.nourish` and the description key that plus `.description` — translate those two keys to give it words.
+
+## Step 2 — Bind Existing Items as Herbs {#step-2-—-bind-existing-items-as-herbs}
+
+A spirit herb registers no new item; it attaches metadata to an **existing item**: an age, a thermal bias, and how much power it provides in each of the three roles. **A herb definition has no tier field of its own** — it carries no item identity, and the stack holds no "which definition am I" component, so resolution has no definition to ask. To give a herb a tier, write a [default_quality](../datapack/json/default_quality.md) definition and claim it with `items`.
+
+```json
+// data/example/mxt/quality/common.json
+{}
+```
+
+```json
+// data/example/mxt/spirit_herb/herb_a.json
+{
+  "items": ["minecraft:red_mushroom"],
+  "main_effects": { "example:nourish": "3 + herb_age / 50" },
+  "thermal_bias": 1.0
+}
+```
+
+```json
+// data/example/mxt/spirit_herb/herb_c.json
+{
+  "items": ["minecraft:brown_mushroom"],
+  "auxiliary_effects": { "example:calm": 3 },
+  "thermal_bias": -1.0
+}
+```
+
+```json
+// data/example/mxt/spirit_herb/herb_d.json
+{
+  "items": ["minecraft:sugar"],
+  "catalyst_power": "1 + herb_age / 100"
+}
+```
+
+Three things to remember:
+
+- **The role comes from the store you put the herb in, not from the definition.** Main herbs read `main_effects`, auxiliary herbs read `auxiliary_effects`, and the catalyst reads `catalyst_power`. A main herb dropped into the auxiliary store has no power at all in that batch.
+- **`thermal_bias` is hot and cold, not an element.** Negative is cold, positive is hot, and the value sits in `-1..1`; it has nothing to do with the fire or water elements.
+- **`herb_age` is a local variable inside the potency formulas.** It reads the stack's `mxt:herb_age` component, falling back to that herb's `default_age` when the component is absent. Age raises the power itself and the pipeline never multiplies age in a second time; what a year of age is worth is whatever the formula says - the formula on this page folds it in as `3 + herb_age / 50` (5 at age 100), and only with something like `3 * (1 + herb_age / 100)` is one century-old A worth two fresh ones. The thermal weighting moves with age too, which makes an exactly balanced recipe sensitive to it.
+
+To make a herb grow in the ground, give the definition `blocks` (which blocks count as this herb) and a `growth` object (ages, rate and fruit, listed in [spirit_herb](../datapack/json/spirit_herb.md)). All three herbs here are for the furnace only, so they omit `growth`.
+
+## Step 3 — The Furnace Spec, the Wall Material and the Heat Source {#step-3-—-the-furnace-spec-the-wall-material-and-the-heat-source}
+
+A furnace spec is a **specification**, not a block in the world: the core item carries it as a component, and without a spec — or with one that is not in the registry — the furnace cannot run.
+
+```json
+// data/example/mxt/alchemy_furnace/basic.json
+{
+  "quality": "example:common",
+  "main_slots": 2,
+  "auxiliary_slots": 2,
+  "capacity": 64,
+  "cooling_per_tick": 0.5
+}
+```
+
+```json
+// data/example/mxt/alchemy_wall_material/basic_wall.json
+{
+  "max_temperature": 200
+}
+```
+
+```json
+// data/example/mxt/heat_source/magma_block.json
+{
+  "blocks": "minecraft:magma_block",
+  "max_temperature": 200,
+  "heating_per_tick": 4
+}
+```
+
+- `main_slots` takes `1..2` and `auxiliary_slots` takes `0..2`. The catalyst always occupies the third slot of the auxiliary store and needs no declaration, while a slot the spec does not use accepts nothing.
+- `capacity` caps how many material items one batch may hold, and the item's own stack size still applies.
+- `cooling_per_tick` is how much the heat falls back per tick once it is above the set point or the heat stops. With an empty heat cell the heat cools to `0`.
+- **The temperature ceiling is the lowest of three.** The furnace specification's own optional `max_temperature`, the lowest rating among the 18 casings when they are all valid, and the highest temperature the heat block gives; mixing in a heat-resistant casing does not average the weak spot away. Writing a large `max_temperature` on the specification raises the ceiling, but never past the walls and the heat block. The set temperature must land between `0` and that ceiling.
+- A `heat_source` gives one family of blocks two numbers: the highest temperature it supplies and how many degrees it adds per tick. It claims blocks through `blocks` (a single block id, a `#`-prefixed block tag, or an array of either), and `max_temperature` and `heating_per_tick` are both required and finite positive. When several definitions hit one block, `priority` decides (the highest wins, a tie falls back to registry order, `0` by default). The file lives at `data/example/mxt/heat_source/<name>.json`. This one makes **magma blocks** a heat block; the fields and the tie-break rule are under [heat_source](../datapack/json/heat_source.md).
+- Quality only decides the display name, the use condition and the **tiers** a formula may require (the core's `furnace_quality` and the per-slot `input_quality`). It never derives slots, capacity, cooling or the temperature ceiling.
+
+## Step 4 — Build the Furnace, Load the Heat Block, Load the Herbs {#step-4-—-build-the-furnace-load-the-heat-block-load-the-herbs}
+
+The shape is fixed and a data pack cannot change it. Place the core facing north and lay the rest out like this:
+
+```text
+Facing the front. Left column x=2, right column x=0. Middle layer y=1, bottom row nearest you:
+
+            back z=2
+left  x=2   wall 17 | wall 16 | wall 15    right x=0
+            main 14 | wall 13 | aux  12
+front z=0   wall 11 | core 10 | wall  9
+```
+
+1. Put the core on the front face of the middle layer at `(1,1,0)`, where `index = x + 3 * z + 9 * y` equals `10`. It faces north by default; standing north of it and facing south, your left is local `x = 2`.
+2. Put the main input store at `(2,1,1)` (index 14) on the left, the auxiliary input store at `(0,1,1)` (index 12) on the right, and the output store at `(1,2,1)` (index 22) on top. The two input stores are different block IDs, and rotating them never changes their role.
+3. Build only the four corners of the bottom layer (`y = 0`, indices 0, 2, 6 and 8); the other five cells (1, 3, 4, 5 and 7) are not checked at all, so whatever is there or nothing, loaded or not, makes no difference to forming. The centre cell of that layer (index 4) is the heat cell.
+4. Fill the other 18 cells with `mxt:alchemy_furnace_casing`, each carrying the wall material. The middle centre `(1,1,1)` is a wall as well.
+5. Put the heat block in the bottom centre cell (index 4), the main herbs in the left store, and the auxiliary herbs and catalyst in the right store.
+
+```mcfunction
+give @s mxt:alchemy_furnace[mxt:alchemy_furnace="example:basic"]
+give @s mxt:alchemy_main_input
+give @s mxt:alchemy_auxiliary_input
+give @s mxt:alchemy_output
+give @s mxt:alchemy_furnace_casing[mxt:alchemy_wall_material="example:basic_wall"]
+```
+
+You need 18 casing blocks (the four bottom corners plus the two layers above; taking them straight from the creative inventory is the quickest way). A shell with a missing cell, an invalid wall material or a cell claimed by another furnace does not form, and the screen lists in words what is missing.
+
+:::warning The mod ships no heat block
+
+The numbers a heat block gives live in the [`mxt:heat_source`](../datapack/json/heat_source.md) data pack definitions, and a block may implement the interface itself. When the bottom centre cell holds no heat block, or holds a block with no heat, the settable ceiling is `0` and starting a batch is refused over temperature - so first make sure that cell holds a block the table knows.
+
+:::
+
+## Step 5 — The Recipe {#step-5-—-the-recipe}
+
+A recipe uses the vanilla recipe type `mxt:alchemy` and lives at `data/<namespace>/recipe/<path>.json`; it is **not** a datapack registry. It judges by medicinal property, and the fields below are all of them.
+
+```json
+// data/example/recipe/warming.json
+{
+  "type": "mxt:alchemy",
+  "main_requirements": { "example:nourish": 6 },
+  "auxiliary_requirements": { "example:calm": 6 },
+  "catalyst_requirement": 1,
+  "balance_tolerance": 0,
+  "target_temperature": 100,
+  "temperature_tolerance": 5,
+  "duration": 200,
+  "max_bad_ticks": 2,
+  "minimum_aura": { "example:qi": 10 },
+  "success_outputs": [
+    {
+      "id": "mxt:pill",
+      "count": 1,
+      "components": { "mxt:pill": { "pill": "example:warming_pill" } }
+    }
+  ],
+  "failure_outputs": [{ "id": "mxt:alchemy_dregs" }]
+}
+```
+
+- The thresholds are per role and only compare **property keys and amounts**. Splitting or merging stacks inside one role changes nothing: two `herb_a` in two main slots are equivalent to a single stack of two.
+- A non-zero main or auxiliary property the recipe does not ask for makes the recipe fail to match, and no material is consumed. That is why each of the three herbs provides exactly one property.
+- `balance_tolerance: 0` demands a perfect balance, judged as the absolute value of `Σ(amount × power per item × thermal bias) / Σ(amount × power per item)` staying inside the tolerance. For this recipe `2 × herb_a + 2 × herb_c + 1 × herb_d` at age zero lands exactly on `0`.
+- When several recipes match at once, only the one that **uniquely dominates** every other survives: same set of property keys, every entry no smaller, and at least one entry strictly larger. The player never picks a recipe, and no unique result means a recipe conflict that consumes nothing either.
+- `target_temperature` and `temperature_tolerance` are the heat window. **The set temperature of the first batch must fall inside it**, so this recipe asks you to set the heat to `95..105`.
+- `minimum_aura` checks the **environment aura**; it is neither a cost nor heat. Name an aura your world actually has, or let the zone override the requirement with `alchemy_env_bonus` (that flag only replaces the threshold, it never provides heat).
+- `duration` is shortened by the brewing modifiers, computed once when the batch starts and frozen into it: the **material side** takes the lowest tier among the materials' `alchemy_modifier`, the **core side** the furnace core tier's own `alchemy_modifier` (counting as `1.0` when the core has no tier), and `effective duration = max(1, round(declared duration ÷ (material side × core side)))`. So giving a high furnace tier `alchemy_modifier: 2` makes that furnace brew any recipe faster.
+- The failure outputs are declared by the recipe; the server never stuffs dregs in on its own, and leaving `failure_outputs` out means a failed batch produces nothing.
+- `guide` is optional example metadata. The furnace neither reads nor shows it, so drop it if you do not want to maintain it.
+
+Loading materials never starts a batch. The player checks on the core's page whether the mixture has matched, then presses Start.
+
+## Step 6 — The Pill and Its Toxicity {#step-6-—-the-pill-and-its-toxicity}
+
+A pill is written in two halves: **what it does** goes into `pill`, and **which items are it and how often they may be taken** goes into `pill_binding`. The output of the recipe above names that effect through a component.
+
+```json
+// data/example/mxt/pill/warming_pill.json
+{
+  "color": "#FF9955",
+  "toxicity_gain": 25,
+  "toxicity_threshold": 100,
+  "toxicity_after_overdose": 20,
+  "on_consume": { "type": "mxt:heal", "amount": 4 }
+}
+```
+
+```json
+// data/example/mxt/pill_binding/warming_pill.json
+{
+  "items": ["mxt:pill"],
+  "pill": "example:warming_pill",
+  "max_uses": 2,
+  "cooldown": 20
+}
+```
+
+With no finished pill at hand you can hand one out directly:
+
+```mcfunction
+give @s mxt:pill[mxt:pill={pill:"example:warming_pill"}]
+```
+
+- The use cap counts per **binding**, not per item ID, so carrying the effect on another item does not get around it. Uses and cooldown are recorded on the body: death, a dimension change and logging back in all leave them alone.
+- **The identity only comes from a binding's `items` match**: a stack that writes only effect keys, or one whose component names a pill while no binding claims the item, counts no uses and has no cooldown. That is why the binding above names the built-in pill carrier `mxt:pill`. The component's `pill` wins over the definition the binding names, and the five effect keys are then laid over it field by field.
+- Toxicity is a per-body ledger too: `toxicity_gain` is added by each dose, `on_overdose` only fires once the total reaches `toxicity_threshold`, and `toxicity_after_overdose` is what is left afterwards. The threshold means "reaching it fires", not "no more pills allowed".
+- Clear toxicity with a negative `add` on the entity action `mxt:modify_pill_toxicity`, which does not touch the use count; read it with the entity condition `mxt:pill_toxicity` or the formula variable `pill_toxicity`.
+- Toxicity does not fade on its own by default. With **Server Config → Alchemy → Natural toxicity decay per second** set to a positive number, an active entity that already has toxicity loses some once every 20 ticks, nothing happens offline, and an entity that has never taken a pill does not gain an empty ledger.
+- The built-in carrier `mxt:pill` paints its icon with this pill's `color`, so when one effect hangs on several items only the built-in pill shows a colour. Every other item keeps its own texture, untouched.
+
+## Verify {#verify}
+
+```text
+(load the world again)
+/mxt registries validate
+/mxt registries list
+```
+
+1. Once the shell is laid out, every cell draws the geometry of the whole cauldron at that cell. When that does not line up, a cell is missing, a wall material is invalid, or another furnace has claimed a cell.
+2. Right-click the core, the main store, the auxiliary store and the output store to open one page each: the core's page is the heat readout with Set / Start / Abort, and the other three are their own slots. All four read the state of the same furnace rather than keeping a second inventory inside the block.
+3. Put the heat block in the bottom centre cell, the main herbs in the left store, and the auxiliary herbs and the catalyst in the right store. Loading materials does not start a batch.
+4. Set the heat to `100` on the core's page, submit it, and press Start: the batch begins, the state walks from idle through warming to running, the heat closes in on the set point, and the progress and remaining ticks follow.
+5. Take the result out of the output store once it appears. That store is take-only; when it cannot fit the result the batch waits at "waiting for output space", and freeing a slot lets it in without brewing again.
+
+:::warning This page does not promise that a batch brews correctly
+
+How a batch **settles once it has started** has not been checked item by item in game yet, so this page promises no particular result for a recipe. Points 4 and 5 above list what you can watch with your own eyes — the structure forming, the four screens opening, the batch starting, the heat moving and the result entering the store. The verdict itself is what the core's page reports as its state and failure reason.
+
+:::
+
+## Common Mistakes {#common-mistakes}
+
+| Symptom | Cause |
+| --- | --- |
+| The structure never forms | A cell is missing (only the four bottom corners count down there, and the middle centre must be walled too), a casing carries no valid wall material, or another furnace claimed a cell. |
+| The heat never rises | There is no heat block in the bottom centre cell, or the coldest wall, this block's `max_temperature` and the specification's `max_temperature` have pushed the ceiling below the set point. |
+| The first batch is refused | The set temperature must fall inside the recipe's tolerance, and when the ceiling is too low the temperature cannot even be set. |
+| The materials seem to do nothing | The role comes from the **store**: main herbs read `main_effects`, auxiliary herbs read `auxiliary_effects` and the catalyst reads `catalyst_power`. The wrong store means no power. |
+| Enough power, but a recipe conflict | A non-zero main or auxiliary property the recipe does not ask for, several matching recipes with no unique dominator, or a thermal deviation outside `balance_tolerance`. |
+| Home-grown herbs break the balance | A harvested herb carries the age it was picked at, so its power and thermal weighting move. Use age-zero herbs, or widen `balance_tolerance`. |
+| The output store is full | The batch waits at "waiting for output space" and the core keeps the result that was generated but not stored yet; free a slot and it goes in. |
+| A wall or a store was removed mid-batch | That batch settles as a failure once and does not return the materials already loaded; removing a store only drops that store's own contents. |
+| A hopper will not pull the result | The output store can only be pulled from its bottom face, and once the furnace is formed that face looks onto the middle-layer centre casing. |
+
+## Next {#next}
+
+- [alchemy_recipe](../datapack/json/alchemy_recipe.md) — the full field list, plus how matching, duration and outputs behave.
+- [alchemy_furnace](../datapack/json/alchemy_furnace.md) and [alchemy_wall_material](../datapack/json/alchemy_wall_material.md) — slots, capacity, cooling and the temperature ceiling.
+- [medicinal_property](../datapack/json/medicinal_property.md) and [spirit_herb](../datapack/json/spirit_herb.md) — properties, power, thermal bias, age and planting.
+- [pill](../datapack/json/pill.md) — the dose action, toxicity, the threshold and what is left after an overdose.
+- [pill_binding](../datapack/json/pill_binding.md) — which items are claimed, the use cap and the cooldown.
+- [quality](../datapack/json/quality.md) — how `alchemy_modifier` shortens a batch.
+- [Alchemy and the Brush](../player-guide/alchemy-and-brush.md) — how the furnace parts and the pill carrier behave in game.
