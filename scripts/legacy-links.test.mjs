@@ -6,17 +6,31 @@ import path from 'node:path';
 import vm from 'node:vm';
 import {test} from 'node:test';
 import legacyLinks from '../plugins/legacy-links.cjs';
-import {languageLinks, languageChoiceHtml} from '../src/utils/legacy-docs.cjs';
+import {languageLinks, languageChoiceUrl, languageChoiceHtml} from '../src/utils/legacy-docs.cjs';
 
 test('language choices only prepend a locale and preserve the full original URL', () => {
   const old = '/docs/mod/ice-and-fire-ce/faq?ref=wiki#questions';
   assert.deepEqual(languageLinks('https://docs.iafenvoy.com' + old), {en: '/en' + old, zh: '/zh' + old});
   assert.deepEqual(languageLinks('/docs/mod/mxt/installation'), {en: '/en/docs/mod/mxt/installation', zh: '/zh/docs/mod/mxt/installation'});
-  const elements = Object.fromEntries(['en', 'zh'].map(locale => [locale, {}]));
   const html = languageChoiceHtml('/docs/mod/ice-and-fire-ce/faq');
-  vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location: {href: 'https://docs.iafenvoy.com' + old}, document: {getElementById: id => elements[id]}});
-  assert.equal(elements.en.href, '/en' + old);
-  assert.equal(elements.zh.href, '/zh' + old);
+  let target;
+  vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location: {href: 'https://docs.iafenvoy.com' + old, replace: value => { target = value; }}});
+  const choice = new URL(target, 'https://docs.iafenvoy.com');
+  assert.equal(choice.pathname, '/en/language');
+  assert.equal(choice.searchParams.get('from'), old);
+  assert.deepEqual(languageLinks(choice.searchParams.get('from')), {en: '/en' + old, zh: '/zh' + old});
+  assert.equal(languageChoiceUrl('/'), '/en/language');
+});
+
+test('static error fallback opens the themed choice only for legacy docs URLs', () => {
+  for (const [url, expected] of [
+    ['https://docs.iafenvoy.com/docs/removed?x=1#intro', '/docs/removed?x=1#intro'],
+    ['https://docs.iafenvoy.com/unrelated', null],
+  ]) {
+    let target;
+    vm.runInNewContext(languageChoiceHtml('/', true).match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location: {href: url, pathname: new URL(url).pathname, replace: value => { target = value; }}});
+    assert.equal(target ? new URL(target, url).searchParams.get('from') : null, expected);
+  }
 });
 
 test('development serves the language choice for all old docs paths and passes localized paths through', async t => {
@@ -45,7 +59,6 @@ test('static builds put language choices at original docs URLs outside the local
   plugin.allContentLoaded({allContent: {'docusaurus-plugin-content-docs': {default: {loadedVersions: [{docs: [{permalink: '/en/docs/mod/demo/faq'}]}]}}}});
   await plugin.postBuild({outDir});
   const html = await readFile(path.join(root, 'docs/mod/demo/faq/index.html'), 'utf8');
-  assert.match(html, /href="\/en\/docs\/mod\/demo\/faq"/);
-  assert.match(html, /href="\/zh\/docs\/mod\/demo\/faq"/);
+  assert.match(html, /href="\/en\/language\?from=%2Fdocs%2Fmod%2Fdemo%2Ffaq"/);
   assert.match(await readFile(path.join(root, 'index.html'), 'utf8'), /Choose a language/);
 });

@@ -1,0 +1,30 @@
+.main {
+  display: grid;
+  place-items: center;
+  flex: 1;
+}
+
+.card {
+  width: 100%;
+  max-width: 34rem;
+  padding: 1rem;
+}
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-bottom: 0;
+}
+
+.message {
+  margin-bottom: 0;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.choices a {
+  flex: 1 1 9rem;
+}

@@ -110,6 +110,7 @@ rg --files docs-en -g '*.md' -g '*.mdx' -g '!_*.md' -g '!_*.mdx' |
 ## CSS 与主题修改
 
 - 全站默认变量与共享基础样式放在 `src/css/custom.css`；首页、404 等独立页面的样式使用 CSS Module。
+- 语言选择界面维护在 `src/pages/language.jsx`，复用原生 `Layout`、卡片、按钮和深浅色设置；`language.module.css` 只负责布局。旧网址入口仅将完整目标传入该页面，不另外维护独立配色或主题存储。
 - 文档目录样式通过 `src/theme/DocItem/index.jsx` 包装原始 `DocItem`，按文档 ID 前两段识别项目，例如 `mod/ice-and-fire-ce`，动态导入 `styles/` 内对应 CSS。
 - 新增项目样式时增加独立 CSS 文件，并在 `DocItem` 的加载映射中登记。中英文页面复用同一套目录样式。
 - 所有项目样式必须限定作用域，例如 `html.dir-mod-ice-and-fire-ce`。包装组件同时维护 HTML 和 body 上的 `dir-…`、`lang-en`、`lang-zh` 类，离开页面时清理。
