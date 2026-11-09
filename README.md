@@ -74,9 +74,9 @@ Save intentional translation changes back to `locales/zh/`, then run `pnpm sync-
 
 ## Old links and language selection
 
-The root `/` and old `/docs/…` links lead to `/en/language`. The original document destination is carried in the `from` parameter. Choosing English opens `/en/docs/…`; choosing Chinese opens `/zh/docs/…`. The original path, query string and fragment are preserved.
+The root `/` and old `/docs/…` links use the last language saved in the browser's `localStorage` (`docs.preferredLocale`). Without a saved preference, they lead to `/en/language`, carrying the original document destination in the `from` parameter. Choosing a language or visiting an explicit `/en/` or `/zh/` page updates the preference. The original document path, query string and fragment are preserved.
 
-The selection page in `src/pages/language.jsx` uses the site's Layout, CSS, cards, buttons and saved light/dark preference. `plugins/legacy-links.cjs` provides its entry pages during development and static builds. There is no automatic language detection or per-page destination mapping.
+The selection page in `src/pages/language.jsx` uses the site's Layout, CSS, cards, buttons and saved light/dark preference. `plugins/legacy-links.cjs` provides its entry pages during development and static builds. Change languages using the navbar, or open `/en/language?choose=1` to show the selector again. If browser storage is blocked, manual language selection still works. There is no browser-language detection or per-page destination mapping.
 
 ## Styles
 

@@ -7,6 +7,7 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 import legacyLinks from '../plugins/legacy-links.cjs';
 import {languageLinks, languageChoiceUrl, languageChoiceHtml} from '../src/utils/legacy-docs.cjs';
+import {LOCALE_STORAGE_KEY} from '../src/utils/locale-preference.cjs';
 
 test('language choices only prepend a locale and preserve the full original URL', () => {
   const old = '/docs/mod/ice-and-fire-ce/faq?ref=wiki#questions';
@@ -30,6 +31,50 @@ test('static error fallback opens the themed choice only for legacy docs URLs', 
     let target;
     vm.runInNewContext(languageChoiceHtml('/', true).match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location: {href: url, pathname: new URL(url).pathname, replace: value => { target = value; }}});
     assert.equal(target ? new URL(target, url).searchParams.get('from') : null, expected);
+  }
+});
+
+test('remembered languages bypass the selector for the root and preserve complete legacy URLs', () => {
+  for (const locale of ['en', 'zh']) {
+    for (const old of ['/?ref=bookmark#top', '/docs/mod/mxt/installation?ref=wiki#setup']) {
+      let target;
+      const href = 'https://docs.iafenvoy.com' + old;
+      vm.runInNewContext(languageChoiceHtml(old).match(/<script>([\s\S]*?)<\/script>/)[1], {
+        URL, localStorage: {getItem: key => key === LOCALE_STORAGE_KEY ? locale : null},
+        location: {href, pathname: new URL(href).pathname, replace: value => { target = value; }},
+      });
+      assert.equal(target, '/' + locale + old);
+    }
+  }
+});
+
+test('invalid or unavailable locale memory falls back to the selector', () => {
+  for (const storage of [
+    {getItem: () => 'fr'},
+    {getItem() { throw new Error('Storage blocked'); }},
+  ]) {
+    let target;
+    const old = '/docs/mod/mxt?ref=wiki#intro';
+    vm.runInNewContext(languageChoiceHtml(old).match(/<script>([\s\S]*?)<\/script>/)[1], {
+      URL, localStorage: storage,
+      location: {href: 'https://docs.iafenvoy.com' + old, replace: value => { target = value; }},
+    });
+    assert.equal(new URL(target, 'https://docs.iafenvoy.com').searchParams.get('from'), old);
+  }
+});
+
+test('remembered language applies to removed legacy URLs without redirecting localized or unrelated 404s', () => {
+  for (const [pathname, expected] of [
+    ['/docs/removed?x=1#intro', '/zh/docs/removed?x=1#intro'],
+    ['/zh/docs/removed', undefined], ['/en/docs/removed', undefined], ['/unrelated', undefined],
+  ]) {
+    let target;
+    const href = 'https://docs.iafenvoy.com' + pathname;
+    vm.runInNewContext(languageChoiceHtml('/', true).match(/<script>([\s\S]*?)<\/script>/)[1], {
+      URL, localStorage: {getItem: () => 'zh'},
+      location: {href, pathname: new URL(href).pathname, replace: value => { target = value; }},
+    });
+    assert.equal(target, expected);
   }
 });
 

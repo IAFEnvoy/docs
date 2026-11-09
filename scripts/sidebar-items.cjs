@@ -1,5 +1,6 @@
 const labels = require('../src/data/sidebar-labels.json');
 const mxtSidebar = require('./mxt-sidebar.cjs');
+const libraryOrder = ['annotation-lib', 'jupiter', 'saturn', 'uranus', 'neptune'];
 
 function documentId(item) {
   if (item.type === 'doc') return item.id;
@@ -20,6 +21,12 @@ module.exports = async function sidebarItemsGenerator({defaultSidebarItemsGenera
     // Project directory names are English and stay the same in both locales.
     const name = item => item.customProps?.sortName ?? documentId(item)?.split('/')[1] ?? item.label;
     items.sort((a, b) => name(a).localeCompare(name(b), 'en', {sensitivity: 'base', numeric: true}));
+  } else if (args.item.dirName === 'library') {
+    const rank = item => {
+      const index = libraryOrder.indexOf(documentId(item)?.split('/')[1]);
+      return index === -1 ? libraryOrder.length : index;
+    };
+    items.sort((a, b) => rank(a) - rank(b));
   }
   const docs = new Map(args.docs.map(doc => [doc.id, doc]));
   const translateLabel = label => labels[locale][label] ?? label;

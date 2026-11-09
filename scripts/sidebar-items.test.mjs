@@ -79,6 +79,30 @@ test('other sidebars keep their configured project order', async () => {
   assert.deepEqual(output.map(item => item.id), ['library/zebra/index', 'library/alpha/index']);
 });
 
+for (const locale of ['en', 'zh']) {
+  test(`library projects use the requested order in ${locale} while preserving child and unlisted project order`, async () => {
+    const projects = ['zebra', 'neptune', 'uranus', 'jupiter', 'alpha', 'annotation-lib', 'saturn'];
+    const docs = projects.flatMap(project => ['advanced', 'install'].map(page => ({
+      id: `library/${project}/${page}`, title: page, frontMatter: {},
+      source: locale === 'zh' ? `@site/i18n/zh/library/${project}/${page}.md` : `@site/docs-en/library/${project}/${page}.md`,
+    })));
+    const output = await generator({
+      item: {dirName: 'library'}, docs,
+      defaultSidebarItemsGenerator: async () => projects.map(project => ({
+        type: 'category', label: project,
+        link: project === 'saturn' ? {type: 'doc', id: `library/${project}/advanced`} : {type: 'generated-index'},
+        items: ['advanced', 'install'].map(page => ({type: 'doc', id: `library/${project}/${page}`})),
+      })),
+    });
+    assert.deepEqual(output.map(item => item.items[0].id.split('/')[1]), [
+      'annotation-lib', 'jupiter', 'saturn', 'uranus', 'neptune', 'zebra', 'alpha',
+    ]);
+    for (const item of output) {
+      assert.deepEqual(item.items.map(child => child.id.split('/').at(-1)), ['advanced', 'install']);
+    }
+  });
+}
+
 test('MiXianTu keeps nested definition families and both locales share the same document order', async () => {
   async function collect(directory, prefix = '') {
     const docs = [];

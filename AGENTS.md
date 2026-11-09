@@ -56,8 +56,10 @@ sidebar_position: 1
 - 使用 Docusaurus 支持的 `sidebar_position`、`sidebar_label`、`id`、`slug` 等字段。旧页面的 `order`、`group`、`nav` 等历史字段不能作为新页面的排序依据。
 - 已发布的文档 ID、文件路径、slug 和被引用的锚点应保持稳定。确需移动或改名时，检查两种语言及所有引用；翻译标题时注意显式保留需要稳定的锚点。
 - 旧 `/docs/…` 网址通过 `plugins/legacy-links.cjs` 显示语言选择页，用户选择后只添加 `/en` 或 `/zh` 前缀，保留后续路径、查询参数和锚点。不要添加逐页猜测映射。静态构建按文档路由生成旧网址入口；任意旧路径的兜底依赖静态托管使用根目录 `404.html`。
+- 语言偏好通过 `src/utils/locale-preference.cjs` 保存到 `localStorage` 的 `docs.preferredLocale`。选择语言或进入显式语言页面都会更新偏好；`src/theme/Root/index.jsx` 负责记录当前路径，语言选择页自身不更新偏好。根目录与旧链接有记忆时直接打开对应语言；`/en/language?choose=1` 可重新选择，存储不可用时保留手动选择。
 - `sidebars.js` 自动生成四类侧边栏。通过 `_category_.json` 设置分类标签、顺序和入口；通过 `src/data/sidebar-labels.json` 本地化目录标签。
 - `mod` 侧边栏最外层按稳定的英文项目名排序，两种语言顺序一致；通常取文档 ID 中的英文目录名，缩写目录可通过 `customProps.sortName` 指定全名（如 `mxt` 使用 `MiXianTu`）。项目内部继续遵循 `sidebar_position` 和 `_category_.json` 的顺序。
+- `library` 侧边栏最外层固定为 Annotation Lib → Jupiter → Saturn → Uranus → Neptune，两种语言顺序一致；排序清单维护在 `scripts/sidebar-items.cjs`，未列出的项目保留生成顺序并放在末尾。
 - MXT 文档维护在两种语言的 `mod/mxt/` 下；其多层目录与中英文标签由 `src/data/mxt-sidebar.json` 统一维护，`scripts/mxt-sidebar.cjs` 保留类型族挂在对应 JSON 定义页下面的结构。新增 MXT 页面时同步登记该清单。两个图形编辑器使用 `src/components/MxtToolFrame.jsx` 与 `mxt-tools/` 中的模块，独立页以 `-full.md` 结尾，不出现在侧边栏中。
 - 新分类沿用侧边栏生成器的唯一键规则。不同项目中相同的“API 参考”“安装”等标签不能产生重复翻译键。
 - 文档之间优先使用相对 Markdown 链接，如 `./install.md`、`../../json/origin.md`。避免写死本站域名或依赖旧源码目录的绝对文件路径。
