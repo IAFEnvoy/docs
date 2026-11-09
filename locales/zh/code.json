@@ -1,0 +1,22 @@
+{
+  "home.title": {"message": "欢迎来到冰火的文档站！"},
+  "home.description": {"message": "冰火参与开发的 Minecraft 模组与开发库文档。"},
+  "home.banner": {"message": "冰火文档站横幅"},
+  "home.intro": {"message": "这里收录了我开发或参与维护的 Minecraft 模组文档。"},
+  "home.contribute": {"message": "欢迎所有人参与完善文档。"},
+  "home.contributionGuide": {"message": "阅读贡献指南"},
+  "home.popular": {"message": "热门模组"},
+  "home.iceFire.name": {"message": "冰火传说社区版"},
+  "home.iceFire.description": {"message": "冰火传说的社区分支，支持 Fabric、NeoForge 和 Forge。"},
+  "home.jupiter.description": {"message": "功能强大、支持自动同步的配置库。"},
+  "home.origins.description": {"message": "为 NeoForge 全面重写的起源模组。"},
+  "home.dragons.description": {"message": "驯服巨龙，骑乘飞行。"},
+  "home.pendulum.description": {"message": "Minecraft 客户端脚本执行器。"},
+  "cards.viewDocumentation": {"message": "查看文档"},
+  "notFound.heading": {"message": "页面似乎遇到了问题。"},
+  "notFound.message": {"message": "404：找不到页面"},
+  "notFound.home": {"message": "返回首页"},
+  "download.action": {"message": "下载"},
+  "download.loading": {"message": "下载中…"},
+  "download.failed": {"message": "无法下载文件：{message}"}
+}

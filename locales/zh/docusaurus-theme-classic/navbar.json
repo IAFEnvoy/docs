@@ -1,0 +1,16 @@
+{
+  "title": {"message": "冰火的文档站"},
+  "logo.alt": {"message": "站点标志"},
+  "item.label.Tutorials": {"message": "教程"},
+  "item.label.Libraries": {"message": "开发库"},
+  "item.label.Mods": {"message": "模组"},
+  "item.label.Tools": {"message": "工具"},
+  "item.label.Deprecated": {"message": "已停止维护"},
+  "item.label.Dragon Mounts: Reforged": {"message": "龙骑士：重铸"},
+  "item.label.Ice And Fire CE": {"message": "冰火传说社区版"},
+  "item.label.MiXianTu": {"message": "觅仙途"},
+  "item.label.Origins (NeoForge)": {"message": "起源（NeoForge）"},
+  "item.label.MITE: Reforged": {"message": "MITE：重铸"},
+  "item.label.ModList Dashboard": {"message": "模组列表管理面板"},
+  "item.label.Origins JS": {"message": "起源JS"}
+}

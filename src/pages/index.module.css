@@ -3,8 +3,12 @@
  * and scoped locally.
  */
 
+.contentRow {
+  justify-content: center;
+}
+
 .heroBanner {
-  padding: 4rem 0;
+  padding: 2rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -16,8 +20,31 @@
   }
 }
 
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.banner {
+  width: 70%;
+  max-width: 900px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 2.5rem 1rem 2rem;
+}
+
+.cards article {
+  height: 100%;
+}
+
+.sectionTitle {
+  text-align: center;
+}
+
+@media screen and (max-width: 996px) {
+  .banner { width: 100%; }
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-inline: 0;
+  }
 }

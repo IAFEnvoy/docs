@@ -15,6 +15,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { saveAs } from 'file-saver';
+import {translate} from '@docusaurus/Translate';
 
 // ============================================================
 // Styles
@@ -73,13 +74,13 @@ export default function Download({ filePath, children, asButton = true }) {
       saveAs(blob, filename);
     } catch (err) {
       console.error('Download 组件下载出错:', err);
-      alert(`无法下载文件: ${err.message}`);
+      alert(translate({id: 'download.failed', message: 'Unable to download file: {message}'}, {message: err.message}));
     } finally {
       setLoading(false);
     }
   }, [filePath]);
 
-  const label = children || filePath.split('/').pop() || '下载';
+  const label = children || filePath?.split('/').pop() || translate({id: 'download.action', message: 'Download'});
   const style = {
     ...(asButton ? S.button : S.link),
     ...(loading ? S.loading : {}),
@@ -92,7 +93,7 @@ export default function Download({ filePath, children, asButton = true }) {
       onClick={handleDownload}
       disabled={loading}
     >
-      {loading ? '下载中...' : label}
+      {loading ? translate({id: 'download.loading', message: 'Downloading…'}) : label}
     </button>
   );
 }

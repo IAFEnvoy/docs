@@ -1,4 +1,5 @@
 import { themes as prismThemes } from 'prism-react-renderer';
+import sidebarItemsGenerator from './scripts/sidebar-items.cjs';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -20,12 +21,13 @@ const config = {
     mermaid: true,
   },
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'zh'],
+    localeConfigs: {
+      en: { label: 'English', htmlLang: 'en', baseUrl: '/en/' },
+      zh: { label: '简体中文', htmlLang: 'zh-CN' },
+    },
   },
 
   presets: [
@@ -34,8 +36,11 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          sidebarPath: './sidebars.js'
+          path: 'docs-en',
+          sidebarPath: './sidebars.js',
+          sidebarItemsGenerator,
         },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -47,6 +52,9 @@ const config = {
     '@saucelabs/theme-github-codeblock',
   ],
   plugins: [
+    './plugins/dev-locales.cjs',
+    './plugins/directory-styles.cjs',
+    './plugins/legacy-links.cjs',
     [
       '@docusaurus/plugin-pwa',
       {
@@ -108,7 +116,7 @@ const config = {
             position: 'left',
             label: 'Tutorials',
             items: [
-              { to: '/docs/tutorial/mixin', label: 'Mixin（中文）' },
+              { to: '/docs/tutorial/mixin', label: 'Mixin' },
             ]
           },
           {
@@ -153,6 +161,10 @@ const config = {
               { to: '/docs/mod/mobs-banner', label: 'Mobs Banner' },
               { to: '/docs/mod/tameable', label: 'Tameable' },
             ]
+          },
+          {
+            type: 'localeDropdown',
+            position: 'right',
           },
           {
             href: 'https://github.com/IAFEnvoy/docs',

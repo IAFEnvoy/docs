@@ -1,0 +1,13 @@
+.container {
+  text-align: center;
+  background: var(--ifm-background-surface-color);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: var(--ifm-global-shadow-lw);
+}
+
+.image {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 1.5rem;
+}

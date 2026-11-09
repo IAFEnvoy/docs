@@ -1,8 +1,9 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Link from '@docusaurus/Link';
+import {translate} from '@docusaurus/Translate';
 
-function Card({ title, body, link, linkTitle = 'View documentation' }) {
+function Card({ title, body, link, linkTitle }) {
     return (
         <article className="card link-card">
             <div className="card__header">
@@ -14,7 +15,7 @@ function Card({ title, body, link, linkTitle = 'View documentation' }) {
             {link && (
                 <div className="card__footer">
                     <Link to={link} className="button button--secondary button--block">
-                        {linkTitle}
+                        {linkTitle ?? translate({id: 'cards.viewDocumentation', message: 'View documentation'})}
                     </Link>
                 </div>
             )}
@@ -22,7 +23,7 @@ function Card({ title, body, link, linkTitle = 'View documentation' }) {
     );
 }
 
-export function Entry({ link, name, content, linkTitle = 'View documentation' }) {
+export function Entry({ link, name, content, linkTitle }) {
     return <Card title={name} body={content} link={link} linkTitle={linkTitle} />;
 }
 

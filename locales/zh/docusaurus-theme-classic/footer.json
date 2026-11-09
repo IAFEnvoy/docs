@@ -1,0 +1,10 @@
+{
+  "link.title.Docs": {"message": "文档"},
+  "link.title.Community": {"message": "社区"},
+  "link.title.More": {"message": "更多"},
+  "link.item.label.FAQ": {"message": "常见问题"},
+  "link.item.label.Mod List": {"message": "模组列表"},
+  "link.item.label.Checklist Before Report": {"message": "反馈前检查清单"},
+  "link.item.label.Home Page": {"message": "个人主页"},
+  "link.item.label.Datapack Visual Editor": {"message": "数据包可视化编辑器"}
+}

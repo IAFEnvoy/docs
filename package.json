@@ -3,15 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "docusaurus": "docusaurus",
-    "start": "docusaurus start",
-    "build": "docusaurus build",
+    "docusaurus": "node scripts/docusaurus.mjs",
+    "sync-i18n": "node scripts/sync-i18n.mjs",
+    "test": "node --test scripts/*.test.mjs",
+    "start": "node scripts/docusaurus.mjs start",
+    "build": "node scripts/docusaurus.mjs build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "node scripts/docusaurus.mjs deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
-    "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids"
+    "write-translations": "node scripts/docusaurus.mjs write-translations",
+    "write-heading-ids": "node scripts/docusaurus.mjs write-heading-ids"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",
@@ -26,7 +28,6 @@
     "clsx": "^2.0.0",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
-    "mod-docs": "file:.",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
