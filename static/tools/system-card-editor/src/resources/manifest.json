@@ -1,0 +1,36 @@
+{
+  "templates": [
+    "chat",
+    "claim",
+    "delivery_state",
+    "entitlement",
+    "item_sources",
+    "items",
+    "knowledge_answer",
+    "lottery_catalog",
+    "lottery_pool",
+    "lottery_prize",
+    "player",
+    "purchase",
+    "quest",
+    "quest_guide",
+    "quest_list",
+    "quest_notice",
+    "quest_pin",
+    "quest_startup",
+    "quest_submit",
+    "reward",
+    "selection",
+    "shop_catalog",
+    "shop_offer",
+    "shop_order",
+    "sign_in_status",
+    "starter_gift",
+    "text",
+    "web_search"
+  ],
+  "lang": [
+    "en_us",
+    "zh_cn"
+  ]
+}

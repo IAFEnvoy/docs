@@ -35,11 +35,7 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: {
-          path: 'docs-en',
-          sidebarPath: './sidebars.js',
-          sidebarItemsGenerator,
-        },
+        docs: false,
         blog: false,
         theme: {
           customCss: './src/css/custom.css',
@@ -52,6 +48,14 @@ const config = {
     '@saucelabs/theme-github-codeblock',
   ],
   plugins: [
+    [
+      './plugins/localized-docs.cjs',
+      {
+        path: 'docs-en',
+        sidebarPath: './sidebars.js',
+        sidebarItemsGenerator,
+      },
+    ],
     './plugins/dev-locales.cjs',
     './plugins/directory-styles.cjs',
     './plugins/legacy-links.cjs',
@@ -125,8 +129,9 @@ const config = {
             label: 'Libraries',
             items: [
               { to: '/docs/library/jupiter', label: 'Jupiter' },
-              { to: '/docs/library/neptune', label: 'Neptune' },
+              { to: '/docs/library/saturn', label: 'Saturn' },
               { to: '/docs/library/uranus', label: 'Uranus' },
+              { to: '/docs/library/neptune', label: 'Neptune' },
             ]
           },
           {
@@ -141,6 +146,7 @@ const config = {
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
               { to: '/docs/mod/origins-js', label: 'Origins JS' },
               { to: '/docs/mod/pendulum', label: 'Pendulum' },
+              { to: '/docs/mod/system', label: 'System' },
             ]
           },
           {

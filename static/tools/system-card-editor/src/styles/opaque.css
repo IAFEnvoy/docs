@@ -1,0 +1,84 @@
+/* Use ApricityUI's opaque t08 palette for the editor shell. */
+body.t08-arwes-theme {
+  --bg: var(--canvas);
+  --panel: var(--panel-background);
+  --muted: var(--ink-muted);
+  --accent: var(--green);
+  --error: #ff9c9c;
+  background: var(--canvas);
+  color: var(--ink);
+  min-width: 280px;
+  font-family: system-ui, 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+}
+
+.t08-arwes-theme .workspace {
+  height: calc(100vh - 190px);
+  min-height: 530px;
+  grid-template-columns: 190px minmax(280px, 1fr) minmax(300px, 1.15fr);
+}
+
+.t08-arwes-theme header,
+.t08-arwes-theme .panel,
+.t08-arwes-theme dialog {
+  background: var(--panel-background);
+  border-radius: 0;
+}
+
+.t08-arwes-theme .toolbar {
+  padding: 0;
+  border: 0;
+  background: var(--panel-background);
+}
+
+.t08-arwes-theme input,
+.t08-arwes-theme select,
+.t08-arwes-theme textarea {
+  background: var(--surface-deep);
+  border-color: var(--edge);
+  border-radius: 0;
+  color: var(--ink);
+}
+
+.t08-arwes-theme button {
+  min-height: 30px;
+  border-radius: 0;
+}
+
+.t08-arwes-theme button:hover:not(:disabled),
+.t08-arwes-theme button.active {
+  background: var(--button-hover-background);
+  border-color: var(--green);
+  color: var(--ink-on-dark);
+}
+
+.t08-arwes-theme .preview-stage {
+  background: var(--canvas);
+}
+
+.t08-arwes-theme dialog h2 {
+  font-family: inherit;
+}
+
+@media (max-width: 1000px) {
+  .t08-arwes-theme .workspace {
+    height: auto;
+    grid-template-columns: 160px minmax(0, 1fr);
+  }
+  .t08-arwes-theme .panel { min-height: 500px; }
+  .t08-arwes-theme .preview-panel { grid-column: 1 / -1; min-height: 650px; }
+}
+
+@media (max-width: 560px) {
+  .t08-arwes-theme .workspace { display: flex; flex-direction: column; }
+  .t08-arwes-theme .workspace > .panel:first-child { min-height: 240px; max-height: 360px; }
+  .t08-arwes-theme .panel { min-height: 520px; }
+  .t08-arwes-theme .preview-panel { min-height: 650px; }
+  .t08-arwes-theme .dialog-fields { grid-template-columns: 1fr; }
+  .t08-arwes-theme .statusbar { flex-wrap: wrap; height: auto; }
+  .t08-arwes-theme #status { flex-basis: 100%; white-space: normal; }
+  .t08-arwes-theme .toolbar .spacer { display: none; }
+  .t08-arwes-theme input,
+  .t08-arwes-theme select,
+  .t08-arwes-theme textarea { font-size: 16px; }
+}

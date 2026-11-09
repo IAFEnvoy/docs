@@ -1,0 +1,318 @@
+---
+title: "开发 API"
+sidebar_position: 1
+---
+
+---
+
+## 0. 依赖与安装
+
+- NeoForge 26.1.2（`neo_version=26.1.2.99`），Java 25。
+- exp4j（公式求值）已 `jarJar` 进 Saturn 自己的 jar，依赖方不必声明。
+- KubeJS 是 **`compileOnly`**：`compat.kubejs` 的类只在装了 KubeJS 时被加载，没装不影响启动。
+- 依赖 Saturn 的模组不需要在 `neoforge.mods.toml` 里声明可选依赖；Saturn 是硬依赖。
+
+---
+
+## 1. 命名空间与数据文件
+
+- 模组 id 与注册表命名空间都是 `saturn`。
+- 定义写在 `data/<你的命名空间>/saturn/<注册表路径>/<条目>.json`。
+- **定义与类型分开**：资源、技能等动态注册表条目使用上述文件路径；`entity_action_type` 等类型由 Java 注册 MapCodec，数据包只在动作字段中选择 `type`，不能创建同名目录来注册新 Java 类型。
+- 多数旧 Type 入口省略 `type` 时使用注册表默认条目（§2 表第二列）；信息表达式要求对象显式写 `type`，原始标量作为常量。
+
+---
+
+## 2. 注册表
+
+### 2.1 代码注册表（`SaturnRegistries`）
+
+| 静态字段 | 默认条目 |
+|---|---|
+| `ENTITY_VALUE_GETTER` | 无；严格查找参数 MapCodec，生成带参数的实体取值查询 |
+| `INFORMATION_EXPRESSION_TYPE` | `constant`（表达式对象仍要求显式 type） |
+| `ABILITY_TYPE` | `empty` |
+| `ABILITY_TARGET_SELECTOR_TYPE` | `self` |
+| `COST_TYPE` | `resource` |
+| `DATA_STORAGE_TYPE` | `empty` |
+| `TRIGGER_TYPE` | `use` |
+| `NUMBER_PROVIDER_TYPE` | `constant` |
+| `FORMULA_FUNCTION` | `round` |
+| `FORMULA_VARIABLE` | `zero` |
+| `RESOURCE_VALUE_PROVIDER_TYPE` | `current` |
+| `ENTITY_ACTION_TYPE` / `BI_ENTITY_ACTION_TYPE` / `BLOCK_ACTION_TYPE` / `ITEM_ACTION_TYPE` | `no_op` |
+| `ENTITY_CONDITION_TYPE` / `BI_ENTITY_CONDITION_TYPE` / `BLOCK_CONDITION_TYPE` / `ITEM_CONDITION_TYPE` / `DAMAGE_CONDITION_TYPE` | `always` |
+| `RESOURCE_BAR_RENDER_DATA_TYPE` | `missing` |
+| `RESOURCE_BAR_CONTEXT` | `self_hud` |
+| `RESOURCE_BAR_VISIBILITY_TYPE` | `always` |
+| `ITEM_MATCHER_ENTRY_TYPE` | `item` |
+| `TIMELINE_ENTRY_TYPE` | `idle` |
+
+非默认条目的代码注册表是 `OPEN_SCREEN_DATA`（界面打开请求的数据类型）与 `PROFILER_SOURCE`（采样桶）；两者都同步，后者的条目是 `ProfilerSource`，数值 id 就是它在采样数组里的列。
+
+```java
+public static final DeferredRegister<MapCodec<? extends EntityAction>> ACTIONS =
+        DeferredRegister.create(SaturnRegistries.ENTITY_ACTION_TYPE, MyMod.MODID);
+```
+
+### 2.1.1 内置条目（`registry/content`）
+
+每个代码注册表一个类（SaturnEntityActions、SaturnEntityConditions、SaturnTriggers…），每个类持有自己的 DeferredRegister 并在静态块里注册；`registry/SaturnContent` 只是汇总表，由主类在构造时统一 .register(bus)。自己的条目另建一个类和本模组的 DeferredRegister 即可。
+
+### 2.2 数据包注册表（`SaturnDatapackRegistries`）
+
+`saturn:resource`、`saturn:ability`、`saturn:trigger`、`saturn:incomplete`、`saturn:information_group`、`saturn:information_row` 由 Saturn 注册，你只写 JSON。信息行/Group 的目录、参数与表达式示例见 [数据驱动信息行](../guides/information.md)。
+
+- `saturn:incomplete`（`data/item/IncompleteMarker`）：把还没做完的物品标出来。文件里只有一个 `items`，装的是 `ItemMatcher` 的条目（物品、标签、通配、正则、`ingredient`，还能用 `type` 走自己的 `item_matcher_entry_type`）；任何一条命中就算命中，因此重叠不用排序——所有命中的声明画的是同一个角标。空 `items` 在加载期报错：那只能是写到一半的文件。
+- 角标由 `render/item/IncompleteMarkerRenderer` 画，贴图 `assets/saturn/textures/gui/incomplete.png`；它在客户端为每个物品注册一个 `IItemDecorator`，所以标记作用于“堆叠”而不是“物品类”，标签与需要读堆叠数据的匹配也能生效。
+
+---
+
+## 3. 扩展点
+
+### 3.1 支付：`Cost` + `CostContext`
+
+Saturn 只实现 `saturn:resource` 与 `saturn:item`；其它通道自己实现：
+
+```java
+public record MyAuraCost(NumberProvider amount) implements Cost {
+    public static final MapCodec<MyAuraCost> CODEC = ...;
+
+    @Override
+    public Result<Transaction> prepare(CostContext context) {
+        AuraCostSource source = context.get("mymod:aura_source").map(AuraCostSource.class::cast).orElse(null);
+        if (source == null) return Result.failure(CostFailure.NO_CHANNEL);
+        return Result.success(source.bind(context, this.amount().evaluate(context.formula())));
+    }
+
+    @Override
+    public MapCodec<MyAuraCost> codec() { return CODEC; }
+}
+```
+
+- `CostContext` 是 `record(payer, formula, origin, account, itemTarget, data)`；`data` 是 `with(key, value)` / `get(key)` 的扩展袋子，Saturn 只搬运不解释，键一律带命名空间。
+- `CostTarget` 是**开放接口**，你的 `Transaction` 可以带自己的目标类型。
+- `CostPayment.pay(List<Cost>, CostContext)`：先全部 `prepare`，再全部 `execute(true)` 试算，最后按序 `execute(false)` 实扣；实扣失败记日志并继续。返回 `Result<List<Debit>>`，`CostPayment.resources(debits)` 把凭据折成 id 键的数量表。
+
+### 3.2 失败
+
+失败是值不是异常。`SimpleFailure.of("my_reason")` 造常量；想有自己的 lang 命名空间就包进 `FailureSource.of(你的注册表 key)`。失败原因可以带受影响的资源（`withResource(id)`），语言键因此能说出「缺的是哪一门」。
+
+返回一律是 `Result<T>`：有数据就是 `Result<T>`，没有数据就是 `Result<Void>`（`Result.success()`）。判成败用 `instanceof Result.SuccessResult<?>` / `instanceof Result.FailureResult<?>`，取数据用 `getData()`，取原因用 `getFailure()`；失败结果不带数据。
+
+### 3.3 附件
+
+Saturn 只有两个实体附件：`SaturnAttachments.RESOURCE_HOLDER`（数值资源）与 `SaturnAttachments.ABILITY_HOLDER`（能力授予与状态）。自己的状态用你自己的附件；想按 tick 同步脏数据，继承 `util.AbstractChangeTrackable` 并参考 `SaturnAttachments.flushDirtyAttachments`。
+
+### 3.4 数值资源
+
+- 定义：`saturn:resource`（`default_value` / `min` / `max` / `icon` / `particle_color` / `bars`）。
+- 读写：`entity.getData(SaturnAttachments.RESOURCE_HOLDER)` 的 `get` / `set`；批量扣取用 `ResourceTransactions.tryConsume`（全有或全无）。
+- 玩家登录时按 `default_value` 播种一次（`ResourceSeeding`）：只填还没有条目的数值，已有的值不动，所以重登不会改余额。没有这一步，一条从没被改动过的数值读出来就是 `0`，写进 `default_value` 也付不起消耗。
+- `FormulaContext.withResource(resource)` 让该资源的公式读到自己的数值；`ResourceService.formulaContext(...)` 是现成包装。
+
+### 3.5 公式
+
+- `NumberProvider` 内置 8 种（`constant` / `expression` / `context_variable` / `sum` / `uniform` / `binomial` / `weighted_list` / `conditional`），另有 `js`。
+- 自己的变量注册到 `FORMULA_VARIABLE`，函数注册到 `FORMULA_FUNCTION`（exp4j `Function`）。
+- `FormulaContext` 字段：`caster` / `target` / `player` / `registries` / `resource` / `random` + 显式值表。
+
+### 3.6 HUD 与资源条
+
+- 加 HUD：实现 `HudEntry`（或继承 `AbstractHudEntry`），客户端初始化时 `HudManager.register(entry)`；位置由 `HudAnchor`（8 锚点）与 `HudPlacement` 决定，玩家在 `HudEditScreen` 里拖；布局落在 `config/saturn/hud.json`。
+- 资源条：写在 `saturn:resource` 的 `bars` 里的按资源画，外观由 `resource_bar_context` / `resource_bar_render_data_type` / `resource_bar_visibility_type` 三个注册表选。`minimum == maximum` 的条不画填充：宽度为零的区间没有比例可言，读成满条会把"上限等于当前值"（含上限被算成 0）画成满格。
+- 不属于任何 `saturn:resource` 的条（例如某个池子没有资源定义）：实现 `ResourceBarContributor`，客户端初始化时 `ResourceBarContributors.register(contributor)`；回调收到 `(LivingEntity, Layout, Anchor, List<ResourceBarRenderState>)`，加进去的条目与资源声明的条一起排序、堆叠、分左右列。列的收集每帧每列一次，回调里不要做重活。
+- 四个资源条 HUD 元素（左/右两列、目标、Boss）由 SaturnClient 在客户端初始化时注册（ResourceBarOverlay.registerEntries()，幂等）；内容侧不需要再调。
+- 物品角标：`render/item/IncompleteMarkerRenderer` 是 Saturn 注册的唯一 `IItemDecorator`，读 `saturn:incomplete`（§2.2）。
+- 客户端两个值（显示名字、图标位置）由 `ModConfigSpec` 的客户端文件提供（`config/saturn-client.toml` 的 `resource_bars.show_names` / `resource_bars.icons_in_center`），代码里读 `SaturnClientConfig.showNames()` / `iconsInCenter()`。
+
+### 3.7 轮盘（不在 Saturn）
+
+整块留在内容侧：键位、选择状态、页面与格子类型、HUD 网格、`/saturn wheel` 指令全在 MiXianTu。Saturn 只保留通用的 HUD 框架（§3.6）、键位持有类 `SaturnKeyMappings.KeyMappingHolder` 与技能激活入口（§3.11）。
+
+### 3.8 指令
+
+根节点 `/saturn`，服务端与客户端节点都挂在下面（Brigadier 同名合并）：
+
+| 节点 | 侧 | 作用 |
+|---|---|---|
+| `information query <target> [<group>]` / `gui <target> [<group>]` | 服务端 | 聊天查询或给执行者打开信息界面；两者均要求管理员权限（3 级） |
+| `profiler on` / `off` / `status [sources…]` | 服务端 | 性能分析开关与读数（管理员） |
+| `registries` | 服务端 | 数据包与代码注册表大小；有默认条目的代码表附带默认 ID |
+| `attachment status` | 服务端 | 两个 Saturn 附件：资源项数、能力来源数、冷却数 |
+| `ability list [target]` | 服务端 | 这个身体持有的技能与来源 |
+| `ability cast <id>` / `grant <targets> <id>` / `revoke <targets> <id>` | 服务端 | 施放、按命令自己的来源授予与收回（管理员） |
+| `triggers list [entity]` / `triggers rules <signal>` | 服务端 | 正在监听的订阅、某信号命中的规则 |
+| `triggers publish <signal> [entity]` | 服务端 | 手动发布一个信号（管理员） |
+| `resource get <id>` / `list` | 服务端 | 读执行者的资源数值 |
+| `resource set/add <targets> <id> <amount>` | 服务端 | 写数值（管理员），按 `min`/`max` 夹取 |
+| `hud` / `hud open` / `hud <element> reset` | 客户端 | HUD 框架诊断与编辑器 |
+
+**根别名与配置。** 每个服务端节点除了挂在 `/saturn` 下，还可以同时注册到根（`/information`、`/profiler`、`/ability`、`/triggers`、`/resource`、`/registries`、`/attachment`），由 `config/saturn-common.toml` 的 `commands.<节点>` 控制，**默认 `true`**；根上已经有别的模组占了同一个字面量时跳过并记一行日志，不覆盖对方。文件由 NeoForge 的 `ModConfigSpec` 注册（`SaturnConfig.COMMON_SPEC` / `CLIENT_SPEC`），Saturn 不自带配置界面。
+
+技能与触发器的节点都在：运行时已经搬进 Saturn（§3.11）。
+
+### 3.9 缓存
+
+`RegistryCache` 子类构造即自注册；`TagsUpdatedEvent`（`shouldUpdateStaticData`）重建，客户端登出清空。唯一的坑：类必须被初始化过——在**你的** mod 构造里持有一次你的缓存类的静态字段。Saturn 只 `init()` 自己的 `RegistryCaches`。
+
+### 3.10 KubeJS（可选）
+
+`compileOnly`；入口是 `kubejs.plugins.txt` 里的 `SaturnKubeJsPlugin`。
+
+| 脚本全局 | 作用 |
+|---|---|
+| `SaturnActions` | 脚本构造四种 action（`type: "js"`） |
+| `SaturnConditions` | 同上，五种 condition |
+| `SaturnCosts` | 脚本构造 cost；`SaturnKubeJsApi.tryConsumeResources` 直接结一笔账 |
+| `SaturnValues` | 脚本构造 `resource_value_provider`（`type: "js"`） |
+| `SaturnResources` | 读写一个实体的 `saturn:resource` 数值 |
+
+- 回调表：`SaturnJsActionCallbacks` / `ConditionCallbacks` / `CostCallbacks` / `ValueCallbacks` / `SelectorCallbacks` / `TriggerMatchers`；脚本重载时 `SaturnJsCallbacks.clear()`。
+- **没有** trigger 的绑定（发布信号、读订阅属依赖方的运行时）。
+- 全局名是 `Saturn*`，与内容模组的 `Mxt*` 不撞名。
+
+### 3.11 技能与触发器运行时
+
+Saturn 自带完整的技能与触发器运行时，内容侧只提供规则与内容。
+
+**技能**（`runtime.ability`）：`AbilityService`（施放/蓄力/通道/按一下的整条流程）、`AbilityActivationService`（客户端按键与脚本的激活入口）、`AbilityGrantService`（按来源授予与收回）、`AbilityModifierService`（被动的属性修正）、`PassiveAttributeService`（属性来源表）、`AbilityStorage`（每技能状态）、`AbilityFeedback`、`AbilityEventBridge`（装备/物品/触发器的接线）。
+
+**状态容器**（`data.storage`）：`DataStorageHolder<T>` 是"某个定义的可变状态"，泛型参数就是**地址本身**，不是 `Holder<T>`——技能写 `DataStorageHolder<Holder<Ability>>`（键是 holder），地址是 `UUID`、`ResourceKey`、名字或别的什么就写那个类型，容器照用；状态种类按类寻址，一对（地址, 种类）正好一个值。要存盘时给它 `codec(Codec<T>)`（如 `DataStorageHolder.codec(Ability.CODEC)`），地址没有可序列化形式就不给 codec、只用内存里的那份。值 `DataStorage` 自己 `copy()`、自己记变更，tick 收的是 `DataStorageContext`（身体 / 公式 / 当前 tick，不含任何技能字段）；节奏（`tickInterval` 之类）仍归各自的宿主循环。存档里一条是 `{"id": <地址>, "value": …}`，定义离开数据包时只丢那一条。
+
+**内置技能类型**：`active`、`triggered`、`modifier`、`aura`、`interval`、`channelled`、`targeted`、`empty`、`upkeep`。自己的类型注册到 `ABILITY_TYPE`，实现 `AbilityType`；要跑动作的再加 `AbilityEffect` / `ActionCarrier`，要长按的加 `Togglable`，要读时钟的加 `CooldownSource`，要通道的加 `ChannelSource`。
+
+**触发器**（`runtime.trigger`）：`TriggerDispatcher`（订阅表 + 发布）、`TriggerRuleService`（`saturn:trigger` 规则：条件、概率、冷却）、`TriggerPublishing`、`TriggerSubscription`、`TriggerRehydrators`、`TriggerLifecycleEvents`，以及原版准则的两个桥（`VanillaTriggerBridge` / `VanillaTriggerPollBridge`）。规则的冷却记在 `SaturnAttachments.TRIGGER_COOLDOWNS`。
+
+**成就完成**：`saturn:advancement_completed` 在服务端收到 NeoForge `AdvancementEarnEvent` 时发布，表示整个 Minecraft advancement 的条件已经完成，而不是单个准则进度变化。`AdvancementCompletedTrigger` 的可选 `advancement` 字段筛选成就 ID；省略则匹配所有成就，包括隐藏成就和配方解锁。信号的 `actor` 是完成者，`TriggerPayload.ADVANCEMENT` 保存该成就的 `Identifier`，可供订阅、条件和动作读取。
+
+例如 `data/example/saturn/trigger/first_diamond.json`：
+
+```json
+{
+  "trigger": {
+    "type": "saturn:advancement_completed",
+    "advancement": "minecraft:story/mine_diamond"
+  },
+  "action": {
+    "type": "saturn:send_message",
+    "message": { "text": "钻石成就已完成" }
+  }
+}
+```
+
+该触发器也可直接用于 `TriggerSubscription` 或触发型技能，复用现有条件、概率和冷却机制。它只转发当次完成事件：登录不补发已有成就，撤销后再次完成会再次发布；持久化去重、绑定基线和奖励账本由使用方管理。此入口先在 Saturn 提供，系统暂未切换成就监听或配置。
+
+**钩子**：`api.AbilityHooks` 是 Saturn 向世界提问的唯一入口——伤害倍率、技能校验、施放提交时的准则、物品能否使用、物品给的技能、身体装备（Curios）。默认全为“不改变”，用 `AbilityHooks.set(...)` 在 mod 构造里装一份。
+
+**事件**（`event`）：`AbilityUseEvent.Pre/Post`、`AbilityTriggeredEvent`、`ResourceConsumeEvent.Pre/Post`、`CollectAbilityGrantsEvent`、`CollectPassiveAttributesEvent`、`CollectTickStagesEvent`、`TriggerRehydrateEvent`。内容事件（修炼、诅咒、丹药、阵法、秘境…）不在 Saturn。
+
+**来源与 tick 顺序**：`runtime.Sources` 生成 `saturn:grant/...`、`saturn:equipment/...` 这类来源 id，`Grant` / `Declaration` 是 record，内容可以造自己的类别；`runtime.EntityTickStages` 是每实体 tick 的阶段表（`RESOURCES` / `TRIGGERS` / `ATTRIBUTES` / `ABILITIES` / `CASTS` / `CHANNEL` …），内容用 `CollectTickStagesEvent` 贡献自己的阶段。
+
+**内容侧要自己做的**：`word` / `storage` / `flight_control` 三种技能类型、`CultivationTriggerService`（修炼进度发信号）、内容事件与其 KubeJS 绑定。
+
+### 3.12 通用工具与战利品条目
+
+- `util/dispatcher`：`TickDispatcher` 按 key 排一次性或周期任务（`TickInterval` 定间隔、`TickExecutionLimit` 定每 tick 的执行上限）；纯 Java、归属创建线程，可 `reschedule` / `cancel` / `advanceTo`。
+- `util/{CloseableResources,ClientRenderResources}`：可关闭资源的槽位（关卡卸载、停机时释放）；`ClientLevelAccess` 是客户端注册表的访问口。
+- `util/InventoryUtil`：精确堆叠的原子挪进/挪出；`util/TooltipText`：tooltip 的数值、正负号与分隔符（`tooltip.saturn.separator`）。
+- `data/DescribedEntry`：`值 + 可选 description` 的 codec 包装（`codec(valueCodec, key)`），任意 `T` 可用。
+- `util/{PlayerNames,ClientPlayerNames}`：按 UUID 解析名字——服务端问在线列表与名字缓存，客户端只答当前连接列出的玩家；不发网络查询，名字要在写入时记下来（`displayName`）。
+- 战利品条目：`saturn:has_ability`（条件：这个实体持不持有某个技能）与 `saturn:grant_ability`（函数：授予，默认来源 `saturn:loot`），只读 `saturn:ability` 与能力附件。
+---
+
+### 3.13 长按手势与按 id 的准则
+
+- `api/ItemUseCycle` + `event/ResolveItemUseCycleEvent`：**通用长按绑定**。一次右键点击后，`ItemUseCycles` 在 `RightClickItem` 上发一次 `ResolveItemUseCycleEvent`，认领的提供者给出一段手势（`id` / `durationTicks` / `animation` / `canStart` / `tick` / `finish` / `isConsumption`）；点击本身由 `saturn.mixins.json` 里的 `ItemStackUseCycleMixin` 接在 `ItemStack#use` 上（物品覆写了 `Item#use`、甚至不调 `super` 也照样接得到），`getUseDuration` / `getUseAnimation` / `finishUsingItem` 由 `ItemUseCycleMixin` 接在 `Item` 上。原版使用组件（`consumable`、`blocks_attacks`、`kinetic_weapon`、可穿戴）优先，原生 `PASS` 之外的结果、原生替换了堆叠、原生给了时长，都会让框架让路。手势状态按实体与堆叠弱引用保存，客户端通过原版同步的使用标记自行发现。
+- `advancement/IdentifierCriterionTrigger`：一个准则实现、按 id 判断是否算数（`definition` 可选，缺省匹配所有调用）。内容侧用 `DeferredRegister.create(Registries.TRIGGER_TYPES, "<你的命名空间>")` 为每个用途注册一个实例，再在对应时刻 `trigger(player, definitionId)`。
+
+### 3.14 别名（`AliasManager`）
+
+搬过来的内置条目现在都叫 `saturn:<path>`，旧数据包里的 `mxt:<path>` 需要继续能解析：
+
+```java
+public MyMod(IEventBus bus) {
+    SaturnAliases.add("mxt");                 // mxt:<path> 成为 saturn:<path> 的第二个 id
+    // 有改名过的条目时先换规则：
+    SaturnAliases.set((namespace, id) -> Optional.of(...));
+}
+```
+
+- `api/AliasManager`：`Optional<Identifier> alias(String namespace, Identifier id)`，返回某个内置条目的旧 id，空表示这个命名空间没这么用过；`AliasManager.SAME_PATH` 把同样的 path 放进内容方命名空间。
+- `registry/SaturnAliases`：`set(manager)` / `add(namespace)`。在 **`EventPriority.LOWEST` 的 `RegisterEvent`** 里，遍历内置注册器加 2 个原版战利品注册器的每个条目，用旧 id **再注册一次同样的值**——这时各注册器自己的条目已经注册、holder 已经绑定，注册表也还没冻结。
+- 为什么要包一层：注册表对“同一个对象挂在两个 id 下”会抛 `Adding duplicate value`（`MappedRegistry` 用 `IdentityHashMap` 查重）。所以 `MapCodec` 用 `xmap(identity, identity)` 重造一个等价实例，`Function` 用 `SimpleFunction` 委托，`FormulaVariable` 与 `ResourceBarContext` 用记录式委托。
+- 跳过：注册表已经占用的旧 id（内容侧自己还在用）、`saturn` 自己的命名空间、附件——附件 id 存在实体上，第二个 id 会变成第二份附件而不是改名。
+- `player_view_field` 也不复制别名：字段 ID 对应保存的事实，第二条记录会重复采集，不应作为重命名手段。
+- 时机：`add` 必须在 mod 构造里调用；setup 之后再加会打一条 warn 并忽略。
+- **公式函数与公式变量不参与别名**：两者都按名字解析（函数看 `getName`，变量看 `names` / `prefixes`），第二个 id 不增加任何查找路径，只会让同一个名字在注册表里出现两次，而公式索引对重名直接抛异常。老数据写 `mxt:round` 或 `mxt:caster_` 本来就不经过注册表 id，因此不需要别名。
+- 与 NeoForge `DeferredRegister.addAlias` 的区别：那套只把别名记进 `IRegistryExtension` 并随注册表快照同步，当前版本的原版查找（`Registry#get` / `byNameCodec`）不经过 `resolve`；真正让旧 id 可解析的是这里的第二次注册。
+
+## 4. Saturn 这边还没做（依赖方不要当作已有能力）
+
+| 缺什么 | 影响 |
+|---|---|
+| 轮盘 | 键位、选择状态、页面与格子类型、HUD 网格、`/saturn wheel` 都在内容侧；Saturn 只给 HUD 框架与 `AbilityActivationService`。 |
+| 内容相关的技能类型 | `word`（解毒/自愈）、`storage`（法器储物）、`flight_control`（御剑）三种类型与 `CultivationTriggerService` 依赖内容运行时，留在内容侧。 |
+| trigger 的脚本绑定 | `js` 的 trigger 类型在 Saturn，但把订阅/发布挂到脚本的绑定在内容侧。 |
+| 灵气 / 池 / 银行 | 不在 Saturn；`Cost` + `CostTarget` + `CostContext.with(...)` 是你的通道。 |
+| 品质（quality） | `quality` 匹配条目与 `QualityRequirement` 都不在 Saturn。 |
+| 物品侧存储 | `DataStorageHolder` 只挂在 `AbilityAttachment` 上，没有物品组件。 |
+| profiler 界面与网络 | 只有 `/saturn profiler`；要图形界面自己读 `ServerProfiling.snapshot`，`ProfilerFrame` 自带 `CODEC` 与 `STREAM_CODEC`，放进你自己的包即可。 |
+| 玩家视图测试 | 已有独立核心检查和 main 源码集的信息行 GameTest；其他系统不在其验证范围。 |
+| 内置数据包定义 | 已包含信息行/Group JSON；玩法资源和技能定义由内容模组提供。 |
+
+---
+
+## 5. 版式约定
+
+- 公共 API 都在 `com.iafenvoy.saturn` 下：`data.*` 数据模型、`registry.*` 注册表、`runtime.*` 运行时、`screen.*` 客户端、`compat.kubejs` 可选脚本桥。
+- `data.*` 的 record 字段名就是 JSON 字段名，改字段等于破坏数据包。
+- 内部类（`builtin/*`、`util/profiling` 的细节）不承诺兼容。
+
+## 6. 玩家视图与信息行
+
+`api.playerview` 提供只读视图、writer 和宿主查询契约。入口、定义和快照在 `data.information`，DTO 在 `data.information.model`，取值接口在 `data.information.getter`，表达式在 `data.information.expression`。`EntityValueGetter<T>` 的参数 MapCodec 以 `DeferredRegister` 注册到 `SaturnRegistries.ENTITY_VALUE_GETTER`；`valueCodec()` 单独负责结果载荷，`schemaVersion()` 默认 `1`。每个查询可实现 `capture(Entity)`、`readSaved(SavedPlayerViewContext)` 和只读快照投影 `fallback(PlayerView)`。
+
+`data.information.PlayerViews` 采集无必填参数类型的默认查询、调用方显式请求和当前世界启用行所需的查询与依赖，按完整参数去重、隔离故障。26 个内置类型分别位于 `data.information.getter.builtin`，包括按 ID 选择属性、资源、效果及计分板目标。Saturn 只解析传入数据，不读取玩家文件、不保存归档，也不自行同步玩家信息。旧无参字段的 ID/schema/载荷格式保持；参数结果另存 `queries`，未知封套和查询定义保留。存档解析的 `NOT_CAPTURED` 不创建封套，允许宿主补充。原 Field / Contributor / SavedReader API 已移除，详见 [Getter 注册与迁移](player-views.md#注册类型化扩展)。
+
+展示扩展通过 `saturn:information_row` 数据定义逐行声明，类型为 `InformationRow`；`InformationGroup.rows` 通过 `Either<Holder<InformationRow>, TagKey<InformationRow>>` 引用单行或标签，可在多个组复用同一行。求值结果为扁平的 `InformationEntry`，直接保存 label/value/tooltip，使用 Holder 引用原始 Row 和 Group；分组查询返回 `Holder<InformationGroup>`，标题、顺序、importance 等不再复制为另一套模型。`PlayerInformation` 只查询原生 Row / Group 注册表，不持有独立的 Java 定义或注册器。`collect(view, group)` 按组取，`collectAll(view)` 全取，两种入口同时保留。`saturn:getter` 表达式内嵌带参数 getter，复合结果可选 `path`；例如按属性 ID 查询不依赖属性列表位置。使用 `InformationContext(language, registries)` 可以显式指定当前世界定义。
+
+旧直接 Java 行/组注册重载、`PlayerInformationRegistry`、`PlayerInformationRowProvider`、无参代码组枚举 `groups()` 和结果单组访问器 `group()` 已全部移除。新行/组使用数据包注册表，自定义取值/计算向 getter / expression 固有注册表登记 MapCodec；枚举当前分组用 `groups(view[, context])`，包含注册表中的空组。全取、按组取、screen 及结果的 `groups()` 保留。没有注册表上下文时查询为空，不回退到代码或全局世界。
+
+行 JSON 的 `importance` 为 int，越大越重要，默认 `0`。结果行通过 `importance()` 从原定义读取，`document.withMinimumImportance(minimum)` 保留不低于阈值的行，沿用原显示顺序。
+
+`InformationRow` / `InformationGroup` 的 `CODEC` 为 Holder Codec，`DIRECT_CODEC` 为定义 Codec；`InformationEntry.CODEC` 和文档 Codec 需要当前 RegistryOps。展示结果直接通过 `entry.label()/value()/tooltip()` 使用，旧 Result/Content 嵌套已删除。
+
+完整签名、字段、NBT 输入、Codec、界面与验证范围见 [玩家视图与展示行](player-views.md)，JSON 定义和自定义 Type 见 [数据驱动信息行](../guides/information.md)。
+
+信息指令为 `/information query <target> [<group>]` 和 `/information gui <target> [<group>]`，两者均要求 `Permissions.COMMANDS_ADMIN`（3 级），并保留 `/saturn information query/gui ...` 入口。支持玩家名、UUID 或单实体选择器；省略 group 全取，提供 group 按组筛选，支持当前 Group 注册表的 ID 补全。`query` 使用 `InformationText` 仅向执行者输出文字，控制台可用；`gui` 要求玩家执行，通过 `saturn:information_gui` 客户端载荷传输已经求值的 `InformationDocument` 与分组选择，在执行者客户端打开 `PlayerInformationScreen`。两者返回逻辑行数。GUI 不发送原始快照、不自动刷新；过大的文档提示按组查看。命令提示含中英文翻译键。
+
+## 7. FileAccess 文件编解码
+
+`com.iafenvoy.saturn.util.FileAccess` 提供共享的 Codec 文件边界，公开入口如下：
+
+| 入口 | 写入格式 | 读取格式 |
+| --- | --- | --- |
+| `FileAccess.JSON` | 格式化 JSON | JSON |
+| `FileAccess.NBT` | 未压缩、标准根头部的 NBT | 自动识别未压缩 / GZIP，兼容标准 / 旧版根头部 |
+| `FileAccess.NBT_COMPRESSED` | GZIP 压缩、标准根头部的 NBT | 与 `NBT` 相同 |
+
+`encode(codec, value)` / `decode(codec, bytes)` 处理字节数组；`save(codec, path, value)` / `load(codec, path)` 处理文件。压缩选项只决定写入方式，不限制读取；两种 NBT 入口均可互读，不依赖文件扩展名。
+
+所有格式的 `save` 均先完成内存编码，再通过 `FileAccess.write(path, bytes)` 原子保存：自动创建父目录，在目标同目录创建独立的临时文件，完整写入并 `force(true)`，最后原子替换目标。相对文件名同样可用；写入或原子移动失败时保留原目标，不回退为直接覆盖，正常退出方法时尝试清理临时文件，清理失败记录警告。独立临时文件避免并发写入互相截断暂存内容，但业务层读改写事务仍需调用方自己的锁。
+
+已经通过 `encode` 做过容量检查或摘要计算的调用方，直接使用公开静态方法 `FileAccess.write(Path, byte[]) throws IOException`；它只写入传入字节，不二次编码或压缩，异常由调用方处理。原有 `save` 继续以 boolean 表示成功或失败，失败记录完整异常。
+
+```java
+byte[] bytes = FileAccess.NBT_COMPRESSED.encode(MyData.CODEC, data).orElseThrow();
+// Check the byte budget or compute a digest before committing these exact bytes.
+FileAccess.write(path, bytes);
+```
+
+新 NBT 使用原版 `NbtIo.writeUnnamedTag`，保留根类型及空名称字段，可供常规 NBT 编辑器读取。读取时按 GZIP 魔数识别压缩，支持此前 `writeAnyTag` 生成的省略根名称格式；每次解析必须完整消费根数据，避免错位后读出假空对象。只有全部格式尝试失败才记录读取错误，成功兼容旧文件不会输出警告。读取不会改写文件；之后经任一入口保存时，写出该入口指定的压缩方式和标准头部。
+
+NBT 字节处理独立在包内 `NbtFiles`，不继承 `FileAccess`；NBT 单例通过私有匿名适配器创建，避免父类静态初始化引用可独立初始化的命名子类。公开 `FileAccess` 类型、原有方法和 JSON 行为保留。
+
+2026-11-08 编译记录：`gradlew compileJava jar --console=plain` 通过；IDE 对 `FileAccess` 和 `NbtFiles` 的静态检查不再报告类加载死锁警告。未启动游戏或执行测试，实际外部编辑器打开、旧文件恢复和压缩往返尚未运行验收。
+
+原子保存是后续新增 API，随下一次 Saturn 更新发布，未改版本号或下游依赖。系统当前保留自身的 `AtomicFiles`；升级到包含本 API 的依赖后，可将 `AtomicFiles.replace(path, bytes)` 换成 `FileAccess.write(path, bytes)` 并移除重复实现。原先固定名称 `.tmp` 的主动清理应一并移除，新的临时文件由 Saturn 在保存方法退出时负责清理。

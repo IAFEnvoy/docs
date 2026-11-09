@@ -57,6 +57,7 @@ sidebar_position: 1
 - 已发布的文档 ID、文件路径、slug 和被引用的锚点应保持稳定。确需移动或改名时，检查两种语言及所有引用；翻译标题时注意显式保留需要稳定的锚点。
 - 旧 `/docs/…` 网址通过 `plugins/legacy-links.cjs` 显示语言选择页，用户选择后只添加 `/en` 或 `/zh` 前缀，保留后续路径、查询参数和锚点。不要添加逐页猜测映射。静态构建按文档路由生成旧网址入口；任意旧路径的兜底依赖静态托管使用根目录 `404.html`。
 - `sidebars.js` 自动生成四类侧边栏。通过 `_category_.json` 设置分类标签、顺序和入口；通过 `src/data/sidebar-labels.json` 本地化目录标签。
+- `mod` 侧边栏最外层按文档 ID 中的英文项目目录名排序，两种语言顺序一致；项目内部继续遵循 `sidebar_position` 和 `_category_.json` 的顺序。
 - 新分类沿用侧边栏生成器的唯一键规则。不同项目中相同的“API 参考”“安装”等标签不能产生重复翻译键。
 - 文档之间优先使用相对 Markdown 链接，如 `./install.md`、`../../json/origin.md`。避免写死本站域名或依赖旧源码目录的绝对文件路径。
 - React 内部导航使用 `@docusaurus/Link`，静态资源按需使用 `useBaseUrl`；避免原生 `<a href="/">` 将中文页面带回英文首页。

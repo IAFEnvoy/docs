@@ -18,5 +18,10 @@
   "notFound.home": {"message": "返回首页"},
   "download.action": {"message": "下载"},
   "download.loading": {"message": "下载中…"},
-  "download.failed": {"message": "无法下载文件：{message}"}
+  "download.failed": {"message": "无法下载文件：{message}"},
+  "systemCardEditor.title": {"message": "卡片 JSON 编辑器"},
+  "systemCardEditor.toggleFullscreen": {"message": "切换全屏"},
+  "systemCardEditor.open": {"message": "独立打开编辑器 ↗"},
+  "systemCardEditor.frameTitle": {"message": "系统卡片 JSON 编辑器"},
+  "systemCardEditor.fullscreenFailed": {"message": "浏览器未允许全屏，可使用“独立打开编辑器”。"}
 }

@@ -4,8 +4,13 @@ import {HtmlClassNameProvider} from '@docusaurus/theme-common';
 import {useLocation} from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-// Register project styles here when needed. See ./styles/README.md.
-const styles = {};
+// Shared by both locales; retained CSS is isolated by the directory classes.
+const styles = {
+  'mod/ice-and-fire-ce': () => import('./styles/ice-and-fire-ce.css'),
+  'mod/origins': () => import('./styles/origins.css'),
+  'mod/origins-js': () => import('./styles/origins.css'),
+  'mod/system': () => import('./styles/system.css'),
+};
 
 export default function DirectoryDocItem(props) {
   const {pathname} = useLocation();

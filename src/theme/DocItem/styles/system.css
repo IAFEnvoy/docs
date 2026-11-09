@@ -1,0 +1,133 @@
+/* Adapted from ApricityUI t08-arwes (opaque). Keep the documentation scope separate from game UI selectors. */
+html.dir-mod-system {
+  color-scheme: dark;
+  --ifm-color-primary: #61e6ff;
+  --ifm-color-primary-dark: #36b9d5;
+  --ifm-color-primary-darker: #279ab7;
+  --ifm-color-primary-darkest: #187d98;
+  --ifm-color-primary-light: #8cefff;
+  --ifm-color-primary-lighter: #9befff;
+  --ifm-color-primary-lightest: #baf7ff;
+  --ifm-background-color: #040b12;
+  --ifm-background-surface-color: #051823;
+  --ifm-font-color-base: #dff8ff;
+  --ifm-font-color-secondary: #83a8b5;
+  --ifm-color-content: #dff8ff;
+  --ifm-color-content-secondary: #83a8b5;
+  --ifm-heading-color: #9befff;
+  --ifm-link-color: #61e6ff;
+  --ifm-link-hover-color: #9befff;
+  --ifm-code-background: #06131d;
+  --ifm-color-emphasis-0: #040b12;
+  --ifm-color-emphasis-100: #06131d;
+  --ifm-color-emphasis-200: #102a37;
+  --ifm-color-emphasis-300: #213b48;
+  --ifm-color-emphasis-400: #31505e;
+  --ifm-color-emphasis-500: #496b78;
+  --ifm-color-emphasis-600: #668894;
+  --ifm-color-emphasis-700: #83a8b5;
+  --ifm-color-emphasis-800: #9ec5cf;
+  --ifm-color-emphasis-900: #c8eaf1;
+  --ifm-color-emphasis-1000: #efffff;
+  --ifm-global-radius: 0;
+  --ifm-card-border-radius: 0;
+  --ifm-font-family-base: system-ui, -apple-system, 'Microsoft YaHei', sans-serif;
+  --ifm-heading-font-family: Consolas, 'Microsoft YaHei UI', 'Microsoft YaHei', monospace;
+  --ifm-menu-color: #83a8b5;
+  --ifm-menu-color-active: #9befff;
+  --ifm-menu-color-background-active: #103c4c;
+  --ifm-menu-color-background-hover: #0c3341;
+  --ifm-menu-link-sublist-icon-filter: invert(1);
+  --ifm-navbar-background-color: #051823;
+  --ifm-navbar-link-color: #dff8ff;
+  --ifm-navbar-link-hover-color: #9befff;
+  --ifm-dropdown-background-color: #051f2b;
+  --ifm-dropdown-link-color: #dff8ff;
+  --ifm-dropdown-hover-background-color: #103c4c;
+  --ifm-toc-border-color: #174657;
+  --ifm-breadcrumb-color-active: #9befff;
+  --ifm-breadcrumb-item-background-active: #103c4c;
+  --ifm-footer-background-color: #030e17;
+  --ifm-footer-color: #83a8b5;
+  --ifm-footer-title-color: #dff8ff;
+  --ifm-footer-link-color: #9befff;
+  --ifm-tabs-color-active: #61e6ff;
+  --ifm-tabs-color-active-border: #61e6ff;
+  --docusaurus-highlighted-code-line-bg: #103b49;
+  --system-doc-edge: #174657;
+}
+
+html.dir-mod-system body {
+  background: #040b12;
+  color: #dff8ff;
+}
+
+html.dir-mod-system ::selection { background: #187d98; color: #efffff; }
+html.dir-mod-system :focus-visible { outline: 2px solid #f0fdff; outline-offset: 3px; }
+html.dir-mod-system .navbar { border-bottom: 1px solid var(--system-doc-edge); box-shadow: none; }
+html.dir-mod-system .footer { border-top: 1px solid var(--system-doc-edge); }
+html.dir-mod-system .menu { background: #051823; }
+html.dir-mod-system .menu__link--active { border-inline-start: 2px solid #61e6ff; }
+html.dir-mod-system .table-of-contents__link { color: #83a8b5; }
+html.dir-mod-system .table-of-contents__link--active { color: #9befff; }
+html.dir-mod-system .theme-doc-markdown h1 { letter-spacing: 0.02em; }
+html.dir-mod-system .theme-doc-markdown h2 {
+  padding-block-end: 0.45rem;
+  border-bottom: 1px solid var(--system-doc-edge);
+}
+html.dir-mod-system .theme-doc-markdown h3 { color: #dff8ff; }
+html.dir-mod-system .theme-doc-markdown code { color: #c8f6ff; border-color: var(--system-doc-edge); }
+/* Arwes stays dark in both site modes. Prism sets these variables and token colors inline. */
+html.dir-mod-system .theme-code-block {
+  --prism-background-color: #06131d !important;
+  --prism-color: #dff8ff !important;
+  border-radius: 0;
+}
+html.dir-mod-system pre { background: #06131d !important; color: #dff8ff !important; border: 1px solid var(--system-doc-edge); border-radius: 0; }
+html.dir-mod-system .theme-doc-markdown pre code { color: inherit; background: transparent; border: 0; }
+html.dir-mod-system .theme-code-block .token-line,
+html.dir-mod-system .theme-code-block .token { color: #dff8ff !important; }
+html.dir-mod-system .theme-code-block .token.comment,
+html.dir-mod-system .theme-code-block .token.prolog,
+html.dir-mod-system .theme-code-block .token.doctype,
+html.dir-mod-system .theme-code-block .token.cdata { color: #83a8b5 !important; }
+html.dir-mod-system .theme-code-block .token.punctuation { color: #c8eaf1 !important; }
+html.dir-mod-system .theme-code-block .token.property,
+html.dir-mod-system .theme-code-block .token.attr-name,
+html.dir-mod-system .theme-code-block .token.constant,
+html.dir-mod-system .theme-code-block .token.symbol { color: #9befff !important; }
+html.dir-mod-system .theme-code-block .token.keyword,
+html.dir-mod-system .theme-code-block .token.tag,
+html.dir-mod-system .theme-code-block .token.boolean,
+html.dir-mod-system .theme-code-block .token.selector,
+html.dir-mod-system .theme-code-block .token.atrule { color: #61e6ff !important; }
+html.dir-mod-system .theme-code-block .token.string,
+html.dir-mod-system .theme-code-block .token.char,
+html.dir-mod-system .theme-code-block .token.attr-value,
+html.dir-mod-system .theme-code-block .token.builtin,
+html.dir-mod-system .theme-code-block .token.inserted { color: #baf0c1 !important; }
+html.dir-mod-system .theme-code-block .token.number { color: #ffd69a !important; }
+html.dir-mod-system .theme-code-block .token.function,
+html.dir-mod-system .theme-code-block .token.class-name { color: #d3bdff !important; }
+html.dir-mod-system .theme-code-block .token.deleted { color: #ffb4b4 !important; }
+html.dir-mod-system blockquote { border-inline-start-color: #61e6ff; background: #051f2b; }
+html.dir-mod-system table { border-color: var(--system-doc-edge); }
+html.dir-mod-system table thead tr { background: #062b36; border-color: var(--system-doc-edge); }
+html.dir-mod-system table tr { background: #051823; border-color: var(--system-doc-edge); }
+html.dir-mod-system table tr:nth-child(2n) { background: #051f2b; }
+html.dir-mod-system table th,
+html.dir-mod-system table td { border-color: var(--system-doc-edge); }
+html.dir-mod-system .card,
+html.dir-mod-system .pagination-nav__link { border: 1px solid var(--system-doc-edge); background: #051f2b; border-radius: 0; }
+html.dir-mod-system .card:hover,
+html.dir-mod-system .pagination-nav__link:hover { border-color: #61e6ff; }
+html.dir-mod-system .alert { background: #051f2b; border-color: #187d98; color: #dff8ff; border-radius: 0; }
+html.dir-mod-system .alert a { color: #9befff; text-decoration: underline; }
+html.dir-mod-system .button { border-radius: 0; }
+
+@media (max-width: 650px) {
+  html.dir-mod-system .theme-doc-markdown h1 { font-size: 1.9rem; }
+  html.dir-mod-system input,
+  html.dir-mod-system select,
+  html.dir-mod-system textarea { font-size: 16px; }
+}

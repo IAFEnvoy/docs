@@ -1,0 +1,33 @@
+---
+title: "传送"
+sidebar_position: 10
+---
+
+`saturn:teleport`
+
+改变实体的位置。
+
+上下文包含 actor（发起者）与 target（目标）。同一个 ID 在实体动作和双实体动作注册表中可能有不同字段，不能跨种类替换。
+
+## JSON 字段
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:teleport` |
+| `teleport_actor` | 布尔值 | 否 | `false` | 本类型的 teleport_actor 参数。 |
+| `teleport_target` | 布尔值 | 否 | `true` | 本类型的 teleport_target 参数。 |
+| `rotate` | 布尔值 | 否 | `false` | 本类型的 rotate 参数。 |
+
+## JSON 示例
+
+```json
+{
+  "type": "saturn:teleport"
+}
+```
+
+这是可嵌入相应字段的值，不是单独可加载的数据包文件。示例中的 `example:` 引用需要替换为已定义的条目。
+
+## Java 入口
+
+`com.iafenvoy.saturn.data.action.builtin.bientity.TeleportAction`。本页按当前 26.1.2 源码的 Codec 整理。

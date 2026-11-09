@@ -1,0 +1,36 @@
+---
+title: "Light level"
+sidebar_position: 10
+---
+
+`saturn:light_level`
+
+Compares the light level of the given light layer.
+
+Checks the block or environment at the context position. Embedded in BlockCondition fields.
+
+## JSON fields
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:light_level` |
+| `light_type` | Object | no | omitted | Light layer, sky or block. Available values: `sky`, `block`. |
+| `comparison` | Enum string | yes | — | One of `==`, `!=`, `<`, `<=`, `>`, `>=`. |
+| `compare_to` | Number | yes | — | The target number to compare against. |
+
+## JSON example
+
+```json
+{
+  "type": "saturn:light_level",
+  "comparison": ">=",
+  "compare_to": 8,
+  "light_type": "sky"
+}
+```
+
+This is a value to embed in the corresponding field, not a standalone loadable data pack file. The `example:` references in the examples must be replaced with defined entries.
+
+## Java entry point
+
+`com.iafenvoy.saturn.data.condition.builtin.block.LightLevelCondition`. This page is based on the Codec in the current 26.1.2 source.

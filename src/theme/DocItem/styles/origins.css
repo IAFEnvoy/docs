@@ -1,0 +1,278 @@
+/* Ore, adapted from E:/Website/Theme/t01-ore for Docusaurus.
+ * The upstream theme is derived from Minecraft-CSS by Jiyath5516F (MPL 2.0).
+ * See assets/ore/license.txt. Both Origins directories share this scoped file.
+ */
+@font-face {
+  font-family: 'Docs Ore Display';
+  src: url('./assets/ore/minecraft-ten.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Docs Ore Regular';
+  src: url('./assets/ore/minecraft-regular.otf') format('opentype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) {
+  color-scheme: dark;
+  --ifm-color-primary: #8dcb65;
+  --ifm-link-color: var(--ifm-color-primary);
+  --ifm-link-hover-color: var(--ifm-color-primary-dark);
+  --ifm-color-primary-dark: #79c14a;
+  --ifm-color-primary-darker: #6eb83e;
+  --ifm-color-primary-darkest: #599532;
+  --ifm-color-primary-light: #a1d580;
+  --ifm-color-primary-lighter: #abda8d;
+  --ifm-color-primary-lightest: #c9e7b5;
+  --ifm-background-color: #202124;
+  --ifm-background-surface-color: #313233;
+  --ifm-font-color-base: #f4f5f7;
+  --ifm-font-color-secondary: #b6bac1;
+  --ifm-color-content: #f4f5f7;
+  --ifm-color-content-secondary: #b6bac1;
+  --ifm-heading-color: #f4f5f7;
+  --ifm-heading-font-family: 'Docs Ore Display', system-ui, -apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
+  --ifm-heading-font-weight: 400;
+  --ifm-heading-line-height: 1.5;
+  --ifm-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
+  --ifm-line-height-base: 1.8;
+  --ifm-code-font-size: 90%;
+  --ifm-code-background: #313233;
+  --ifm-color-emphasis-0: #202124;
+  --ifm-color-emphasis-100: #313233;
+  --ifm-color-emphasis-200: #48494a;
+  --ifm-color-emphasis-300: #5b5d60;
+  --ifm-color-emphasis-400: #77797c;
+  --ifm-color-emphasis-500: #96999e;
+  --ifm-color-emphasis-600: #b6bac1;
+  --ifm-color-emphasis-700: #d0d1d4;
+  --ifm-color-emphasis-800: #e6e8eb;
+  --ifm-color-emphasis-900: #f4f5f7;
+  --ifm-color-emphasis-1000: #ffffff;
+  --ifm-global-radius: 0;
+  --ifm-card-border-radius: 0;
+  --ifm-menu-color: #d0d1d4;
+  --ifm-menu-color-active: #b9e59c;
+  --ifm-menu-color-background-active: #3c852730;
+  --ifm-menu-color-background-hover: #48494a;
+  --ifm-menu-link-sublist-icon-filter: invert(1);
+  --ifm-navbar-background-color: #313233;
+  --ifm-navbar-link-color: #f4f5f7;
+  --ifm-navbar-link-hover-color: #b9e59c;
+  --ifm-dropdown-background-color: #313233;
+  --ifm-dropdown-link-color: #f4f5f7;
+  --ifm-dropdown-hover-background-color: #48494a;
+  --ifm-toc-border-color: #5b5d60;
+  --ifm-breadcrumb-color-active: #b9e59c;
+  --ifm-breadcrumb-item-background-active: #3c852730;
+  --ifm-footer-background-color: #313233;
+  --ifm-footer-color: #d0d1d4;
+  --ifm-footer-title-color: #f4f5f7;
+  --ifm-footer-link-color: #d0d1d4;
+  --ifm-tabs-color-active: #b9e59c;
+  --ifm-tabs-color-active-border: #3c8527;
+  --doc-ore-edge: #1e1e1f;
+  --doc-ore-surface: #48494a;
+  --doc-ore-green: #3c8527;
+  --doc-ore-green-shadow: #1d4d13;
+  --docusaurus-highlighted-code-line-bg: #3c852730;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) :focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) ::selection {
+  background: #3c8527;
+  color: #fff;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar {
+  --ifm-navbar-link-color: #f4f5f7;
+  --ifm-navbar-link-hover-color: #b9e59c;
+  border-bottom: 3px solid var(--doc-ore-edge);
+  box-shadow: inset 0 -4px #1e1e1f4d;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar-sidebar {
+  background: #313233;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__toggle,
+html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__items--right > div > button {
+  color: #f4f5f7;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-sidebar-container {
+  border-right: 3px solid var(--doc-ore-edge);
+  background: #313233;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__link {
+  border: 2px solid transparent;
+  border-radius: 0;
+  padding-block: .25rem;
+  line-height: 1.4;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__list-item:not(:first-child),
+html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__list .menu__list {
+  margin-top: .125rem;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__link--active {
+  border-color: var(--doc-ore-edge);
+  box-shadow: inset 3px 0 var(--doc-ore-green);
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown > header h1 {
+  padding-bottom: 1rem;
+  border-bottom: 4px solid var(--doc-ore-green);
+  text-shadow: 2px 2px #0006;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :is(h1, h2, h3) {
+  overflow-wrap: anywhere;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown h2 {
+  padding: .35rem 0 .35rem .8rem;
+  border-inline-start: 4px solid var(--doc-ore-green);
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :is(h4, h5, h6) {
+  font-family: var(--ifm-font-family-base);
+  font-weight: 650;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :is(p, li) {
+  line-height: 1.85;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown hr {
+  height: 4px;
+  border-top: 2px solid #161718;
+  border-bottom: 2px solid #5a5b5c;
+  background: transparent;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :not(pre) > code {
+  border: 1px solid #5b5d60;
+  border-radius: 0;
+  color: #e6e8eb;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown blockquote {
+  padding: 1rem 1.25rem;
+  border-inline-start: 4px solid var(--doc-ore-green);
+  background: #313233;
+  color: #d0d1d4;
+}
+
+/* Keep code legible even when the site's stored preference is light. */
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block {
+  --prism-background-color: #242527 !important;
+  --prism-color: #e6e8eb !important;
+  border: 3px solid var(--doc-ore-edge);
+  border-radius: 0;
+  box-shadow: inset 0 3px #151516;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block .token {
+  color: #e6e8eb !important;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.comment, .token.prolog, .token.doctype) { color: #a9b2a3 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.string, .token.attr-value) { color: #b5dc96 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.keyword, .token.boolean, .token.tag) { color: #c6adf5 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.number, .token.constant) { color: #f0ca72 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.function, .token.class-name, .token.property) { color: #8bcce8 !important; }
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown table {
+  --ifm-table-background: #313233;
+  --ifm-table-stripe-background: #393a3b;
+  --ifm-table-border-color: #5b5d60;
+  --ifm-table-head-background: #48494a;
+  font-size: .9375rem;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown th {
+  font-family: var(--ifm-font-family-base);
+  font-weight: 650;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) :is(.card, .pagination-nav__link, .project) {
+  border: 3px solid var(--doc-ore-edge);
+  border-radius: 0;
+  background: var(--doc-ore-surface);
+  box-shadow: inset 2px 2px #77797c, inset -2px -2px #292a2b;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) :is(.card, .pagination-nav__link):hover {
+  border-color: var(--doc-ore-green);
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .button {
+  border: 3px solid var(--doc-ore-edge);
+  border-radius: 0;
+  font-family: 'Docs Ore Regular', var(--ifm-font-family-base);
+  box-shadow: inset 0 -4px #1e1e1f55, inset 2px 2px #ffffff26;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .button--primary {
+  --ifm-button-background-color: #3c8527;
+  --ifm-button-border-color: #1e1e1f;
+  --ifm-button-color: #fff;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .button--primary:hover {
+  --ifm-button-background-color: #2a641c;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition {
+  --ifm-alert-background-color: #313233;
+  --ifm-alert-border-color: #8dcb65;
+  --ifm-alert-foreground-color: #f4f5f7;
+  --ifm-alert-color: #f4f5f7;
+  border: 2px solid var(--doc-ore-edge);
+  border-inline-start: 4px solid var(--ifm-alert-border-color);
+  border-radius: 0;
+  box-shadow: inset 1px 1px #77797c55;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition :is(h5, [class*='admonitionHeading']) {
+  font-family: var(--ifm-font-family-base);
+  font-weight: 650;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition-warning { --ifm-alert-border-color: #f0b92d; }
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition-info { --ifm-alert-border-color: #58a6d2; }
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition-danger { --ifm-alert-border-color: #d45b50; }
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-toc-mobile {
+  border: 2px solid var(--doc-ore-edge);
+  border-radius: 0;
+  background: #313233;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js) .footer {
+  --ifm-footer-background-color: #313233;
+  --ifm-footer-color: #d0d1d4;
+  --ifm-footer-title-color: #f4f5f7;
+  --ifm-footer-link-color: #d0d1d4;
+  border-top: 3px solid var(--doc-ore-edge);
+}
+
+@media (max-width: 996px) {
+  html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown h1 { font-size: 2rem; }
+  html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown h2 { font-size: 1.5rem; }
+  html:is(.dir-mod-origins, .dir-mod-origins-js) :is(input, select, textarea) { font-size: 16px; }
+}

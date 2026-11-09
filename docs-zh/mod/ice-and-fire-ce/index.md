@@ -10,7 +10,7 @@ Fabric 和 NeoForge 版本可在 [CurseForge](https://www.curseforge.com/minecra
 
 ## 与原版的区别
 
-- 保留原版的所有内容，**蚁族除外**（参见[常见问题](faq)）。
+- 保留原版的所有内容，**恐蚁除外**（参见[常见问题](faq)）。
 - 支持 Minecraft 1.21.1 和 1.20.1，提供 Fabric、NeoForge 与 Forge 版本；原版最高支持 1.20.1，且仅支持 Forge 和 NeoForge。
 - 包含新增功能、模组兼容、代码重写、错误修复和性能优化。
 

@@ -1,0 +1,74 @@
+.widget {
+  width: 100%;
+  margin-block: 1.5rem;
+  overflow: hidden;
+  border: 1px solid #174657;
+  background: #040b12;
+  color: #dff8ff;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #174657;
+  background: #051823;
+}
+
+.toolbar span {
+  flex: 1;
+  font-weight: 600;
+}
+
+.toolbar button,
+.toolbar a {
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #187d98;
+  background: #081f2b;
+  color: #9befff;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.toolbar button:hover,
+.toolbar a:hover {
+  border-color: #9befff;
+  background: #17596a;
+  color: #efffff;
+}
+
+.toolbar :focus-visible {
+  outline: 2px solid #f0fdff;
+  outline-offset: 3px;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  height: clamp(760px, 85vh, 1100px);
+  border: 0;
+  background: #040b12;
+}
+
+.error {
+  margin: 0;
+  padding: 0.75rem;
+  color: #ffd79c;
+}
+
+.widget:fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.widget:fullscreen .frame {
+  flex: 1;
+  height: 0;
+  min-height: 0;
+}
