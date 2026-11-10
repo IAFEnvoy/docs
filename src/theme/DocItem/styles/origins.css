@@ -107,7 +107,7 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar-sidebar {
 }
 
 html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__toggle,
-html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__items--right > div > button {
+html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__items--right > div > button:not(.DocSearch-Button) {
   color: #f4f5f7;
 }
 

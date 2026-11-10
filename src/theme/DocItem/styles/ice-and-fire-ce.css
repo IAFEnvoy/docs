@@ -988,8 +988,8 @@ html.dir-mod-ice-and-fire-ce .navbar {
 }
 
 html.dir-mod-ice-and-fire-ce .navbar :is(.navbar__title, .navbar__toggle),
-html.dir-mod-ice-and-fire-ce .navbar .navbar__item > button,
-html.dir-mod-ice-and-fire-ce .navbar .navbar__items--right > div > button {
+html.dir-mod-ice-and-fire-ce .navbar .navbar__item > button:not(.DocSearch-Button),
+html.dir-mod-ice-and-fire-ce .navbar .navbar__items--right > div > button:not(.DocSearch-Button) {
   color: #eee0bf;
 }
 

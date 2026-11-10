@@ -48,3 +48,51 @@
   font-weight: 700;
   margin-bottom: .25rem
 }
+
+/* DocSearch v4 owns a separate palette. Set it on both portal roots so its
+ * light/dark defaults cannot mask the active documentation theme. */
+html.doc-section :is(.DocSearch-Button, .DocSearch-Container) {
+  --docsearch-primary-color: var(--ifm-color-primary);
+  --docsearch-highlight-color: var(--ifm-color-primary);
+  --docsearch-focus-color: var(--ifm-color-primary);
+  --docsearch-soft-primary-color: var(--ifm-color-emphasis-200);
+  --docsearch-text-color: var(--ifm-font-color-base);
+  --docsearch-secondary-text-color: var(--ifm-color-emphasis-700);
+  --docsearch-muted-color: var(--ifm-color-emphasis-700);
+  --docsearch-icon-color: var(--ifm-color-emphasis-700);
+  --docsearch-subtle-color: var(--ifm-color-emphasis-300);
+  --docsearch-background-color: var(--ifm-color-emphasis-100);
+  --docsearch-search-button-background: var(--ifm-background-surface-color);
+  --docsearch-search-button-text-color: var(--ifm-font-color-base);
+  --docsearch-container-background: rgb(0 0 0 / 55%);
+  --docsearch-modal-background: var(--ifm-background-surface-color);
+  --docsearch-modal-shadow: var(--ifm-global-shadow-tl);
+  --docsearch-searchbox-background: var(--ifm-background-surface-color);
+  --docsearch-searchbox-focus-background: var(--ifm-background-surface-color);
+  --docsearch-hit-background: var(--ifm-color-emphasis-100);
+  --docsearch-hit-color: var(--ifm-font-color-base);
+  --docsearch-hit-highlight-color: var(--ifm-color-emphasis-200);
+  --docsearch-key-background: var(--ifm-color-emphasis-200);
+  --docsearch-key-color: var(--ifm-font-color-base);
+  --docsearch-footer-background: var(--ifm-background-surface-color);
+  --docsearch-logo-color: var(--ifm-color-primary);
+  --docsearch-border-radius: var(--ifm-global-radius);
+  font-family: var(--ifm-font-family-base);
+}
+
+html.doc-section :is(.DocSearch-Button, .DocSearch-Modal, .DocSearch-Button-Key, .DocSearch-Commands-Key),
+html.doc-section .DocSearch-Hit a {
+  border-radius: var(--docsearch-border-radius);
+}
+
+html.doc-section .DocSearch-Modal {
+  border: 1px solid var(--docsearch-subtle-color);
+}
+
+html.doc-section .DocSearch-Form {
+  border-radius: var(--docsearch-border-radius) var(--docsearch-border-radius) 0 0;
+}
+
+html.doc-section .DocSearch-Footer {
+  border-radius: 0 0 var(--docsearch-border-radius) var(--docsearch-border-radius);
+}

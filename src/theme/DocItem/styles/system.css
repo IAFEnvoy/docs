@@ -47,10 +47,6 @@ html.dir-mod-system {
   --ifm-toc-border-color: #174657;
   --ifm-breadcrumb-color-active: #9befff;
   --ifm-breadcrumb-item-background-active: #103c4c;
-  --ifm-footer-background-color: #030e17;
-  --ifm-footer-color: #83a8b5;
-  --ifm-footer-title-color: #dff8ff;
-  --ifm-footer-link-color: #9befff;
   --ifm-tabs-color-active: #61e6ff;
   --ifm-tabs-color-active-border: #61e6ff;
   --docusaurus-highlighted-code-line-bg: #103b49;
@@ -65,7 +61,15 @@ html.dir-mod-system body {
 html.dir-mod-system ::selection { background: #187d98; color: #efffff; }
 html.dir-mod-system :focus-visible { outline: 2px solid #f0fdff; outline-offset: 3px; }
 html.dir-mod-system .navbar { border-bottom: 1px solid var(--system-doc-edge); box-shadow: none; }
-html.dir-mod-system .footer { border-top: 1px solid var(--system-doc-edge); }
+/* Override footer--dark locally; root variables are masked by that class. */
+html.dir-mod-system .footer {
+  --ifm-footer-background-color: #030e17;
+  --ifm-footer-color: #83a8b5;
+  --ifm-footer-title-color: #dff8ff;
+  --ifm-footer-link-color: #9befff;
+  --ifm-footer-link-hover-color: #baf7ff;
+  border-top: 1px solid var(--system-doc-edge);
+}
 html.dir-mod-system .menu { background: #051823; }
 html.dir-mod-system .menu__link--active { border-inline-start: 2px solid #61e6ff; }
 html.dir-mod-system .table-of-contents__link { color: #83a8b5; }

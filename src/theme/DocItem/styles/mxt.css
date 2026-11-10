@@ -220,10 +220,6 @@ html.dir-mod-mxt {
   --ifm-color-emphasis-900: var(--ink-dark);
   --ifm-code-background: var(--surface-soft);
   --ifm-pre-background: var(--surface-soft);
-  --ifm-footer-background-color: var(--surface-soft);
-  --ifm-footer-color: var(--ink-muted);
-  --ifm-footer-title-color: var(--ink-dark);
-  --ifm-footer-link-color: var(--green);
   --ifm-card-background-color: var(--surface);
   --ifm-global-radius: var(--radius-sm);
   --ifm-table-border-color: var(--edge);
@@ -243,6 +239,16 @@ html.dir-mod-mxt ::selection {
 html.dir-mod-mxt .theme-doc-sidebar-container {
   background: var(--surface-soft);
   border-color: var(--edge);
+}
+
+/* footer--dark declares its own variables, so apply the palette on the footer. */
+html.dir-mod-mxt .footer {
+  --ifm-footer-background-color: var(--surface-soft);
+  --ifm-footer-color: var(--ink-muted);
+  --ifm-footer-title-color: var(--ink-dark);
+  --ifm-footer-link-color: var(--green);
+  --ifm-footer-link-hover-color: var(--green-hover);
+  border-top: 1px solid var(--edge);
 }
 
 html.dir-mod-mxt .navbar__title,

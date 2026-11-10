@@ -49,6 +49,7 @@ MXT 的 `mxt.css` 保留松烟主题的配色、标题字体、纸面纹理、�
 - 动态加载的 CSS 会在浏览器中保留，规则必须带作用域。不要写无前缀的 `:root`、`h2`、`a` 等选择器。
 - 修改主题主色时直接维护需要的 `--ifm-color-primary` 及其深浅色变量。此前用于演示的 `--doc-accent`、`--doc-accent-dark` 转换规则已移除。
 - 全站通用规则放在 `src/css/custom.css`；首页、404 等独立页面继续使用各自的 CSS Module。
+- Docusaurus 的 `.footer--dark` 会在页脚自身重设配色，目录主题的 `--ifm-footer-*` 要声明在作用域内的 `.footer` 上，单放在 HTML 根节点不会覆盖它。DocSearch v4 的搜索按钮和弹窗通过 `src/css/custom.css` 中限定在 `html.doc-section` 下的规则映射到当前 `--ifm-*` 配色，两者均需检查，离开文档页后恢复原生搜索样式。
 
 `plugins/directory-styles.cjs` 保留按目录提取 CSS 的打包配置。构建会生成 `docs-ice-and-fire-ce.<hash>.css` 和 `docs-origins.<hash>.css` 等独立文件；Origins 与 Origins JS 共用后一份文件。
 

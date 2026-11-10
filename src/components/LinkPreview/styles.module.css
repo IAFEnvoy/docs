@@ -1,7 +1,6 @@
 .trigger {
   position: fixed;
   z-index: calc(var(--ifm-z-index-fixed) + 1);
-  box-shadow: var(--ifm-global-shadow-md);
   white-space: nowrap;
 }
 

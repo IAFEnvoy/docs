@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useId, useMemo, useRef, useState} from 'react';
+import {useCallback, useEffect, useId, useMemo, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import Link from '@docusaurus/Link';
 import Translate, {translate} from '@docusaurus/Translate';
@@ -162,7 +162,7 @@ export default function LinkPreview() {
   }, [currentLocale, siteUrl, target, open]);
   if (!candidate && !target) return null;
   return createPortal(<>
-    {candidate && <button ref={trigger} type="button" data-link-preview-trigger="" className={`button button--secondary button--sm ${styles.trigger}`} style={{left: candidate.x, top: candidate.y}} title={translate({id: 'linkPreview.shortcut', message: 'Preview (Alt+Enter on a focused link)'})} onClick={() => open(candidate)}><Translate id="linkPreview.preview">Preview</Translate></button>}
+    {candidate && <button ref={trigger} type="button" data-link-preview-trigger="" className={`button button--primary button--sm ${styles.trigger}`} style={{left: candidate.x, top: candidate.y}} title={translate({id: 'linkPreview.shortcut', message: 'Preview (Alt+Enter on a focused link)'})} onClick={() => open(candidate)}><Translate id="linkPreview.preview">Preview</Translate></button>}
     {target && <PreviewDialog target={target} onClose={close} onNavigate={setTarget} locale={currentLocale} siteUrl={siteUrl} prism={prism} />}
   </>, document.body);
 }
