@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import DocItem from '@theme-original/DocItem';
 import {HtmlClassNameProvider} from '@docusaurus/theme-common';
 import {useLocation} from '@docusaurus/router';
@@ -10,6 +10,7 @@ const styles = {
   'mod/ice-and-fire-ce': () => import('./styles/ice-and-fire-ce.css'),
   'mod/origins': () => import('./styles/origins.css'),
   'mod/origins-js': () => import('./styles/origins.css'),
+  'mod/starting-point-buy': () => import('./styles/origins.css'),
   'mod/system': () => import('./styles/system.css'),
   'mod/mxt': () => import('./styles/mxt.css'),
 };

@@ -35,7 +35,7 @@ sidebar_position: 1
 | `ABILITY_TARGET_SELECTOR_TYPE` | `self` |
 | `COST_TYPE` | `resource` |
 | `DATA_STORAGE_TYPE` | `empty` |
-| `TRIGGER_TYPE` | `use` |
+| `TRIGGER_TYPE` | `tick` |
 | `NUMBER_PROVIDER_TYPE` | `constant` |
 | `FORMULA_FUNCTION` | `round` |
 | `FORMULA_VARIABLE` | `zero` |
@@ -203,11 +203,13 @@ Saturn 自带完整的技能与触发器运行时，内容侧只提供规则与�
 
 该触发器也可直接用于 `TriggerSubscription` 或触发型技能，复用现有条件、概率和冷却机制。它只转发当次完成事件：登录不补发已有成就，撤销后再次完成会再次发布；持久化去重、绑定基线和奖励账本由使用方管理。此入口先在 Saturn 提供，系统暂未切换成就监听或配置。
 
-**钩子**：`api.AbilityHooks` 是 Saturn 向世界提问的唯一入口——伤害倍率、技能校验、施放提交时的准则、物品能否使用、物品给的技能、身体装备（Curios）。默认全为“不改变”，用 `AbilityHooks.set(...)` 在 mod 构造里装一份。
+**钩子**：`api.AbilityHooks.register(ownerId, hooks)` 按模组自己的 ID 注册；相同 ID 只替换该提供者，传入 `null` 只移除该提供者。多个提供者的伤害倍率相乘，技能与物品许可必须全部通过，施放提交回调按注册顺序全部执行，技能列表去重，装备按堆叠对象身份合并。`set(...)` 保留为单独的兼容槽位，不覆盖具名提供者；新接入使用 `register`。
 
 **事件**（`event`）：`AbilityUseEvent.Pre/Post`、`AbilityTriggeredEvent`、`ResourceConsumeEvent.Pre/Post`、`CollectAbilityGrantsEvent`、`CollectPassiveAttributesEvent`、`CollectTickStagesEvent`、`TriggerRehydrateEvent`。内容事件（修炼、诅咒、丹药、阵法、秘境…）不在 Saturn。
 
-**来源与 tick 顺序**：`runtime.Sources` 生成 `saturn:grant/...`、`saturn:equipment/...` 这类来源 id，`Grant` / `Declaration` 是 record，内容可以造自己的类别；`runtime.EntityTickStages` 是每实体 tick 的阶段表（`RESOURCES` / `TRIGGERS` / `ATTRIBUTES` / `ABILITIES` / `CASTS` / `CHANNEL` …），内容用 `CollectTickStagesEvent` 贡献自己的阶段。
+**来源与 tick 顺序**：`runtime.Sources` 只定义通用来源生成规则和开放的 `Grant` / `Declaration` 类别；玩法类别由消费方提供。收集事件接受任意来源 ID，声明该 ID 即接管它的完整授予集合；撤回声明会清理对应授予，管理关系随附件保存。直接授予必须使用不同 ID。重算先增加新来源再释放旧来源，避免切换来源时丢失仍有效的技能状态；旧 `saturn:grant/...` 来源继续按受管来源处理。`EQUIPPED` 表示扩展装备集合。`runtime.EntityTickStages` 只保留库自己的阶段（`RESOURCES` / `TRIGGERS` / `ATTRIBUTES` / `EQUIPMENT` / `ABILITIES` / `CASTS` / `CHANNEL`），消费方通过 `CollectTickStagesEvent` 和自己的顺序值贡献阶段。
+
+时间线的 `ticks` 只应用显式传入的 scale，截止时限使用 `unscaledTicks`；环境或玩法倍率由消费方计算。默认注册表的回退项位于 `saturn:` 命名空间。
 
 **内容侧要自己做的**：`word` / `storage` / `flight_control` 三种技能类型、`CultivationTriggerService`（修炼进度发信号）、内容事件与其 KubeJS 绑定。
 

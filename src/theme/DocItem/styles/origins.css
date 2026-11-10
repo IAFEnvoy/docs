@@ -1,6 +1,6 @@
 /* Ore, adapted from E:/Website/Theme/t01-ore for Docusaurus.
  * The upstream theme is derived from Minecraft-CSS by Jiyath5516F (MPL 2.0).
- * See assets/ore/license.txt. Both Origins directories share this scoped file.
+ * See assets/ore/license.txt. Origins, Origins JS and Starting Point Buy share this scoped file.
  */
 @font-face {
   font-family: 'Docs Ore Display';
@@ -18,7 +18,7 @@
   font-display: swap;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) {
   color-scheme: dark;
   --ifm-color-primary: #8dcb65;
   --ifm-link-color: var(--ifm-color-primary);
@@ -85,92 +85,92 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) {
   text-size-adjust: 100%;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) :focus-visible {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) :focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) ::selection {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) ::selection {
   background: #3c8527;
   color: #fff;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .navbar {
   --ifm-navbar-link-color: #f4f5f7;
   --ifm-navbar-link-hover-color: #b9e59c;
   border-bottom: 3px solid var(--doc-ore-edge);
   box-shadow: inset 0 -4px #1e1e1f4d;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar-sidebar {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .navbar-sidebar {
   background: #313233;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__toggle,
-html:is(.dir-mod-origins, .dir-mod-origins-js) .navbar .navbar__items--right > div > button:not(.DocSearch-Button) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .navbar .navbar__toggle,
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .navbar .navbar__items--right > div > button:not(.DocSearch-Button) {
   color: #f4f5f7;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-sidebar-container {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-sidebar-container {
   border-right: 3px solid var(--doc-ore-edge);
   background: #313233;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__link {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .menu__link {
   border: 2px solid transparent;
   border-radius: 0;
   padding-block: .25rem;
   line-height: 1.4;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__list-item:not(:first-child),
-html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__list .menu__list {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .menu__list-item:not(:first-child),
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .menu__list .menu__list {
   margin-top: .125rem;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .menu__link--active {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .menu__link--active {
   border-color: var(--doc-ore-edge);
   box-shadow: inset 3px 0 var(--doc-ore-green);
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown > header h1 {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown > header h1 {
   padding-bottom: 1rem;
   border-bottom: 4px solid var(--doc-ore-green);
   text-shadow: 2px 2px #0006;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :is(h1, h2, h3) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown :is(h1, h2, h3) {
   overflow-wrap: anywhere;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown h2 {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown h2 {
   padding: .35rem 0 .35rem .8rem;
   border-inline-start: 4px solid var(--doc-ore-green);
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :is(h4, h5, h6) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown :is(h4, h5, h6) {
   font-family: var(--ifm-font-family-base);
   font-weight: 650;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :is(p, li) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown :is(p, li) {
   line-height: 1.85;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown hr {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown hr {
   height: 4px;
   border-top: 2px solid #161718;
   border-bottom: 2px solid #5a5b5c;
   background: transparent;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown :not(pre) > code {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown :not(pre) > code {
   border: 1px solid #5b5d60;
   border-radius: 0;
   color: #e6e8eb;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown blockquote {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown blockquote {
   padding: 1rem 1.25rem;
   border-inline-start: 4px solid var(--doc-ore-green);
   background: #313233;
@@ -178,7 +178,7 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown blockquote {
 }
 
 /* Keep code legible even when the site's stored preference is light. */
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block {
   --prism-background-color: #242527 !important;
   --prism-color: #e6e8eb !important;
   border: 3px solid var(--doc-ore-edge);
@@ -186,17 +186,17 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block {
   box-shadow: inset 0 3px #151516;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block .token {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block .token {
   color: #e6e8eb !important;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.comment, .token.prolog, .token.doctype) { color: #a9b2a3 !important; }
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.string, .token.attr-value) { color: #b5dc96 !important; }
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.keyword, .token.boolean, .token.tag) { color: #c6adf5 !important; }
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.number, .token.constant) { color: #f0ca72 !important; }
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-code-block :is(.token.function, .token.class-name, .token.property) { color: #8bcce8 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block :is(.token.comment, .token.prolog, .token.doctype) { color: #a9b2a3 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block :is(.token.string, .token.attr-value) { color: #b5dc96 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block :is(.token.keyword, .token.boolean, .token.tag) { color: #c6adf5 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block :is(.token.number, .token.constant) { color: #f0ca72 !important; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block :is(.token.function, .token.class-name, .token.property) { color: #8bcce8 !important; }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown table {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown table {
   --ifm-table-background: #313233;
   --ifm-table-stripe-background: #393a3b;
   --ifm-table-border-color: #5b5d60;
@@ -204,40 +204,40 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown table {
   font-size: .9375rem;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown th {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown th {
   font-family: var(--ifm-font-family-base);
   font-weight: 650;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) :is(.card, .pagination-nav__link, .project) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) :is(.card, .pagination-nav__link, .project) {
   border: 3px solid var(--doc-ore-edge);
   border-radius: 0;
   background: var(--doc-ore-surface);
   box-shadow: inset 2px 2px #77797c, inset -2px -2px #292a2b;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) :is(.card, .pagination-nav__link):hover {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) :is(.card, .pagination-nav__link):hover {
   border-color: var(--doc-ore-green);
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .button {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .button {
   border: 3px solid var(--doc-ore-edge);
   border-radius: 0;
   font-family: 'Docs Ore Regular', var(--ifm-font-family-base);
   box-shadow: inset 0 -4px #1e1e1f55, inset 2px 2px #ffffff26;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .button--primary {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .button--primary {
   --ifm-button-background-color: #3c8527;
   --ifm-button-border-color: #1e1e1f;
   --ifm-button-color: #fff;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .button--primary:hover {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .button--primary:hover {
   --ifm-button-background-color: #2a641c;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-admonition {
   --ifm-alert-background-color: #313233;
   --ifm-alert-border-color: #8dcb65;
   --ifm-alert-foreground-color: #f4f5f7;
@@ -248,22 +248,22 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition {
   box-shadow: inset 1px 1px #77797c55;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition :is(h5, [class*='admonitionHeading']) {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-admonition :is(h5, [class*='admonitionHeading']) {
   font-family: var(--ifm-font-family-base);
   font-weight: 650;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition-warning { --ifm-alert-border-color: #f0b92d; }
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition-info { --ifm-alert-border-color: #58a6d2; }
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-admonition-danger { --ifm-alert-border-color: #d45b50; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-admonition-warning { --ifm-alert-border-color: #f0b92d; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-admonition-info { --ifm-alert-border-color: #58a6d2; }
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-admonition-danger { --ifm-alert-border-color: #d45b50; }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-toc-mobile {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-toc-mobile {
   border: 2px solid var(--doc-ore-edge);
   border-radius: 0;
   background: #313233;
 }
 
-html:is(.dir-mod-origins, .dir-mod-origins-js) .footer {
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .footer {
   --ifm-footer-background-color: #313233;
   --ifm-footer-color: #d0d1d4;
   --ifm-footer-title-color: #f4f5f7;
@@ -272,7 +272,7 @@ html:is(.dir-mod-origins, .dir-mod-origins-js) .footer {
 }
 
 @media (max-width: 996px) {
-  html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown h1 { font-size: 2rem; }
-  html:is(.dir-mod-origins, .dir-mod-origins-js) .theme-doc-markdown h2 { font-size: 1.5rem; }
-  html:is(.dir-mod-origins, .dir-mod-origins-js) :is(input, select, textarea) { font-size: 16px; }
+  html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown h1 { font-size: 2rem; }
+  html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-doc-markdown h2 { font-size: 1.5rem; }
+  html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) :is(input, select, textarea) { font-size: 16px; }
 }

@@ -35,7 +35,7 @@ sidebar_position: 1
 | `ABILITY_TARGET_SELECTOR_TYPE` | `self` |
 | `COST_TYPE` | `resource` |
 | `DATA_STORAGE_TYPE` | `empty` |
-| `TRIGGER_TYPE` | `use` |
+| `TRIGGER_TYPE` | `tick` |
 | `NUMBER_PROVIDER_TYPE` | `constant` |
 | `FORMULA_FUNCTION` | `round` |
 | `FORMULA_VARIABLE` | `zero` |
@@ -203,11 +203,13 @@ For example `data/example/saturn/trigger/first_diamond.json`:
 
 This trigger can also be used directly in a `TriggerSubscription` or a triggered ability, reusing the existing condition, chance and cooldown machinery. It only forwards the completion event of that moment: logging in does not replay existing advancements, and completing again after a revoke publishes again; persisted deduplication, binding baselines and reward ledgers are up to the consumer. This entry point is provided in Saturn first; System has not yet switched its advancement listener or configuration.
 
-**Hooks**: `api.AbilityHooks` is Saturn's only entry point for asking the world questions — damage multipliers, ability validation, criteria on cast submission, whether an item can be used, the abilities an item grants, body equipment (Curios). All default to "no change"; install one with `AbilityHooks.set(...)` in the mod constructor.
+**Hooks**: register each provider with its own mod id through `api.AbilityHooks.register(ownerId, hooks)`. Reusing an id replaces only that provider; null removes only that provider. Damage multipliers multiply, every permission check must pass, all commit callbacks run in registration order, ability lists are deduplicated, and equipment is combined by stack identity. The legacy `set(...)` updates a separate compatibility slot without replacing named providers; new integrations use `register`.
 
 **Events** (`event`): `AbilityUseEvent.Pre/Post`, `AbilityTriggeredEvent`, `ResourceConsumeEvent.Pre/Post`, `CollectAbilityGrantsEvent`, `CollectPassiveAttributesEvent`, `CollectTickStagesEvent`, `TriggerRehydrateEvent`. Content events (cultivation, curses, pills, formations, secret realms…) are not in Saturn.
 
-**Sources and tick order**: `runtime.Sources` generates source ids such as `saturn:grant/...` and `saturn:equipment/...`; `Grant` / `Declaration` are records, and content can create its own categories; `runtime.EntityTickStages` is the per-entity tick stage table (`RESOURCES` / `TRIGGERS` / `ATTRIBUTES` / `ABILITIES` / `CASTS` / `CHANNEL` …), and content contributes its own stages with `CollectTickStagesEvent`.
+**Sources and tick order**: `runtime.Sources` defines generic factories and open `Grant` / `Declaration` categories; consumers own their gameplay categories. The collection event accepts any source id. Declaring an id gives the collector ownership of its entire grant set; withdrawing it revokes that set, and ownership is saved with the attachment. Independent grants must use different ids. Reconciliation adds new sources before removing old ones to preserve still-granted ability state; legacy `saturn:grant/...` sources remain managed. `EQUIPPED` identifies additional equipment. `runtime.EntityTickStages` contains only library stages (`RESOURCES` / `TRIGGERS` / `ATTRIBUTES` / `EQUIPMENT` / `ABILITIES` / `CASTS` / `CHANNEL`); consumers contribute their own order values through `CollectTickStagesEvent`.
+
+Timeline `ticks` applies only its explicit scale; deadlines use `unscaledTicks`. Consumers calculate environmental or gameplay multipliers. Registry fallback entries use the `saturn:` namespace.
 
 **What the content side has to do itself**: the `word` / `storage` / `flight_control` ability types, `CultivationTriggerService` (publishes cultivation progress signals), and content events plus their KubeJS bindings.
 

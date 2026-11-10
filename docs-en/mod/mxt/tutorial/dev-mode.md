@@ -50,6 +50,8 @@ Profiling commands and GUI data reception both require **operator level 3** (`ad
 
 If development mode already started recording at server startup, run only the second command. Opening the screen does not enable recording, and profiling can be used without enabling development mode as a whole.
 
+Item bindings, quality changes and pill use count under MiXianTu items; custom entities count under MiXianTu entities. Saturn ability, resource, trigger and payment rows measure the library runtime itself.
+
 ### List and Charts {#list-and-charts}
 
 | Position | Display and Controls |

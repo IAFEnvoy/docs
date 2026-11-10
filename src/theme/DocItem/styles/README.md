@@ -7,6 +7,7 @@
 | `mod/ice-and-fire-ce` | `ice-and-fire-ce.css` | 铁誓 / Iron Oath，中世纪羊皮纸与烛夜深色 |
 | `mod/origins` | `origins.css` | Ore，固定深色像素风格 |
 | `mod/origins-js` | `origins.css` | 与 Origins 共用 Ore |
+| `mod/starting-point-buy` | `origins.css` | 开局加点界面，与 Origins 共用 Ore |
 | `mod/system` | `system.css` | ApricityUI t08-arwes，不透明深色青色边框 |
 | `mod/mxt` | `mxt.css` | 松烟 / Songyan，继承原 MXT 文档站的浅色纸面与深色墨绿 |
 
@@ -51,7 +52,7 @@ MXT 的 `mxt.css` 保留松烟主题的配色、标题字体、纸面纹理、�
 - 全站通用规则放在 `src/css/custom.css`；首页、404 等独立页面继续使用各自的 CSS Module。
 - Docusaurus 的 `.footer--dark` 会在页脚自身重设配色，目录主题的 `--ifm-footer-*` 要声明在作用域内的 `.footer` 上，单放在 HTML 根节点不会覆盖它。DocSearch v4 的搜索按钮和弹窗通过 `src/css/custom.css` 中限定在 `html.doc-section` 下的规则映射到当前 `--ifm-*` 配色，两者均需检查，离开文档页后恢复原生搜索样式。
 
-`plugins/directory-styles.cjs` 保留按目录提取 CSS 的打包配置。构建会生成 `docs-ice-and-fire-ce.<hash>.css` 和 `docs-origins.<hash>.css` 等独立文件；Origins 与 Origins JS 共用后一份文件。
+`plugins/directory-styles.cjs` 保留按目录提取 CSS 的打包配置。构建会生成 `docs-ice-and-fire-ce.<hash>.css` 和 `docs-origins.<hash>.css` 等独立文件；Origins、Origins JS 与开局加点界面共用后一份文件。
 
 ## 检查
 
