@@ -78,6 +78,14 @@ The root `/` and old `/docs/…` links use the last language saved in the browse
 
 The selection page in `src/pages/language.jsx` uses the site's Layout, CSS, cards, buttons and saved light/dark preference. `plugins/legacy-links.cjs` provides its entry pages during development and static builds. Change languages using the navbar, or open `/en/language?choose=1` to show the selector again. If browser storage is blocked, manual language selection still works. There is no browser-language detection or per-page destination mapping.
 
+## Link previews
+
+Hover an internal page link in a document's body to show its **Preview** button. Navbar, sidebar, table of contents, breadcrumbs, footer, previous/next navigation and homepage links do not offer previews. Clicking the link itself still navigates normally; keyboard users can focus a body link and press `Alt+Enter` to preview it. The dialog offers **Open page** and closes with its close button, `Esc` or a click outside it.
+
+The preview displays the target's article using the **current page's CSS and light/dark mode**, without importing the target project's theme or changing the saved language. Internal links in the preview continue inside the dialog. Downloads, external URLs, language switches and anchors within the current page keep their normal behavior. Interactive editors require opening the full page.
+
+`src/components/LinkPreview/` handles the shared preview. Production reads the generated HTML; development reads the rendered app through a temporary hidden frame marked `data-docs-preview-source`. This frame skips language memory and directory CSS loading. Set `data-no-link-preview` on a link or container to opt out.
+
 ## Styles
 
 Global styles belong in `src/css/custom.css`. Standalone pages use CSS Modules for their layout and reuse the site theme for colors and controls.

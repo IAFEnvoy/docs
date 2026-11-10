@@ -3,6 +3,7 @@ import DocItem from '@theme-original/DocItem';
 import {HtmlClassNameProvider} from '@docusaurus/theme-common';
 import {useLocation} from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {isPreviewSource} from '@site/src/utils/link-preview.cjs';
 
 // Shared by both locales; retained CSS is isolated by the directory classes.
 const styles = {
@@ -20,7 +21,7 @@ export default function DirectoryDocItem(props) {
   const sectionClass = `dir-${directory.replaceAll('/', '-')}`;
   const languageClass = `lang-${currentLocale}`;
   useEffect(() => {
-    styles[directory]?.().catch(error => console.error('Unable to load documentation styles', error));
+    if (!isPreviewSource()) styles[directory]?.().catch(error => console.error('Unable to load documentation styles', error));
     document.body.classList.add(sectionClass, languageClass);
     return () => document.body.classList.remove(sectionClass, languageClass);
   }, [pathname, directory, sectionClass, languageClass]);

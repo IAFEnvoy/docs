@@ -64,6 +64,7 @@ sidebar_position: 1
 - 新分类沿用侧边栏生成器的唯一键规则。不同项目中相同的“API 参考”“安装”等标签不能产生重复翻译键。
 - 文档之间优先使用相对 Markdown 链接，如 `./install.md`、`../../json/origin.md`。避免写死本站域名或依赖旧源码目录的绝对文件路径。
 - React 内部导航使用 `@docusaurus/Link`，静态资源按需使用 `useBaseUrl`；避免原生 `<a href="/">` 将中文页面带回英文首页。
+- 仅文档正文（`main .theme-doc-markdown`）中的站内链接悬停时提供“预览”按钮，导航栏、侧边栏、目录、面包屑、页脚、上一篇／下一篇和首页链接不提供预览。直接点击仍正常跳转；聚焦正文链接后可按 `Alt+Enter` 预览。实现位于 `src/components/LinkPreview/`，只复制目标正文，小窗始终继承当前页面的 CSS 和深浅色，不导入目标目录主题、不更新语言记忆。开发时的临时取文框架通过 `data-docs-preview-source` 标识，`Root` 与 `DocItem` 必须保留对它的识别；链接或容器可用 `data-no-link-preview` 禁用预览。交互编辑器需打开完整页面。
 - 代码块标明语言；多文件示例通过 `title="data/example/…/file.json"` 给出文件位置。示例尽量完整可用，JSON 代码块使用合法 JSON；确需注释时明确采用 JSONC 等对应格式。
 - MDX 中的字面量 `<namespace>`、花括号等放入行内代码或代码块，避免被当作标签或表达式。JSX 使用 `className` 等 React 属性。
 - 图片优先使用体积较小的 WebP，正文图片尽量放在对应文档附近并使用相对引用、合适的替代文本。固定网址的下载文件放入 `static/resources/`，可复用 `Download` 组件。
