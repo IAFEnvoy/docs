@@ -177,7 +177,7 @@ html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .the
   color: #d0d1d4;
 }
 
-/* Keep code legible even when the site's stored preference is light. */
+/* Ore stays dark in both site modes. Prism also sets pre and line colors inline. */
 html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block {
   --prism-background-color: #242527 !important;
   --prism-color: #e6e8eb !important;
@@ -186,6 +186,18 @@ html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .the
   box-shadow: inset 0 3px #151516;
 }
 
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block pre {
+  background: var(--prism-background-color) !important;
+  color: var(--prism-color) !important;
+  border-radius: 0;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block pre code {
+  background: transparent;
+  color: inherit;
+}
+
+html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block .token-line,
 html:is(.dir-mod-origins, .dir-mod-origins-js, .dir-mod-starting-point-buy) .theme-code-block .token {
   color: #e6e8eb !important;
 }

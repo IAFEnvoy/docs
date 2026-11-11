@@ -103,9 +103,9 @@ All options have non-negative integer quantities; `0` means unselected. `hard_ma
 
 ## 5. Test in the game
 
-Put `first-start/` in the world's `datapacks/`, reopen the world and run `/spb open example:first_start`. Select four training units or apply the preset: the balance should be `0` and confirmation should be available. Confirmation writes `0` to the real Saturn resource.
+Put `first-start/` in the world's `datapacks/`, reopen the world and run `/starting_point_buy open example:first_start`. Select four training units or apply the preset: the balance should be `0` and confirmation should be available. Confirmation writes `0` to the real Saturn resource.
 
-To test again, use the administrator command `/spb unlock <player> example:first_start`; it restores the resource baseline of the current committed session. On a multiplayer server, install data packs on the server.
+To test again, use the administrator command `/starting_point_buy unlock <player> example:first_start`; it restores the resource baseline of the current committed session. On a multiplayer server, install data packs on the server.
 
 ## Additional directories and references
 

@@ -103,9 +103,9 @@ Minecraft 26.1.2 的数据包格式为 `101.1`。将以下文件放在数据包�
 
 ## 5. 进入游戏验证
 
-将 `first-start/` 放入世界的 `datapacks/`，重新进入世界，运行 `/spb open example:first_start`。选择 4 份训练或左侧预设：余额应为 `0`，确认按钮可用。确认后真实 Saturn 点数变为 `0`。
+将 `first-start/` 放入世界的 `datapacks/`，重新进入世界，运行 `/starting_point_buy open example:first_start`。选择 4 份训练或左侧预设：余额应为 `0`，确认按钮可用。确认后真实 Saturn 点数变为 `0`。
 
-需要再次测试时使用管理员命令 `/spb unlock <玩家名> example:first_start`；它会恢复当前已提交会话的资源基准。多人服务器中的数据包只放在服务端。
+需要再次测试时使用管理员命令 `/starting_point_buy unlock <玩家名> example:first_start`；它会恢复当前已提交会话的资源基准。多人服务器中的数据包只放在服务端。
 
 ## 扩展目录与引用
 

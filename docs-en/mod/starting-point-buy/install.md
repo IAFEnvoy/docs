@@ -11,11 +11,11 @@ This page covers the current Starting Point Buy 1.0.0 implementation for Minecra
 1. Install NeoForge for the matching Minecraft version on both client and server.
 2. Put the Starting Point Buy and Saturn JARs in both `mods/` directories. For singleplayer, install them in the local instance.
 3. Enable your modpack's plan data pack when creating a world. For an existing world, leave the world or stop the server before adding the pack to `<world>/datapacks/`.
-4. Reopen the world or start the server, then run `/spb open <plan_id>`, for example `/spb open example:first_start`.
+4. Reopen the world or start the server, then run `/starting_point_buy open <plan_id>`, for example `/starting_point_buy open example:first_start`.
 
 The production mod supplies no playable plan. Without a data pack, no profession screen or starting points appear automatically. Install the [complete example](./datapack/example.md) first, or create a plan with the [tutorial](./datapack/index.md).
 
-A plan with `activation.on_first_join: true` is offered automatically to players who have not completed it; the default is `false`. With no current session, `/spb open` without an ID tries to choose an eligible automatic plan. Specify the full ID for a plan that is only opened manually.
+A plan with `activation.on_first_join: true` is offered automatically to players who have not completed it; the default is `false`. With no current session, `/starting_point_buy open` without an ID tries to choose an eligible automatic plan. Specify the full ID for a plan that is only opened manually.
 
 ## Data packs and resource packs
 

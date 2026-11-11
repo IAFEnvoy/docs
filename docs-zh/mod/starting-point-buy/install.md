@@ -11,11 +11,11 @@ sidebar_position: 1
 1. 在客户端和服务端安装对应 Minecraft 版本的 NeoForge。
 2. 将开局加点界面和 Saturn 的 JAR 放入两端的 `mods/`。单人游戏只需在本地实例安装。
 3. 在创建世界前启用整合包的方案数据包；已有世界可在退出世界或关闭服务器后，将数据包放入 `<世界目录>/datapacks/`。
-4. 重新进入世界或启动服务器，运行 `/spb open <方案ID>`，例如 `/spb open example:first_start`。
+4. 重新进入世界或启动服务器，运行 `/starting_point_buy open <方案ID>`，例如 `/starting_point_buy open example:first_start`。
 
 正式模组不附带可直接选择的方案。没有数据包时，不会自动出现职业选择，也不会自动产生点数。可以先安装[完整示例](./datapack/example.md)，或按[入门教程](./datapack/index.md)创建自己的方案。
 
-`activation.on_first_join` 为 `true` 的方案会自动向尚未完成该方案的玩家提供界面；默认为 `false`。没有当前会话时，`/spb open` 省略 ID 会尝试选择符合自动开启条件的方案。只配置手动方案时应填写完整 ID。
+`activation.on_first_join` 为 `true` 的方案会自动向尚未完成该方案的玩家提供界面；默认为 `false`。没有当前会话时，`/starting_point_buy open` 省略 ID 会尝试选择符合自动开启条件的方案。只配置手动方案时应填写完整 ID。
 
 ## 数据包和资源包
 

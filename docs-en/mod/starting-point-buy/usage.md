@@ -40,17 +40,17 @@ While the screen is open, the server ignores incoming damage, including void dam
 
 | Command | User | Purpose |
 | --- | --- | --- |
-| `/spb open [plan]` | The player | Open or resume a plan; without a session or ID, choose an automatic plan |
-| `/spb status` | The player | Show the plan, state, revision, tasks and completion count |
-| `/spb refresh` | The player | Refresh an uncommitted session |
-| `/spb unlock <player> [plan]` | Game master | Clear the player's matching plan records, or all starting-plan records when no plan is specified |
-| `/spb recover <player>` | Game master | Release a `NEEDS_REVIEW` session so remaining tasks can continue |
+| `/starting_point_buy open [plan]` | The player | Open or resume a plan; without a session or ID, choose an automatic plan |
+| `/starting_point_buy status` | The player | Show the plan, state, revision, tasks and completion count |
+| `/starting_point_buy refresh` | The player | Refresh an uncommitted session |
+| `/starting_point_buy unlock <player> [plan]` | Game master | Clear the player's matching plan records, or all starting-plan records when no plan is specified |
+| `/starting_point_buy recover <player>` | Game master | Release a `NEEDS_REVIEW` session so remaining tasks can continue |
 
 Each player can normally complete each plan once per world. Repeated submission does not grant rewards again.
 
 ## Refresh a draft {#refresh}
 
-The draft may require a refresh when another system changes real resources or a data pack changes the definition. The Reset button then becomes Refresh Draft: click it to resume editing in the current screen. Refreshing reads current real resources, captures `inputs` again, and keeps recognised options. Mandatory completion and damage protection remain active throughout. `/spb refresh` can also refresh an uncommitted session.
+The draft may require a refresh when another system changes real resources or a data pack changes the definition. The Reset button then becomes Refresh: click it to resume editing in the current screen. Refreshing reads current real resources, captures `inputs` again, and keeps recognised options. Mandatory completion and damage protection remain active throughout. `/starting_point_buy refresh` can also refresh an uncommitted session.
 
 Refreshing does not evaluate `initial` again: current real values become the new baseline. Committed or completed plans cannot be refreshed. Reset only clears quantities; it neither changes the baseline nor rerolls captured inputs.
 

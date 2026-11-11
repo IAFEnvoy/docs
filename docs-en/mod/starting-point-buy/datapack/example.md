@@ -16,7 +16,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 1. Install Starting Point Buy and Saturn 1.3 for Minecraft 26.1.2.
 2. Put the data pack ZIP in a test world's `datapacks/`. Put the resource pack ZIP in the client's `resourcepacks/` and enable it.
-3. Reopen the world. Players who have not completed the plan are offered it automatically; you can also run `/spb open example:default`.
+3. Reopen the world. Players who have not completed the plan are offered it automatically; you can also run `/starting_point_buy open example:default`.
 4. Choose Warrior start or Scholar start, check the balances, and confirm.
 
 The resource pack supplies example translations; without it, translation keys may appear. Confirmation is required before closing, and damage is ignored while the screen is open. The example uses the same `example` namespace as the test mod; you do not need both copies installed. The tutorial also uses `example:points`; try the two packs in separate test worlds to avoid overriding that resource.

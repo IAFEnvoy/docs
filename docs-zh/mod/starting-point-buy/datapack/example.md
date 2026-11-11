@@ -16,7 +16,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 1. 安装 Minecraft 26.1.2 对应的开局加点界面和 Saturn 1.3。
 2. 将数据包 ZIP 放入测试世界的 `datapacks/`，将资源包 ZIP 放入客户端 `resourcepacks/` 并启用。
-3. 重新进入世界。尚未完成的玩家会自动打开方案，也可以运行 `/spb open example:default`。
+3. 重新进入世界。尚未完成的玩家会自动打开方案，也可以运行 `/starting_point_buy open example:default`。
 4. 选择战士开局或学者开局，检查底部余额，然后确认。
 
 资源包提供示例翻译；未启用时可能显示翻译键。方案默认必须确认后才能关闭，打开期间忽略伤害。示例与 test-mod 使用相同的 `example` 命名空间，不需要同时安装两份相同内容。入门教程也使用 `example:points`，建议在独立测试世界中分别体验，避免同名资源覆盖。
