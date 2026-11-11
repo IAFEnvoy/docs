@@ -245,7 +245,7 @@ const config = {
       algolia: {
         appId: 'L0D3UPINT6',
         apiKey: 'e2e9ba7af6e58bfe5b708a92768cb4e2',
-        indexName: 'Main Documentation Site',
+        indexName: 'MAIN_INDEX',
       },
     }),
 };
