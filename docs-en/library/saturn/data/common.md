@@ -33,7 +33,7 @@ Fields that require a NumberProvider support three forms: a constant number, a f
 }
 ```
 
-See [Number providers](../types/number/index.md) for the full types. Time parameters follow the description of their field; fields marked as ticks mean 20 ticks per second at the normal 20 TPS.
+See [Number providers](../types/number.md) for the full types. Time parameters follow the description of their field; fields marked as ticks mean 20 ticks per second at the normal 20 TPS.
 
 ## Actions and conditions
 

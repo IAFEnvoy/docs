@@ -1,5 +1,6 @@
 ---
 title: "触发规则"
+sidebar_label: "触发规则 (trigger)"
 sidebar_position: 5
 ---
 
@@ -7,10 +8,10 @@ sidebar_position: 5
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| `trigger` | [触发器](../types/trigger/index.md) | 是 | — | 订阅和匹配的游戏信号。 |
-| `condition` | [实体条件](../types/entity-condition/index.md) | 否 | 始终成立 | 信号命中后检查 actor。 |
-| `action` | [实体动作](../types/entity-action/index.md) | 否 | 空动作 | 条件与概率通过后执行。 |
-| `chance` | [数值提供器](../types/number/index.md) | 否 | `1` | 命中概率，0～1。 |
+| `trigger` | [触发器](../types/trigger.md) | 是 | — | 订阅和匹配的游戏信号。 |
+| `condition` | [实体条件](../types/condition/entity-condition.md) | 否 | 始终成立 | 信号命中后检查 actor。 |
+| `action` | [实体动作](../types/action/entity-action.md) | 否 | 空动作 | 条件与概率通过后执行。 |
+| `chance` | [数值提供器](../types/number.md) | 否 | `1` | 命中概率，0～1。 |
 | `cooldown` | 数值提供器 | 否 | `0` | 同一 actor 的规则冷却，单位 tick。 |
 
 ## 示例：完成指定成就时提示

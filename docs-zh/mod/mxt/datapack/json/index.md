@@ -6,7 +6,7 @@ title: 动态注册表
 
 <span id="动态注册表" />
 
-下表列出本模组的 43 个数据包注册表。字段表里的「默认」是省略该字段时用的值，「必填」表示缺失时加载失败。
+下表列出本模组使用的 43 个数据包注册表；其中 `resource`、`ability`、`trigger` 由 Saturn 提供，字段见 [Saturn 数据定义](../../../../library/saturn/data/index.md)。字段表里的「默认」是省略该字段时用的值，「必填」表示缺失时加载失败。
 
 **配方不在表里。** 走原版 `RecipeManager` 的配方页收在下面的「合成表」分组里：炼丹配方（`mxt:alchemy`）、灵气合成（`mxt:spirit_shaped` / `mxt:spirit_shapeless`）与画符配方（`mxt:talisman_drawing`）。它们的 JSON 放在 `data/<namespace>/recipe/`，**不要**放进 `mxt/<配方名>/`；它们也不是注册表，所以 `/reload` 会重新读取它们。文件位置与「按类别把 JSON 分进子文件夹」的写法见[数据包开发总览](../overview.md)。
 
@@ -14,7 +14,7 @@ title: 动态注册表
 
 | 注册表 | 文件目录 | 用途 |
 | --- | --- | --- |
-| `resource` | `saturn/resource` | 修为、灵力、体力等实体资源及内联资源条（注册表 id 是 `saturn:resource`）。 |
+| `resource` | `saturn/resource` | 修为、灵力、体力等实体资源及内联资源条；字段见 [Saturn 资源定义](../../../../library/saturn/data/resource.md)。 |
 | `artifact` | `mxt/artifact` | 法器：认领哪些现有物品、每种灵气存多少、提供哪些能力。 |
 | `aura` | `mxt/aura` | 单个数值的灵气定义：元素标记、境界链入口、恢复与换算。 |
 | `realm_stage` | `mxt/realm_stage` | 线性境界链和突破。 |
@@ -22,7 +22,7 @@ title: 动态注册表
 | `element_reaction` | `mxt/element_reaction` | 元素附着达到要求时触发的反应。 |
 | `spirit_root` | `mxt/spirit_root` | 与一个或多个元素绑定的灵根：修炼倍率、亲和倍率、授予能力与互斥。 |
 | `physique` | `mxt/physique` | 独立于元素的体质加成：原版属性、授予能力与伤害倍率。 |
-| `ability` | `saturn/ability` | 主动、被动和触发技能（注册表 id 是 `saturn:ability`）。 |
+| `ability` | `saturn/ability` | 主动、被动和触发技能；字段见 [Saturn 技能定义](../../../../library/saturn/data/ability.md)。 |
 | `ability_affinity` | `mxt/ability_affinity` | 技能的元素亲和：哪些元素、多个灵根匹配时怎么合并；不在技能定义里。 |
 | `curse` | `mxt/curse` | 可被多个模块引用的诅咒定义与持续类型。 |
 | `forging_method` | `mxt/forging_method` | 单次锻打方式。 |
@@ -45,7 +45,7 @@ title: 动态注册表
 | `technique_binding` | `mxt/technique_binding` | 现有物品到功法学习的绑定。 |
 | `aura_zone` | `mxt/aura_zone` | 环境灵气模板。 |
 | `quality` | `mxt/quality` | 共享品质：名字、颜色、三个修正、使用条件，以及它在品质链上的位置与升级代价。 |
-| `trigger` | `saturn/trigger` | 事件规则：信号、条件与行为。 |
+| `trigger` | `saturn/trigger` | 事件规则：信号、条件与行为；字段见 [Saturn 触发规则](../../../../library/saturn/data/trigger.md)。 |
 | `talisman` | `mxt/talisman` | 符箓定义：一张符箓铭刻的能力。 |
 | `item_aura` | `mxt/item_aura` | 物品提供的修炼燃料：认领哪些物品、存多少灵气、进出多快。 |
 | `currency` | `mxt/currency` | 物品的货币面值与兑换。 |

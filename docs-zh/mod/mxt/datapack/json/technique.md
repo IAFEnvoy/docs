@@ -18,7 +18,7 @@ description: 定义一门可以学会的功法：学习条件、长按时长、�
 | `primary_color` | `RGBColor` | `#0E54A0` | **内置功法书** `mxt:technique_book` 第一层贴图（书身）的颜色，写 `#RRGGBB`（整数或 `[r,g,b]` 浮点数组也接受，一律按不透明处理）。 |
 | `secondary_color` | `RGBColor` | `#E4E8EB` | 同一本书第二层贴图（书面上那个标记）的颜色，写法同上。 |
 | `learn_condition` | `EntityCondition` | `mxt:always` | 学习条件。 |
-| `learn_time` | [`NumberProvider`](../types/number_provider_types.md) | `0` | 读完这门功法需要**长按**多久，单位 tick。**按读取者求值**（长按开始时求一次、之后每 tick 再求一次），结果向下取整；小于 `1` 当作 `0`，也就是右键立刻学会。没有上限（求值超过 int 就按 `2147483647` 算）。 |
+| `learn_time` | [`NumberProvider`](../../../../library/saturn/types/number.md) | `0` | 读完这门功法需要**长按**多久，单位 tick。**按读取者求值**（长按开始时求一次、之后每 tick 再求一次），结果向下取整；小于 `1` 当作 `0`，也就是右键立刻学会。没有上限（求值超过 int 就按 `2147483647` 算）。 |
 | `hold_animation` | String | `eat` | 长按时播放的动作。仅在 `learn_time` 大于 `0` 时有意义，取值见[下表](#holding)。 |
 | `hold_sound` | 音效 id（`sound_event` 注册表） | `minecraft:item.book.page_turn` | 长按时播放的音效。仅在 `learn_time` 大于 `0` 时有意义；**附近所有玩家都能听到**。 |
 | `exclusive_tags` | Identifier 数组 | `[]` | 功法互斥标签。 |
@@ -107,7 +107,7 @@ description: 定义一门可以学会的功法：学习条件、长按时长、�
 
 `learn_time` 大于 `0` 时，这门功法改为**长按**学习：按住右键蓄力，进度走完才学会，中途松手视为取消、什么也不会发生。手臂动作与松手取消来自原版的 use 周期；进度条是**动作栏上的一行文字**（`#--------- 12%`），从按下一直显示到读完或松手，读得越久一格走得越慢。
 
-两种写法互不影响：省略 `learn_time`（或写 `0`）保持右键即学，写正数就是长按学。`learn_time` 可以写公式（见[数值提供器](../types/number_provider_types.md)）：按**读取者**求值——按下那一刻的值写进 use 组件、由原版计数，而进度条与音效每一 tick 重算；公式随身体变化时格子会跳，想稳稳走完就写常量。
+两种写法互不影响：省略 `learn_time`（或写 `0`）保持右键即学，写正数就是长按学。`learn_time` 可以写公式（见[数值提供器](../../../../library/saturn/types/number.md)）：按**读取者**求值——按下那一刻的值写进 use 组件、由原版计数，而进度条与音效每一 tick 重算；公式随身体变化时格子会跳，想稳稳走完就写常量。
 
 **手册物品不需要做任何特殊处理。** 只要那一叠**能被解析成手册**（带 `mxt:technique` 组件，或被某条[功法绑定](./technique_binding.md)的 `items` 认领），该物品就会按这门功法获得长按行为，无论它是原版物品、其他模组的物品，还是 KubeJS 注册的物品——载体是**堆**，不要求物品属于某个特定类，也不要求它就是绑定里写的 `carrier_item`。
 

@@ -7,6 +7,10 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 
 <span id="item-condition-type-物品条件" />
 
+:::info 与 Saturn 共享的类型
+本页只列 MXT 自有类型；与 Saturn 共享的类型（含 `mxt:` 别名写法）见 [Saturn 类型参考](../../../../../library/saturn/types/condition/item-condition.md)。
+:::
+
 **物品条件**检查单个物品堆，返回 `true` 或 `false`。持有者实体与物品堆由声明该条件的那个定义提供，所以条件只描述"交给它的这堆东西"要满足什么。
 
 物品条件是内置类型，`type` id 固定，数据包不能新增或删除条目。这一页列的就是全部取值，都带 `mxt` 命名空间。要加自定义类型只能写 Java 或走 KubeJS 桥接，见 [KubeJS API](../../../kubejs/api-reference.md)。
@@ -75,18 +79,6 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 
 ## 条件类型 {#条件类型}
 
-### `mxt:item_id` {#mxt-item-id}
-
-匹配物品堆的物品 id。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `item` | 物品 id | **必填** | 物品注册表 id。 |
-
-```json
-{ "type": "mxt:item_id", "item": "minecraft:diamond_sword" }
-```
-
 ### `mxt:owned_by` {#mxt-owned-by}
 
 当物品堆的法器归属（`mxt:artifact_state` 的 `owner_uuid`）就是当前持有者时通过。没有归属的物品堆不通过。
@@ -112,201 +104,6 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 ```
 
 `min` 与 `max` 在当前的公式上下文里求值。任一边求不出有限数、或 `min > max`，条件都不通过。
-
-### `mxt:item_tag` {#mxt-item-tag}
-
-用原版或数据包物品标签匹配该物品堆。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `tag` | 物品标签 | **必填** | 物品标签引用。 |
-
-```json
-{ "type": "mxt:item_tag", "tag": "minecraft:swords" }
-```
-
-### `mxt:item_matcher` {#mxt-item-matcher}
-
-用 `items` 里列出的任意一条匹配器条目匹配该物品堆。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `items` | 条目或条目数组 | **必填** | 物品 id、物品标签或带类型的匹配器条目，可以混着写。 |
-
-```json
-{
-  "type": "mxt:item_matcher",
-  "items": ["minecraft:apple", "#minecraft:swords", { "type": "mxt:wildcard", "pattern": "*_gem" }]
-}
-```
-
-`items` 接受单个值或数组，数组中可自由混合物品 id、物品标签和带类型的匹配器条目。带类型的条目有 `mxt:item`、`mxt:tag`、`mxt:wildcard`、`mxt:regex`、`mxt:technique`（带该组件的功法手册）、无字段的 `mxt:spirit_storage`（匹配所有能存储灵气的物品）以及 `mxt:herb_tag`（带有给定元素或材质标签的灵草）与 `mxt:quality`（物品列表 + 一份品质要求，见[品质 · 按档位筛物品](../../json/quality.md#gating)）；见 [物品匹配器](../other/item-matcher.md#item-matcher-entry-type)。一组物品还没有现成标签覆盖时，这是收下它们最紧凑的写法。空列表在加载期被拒。
-
-### `mxt:amount` {#mxt-amount}
-
-比较物品堆的数量。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `comparison` | String | **必填** | 比较运算符。 |
-| `compare_to` | Double | **必填** | 用来比较的数量。 |
-
-```json
-{ "type": "mxt:amount", "comparison": ">=", "compare_to": 16 }
-```
-
-### `mxt:fuel` {#mxt-fuel}
-
-比较物品堆的熔炉燃烧时间。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `comparison` | String | **必填** | 比较运算符。 |
-| `compare_to` | Double | **必填** | 用来比较的燃烧时间，单位 tick。 |
-
-```json
-{ "type": "mxt:fuel", "comparison": ">=", "compare_to": 200 }
-```
-
-不是燃料的物品燃烧时间为 `0`，所以照常答得出 `== 0`。
-
-### `mxt:is_equipable` {#mxt-is-equipable}
-
-检查物品堆是否带有可装备组件。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `slot` | 装备槽名 | 不写 | 只检查物品堆的装备槽是否就是这个槽位。 |
-
-```json
-{ "type": "mxt:is_equipable", "slot": "head" }
-```
-
-不写 `slot` 时只问「能不能装备」；写了就要求装备槽正好等于它，物品堆没有可装备组件时一律不通过。
-
-### `mxt:relative_durability` {#mxt-relative-durability}
-
-比较物品堆的剩余耐久除以其最大耐久。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `comparison` | String | **必填** | 比较运算符。 |
-| `compare_to` | Double | **必填** | 用来比较的比例。 |
-
-```json
-{ "type": "mxt:relative_durability", "comparison": "<=", "compare_to": 0.25 }
-```
-
-比值介于 `0` 与 `1` 之间。只对可损坏物品通过。
-
-### `mxt:armor_value` {#mxt-armor-value}
-
-比较物品堆在其可装备槽位中提供的护甲值。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `comparison` | String | **必填** | 比较运算符。 |
-| `compare_to` | Double | **必填** | 用来比较的护甲值。 |
-
-```json
-{ "type": "mxt:armor_value", "comparison": ">", "compare_to": 3 }
-```
-
-护甲值按物品堆自己的属性修饰符在该装备槽上算出来。没有可装备组件的物品堆不通过。
-
-### `mxt:durability` {#mxt-durability}
-
-比较物品堆的剩余耐久。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `comparison` | String | **必填** | 比较运算符。 |
-| `compare_to` | Double | **必填** | 用来比较的剩余耐久。 |
-
-```json
-{ "type": "mxt:durability", "comparison": "<=", "compare_to": 100 }
-```
-
-只对可损坏物品通过。
-
-与 `mxt:relative_durability` 的分工：这一条比的是原始剩余耐久，同一个值在最大耐久不同的物品上含义不同；那一条比的是 `0` 到 `1` 之间的比例，更适合写成通用规则。
-
-### `mxt:on_cooldown` {#mxt-on-cooldown}
-
-当物品堆处于持有者的原版物品冷却中时通过。持有者不是玩家时不通过。
-
-没有字段。
-
-```json
-{ "type": "mxt:on_cooldown" }
-```
-
-### `mxt:ingredient` {#mxt-ingredient}
-
-用原版 ingredient 匹配该物品堆。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `ingredient` | 原版 Ingredient | **必填** | 物品、标签或它们的列表。 |
-
-```json
-{ "type": "mxt:ingredient", "ingredient": { "tag": "minecraft:wool" } }
-```
-
-### `mxt:tool_ability` {#mxt-tool-ability}
-
-检查物品堆是否能执行某项 NeoForge 物品能力。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `ability` | 物品能力 id | **必填** | 要检查的 NeoForge 物品能力。 |
-
-```json
-{ "type": "mxt:tool_ability", "ability": "minecraft:axe_strip" }
-```
-
-### `mxt:base_enchantment` {#mxt-base-enchantment}
-
-比较存储在物品堆上的某个附魔的等级。读的是物品堆自己带的等级，不受附魔等级相关的技能影响。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `enchantment` | 附魔 id | **必填** | 要查的附魔。 |
-| `comparison` | String | **必填** | 比较运算符。 |
-| `compare_to` | Double | **必填** | 用来比较的等级。 |
-
-```json
-{ "type": "mxt:base_enchantment", "enchantment": "minecraft:sharpness", "comparison": ">=", "compare_to": 3 }
-```
-
-物品堆没有这个附魔时等级按 `0` 算，所以 `!= 0` 和"有这个附魔"是一回事。
-
-### `mxt:has_component` {#mxt-has-component}
-
-检查物品堆是否带有给定的数据组件。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `component` | 数据组件 id | **必填** | 要查的组件。 |
-
-```json
-{ "type": "mxt:has_component", "component": "minecraft:damage" }
-```
-
-### `mxt:component` {#mxt-component}
-
-用部分 NBT 比较匹配某个数据组件的序列化值。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `component` | 数据组件 id | **必填** | 要比较的组件。 |
-| `nbt` | NBT 复合标签 | **必填** | 期望值，按部分匹配比较。 |
-
-```json
-{ "type": "mxt:component", "component": "minecraft:custom_name", "nbt": { "text": "剑" } }
-```
-
-物品堆没有这个组件时不通过。比较是部分的：`nbt` 里写到的键必须对上，没写到的键不管。
 
 ### `mxt:spirit_storage_not_full` {#mxt-spirit-storage-not-full}
 
@@ -374,7 +171,7 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 
 ### `mxt:item_abilities` {#mxt-item-abilities}
 
-检查物品堆授予的 mxt [技能](../../json/ability.md)。
+检查物品堆授予的 mxt [技能](../../../../../library/saturn/data/ability.md)。
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |

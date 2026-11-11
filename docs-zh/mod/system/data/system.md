@@ -43,7 +43,7 @@ sidebar_position: 1
 
 ## 模块引用
 
-`id` 引用的是[模块配置](./module.md)，不是 Agent 工作流或服务端实现类。`condition` 使用 Saturn [实体条件](../../../library/saturn/types/entity-condition/index.md)，省略表示无条件。tag 成员分别求值，重叠引用取并集；手动禁用优先于定义，手动添加可覆盖条件。
+`id` 引用的是[模块配置](./module.md)，不是 Agent 工作流或服务端实现类。`condition` 使用 Saturn [实体条件](../../../library/saturn/types/condition/entity-condition.md)，省略表示无条件。tag 成员分别求值，重叠引用取并集；手动禁用优先于定义，手动添加可覆盖条件。
 
 创建 `data/example/tags/system/system_module/basic.json`，例如：
 

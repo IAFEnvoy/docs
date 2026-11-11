@@ -1,5 +1,6 @@
 ---
 title: "未完成物品标记"
+sidebar_label: "未完成物品标记 (incomplete)"
 sidebar_position: 6
 ---
 
@@ -7,7 +8,7 @@ sidebar_position: 6
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| `items` | [物品匹配条目](../types/item-matcher/index.md)或数组 | 是 | — | 至少一项，任一条目命中即可。 |
+| `items` | [物品匹配条目](../types/item-matcher.md)或数组 | 是 | — | 至少一项，任一条目命中即可。 |
 
 ## 示例
 

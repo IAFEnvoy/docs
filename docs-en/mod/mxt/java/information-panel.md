@@ -31,7 +31,7 @@ Capture server entities on the server thread. Lists, tooltips and text component
 
 ## Extending the Cultivation Group {#extending-the-cultivation-group}
 
-An [information row definition](../datapack/json/information_row.md) declares content, visibility, tooltips, order and importance. [Groups and tags](../datapack/json/information_group.md) select rows. Appending a row to `#mxt:cultivation` includes it in the panel's cultivation section and in command output for that group.
+An [information row definition](../../../library/saturn/data/information-row.md) declares content, visibility, tooltips, order and importance. [Groups and tags](../../../library/saturn/data/information-group.md) select rows. Appending a row to `#mxt:cultivation` includes it in the panel's cultivation section and in command output for that group.
 
 The 7 built-in rows cover realm, lifespan, cultivation progress, spirit roots, physiques, techniques and curses. They read the `mxt:information` getter. Snapshots retain getter facts; definitions control their presentation. Register parameter codecs for `EntityValueGetter` to add new queries, and register `InformationExpression` types for custom presentation calculations.
 

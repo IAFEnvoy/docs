@@ -500,11 +500,6 @@
             "en": "Formula Variables (formula_variable)"
           },
           {
-            "page": "datapack/types/number_provider_types",
-            "zh": "number_provider_type（数值提供器）",
-            "en": "Number Providers (number_provider_type)"
-          },
-          {
             "page": "datapack/types/shared_data_types",
             "zh": "共享数据类型",
             "en": "Shared Data Types"
@@ -579,16 +574,6 @@
                 "page": "datapack/types/other/ability",
                 "zh": "ability_type（技能类型）",
                 "en": "Ability Types (ability_type)"
-              },
-              {
-                "page": "datapack/types/other/ability-selector",
-                "zh": "ability_target_selector_type（技能目标选择器）",
-                "en": "Ability Target Selectors (ability_target_selector_type)"
-              },
-              {
-                "page": "datapack/types/other/data-storage",
-                "zh": "data_storage_type（数据存储）",
-                "en": "Data Storage (data_storage_type)"
               },
               {
                 "page": "datapack/types/other/mount-render",
@@ -798,16 +783,6 @@
                 "en": "Resource Bar Contexts (resource_bar_context)"
               },
               {
-                "page": "datapack/types/other/resource-bar-render",
-                "zh": "resource_bar_render_data_type（资源条绘制器）",
-                "en": "Resource Bar Renderers (resource_bar_render_data_type)"
-              },
-              {
-                "page": "datapack/types/other/resource-bar-visibility",
-                "zh": "resource_bar_visibility_type（资源条显示条件）",
-                "en": "Resource Bar Visibility (resource_bar_visibility_type)"
-              },
-              {
                 "page": "datapack/types/other/resource-value-provider",
                 "zh": "resource_value_provider_type（资源数值来源）",
                 "en": "Resource Value Providers (resource_value_provider_type)"
@@ -847,14 +822,7 @@
           {
             "page": "datapack/json/tribulation",
             "zh": "tribulation（天劫）",
-            "en": "tribulation",
-            "items": [
-              {
-                "page": "datapack/types/other/timeline-entry",
-                "zh": "timeline_entry_type（天劫节拍）",
-                "en": "Timeline Entries (timeline_entry_type)"
-              }
-            ]
+            "en": "tribulation"
           },
           {
             "page": "datapack/json/trigger",

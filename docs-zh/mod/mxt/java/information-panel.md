@@ -31,7 +31,7 @@ var compact = rows.withMinimumImportance(60);
 
 ## 扩展修炼分组 {#扩展修炼分组}
 
-用[信息行定义](../datapack/json/information_row.md)声明内容、显示条件、tooltip、顺序和重要程度，再通过[信息分组与标签](../datapack/json/information_group.md)选取它。向 `#mxt:cultivation` 追加行，就会进入人物面板的修炼区以及同分组的指令输出。
+用[信息行定义](../../../library/saturn/data/information-row.md)声明内容、显示条件、tooltip、顺序和重要程度，再通过[信息分组与标签](../../../library/saturn/data/information-group.md)选取它。向 `#mxt:cultivation` 追加行，就会进入人物面板的修炼区以及同分组的指令输出。
 
 内置境界、寿元、修为进度、灵根、体质、功法和诅咒共 7 条行读取 `mxt:information` getter。快照保存 getter 的事实，数据定义决定如何展示；新增取值行为应注册 `EntityValueGetter` 的参数 Codec，自定义展示计算应注册 `InformationExpression` 类型。
 

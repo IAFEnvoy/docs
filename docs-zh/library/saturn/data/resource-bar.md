@@ -7,11 +7,11 @@ sidebar_position: 3
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| `context` | [上下文 ID](../types/bar-context/index.md) | 否 | `"saturn:self_hud"` | 字符串 ID，不是 type 对象。 |
+| `context` | [上下文 ID](../types/bar-context.md) | 否 | `"saturn:self_hud"` | 字符串 ID，不是 type 对象。 |
 | `anchor` | 字符串 | 是 | — | `left` 或 `right`。 |
 | `order` | 整数 | 否 | `0` | 同一上下文中的布局顺序。 |
-| `visibility` | [显示条件](../types/bar-visibility/index.md) | 否 | `{"type":"saturn:always"}` | 是否绘制。 |
-| `renderer` | [渲染类型](../types/bar-renderer/index.md) | 是 | — | 资源条外观。 |
+| `visibility` | [显示条件](../types/bar-visibility.md) | 否 | `{"type":"saturn:always"}` | 是否绘制。 |
+| `renderer` | [渲染类型](../types/bar-renderer.md) | 是 | — | 资源条外观。 |
 | `value_display` | 字符串 | 否 | `"none"` | `none`、`current`、`current_and_maximum`、`percentage`。 |
 | `maximum` | 数值 | 否 | 省略 | 正数覆盖显示上限，非正数视为未指定。 |
 

@@ -1,5 +1,6 @@
 ---
 title: "资源定义"
+sidebar_label: "资源定义 (resource)"
 sidebar_position: 2
 ---
 
@@ -7,7 +8,7 @@ sidebar_position: 2
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
-| `default_value` | [数值提供器](../types/number/index.md) | 是 | — | 初始化资源时的值。 |
+| `default_value` | [数值提供器](../types/number.md) | 是 | — | 初始化资源时的值。 |
 | `min` | 数值提供器 | 否 | `0` | 资源下限。 |
 | `max` | 数值提供器 | 是 | — | 资源上限。 |
 | `icon` | [图标](./common.md#物品与图标) | 否 | 省略 | 贴图 ID 或物品模板。 |
@@ -38,4 +39,4 @@ sidebar_position: 2
 }
 ```
 
-按实际效果增减资源可使用 [add_resource](../types/entity-action/add_resource.md)，扣款使用[资源费用](../types/cost/resource.md)。开发侧初始化与事务接口见 [Java API](../development/api.md)。
+按实际效果增减资源可使用 [add_resource](../types/action/entity-action.md#saturnadd_resource)，扣款使用[资源费用](../types/cost.md#saturnresource)。开发侧初始化与事务接口见 [Java API](../development/api.md)。

@@ -6,7 +6,7 @@ title: /resource
 
 <span id="resource" />
 
-`/resource` covers the **value accounts** (`saturn:resource`): reading or rewriting one of your own values, and seeing what the [resource bars](../../datapack/json/resource.md) that value declares would currently compute. **Writing needs the `gamemaster` permission; reading does not.**
+`/resource` covers the **value accounts** (`saturn:resource`): reading or rewriting one of your own values, and seeing what the [resource bars](../../../../library/saturn/data/resource.md) that value declares would currently compute. **Writing needs the `gamemaster` permission; reading does not.**
 
 <div className="cmd-tree">
 
@@ -46,7 +46,7 @@ When a context cannot produce values, that bar reports that it is currently unav
 
 ## Relation to the HUD {#relation-to-the-hud}
 
-This command prints the **values themselves**, not the pixels drawn on screen. The bars on screen are HUD elements (`resource_bars.left`, `resource_bars.right`, the target and boss overlays), whose toggles, positions and scaling live in [HUD and Panels](../hud.md) and `/hud`. Both read the same definitions and the same contexts, so what the command prints and what a bar shows should agree; when they do not, first check whether a [visibility condition](../../datapack/json/resource.md) is hiding that bar, or whether its anchor has been dragged off the window.
+This command prints the **values themselves**, not the pixels drawn on screen. The bars on screen are HUD elements (`resource_bars.left`, `resource_bars.right`, the target and boss overlays), whose toggles, positions and scaling live in [HUD and Panels](../hud.md) and `/hud`. Both read the same definitions and the same contexts, so what the command prints and what a bar shows should agree; when they do not, first check whether a [visibility condition](../../../../library/saturn/data/resource.md) is hiding that bar, or whether its anchor has been dragged off the window.
 
 ## Top-level alias {#top-level-alias}
 

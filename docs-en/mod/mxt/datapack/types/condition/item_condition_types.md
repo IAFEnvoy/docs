@@ -7,6 +7,10 @@ description: Every built-in item condition type registered by the mod, and the J
 
 <span id="item-conditions-item-condition-type" />
 
+:::info Shared with Saturn
+This page lists only MiXianTu's own types; types shared with Saturn (including their `mxt:` alias spellings) are documented in [Saturn's type reference](../../../../../library/saturn/types/condition/item-condition.md).
+:::
+
 An **item condition** checks a single item stack and returns `true` or `false`. The holder entity and the stack come from whichever definition declares the condition, so a condition only describes what the stack it is handed has to satisfy.
 
 Item conditions are built-in types with fixed `type` ids, and a data pack can neither add nor remove entries. Every value is listed on this page, all of them in the `mxt` namespace. Custom types take Java or the KubeJS bridge — see the [KubeJS API](../../../kubejs/api-reference.md).
@@ -75,18 +79,6 @@ An unregistered handler for `mxt:js`, or a callback that throws, counts as faili
 
 ## Condition Types {#condition-types}
 
-### `mxt:item_id` {#mxt-item-id}
-
-Matches the stack's item id.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `item` | Item id | **required** | Item registry id. |
-
-```json
-{ "type": "mxt:item_id", "item": "minecraft:diamond_sword" }
-```
-
 ### `mxt:owned_by` {#mxt-owned-by}
 
 Passes when the stack's artifact owner (the `owner_uuid` of `mxt:artifact_state`) is the current holder. A stack with no owner does not pass.
@@ -112,201 +104,6 @@ Checks whether the stored amount of **one named aura** on the stack lies between
 ```
 
 `min` and `max` are evaluated in the current formula context. If either side fails to produce a finite number, or `min > max`, the condition does not pass.
-
-### `mxt:item_tag` {#mxt-item-tag}
-
-Matches the stack against a vanilla or data pack item tag.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `tag` | Item tag | **required** | Item tag reference. |
-
-```json
-{ "type": "mxt:item_tag", "tag": "minecraft:swords" }
-```
-
-### `mxt:item_matcher` {#mxt-item-matcher}
-
-Matches the stack against any single matcher entry listed in `items`.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `items` | Entry or array of entries | **required** | An item id, an item tag or a typed matcher entry, freely mixed. |
-
-```json
-{
-  "type": "mxt:item_matcher",
-  "items": ["minecraft:apple", "#minecraft:swords", { "type": "mxt:wildcard", "pattern": "*_gem" }]
-}
-```
-
-`items` accepts a single value or an array, and the array may freely mix item ids, item tags and typed matcher entries. The typed entries are `mxt:item`, `mxt:tag`, `mxt:wildcard`, `mxt:regex`, `mxt:technique` (a technique manual carrying that component), the fieldless `mxt:spirit_storage` (matches every item that can store aura) and `mxt:herb_tag` (a spirit herb carrying the given element or material tag) and `mxt:quality` (an item list plus a quality requirement, see [Quality · Filtering items by tier](../../json/quality.md#gating)); see [Item Matcher](../other/item-matcher.md#item-matcher-entry-type). It is the most compact way to take in a set of items that no existing tag covers yet. An empty list is refused at load.
-
-### `mxt:amount` {#mxt-amount}
-
-Compares the stack's count.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `comparison` | String | **required** | Comparison operator. |
-| `compare_to` | Double | **required** | The count to compare against. |
-
-```json
-{ "type": "mxt:amount", "comparison": ">=", "compare_to": 16 }
-```
-
-### `mxt:fuel` {#mxt-fuel}
-
-Compares the stack's furnace burn time.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `comparison` | String | **required** | Comparison operator. |
-| `compare_to` | Double | **required** | Burn time to compare against, in ticks. |
-
-```json
-{ "type": "mxt:fuel", "comparison": ">=", "compare_to": 200 }
-```
-
-An item that is not a fuel has a burn time of `0`, so `== 0` still gets an answer.
-
-### `mxt:is_equipable` {#mxt-is-equipable}
-
-Checks whether the stack carries an equippable component.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `slot` | Equipment slot name | omitted | Only checks whether the stack's equipment slot is exactly this slot. |
-
-```json
-{ "type": "mxt:is_equipable", "slot": "head" }
-```
-
-With `slot` omitted it only asks "can this be equipped"; with it, the equipment slot has to equal that slot exactly, and a stack with no equippable component never passes.
-
-### `mxt:relative_durability` {#mxt-relative-durability}
-
-Compares the stack's remaining durability divided by its maximum durability.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `comparison` | String | **required** | Comparison operator. |
-| `compare_to` | Double | **required** | The ratio to compare against. |
-
-```json
-{ "type": "mxt:relative_durability", "comparison": "<=", "compare_to": 0.25 }
-```
-
-The ratio lies between `0` and `1`. Only damageable items pass.
-
-### `mxt:armor_value` {#mxt-armor-value}
-
-Compares the armor value the stack provides in its equippable slot.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `comparison` | String | **required** | Comparison operator. |
-| `compare_to` | Double | **required** | The armor value to compare against. |
-
-```json
-{ "type": "mxt:armor_value", "comparison": ">", "compare_to": 3 }
-```
-
-The armor value is worked out from the stack's own attribute modifiers on that equipment slot. A stack with no equippable component does not pass.
-
-### `mxt:durability` {#mxt-durability}
-
-Compares the stack's remaining durability.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `comparison` | String | **required** | Comparison operator. |
-| `compare_to` | Double | **required** | Remaining durability to compare against. |
-
-```json
-{ "type": "mxt:durability", "comparison": "<=", "compare_to": 100 }
-```
-
-Only damageable items pass.
-
-This one and `mxt:relative_durability` split the job: it compares the raw remaining durability, so the same value means different things on items with different maximum durability, while that one compares a ratio between `0` and `1` and is the better fit for a generic rule.
-
-### `mxt:on_cooldown` {#mxt-on-cooldown}
-
-Passes when the stack is on the holder's vanilla item cooldown. It does not pass when the holder is not a player.
-
-No fields.
-
-```json
-{ "type": "mxt:on_cooldown" }
-```
-
-### `mxt:ingredient` {#mxt-ingredient}
-
-Matches the stack against a vanilla ingredient.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ingredient` | Vanilla Ingredient | **required** | An item, a tag, or a list of them. |
-
-```json
-{ "type": "mxt:ingredient", "ingredient": { "tag": "minecraft:wool" } }
-```
-
-### `mxt:tool_ability` {#mxt-tool-ability}
-
-Checks whether the stack can perform a NeoForge item ability.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ability` | Item ability id | **required** | The NeoForge item ability to check. |
-
-```json
-{ "type": "mxt:tool_ability", "ability": "minecraft:axe_strip" }
-```
-
-### `mxt:base_enchantment` {#mxt-base-enchantment}
-
-Compares the level of one enchantment stored on the stack. It reads the level the stack itself carries, untouched by abilities that play with enchantment levels.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `enchantment` | Enchantment id | **required** | The enchantment to inspect. |
-| `comparison` | String | **required** | Comparison operator. |
-| `compare_to` | Double | **required** | The level to compare against. |
-
-```json
-{ "type": "mxt:base_enchantment", "enchantment": "minecraft:sharpness", "comparison": ">=", "compare_to": 3 }
-```
-
-A stack without that enchantment counts as level `0`, so `!= 0` is the same question as "has this enchantment".
-
-### `mxt:has_component` {#mxt-has-component}
-
-Checks whether the stack carries the given data component.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `component` | Data component id | **required** | The component to check. |
-
-```json
-{ "type": "mxt:has_component", "component": "minecraft:damage" }
-```
-
-### `mxt:component` {#mxt-component}
-
-Matches the serialized value of a data component with a partial NBT comparison.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `component` | Data component id | **required** | The component to compare. |
-| `nbt` | NBT compound tag | **required** | The expected value, compared partially. |
-
-```json
-{ "type": "mxt:component", "component": "minecraft:custom_name", "nbt": { "text": "Sword" } }
-```
-
-A stack without that component does not pass. The comparison is partial: every key written in `nbt` has to match, and keys left out are ignored.
 
 ### `mxt:spirit_storage_not_full` {#mxt-spirit-storage-not-full}
 
@@ -374,7 +171,7 @@ It follows the same resolution order as the quality gate and the tooltip (**thre
 
 ### `mxt:item_abilities` {#mxt-item-abilities}
 
-Checks the mxt [abilities](../../json/ability.md) the stack grants.
+Checks the mxt [abilities](../../../../../library/saturn/data/ability.md) the stack grants.
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |

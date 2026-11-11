@@ -42,7 +42,7 @@ An entry with only `id` and `amount` is the **shorthand**, and it is read as `sa
 
 The shorthand is the door left open for the older writing; the two mix freely in one array, and `MxtCosts` and `MxtResources.consume` both accept them.
 
-`amount` is always a [number provider](../datapack/types/number_provider_types.md): a constant, a formula string or a built-in provider. It **has to evaluate to a finite positive number at use time** — a value that is not finite, or is `0` or negative, makes that entry unpayable (the failure reason is `INVALID_AMOUNT`) rather than charging nothing.
+`amount` is always a [number provider](../../../library/saturn/types/number.md): a constant, a formula string or a built-in provider. It **has to evaluate to a finite positive number at use time** — a value that is not finite, or is `0` or negative, makes that entry unpayable (the failure reason is `INVALID_AMOUNT`) rather than charging nothing.
 
 ```json
 "costs": [

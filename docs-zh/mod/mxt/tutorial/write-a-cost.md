@@ -42,7 +42,7 @@ description: "一套被满包复用的消耗数组：五种写法、四种类型
 
 简写是给老写法用的口子，两种写法可以混在同一个数组里，`MxtCosts` 与 `MxtResources.consume` 也照样接受。
 
-`amount` 一律是[数值提供器](../datapack/types/number_provider_types.md)：常量、公式串或固有提供器都行。它**使用时必须求值为有限正数**——算不出有限值、算了 `0` 或负数，这一项就付不出（失败原因是 `INVALID_AMOUNT`），而不是「按 0 扣」。
+`amount` 一律是[数值提供器](../../../library/saturn/types/number.md)：常量、公式串或固有提供器都行。它**使用时必须求值为有限正数**——算不出有限值、算了 `0` 或负数，这一项就付不出（失败原因是 `INVALID_AMOUNT`），而不是「按 0 扣」。
 
 ```json
 "costs": [

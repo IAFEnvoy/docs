@@ -55,7 +55,7 @@ MxtAbilities.selector('example:nearest_three', (actor, context, params) => {
 
 ## Related {#related}
 
-- Data pack side: [`ability`](../../datapack/json/ability.md), [`artifact`](../../datapack/json/artifact.md) and [`technique`](../../datapack/json/technique.md).
+- Data pack side: [`ability`](../../../../library/saturn/data/ability.md), [`artifact`](../../datapack/json/artifact.md) and [`technique`](../../datapack/json/technique.md).
 - The other user of the same source ledger: [MxtCurses](./curses.md).
 - Callbacks around a cast: `abilityUse` and `abilityTriggered` in [MxtEvents](./events.md).
 - [KubeJS API Reference](../api-reference.md).

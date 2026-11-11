@@ -9,7 +9,7 @@ Registry: `system:shop_offers`. Prices are handled on the server as Saturn costs
 | --- | --- | --- | --- | --- |
 | `label` | Text component | no | Empty component | An enabled entry must have a non-empty name; a bare string is literal text. |
 | `items` | ItemStackTemplate array | no | `[]` | At least 1 and at most 36 entries when enabled. |
-| `costs` | [Saturn cost](../../../library/saturn/types/cost/index.md) array | no | `[]` | An enabled shop offer must have at least one cost. |
+| `costs` | [Saturn cost](../../../library/saturn/types/cost.md) array | no | `[]` | An enabled shop offer must have at least one cost. |
 | `enabled` | Boolean | no | `true` | false can be used to disable an older entry that is overridden. |
 
 ## Example

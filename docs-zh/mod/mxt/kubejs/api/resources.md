@@ -37,5 +37,5 @@ if (result.getFailure().isEmpty()) {
 
 - 单个 `Cost` 与它的五种写法：[MxtCosts](./costs.md)、[共享数据类型](../../datapack/types/shared_data_types.md#cost)。
 - 扣在哪个通道上（付款者、脚下灵气池、方块库存）：[共享数据类型](../../datapack/types/shared_data_types.md#cost)。
-- 数值本身：[MxtValues](./values.md)、[数值 `resource`](../../datapack/json/resource.md)。
+- 数值本身：[MxtValues](./values.md)、[数值 `resource`](../../../../library/saturn/data/resource.md)。
 - [KubeJS API 参考](../api-reference.md)。

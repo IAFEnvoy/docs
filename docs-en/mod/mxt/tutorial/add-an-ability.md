@@ -59,7 +59,7 @@ The fields this ability reads (`cooldown` and the four action fields below it ar
 
 | Field | What it does |
 | --- | --- |
-| `target_selector` | Which entities the bi-entity behaviour applies to; `mxt:self` (the default) selects only the caster. The shape of every selector and their `limit` and `order` are on [Ability Target Selectors](../datapack/types/other/ability-selector.md). The example uses `mxt:area` - a box, not a sphere - and `include_actor` decides whether the caster counts as part of the set. |
+| `target_selector` | Which entities the bi-entity behaviour applies to; `mxt:self` (the default) selects only the caster. The shape of every selector and their `limit` and `order` are on [Ability Target Selectors](../../../library/saturn/types/target.md). The example uses `mxt:area` - a box, not a sphere - and `include_actor` decides whether the caster counts as part of the set. |
 | `bi_entity_action` | Run for each selected target, and a failing one never stops the rest. `mxt:target_action` forwards an entity action to the target — here 6 damage plus half the caster's experience level. |
 | `entity_action` | Runs on the caster. It defaults to `mxt:no_op`; use it for a self-buff, a particle burst or an aura change. |
 | `target_condition` | The bi-entity condition every target has to pass; `mxt:always` by default. |
@@ -186,7 +186,7 @@ Abilities are a data pack registry, so load the world again rather than running 
 
 ## Next {#next}
 
-- [Ability](../datapack/json/ability.md) — the full field list, including `charges` and channelled upkeep.
+- [Ability](../../../library/saturn/data/ability.md) — the full field list, including `charges` and channelled upkeep.
 - [Define a Technique and Its Levels](./define-a-technique.md) — hang these abilities on a progression chain that climbs, so mastery decides when each one unlocks.
 - [Action Types](../datapack/types/action/entity_action_types.md) and [Condition Types](../datapack/types/condition/entity_condition_types.md) — everything an ability can do and check.
 - [Loot and Advancement Criteria](../datapack/loot-and-criteria.md) — rewards and advancements that react to breakthroughs and ability use.

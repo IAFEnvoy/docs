@@ -42,7 +42,7 @@ description: 写一场由突破启动的天劫：启动闸门、前摇与倒计�
 | `success_action` | 时间线走空之后执行，默认 `mxt:no_op`。 |
 | `fail_action` | 某一拍报错、天劫无法继续时执行，默认 `mxt:no_op`。 |
 
-节拍有四种，写一场天劫就是把它们排成一队；每种节拍自己读的字段与时长换算见[天劫节拍](../datapack/types/other/timeline-entry.md)。下面按顺序用到 `mxt:action`、`mxt:idle`、`mxt:wait_for` 与 `mxt:branch`。
+节拍有四种，写一场天劫就是把它们排成一队；每种节拍自己读的字段与时长换算见[天劫节拍](../../../library/saturn/types/timeline.md)。下面按顺序用到 `mxt:action`、`mxt:idle`、`mxt:wait_for` 与 `mxt:branch`。
 
 时间线是**运行游标**：启动时整条被复制进实体的附件，之后每 tick 消费游标所在那一拍，跑完就前进一拍。**游标是存下来的**（`mxt:branch` 可以把它移到任意一拍，也可以回跳），所以 `/reload` 改动定义**不会**影响一场已经在进行的天劫——时间线已经拷走了；而难度倍率与成败行为仍然从定义实时读取。`if_true` / `if_false` 的下标从**这条被复制的时间线的第一拍**算起（`0` 起），越界会在**启动时**被拒绝。
 

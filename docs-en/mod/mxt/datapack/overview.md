@@ -54,10 +54,10 @@ An alchemy recipe is not a registry: `mxt:alchemy` is a vanilla recipe type whos
 
 ## Module Pages {#module-pages}
 
-- [resource: Resources and Resource Bars](./json/resource.md)
+- [resource: Resources and Resource Bars](../../../library/saturn/data/resource.md)
 - [Cultivation, Realms and Spirit Roots](./json/cultivation.md)
 - [Aura Environment and Aura Items](./json/aura.md)
-- [Ability, Cost and Condition](./json/ability.md)
+- [Ability, Cost and Condition](../../../library/saturn/data/ability.md)
 - [Item Bindings, Quality and Economy](./json/item_binding.md)
 - [Formations, Forging and Alchemy](./json/formation.md)
 - [Other Registries](./json/index.md)

@@ -20,7 +20,7 @@ sidebar_position: 1
 }
 ```
 
-结构见[触发规则](../data/trigger.md)，所有匹配类型见[触发器目录](../types/trigger/index.md)。原版准则移植类型复用对应准则的 JSON 参数，由 Saturn 桥接事件或轮询状态，不创建成就。
+结构见[触发规则](../data/trigger.md)，所有匹配类型见[触发器目录](../types/trigger.md)。原版准则移植类型复用对应准则的 JSON 参数，由 Saturn 桥接事件或轮询状态，不创建成就。
 
 ## Java 订阅
 

@@ -7,7 +7,7 @@ description: 注册 mxt:js 触发器匹配器，发布自定义信号，并让�
 
 <span id="mxttriggers-触发器信号" />
 
-触发器信号就是数据包技能在等待的通知（例如持有者命中目标）。`MxtTriggers` 让脚本发布同一种信号，也让脚本等待它；两侧都走运行时 `TriggerDispatcher`，因此脚本订阅、数据包技能触发器与数据包[触发规则](../../datapack/json/trigger.md)看到的是同一次派发——脚本发布的信号能驱动一条规则，规则里的行为也能发布脚本等待的信号。
+触发器信号就是数据包技能在等待的通知（例如持有者命中目标）。`MxtTriggers` 让脚本发布同一种信号，也让脚本等待它；两侧都走运行时 `TriggerDispatcher`，因此脚本订阅、数据包技能触发器与数据包[触发规则](../../../../library/saturn/data/trigger.md)看到的是同一次派发——脚本发布的信号能驱动一条规则，规则里的行为也能发布脚本等待的信号。
 
 ## 方法 {#方法}
 
@@ -84,6 +84,6 @@ function publishPillTaken(player, toxicity) {
 
 ## 相关 {#相关}
 
-- 数据包侧：[触发规则 `trigger`](../../datapack/json/trigger.md)、[trigger_type（触发器）](../../datapack/types/other/trigger-type.md)与[cost_type（消耗）](../../datapack/types/other/cost-type.md)。
+- 数据包侧：[触发规则 `trigger`](../../../../library/saturn/data/trigger.md)、[trigger_type（触发器）](../../datapack/types/other/trigger-type.md)与[cost_type（消耗）](../../datapack/types/other/cost-type.md)。
 - 等待信号的一方：[MxtAbilities](./abilities.md)（技能上的触发器）。
 - [KubeJS API 参考](../api-reference.md)。

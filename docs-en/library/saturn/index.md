@@ -20,7 +20,7 @@ The documentation covers interfaces already implemented in the current source, s
 
 - [Installation and basic conventions](./install.md): where to install, dependencies, resource IDs, data pack directories and when changes take effect.
 - [Data definitions](./data/index.md): one page for each standalone JSON definition.
-- [Type reference](./types/index.md): actions, conditions, abilities, costs, triggers, information expressions and more, with a separate page for each type including field tables and JSON examples.
+- [Type reference](./types/index.md): actions, conditions, abilities, costs, triggers, information expressions and more; one page per type family with field tables and JSON examples, and meta types listed at the end of each page.
 - [Triggers](./guides/triggers.md): publishing, subscriptions, rebuilding and advancement completion events.
 - [Costs and payment](./guides/costs.md): cost preparation, trial calculation and commit.
 - [Player information](./guides/information.md): information rows, groups, getters and missing-value handling.

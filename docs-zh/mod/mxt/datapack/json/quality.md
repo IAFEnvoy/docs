@@ -139,7 +139,7 @@ description: 定义一档品质的颜色与三个修正，以及它在品质链�
 2. **匹配器条目 `mxt:quality`**（`items` 必填，再加上面两个字段）：凡是用 [ItemMatcher](../types/other/item-matcher.md) 的地方都能用——`Cost` 的 `mxt:item`、`artifact` / `pill_binding` / `technique_binding` 的 `items`、`spirit_herb` 的 `blocks`、`mxt:item_matcher` / `mxt:item_id` / `mxt:item_tag` 条件、灵植的种子、拾取器。
 3. **自定义材料 `mxt:quality`**（`neoforge:ingredient_type` + `items` + 上面两个字段）：**凡是用原版 `Ingredient` 的地方都能用**——原版与别的模组的配方、灵气合成、画符、`mxt:ingredient` 条件、[锻造蓝图](./forging_blueprint.md)的 `input`（那一项就是 sized ingredient），以及[画符配方](./talisman_drawing.md)的 `paper`（那一项就是 ingredient）；见[灵气合成](./spirit_crafting.md)。
 
-还有一条窄路只对"材料条目"成立：匹配器条目 [**`mxt:ingredient`**](../types/other/item-matcher.md#mxtingredient) 能把一整个原版材料（含 `mxt:quality`）写进任何接受 `ItemMatcher` 的地方，画符那次取纸的代价走的就是它。
+还有一条窄路只对"材料条目"成立：匹配器条目 [**`mxt:ingredient`**](../../../../library/saturn/types/item-matcher.md) 能把一整个原版材料（含 `mxt:quality`）写进任何接受 `ItemMatcher` 的地方，画符那次取纸的代价走的就是它。
 
 丹方还有两个字段挂在机器侧，不是物品自己的匹配条目：[`furnace_quality`](./alchemy_recipe.md) 要求**丹炉核心**的档位，[`input_quality`](./alchemy_recipe.md) 逐格要求输入仓里**每一格非空物品**（主药、辅药、药引都算；炉壁与多方块结构不看品质）。两份形状相同，都至少写一个字段、写空对象会被拒；不过就拒绝开炉、不扣料、不动供热方块。核心的档位还能作为变量 **`furnace_rank`** 进丹方自己的公式字段（药力公式与任何 `alchemy_modifier` 公式读不到它）；核心那一档自己的 `alchemy_modifier` 也进这一炉的时长换算，所以更高级的炉子炼得越快。
 

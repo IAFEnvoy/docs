@@ -118,7 +118,7 @@ A number can be written as a constant, an expression string or a number provider
 }
 ```
 
-Expressions use exp4j. Variables are read on demand by the built-in variable table out of the objects the evaluation context carries (caster, target, resources, random source), and `params` can override or add variables. A formula problem that can be decided at load time (an empty expression, a syntax error, an invalid `params` and so on) is a decode error: the loader collects every failing entry and lists them together before failing the load. A variable name the context cannot provide is only found at evaluation — a development environment prints the full ERROR log, production prints one WARN line per distinct message, and both carry on with `0`. For the full fields and value ranges, see [Number Provider Types](./types/number_provider_types.md).
+Expressions use exp4j. Variables are read on demand by the built-in variable table out of the objects the evaluation context carries (caster, target, resources, random source), and `params` can override or add variables. A formula problem that can be decided at load time (an empty expression, a syntax error, an invalid `params` and so on) is a decode error: the loader collects every failing entry and lists them together before failing the load. A variable name the context cannot provide is only found at evaluation — a development environment prints the full ERROR log, production prints one WARN line per distinct message, and both carry on with `0`. For the full fields and value ranges, see [Number Provider Types](../../../library/saturn/types/number.md).
 
 ## Actions and Conditions {#actions-and-conditions}
 

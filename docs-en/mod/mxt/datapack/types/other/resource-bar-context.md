@@ -7,7 +7,11 @@ description: The five contexts of the resource_bar_context family, where each on
 
 <span id="resource-bar-contexts-resource-bar-context" />
 
-A context extracts the current value, the minimum, the maximum and the last-changed tick from an entity or from client state, and builds a display name out of the value ID it is given. It is written in the `context` of an inline `bars` entry of a [resource](../../json/resource.md).
+:::info Shared with Saturn
+`self_hud`, `target_overlay` and `boss_overlay` are registered by Saturn; this page lists only MiXianTu's two own contexts. The shared contexts are in [Saturn's resource bar contexts](../../../../../library/saturn/types/bar-context.md).
+:::
+
+A context extracts the current value, the minimum, the maximum and the last-changed tick from an entity or from client state, and builds a display name out of the value ID it is given. It is written in the `context` of an inline `bars` entry of a [resource](../../../../../library/saturn/data/resource.md).
 
 This family is registered by the mod; a data pack picks one, it cannot add a new one. The environmental storage maximum of an aura chunk is a separate family, see [aura maximum types](./aura-maximum.md).
 
@@ -15,9 +19,6 @@ A context is picked by an **ID string**, not by a `type` object: it goes in the 
 
 | ID | Layout | Description |
 | --- | --- | --- |
-| `mxt:self_hud` | Self HUD | Reads the value stored on the entity |
-| `mxt:target_overlay` | Target overlay | Reads the value stored on the entity |
-| `mxt:boss_overlay` | Boss overlay | Reads the value stored on the entity |
 | `mxt:environment_concentration` | Self HUD | Reads the environmental aura template synchronized to the client, excluding chunk stock and block or formation contributions |
 | `mxt:actual_concentration` | Self HUD | Reads the final concentration synchronized to the client, with environment, stock, blocks and formations all counted |
 

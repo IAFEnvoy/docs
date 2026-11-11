@@ -73,7 +73,7 @@ description: "用一张契约类型定义去收服一只兽：谁有资格、什
 }
 ```
 
-`mxt:apply_effect` 给实体施加一个原版状态效果，三个字段见[实体行为类型 · `mxt:apply_effect`](../datapack/types/action/entity_action_types.md#mxt-apply-effect)。这条行为落在这只兽自己身上——它跟着你的时候每 tick 重刷一次 40 tick 的加速，一眼就能看出它正处在跟随状态；命令换成游荡或驻守，这条就不跑了。
+`mxt:apply_effect` 给实体施加一个原版状态效果，三个字段见[实体行为类型 · `mxt:apply_effect`](../../../library/saturn/types/action/entity-action.md#saturnapply_effect)。这条行为落在这只兽自己身上——它跟着你的时候每 tick 重刷一次 40 tick 的加速，一眼就能看出它正处在跟随状态；命令换成游荡或驻守，这条就不跑了。
 
 `follow_action` 也可以写成数组，一次挂好几条。`release_action` 与 `death_action` 同样是实体行为，各自只在自己那一刻跑一次：一个是解除契约，一个是兽死亡。`combat_action` 是双实体行为，写法一样。
 

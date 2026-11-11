@@ -23,7 +23,7 @@ Java 扩展应优先复用现有数据定义、Action、Condition、Cost 和运�
 | **数据包注册表** | 在 `data/<命名空间>/mxt/` 下加或覆盖条目；见 [JSON 数据格式](../datapack/json/index.md)。 |
 | **附件** | 用 NeoForge 附件类型存每实体、每维度、每区块的状态；本模组自己的附件登记在 `MxtAttachments`，例如 `CULTIVATION`、`SPIRIT_IDENTITY` 与 `RESOURCE_HOLDER`，读法是 `entity.getData(...)`。 |
 | **行为与条件** | 复用内置的实体、双实体、方块、物品与伤害行为/条件类型，或注册新的固有类型；见[类型参考](../datapack/types/index.md)。 |
-| **数值提供器** | 任何数值字段都可以来自常量、表达式或已注册的提供器类型；见[数值提供器](../datapack/types/number_provider_types.md)。 |
+| **数值提供器** | 任何数值字段都可以来自常量、表达式或已注册的提供器类型；见[数值提供器](../../../library/saturn/types/number.md)。 |
 | **阵法功能** | 写一个 `FormationActionType` 记录并注册它，就多一个阵法功能；见[公开 API](./api.md)。 |
 | **信息面板** | 用 `InformationManager` 往人物信息面板加自己的行；见[信息面板](./information-panel.md)。 |
 | **轮盘条目** | 实现 `WheelMenuEntry` 就多一个客户端轮盘条目；见[客户端轮盘](./wheel.md)。 |

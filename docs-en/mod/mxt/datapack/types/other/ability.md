@@ -7,30 +7,34 @@ description: The fourteen ability types in saturn:ability_type, which fields eac
 
 <span id="ability-types-ability-type" />
 
+:::info Shared with Saturn
+`empty`, `active`, `triggered`, `channelled`, `targeted`, `aura`, `interval`, `modifier` and `upkeep` are registered by Saturn; this page documents only MiXianTu's four own types. The shared types are in [Saturn's ability types](../../../../../library/saturn/types/ability.md).
+:::
+
 The **top-level** `type` of an ability definition comes from this table:
 
 ```json
 {"type": "mxt:active", "costs": [{"id": "example:qi", "amount": 10}], "cooldown": 40}
 ```
 
-The common fields — the handful every type reads — are on the [ability definition](../../json/ability.md) page. This page records only the keys each type **itself** reads. A key that is listed nowhere is read by nobody even when it is written.
+The common fields — the handful every type reads — are on the [ability definition](../../../../../library/saturn/data/ability.md) page. This page records only the keys each type **itself** reads. A key that is listed nowhere is read by nobody even when it is written.
 
 ## Overview {#overview}
 
 | `type` | What it does | Needs a key |
 | --- | --- | --- |
-| [`mxt:empty`](#mxt-empty) | Does nothing | No |
-| [`mxt:active`](#mxt-active) | One press, one run | **Yes** |
-| [`mxt:triggered`](#mxt-triggered) | One run when a signal arrives | No |
-| [`mxt:channelled`](#mxt-channelled) | Hold to keep it up, one run per beat | **Yes** |
-| [`mxt:targeted`](#mxt-targeted) | One press, the payload ability on each of a batch of targets | **Yes** |
-| [`mxt:aura`](#mxt-aura) | Every so often, one run on every entity in radius | No |
-| [`mxt:interval`](#mxt-interval) | Runs itself over and over on a cadence | No |
-| [`mxt:modifier`](#mxt-modifier) | Passive attribute bonuses | No |
+| [`mxt:empty`](../../../../../library/saturn/types/ability.md#saturnempty) | Does nothing | No |
+| [`mxt:active`](../../../../../library/saturn/types/ability.md#saturnactive) | One press, one run | **Yes** |
+| [`mxt:triggered`](../../../../../library/saturn/types/ability.md#saturntriggered) | One run when a signal arrives | No |
+| [`mxt:channelled`](../../../../../library/saturn/types/ability.md#saturnchannelled) | Hold to keep it up, one run per beat | **Yes** |
+| [`mxt:targeted`](../../../../../library/saturn/types/ability.md#saturntargeted) | One press, the payload ability on each of a batch of targets | **Yes** |
+| [`mxt:aura`](../../../../../library/saturn/types/ability.md#saturnaura) | Every so often, one run on every entity in radius | No |
+| [`mxt:interval`](../../../../../library/saturn/types/ability.md#saturninterval) | Runs itself over and over on a cadence | No |
+| [`mxt:modifier`](../../../../../library/saturn/types/ability.md#saturnmodifier) | Passive attribute bonuses | No |
 | [`mxt:mount`](#mxt-mount) | Declares the artifact a flying mount | No |
 | [`mxt:flight_control`](#mxt-flight-control) | One press to take off, one to land | **Yes** |
 | [`mxt:storage`](#mxt-storage) | One press opens a carried storage | **Yes** |
-| [`mxt:upkeep`](#mxt-upkeep) | A periodic price | No |
+| [`mxt:upkeep`](../../../../../library/saturn/types/ability.md#saturnupkeep) | A periodic price | No |
 | [`mxt:word`](#mxt-word) | The two whitelisted effects | No |
 
 **Needs a key** only affects the wheel: only pressable types enter the wheel pool, and no other type does. Commands, scripts and item-carried abilities cast a type of any kind directly.
@@ -59,18 +63,9 @@ Every other type reads **none of it**: `mxt:word` carries a terminal payload of 
 
 | `type` | Its own fields |
 | --- | --- |
-| `mxt:empty` | none |
-| `mxt:active` | `cooldown`, the four action fields |
-| `mxt:triggered` | `triggers`, `chance`, `damage_condition`, `cooldown`, the four action fields |
-| `mxt:channelled` | `cooldown`, `tick_interval`, `upkeep_costs`, the four action fields |
-| `mxt:targeted` | `target_selector`, `ability`, `cooldown` |
-| `mxt:aura` | `cooldown`, `interval`, `radius`, the four action fields |
-| `mxt:interval` | `interval`, the four action fields |
-| `mxt:modifier` | `modifiers` |
 | `mxt:mount` | `speed`, `seats`, `sit`, `render`, `entity_type`, `display`, `width`, `height`, `step_height`, `seat_offsets`, `mount_action`, `trail` |
 | `mxt:flight_control` | `hand`, `speed_multiplier`, `cooldown` |
 | `mxt:storage` | `slots`, `cooldown` |
-| `mxt:upkeep` | `interval`, `on_fail`, `owner_only` |
 | `mxt:word` | `effect`, `requires_operator`, `amount`, `cooldown` |
 
 `cooldown` and `damage_condition` are read by only some types, so they are not in the common field table — but they are still written beside `type` in JSON.
@@ -84,174 +79,11 @@ Which state kinds an ability can store is decided by its `type`; a data pack doe
 
 | `type` | Declared state kinds |
 | --- | --- |
-| `mxt:empty` / `mxt:modifier` / `mxt:mount` / `mxt:upkeep` | Only the default `mxt:active_state` |
-| `mxt:active` / `mxt:triggered` / `mxt:channelled` / `mxt:aura` | `mxt:active_state`, `mxt:cooldown`, and `mxt:charges` when `charges` is written, plus `mxt:toggle` / `mxt:timer` / `saturn:resource` / `mxt:target_lock` |
-| `mxt:interval` | `mxt:active_state` and those four content-side kinds; no `mxt:cooldown` and no `mxt:charges` |
-| `mxt:targeted` | `mxt:active_state`, `mxt:cooldown`, and `mxt:charges` when `charges` is written; none of those four |
 | `mxt:flight_control` | `mxt:active_state`, `mxt:cooldown` |
 | `mxt:storage` | `mxt:active_state`, `mxt:cooldown`, `mxt:container` |
 | `mxt:word` | `mxt:active_state`, `mxt:cooldown`, and `mxt:charges` when `charges` is written |
 
 The fields of those six kinds, how they are written and how they are read are on [Ability Casting](../../../technical/ability.md).
-
-## `mxt:empty` {#mxt-empty}
-
-No fields and no lifecycle: `{"type": "mxt:empty"}` is the whole ability. Useful as a placeholder, or where all you want is to grant an id.
-
-## `mxt:active` {#mxt-active}
-
-One press runs the four action fields once; with a `cast_time` it is the tick the cast finishes on.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `cooldown` | `NumberProvider` | `0` | Cooldown length, in ticks |
-| `entity_action` | `EntityAction` | `mxt:no_op` | Runs on the caster first |
-| `target_selector` | `TargetSelector` | `mxt:self` | How targets are picked |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | Every target has to pass it |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | Only targets that pass the condition run it |
-
-**It has no `slot` field.** Which wheel cell an ability sits in is the player's own twelve-cell layout, nothing to do with the definition.
-
-```json
-{
-  "type": "mxt:active",
-  "costs": [{"id": "example:qi", "amount": 10}],
-  "cooldown": 40,
-  "entity_action": {"type": "mxt:spawn_particles", "particle": {"type": "minecraft:flame"}},
-  "target_selector": {"type": "mxt:ray", "length": 16},
-  "target_condition": {"type": "mxt:not_owner"},
-  "bi_entity_action": {"type": "mxt:set_on_fire", "ticks": 60}
-}
-```
-
-## `mxt:triggered` {#mxt-triggered}
-
-Once a signal in `triggers` arrives, `chance` passes and the costs are paid, the four action fields run once.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `triggers` | `Trigger` list | `[]` | An empty list means it never triggers |
-| `chance` | `NumberProvider` | `1` | Whether this one counts |
-| `damage_condition` | `DamageCondition` | `mxt:always` | Only used on the `mxt:hurt` signal |
-| `cooldown` | `NumberProvider` | `0` | Cooldown length |
-| `entity_action` | `EntityAction` | `mxt:no_op` | Runs on the caster first |
-| `target_selector` | `TargetSelector` | `mxt:self` | How targets are picked |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | Every target has to pass it |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | Only targets that pass the condition run it |
-
-How `chance` is read: an evaluation that throws or is not finite does **not** pass, `≤ 0` does not pass, `≥ 1` always passes, and anything in between rolls the entity's random once. This is **not** the same rule as the `chance` of the same name in the [trigger rules](../../json/trigger.md), where a value that cannot be computed counts as `1`.
-
-```json
-{
-  "type": "mxt:triggered",
-  "triggers": [{"type": "mxt:item_use"}],
-  "costs": [{"id": "example:qi", "amount": "10 + level"}],
-  "cooldown": 100,
-  "condition": {"type": "mxt:sneaking"},
-  "entity_action": {"type": "mxt:spawn_particles", "particle": {"type": "minecraft:crit"}},
-  "target_selector": {"type": "mxt:ray", "length": 6, "limit": 1},
-  "target_condition": {"type": "mxt:not_owner"},
-  "bi_entity_action": {"type": "mxt:damage", "amount": "6 + level"}
-}
-```
-
-## `mxt:channelled` {#mxt-channelled}
-
-The activation itself is a full cast; after that it is kept up once every `tick_interval`: `condition` is tested first, then `upkeep_costs` are charged all or nothing, and only on success do the four action fields run. A failure at any step stops the channel.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `cooldown` | `NumberProvider` | `0` | Cooldown length |
-| `tick_interval` | `NumberProvider` | `1` | Ticks between two upkeep payments |
-| `upkeep_costs` | `Cost` list | `[]` | What each upkeep costs |
-| `entity_action` | `EntityAction` | `mxt:no_op` | Runs on the caster first, on activation and on every upkeep |
-| `target_selector` | `TargetSelector` | `mxt:self` | How targets are picked |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | Every target has to pass it |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | Only targets that pass the condition run it |
-
-```json
-{
-  "type": "mxt:channelled",
-  "tick_interval": 20,
-  "upkeep_costs": [{"id": "example:qi", "amount": 1}],
-  "entity_action": {"type": "mxt:add_resource", "resource": "example:qi", "amount": 2}
-}
-```
-
-## `mxt:targeted` {#mxt-targeted}
-
-One press runs one full cast, uses `target_selector` to pick targets, and then runs **the payload ability `ability`'s one-target half** on each of them: the payload's `target_condition` filters, the payload's `bi_entity_action` happens, and the actor stays whoever pressed.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `target_selector` | `TargetSelector` | **required** | Who this cast reaches; the distance and the shape are written here |
-| `ability` | Ability id | **required** | The payload ability run on every target |
-| `cooldown` | `NumberProvider` | `0` | Cooldown length |
-
-The payload takes **concrete ids only, never a `#tag`**, and it has to be one of the five types that run the four action fields; naming `mxt:modifier` / `mxt:word` / another `mxt:targeted` is refused before anything is paid.
-
-None of the payload's own `costs` / `cast_time` / `cooldown` / `charges` / `condition` / element affinity is read, and neither are its `entity_action` and `target_selector`.
-
-Picking nobody at all (or having every pick filtered out by the payload's `target_condition`) is `NO_TARGET`; a payload type with no one-target half is `NOT_APPLICABLE`. Both are decided before anything is paid.
-
-## `mxt:aura` {#mxt-aura}
-
-Every `interval` ticks it runs one pulse around itself.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `cooldown` | `NumberProvider` | `0` | Cooldown length |
-| `interval` | `NumberProvider` | `20` | Ticks between two pulses |
-| `radius` | `NumberProvider` | `4` | How far a pulse reaches |
-| `entity_action` | `EntityAction` | `mxt:no_op` | Runs on the caster first when fired one-off; a pulse does not read it |
-| `target_selector` | `TargetSelector` | `mxt:self` | How targets are picked when fired one-off; a pulse does not read it |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | Every entity in range has to pass it |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | Only in-range targets that pass the condition run it |
-
-A pulse picks entities **by `radius` alone**: a sphere centred on the caster, comparing each target's straight-line distance, reading neither `target_selector` nor `entity_action`. A `radius` that evaluates non-finite or negative skips that beat. A pulse puts two extra formula variables, `aura_radius` and `distance`, on the bi-entity context.
-
-Fired one-off by a command, a script or a talisman, it runs the whole set once through the ordinary path.
-
-Mind that `mxt:aura`'s `radius` is a **sphere** while the `mxt:area` selector's `radius` is a **box**. Same name, but they do not cover the same entities.
-
-## `mxt:interval` {#mxt-interval}
-
-It runs itself over and over on a cadence: every `interval` ticks (the ticks world time divides by it) while it counts as in effect, one full pass over the four action fields.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `interval` | `NumberProvider` | `20` | Ticks between two passes |
-| `entity_action` | `EntityAction` | `mxt:no_op` | Runs on the caster first |
-| `target_selector` | `TargetSelector` | `mxt:self` | How targets are picked |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | Every target has to pass it |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | Only targets that pass the condition run it |
-
-An `interval` that yields no usable tick count (not finite, or below `1`) skips that beat. Fired one-off by a command or a script it ignores its cadence and runs once straight away.
-
-It pays nothing, so it has no `cooldown` and no charges.
-
-## `mxt:modifier` {#mxt-modifier}
-
-While it is granted, `modifiers` are contributed to the holder's vanilla attributes and `condition` is tested again every tick; when it fails, the contribution is withdrawn.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `modifiers` | `AttributeEntry` list | `[]` | Attribute modifiers |
-
-Each `AttributeEntry` is `attribute` plus `id` / `amount` / `operation`, with an optional `value`: with `value` written the modifier is evaluated from it, otherwise from `amount` (recomputed every tick). The field details are on [Shared Data Types](../shared_data_types.md).
-
-An `amount` that is not finite is not a load error; that entry is skipped at runtime.
-
-It is not a pressable type, it runs no `entity_action`, and it never enters the wheel pool.
-
-```json
-{
-  "type": "mxt:modifier",
-  "modifiers": [
-    {"attribute": "minecraft:attack_damage", "id": "example:blade", "amount": 2, "operation": "add_value"}
-  ]
-}
-```
 
 ## `mxt:mount` {#mxt-mount}
 
@@ -318,22 +150,6 @@ Failure reasons on a press: not a server-side player = `UNAVAILABLE`, nothing ca
 The contents live in the item component `mxt:storage`, as one record under this ability's own id. Two storage abilities on one carrier keep two separate boxes.
 
 It spends no charge either.
-
-## `mxt:upkeep` {#mxt-upkeep}
-
-A periodic price: every server tick the carriers in the hands of online players (main hand, off hand, every Curios slot) are looked at, and every `interval` ticks each one's own `costs` are charged all or nothing. It needs an item to carry it.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `interval` | `NumberProvider` | `20` | Ticks between two settlements |
-| `on_fail` | `ItemAction` | `mxt:no_op` | Runs on the holder and that stack when the price cannot be paid |
-| `owner_only` | Boolean | `true` | Only the owner pays; with `false`, whoever carries it pays |
-
-`interval` runs on the world's clock and only settles on ticks divisible by it; when the evaluation is unusable (not finite, below `1`, or beyond the 64-bit integer range) it falls back to the default `20`, rather than becoming every tick.
-
-When settlement is skipped: the stack carries no `mxt:upkeep`, `costs` is empty, `owner_only` is true and the holder is not the owner, or the current tick is not divisible by `interval`.
-
-It is not a pressable type.
 
 ## `mxt:word` {#mxt-word}
 

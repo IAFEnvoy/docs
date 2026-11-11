@@ -21,6 +21,14 @@ System provides a configurable "system" assistant for Minecraft. Players can que
 
 1.21.1 is not updated immediately with every change on the main branch. Check the installed version before using the new features or JSON fields below; do not apply the 26.1.2 dependency versions to 1.21.1.
 
+:::info Extension of Saturn
+System is built on [Saturn](../../library/saturn/index.md): types such as abilities, costs, triggers, state storage and player information are provided by Saturn.
+:::
+
+:::info Extension of Saturn
+System is built on [Saturn](../../library/saturn/index.md): types such as abilities, costs, triggers, state storage and player information are provided by Saturn.
+:::
+
 ## Where to start
 
 - Players: [Installation and getting started](./install.md), [Usage and configuration](./guides/usage.md), [Voice input](./guides/asr.md), [Voice narration](./guides/tts.md).

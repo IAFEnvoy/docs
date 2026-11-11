@@ -9,7 +9,7 @@ description: Every built-in mxt:mount_render_type entry, its fields, the GeckoLi
 
 ## `mount_render_type` {#mount-render-type}
 
-The `render` of [`mxt:mount`](../../json/ability.md) picks a renderer from this family to draw the vehicle. A data pack can only pick an existing type and cannot add new ones. Rendering happens on the client only: a dedicated server decodes `render` as ordinary data, neither drawing it nor checking whether this machine has a matching renderer.
+The `render` of [`mxt:mount`](../../../../../library/saturn/data/ability.md) picks a renderer from this family to draw the vehicle. A data pack can only pick an existing type and cannot add new ones. Rendering happens on the client only: a dedicated server decodes `render` as ordinary data, neither drawing it nor checking whether this machine has a matching renderer.
 
 ```json
 "render": {
@@ -25,7 +25,7 @@ Two types are built in, and a content mod can register its own; see Custom Rende
 
 Draws the item model of the carried item, using the item frame context (original size, an unmoved flat card). **This is the default**: leaving `render` out entirely selects it.
 
-It has no fields of its own. This type automatically sits the model's bottom face on the bottom face of the hitbox, so any item model lands on the same plane; [`display`](../../json/ability.md#mount-render) defaults to `[0,0,0]` / `[90,0,-45]` / `[2,2,2]` here.
+It has no fields of its own. This type automatically sits the model's bottom face on the bottom face of the hitbox, so any item model lands on the same plane; [`display`](./ability.md#mxt-mount) defaults to `[0,0,0]` / `[90,0,-45]` / `[2,2,2]` here.
 
 ### `mxt:geckolib` {#mxt-geckolib}
 

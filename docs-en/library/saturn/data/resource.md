@@ -7,7 +7,7 @@ File: `data/<namespace>/saturn/resource/<path>.json`. For example, the following
 
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `default_value` | [Number provider](../types/number/index.md) | yes | — | Value used when the resource is initialised. |
+| `default_value` | [Number provider](../types/number.md) | yes | — | Value used when the resource is initialised. |
 | `min` | Number provider | no | `0` | Lower bound of the resource. |
 | `max` | Number provider | yes | — | Upper bound of the resource. |
 | `icon` | [Icon](./common.md#items-and-icons) | no | omitted | Texture ID or item template. |
@@ -38,4 +38,4 @@ File: `data/<namespace>/saturn/resource/<path>.json`. For example, the following
 }
 ```
 
-Use [add_resource](../types/entity-action/add_resource.md) to add or remove resources as an effect, and a [resource cost](../types/cost/resource.md) to charge a payment. For initialisation and transactional interfaces on the development side, see the [Java API](../development/api.md).
+Use [add_resource](../types/action/entity-action.md#saturnadd_resource) to add or remove resources as an effect, and a [resource cost](../types/cost.md#saturnresource) to charge a payment. For initialisation and transactional interfaces on the development side, see the [Java API](../development/api.md).

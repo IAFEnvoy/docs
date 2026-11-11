@@ -7,11 +7,11 @@ Resource bars are embedded in the `bars` field of a [resource definition](./reso
 
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `context` | [Context ID](../types/bar-context/index.md) | no | `"saturn:self_hud"` | A string ID, not a type object. |
+| `context` | [Context ID](../types/bar-context.md) | no | `"saturn:self_hud"` | A string ID, not a type object. |
 | `anchor` | String | yes | — | `left` or `right`. |
 | `order` | Integer | no | `0` | Layout order within the same context. |
-| `visibility` | [Visibility](../types/bar-visibility/index.md) | no | `{"type":"saturn:always"}` | Whether to draw the bar. |
-| `renderer` | [Renderer type](../types/bar-renderer/index.md) | yes | — | Appearance of the resource bar. |
+| `visibility` | [Visibility](../types/bar-visibility.md) | no | `{"type":"saturn:always"}` | Whether to draw the bar. |
+| `renderer` | [Renderer type](../types/bar-renderer.md) | yes | — | Appearance of the resource bar. |
 | `value_display` | String | no | `"none"` | `none`, `current`, `current_and_maximum`, `percentage`. |
 | `maximum` | Number | no | omitted | A positive number overrides the displayed maximum; a non-positive number is treated as unspecified. |
 

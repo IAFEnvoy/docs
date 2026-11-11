@@ -24,7 +24,7 @@ A tribulation is: the gate that starts it, the beats of its timeline, the diffic
 
 `condition` is an **extra gate**, not an event trigger: what decides whether a tribulation opens at all is the place that references it (the `tribulation` of a `realm_stage`), and this field only decides whether that start is accepted.
 
-Each entry of `timeline` is a beat. How the running cursor moves, which fields each beat reads, how a wait length is converted and what is checked before the start are on [Tribulation Beat Types](../types/other/timeline-entry.md).
+Each entry of `timeline` is a beat. How the running cursor moves, which fields each beat reads, how a wait length is converted and what is checked before the start are on [Tribulation Beat Types](../../../../library/saturn/types/timeline.md).
 
 `windup` is the **wind-up before the start**: after the tribulation is accepted it idles for that many ticks before the first beat begins. It goes through the same resolution rule as a wait length (`windup × difficulty_scale × max(0, 1 + aura_tribulation_modifier)`; writing `0`, or resolving to a non-positive number, means no wind-up) and is settled **once, the moment the run starts**: from then on it only counts down one per tick, so the countdown a player sees is the number of ticks that will really pass, and an aura change in the middle cannot stretch it. No beat is consumed and no state is written during the wind-up, but the tribulation already counts as running — a second start is still refused, `status` reports "still winding up, N ticks left", and `darken_sky` already applies. The ticks left are saved and synced with the attachment, so leaving the world and coming back resumes the countdown instead of starting it over.
 

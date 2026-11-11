@@ -19,7 +19,7 @@ Reading a name resolves in this order:
 2. **The variable registry**, which resolves the name from the context objects.
 3. **Nothing**, which is a content bug and is reported as described below.
 
-`params` is the highest priority and only affects the one expression that declares it. See [Expression Strings](./number_provider_types.md#expression-strings).
+`params` is the highest priority and only affects the one expression that declares it. See [Expression Strings](../../../../library/saturn/types/number.md).
 
 ## Unknown Names and Failures {#unknown-names-and-failures}
 

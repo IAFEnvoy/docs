@@ -1,5 +1,6 @@
 ---
 title: "玩家信息行"
+sidebar_label: "玩家信息行 (information_row)"
 sidebar_position: 7
 ---
 
@@ -8,7 +9,7 @@ sidebar_position: 7
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
 | `label` | 标准文本组件 | 是 | — | 默认行标题。 |
-| `value` | [信息表达式](../types/expression/index.md) | 是 | — | 主值。 |
+| `value` | [信息表达式](../types/expression.md) | 是 | — | 主值。 |
 | `order` | 整数 | 否 | `0` | 升序排序，随后按 ID 排序。 |
 | `importance` | 整数 | 否 | `0` | 供界面按最低重要程度过滤。 |
 | `enabled` | 布尔值 | 否 | `true` | 是否启用此行。 |

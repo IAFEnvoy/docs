@@ -49,7 +49,7 @@ Give yourself a vessel that holds 1000 and already carries 25:
 /give @s mxt:spirit_vessel[mxt:resource_capacity={"example:qi":1000.0},mxt:resource_container={"example:qi":25.0}]
 ```
 
-The `resource` definitions themselves are in [Resource (resource)](../datapack/json/resource.md), and `mxt:spirit_vessel` with the other shared carriers is in [Built-in Items](../player-guide/items.md).
+The `resource` definitions themselves are in [Resource (resource)](../../../library/saturn/data/resource.md), and `mxt:spirit_vessel` with the other shared carriers is in [Built-in Items](../player-guide/items.md).
 
 ## Step 2 — Filling It {#step-2-—-filling-it}
 
@@ -78,6 +78,6 @@ Then fill it: put it on a display stand and let a ray hit it, or fire spirit pow
 - [Storage](./storage.md) — the sub-tutorial: a storage ability hung on an item, how the slot count settles, where the box lives and how to pre-fill it.
 - [Flying Mounts](./flying-mount.md) — the sub-tutorial: an item that flies, its mount, its skill and the two fuel bills.
 - [Data Components](../technical/data-components.md) — the component syntax for `mxt:spirit_vessel` and `mxt:resource_container`.
-- [Resource (resource)](../datapack/json/resource.md) — which registry the keys inside a spirit vessel point at.
+- [Resource (resource)](../../../library/saturn/data/resource.md) — which registry the keys inside a spirit vessel point at.
 - [Artifact (artifact)](../datapack/json/artifact.md) — the definition both sub-tutorials need.
 - [Keys and Wheel](../player-guide/keys-and-wheel.md) — what a press does, and the cells on the wheel.

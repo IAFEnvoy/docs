@@ -75,7 +75,7 @@ sidebar_position: 1
 
 `inputs` 保留人为名称，公式读取 `input_bonus`、`input_roll`。名字不能为空，且只能使用 Saturn 变量名允许的字母、数字和下划线。新会话时求值并保存，点击、重置和重连不重新抽取；显式刷新会重新捕获。
 
-输入和 `initial` 求值发生在选择编辑之前，不应依赖最终草稿变量。其他 [NumberProvider](../../../library/saturn/types/number/index.md) 可用于读取真实玩家状态。
+输入和 `initial` 求值发生在选择编辑之前，不应依赖最终草稿变量。其他 [NumberProvider](../../../library/saturn/types/number.md) 可用于读取真实玩家状态。
 
 ## 预设
 

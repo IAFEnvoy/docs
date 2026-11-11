@@ -4,7 +4,7 @@ description: 自动变量名、求值顺序、选项联动、点数通过规则�
 sidebar_position: 3
 ---
 
-数值字段直接使用 Saturn [NumberProvider](../../../library/saturn/types/number/index.md)，可写常量、公式字符串或带 `type` 的数值对象。公式使用 exp4j，不是 JavaScript；布尔组合使用 Saturn EntityCondition。
+数值字段直接使用 Saturn [NumberProvider](../../../library/saturn/types/number.md)，可写常量、公式字符串或带 `type` 的数值对象。公式使用 exp4j，不是 JavaScript；布尔组合使用 Saturn EntityCondition。
 
 ## 自动变量名
 

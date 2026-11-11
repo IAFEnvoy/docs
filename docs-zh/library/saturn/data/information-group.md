@@ -1,5 +1,6 @@
 ---
 title: "玩家信息分组"
+sidebar_label: "玩家信息分组 (information_group)"
 sidebar_position: 8
 ---
 

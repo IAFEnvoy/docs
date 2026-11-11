@@ -7,7 +7,7 @@ File: `data/<namespace>/saturn/incomplete/<path>.json`. Matching items show an i
 
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `items` | An [item matcher entry](../types/item-matcher/index.md) or an array | yes | — | At least one entry; any matching entry is enough. |
+| `items` | An [item matcher entry](../types/item-matcher.md) or an array | yes | — | At least one entry; any matching entry is enough. |
 
 ## Example
 

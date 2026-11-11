@@ -25,7 +25,7 @@ if (!result.advanced()) console.warn(`breakthrough refused: ${result.failure()}`
 
 ## 相关 {#相关}
 
-- 数据包侧：[境界阶段 `realm_stage`](../../datapack/json/realm_stage.md)、[数值 `resource`](../../datapack/json/resource.md)、[灵气 `aura`](../../datapack/json/aura.md)。
+- 数据包侧：[境界阶段 `realm_stage`](../../datapack/json/realm_stage.md)、[数值 `resource`](../../../../library/saturn/data/resource.md)、[灵气 `aura`](../../datapack/json/aura.md)。
 - 读/改这一处的环境与数值：[MxtAura](./aura.md)、[MxtValues](./values.md)。
 - 想拦下或改写突破消耗：[MxtEvents](./events.md) 的 `cultivationBreak`。
 - [KubeJS API 参考](../api-reference.md)。

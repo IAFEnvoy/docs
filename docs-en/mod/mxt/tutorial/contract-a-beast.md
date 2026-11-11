@@ -74,7 +74,7 @@ Both conditions are entity conditions, one asked about the owner and one about t
 ```
 
 
-`mxt:apply_effect` applies one vanilla status effect; its three fields are on [Entity Action Types · `mxt:apply_effect`](../datapack/types/action/entity_action_types.md#mxt-apply-effect). The action lands on the beast itself, so while it follows you it refreshes a 40-tick speed every tick and one glance tells you it is in follow; tell it to wander or stay and the action stops.
+`mxt:apply_effect` applies one vanilla status effect; its three fields are on [Entity Action Types · `mxt:apply_effect`](../../../library/saturn/types/action/entity-action.md#saturnapply_effect). The action lands on the beast itself, so while it follows you it refreshes a 40-tick speed every tick and one glance tells you it is in follow; tell it to wander or stay and the action stops.
 
 `follow_action` also takes an array, so you can hang several actions on the same moment. `release_action` and `death_action` are entity actions too, each running once at its own moment - release, and the beast's death. `combat_action` is a two-entity action and is written the same way.
 

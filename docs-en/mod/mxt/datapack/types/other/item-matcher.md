@@ -1,15 +1,19 @@
 ---
 title: Item Matcher (item_matcher_entry_type)
-description: The seven entries of item_matcher_entry_type, with the fields and matching rules of each.
+description: The five entries of item_matcher_entry_type, with the fields and matching rules of each.
 ---
 
 # Item Matcher (item_matcher_entry_type)
 
 <span id="item-matcher-item-matcher-entry-type" />
 
+:::info Shared with Saturn
+This page lists only MiXianTu's own types; types shared with Saturn (including their `mxt:` alias spellings) are documented in [Saturn's type reference](../../../../../library/saturn/types/item-matcher.md).
+:::
+
 `item_matcher_entry_type` is the type family of each entry in an [`ItemMatcher`](../shared_data_types.md#itemmatcher): an `ItemMatcher` is one or more such entries, and each entry picks a matching mode by writing one of the IDs below in its `type`; a string without a `type` is read as a bare item ID or an item tag.
 
-`mxt:item` and `mxt:tag` are the expanded forms of the shorthands, and `mxt:technique` and `mxt:spirit_storage` have no fields at all. Entries in the array may be plain strings, objects with a `type`, or a mix of both.
+`mxt:technique`, `mxt:spirit_storage` and `mxt:resource_container` have no fields; `mxt:item`, `mxt:tag`, `mxt:wildcard`, `mxt:regex` and `mxt:ingredient` are provided by Saturn and documented in [Saturn's item matcher](../../../../../library/saturn/types/item-matcher.md#saturningredient). Entries in the array may be plain strings, objects with a `type`, or a mix of both.
 
 These entries are registered by the mod; a data pack can pick one, never add a new one.
 
@@ -17,15 +21,11 @@ These entries are registered by the mod; a data pack can pick one, never add a n
 
 | `type` | Fields |
 | --- | --- |
-| `mxt:item` | `item` |
-| `mxt:tag` | `tag` |
-| `mxt:wildcard` | `pattern` |
-| `mxt:regex` | `pattern` |
 | `mxt:technique` | none |
 | `mxt:spirit_storage` | none |
+| `mxt:resource_container` | none |
 | `mxt:herb_tag` | `element`, `material` |
 | `mxt:quality` | `items`, `quality`, `min_quality` |
-| `mxt:ingredient` | `ingredient` |
 
 ```json
 "items": [
@@ -33,54 +33,6 @@ These entries are registered by the mod; a data pack can pick one, never add a n
   {"type": "mxt:wildcard", "pattern": "minecraft:*_sword"},
   {"type": "mxt:regex", "pattern": "othermod:(ruby|jade)_gem"}
 ]
-```
-
-### `mxt:item` {#mxt-item}
-
-Matches one exact item.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `item` | Identifier | **required** | Item registry ID; the shorthand form is the bare ID string |
-
-```json
-{"type": "mxt:item", "item": "minecraft:apple"}
-```
-
-### `mxt:tag` {#mxt-tag}
-
-Matches every item in an item tag.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `tag` | Item tag ID | **required** | Tag reference; write the tag ID without `#` here, the shorthand form is the `#`-prefixed string |
-
-```json
-{"type": "mxt:tag", "tag": "minecraft:logs"}
-```
-
-### `mxt:wildcard` {#mxt-wildcard}
-
-Matches item IDs with `*` and `?` wildcards.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `pattern` | String | **required** | `*` matches any run of characters and `?` matches a single character; must not be empty |
-
-```json
-{"type": "mxt:wildcard", "pattern": "mxt:*_spirit_stone"}
-```
-
-### `mxt:regex` {#mxt-regex}
-
-Matches item IDs with a regular expression.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `pattern` | String | **required** | A full regular expression matched against the item ID; must not be empty |
-
-```json
-{"type": "mxt:regex", "pattern": "mxt:(medium|high)_spirit_stone"}
 ```
 
 ### `mxt:technique` {#mxt-technique}
@@ -164,30 +116,23 @@ First matches `items` on its own (also an array of entries, and it may nest any 
 
 At least one of `quality` and `min_quality` has to be written; writing neither is refused at load. This entry reads the tier off the stack, so `itemLevel()` is false — a caller caching per item (hold detection, for instance) has to ask it about every stack. The entry points for filtering items by tier are in [Quality · Filtering items by tier](../../json/quality.md#gating).
 
-## `mxt:ingredient` {#mxtingredient}
+### `mxt:resource_container` {#mxt-resource-container}
 
-Puts **a whole vanilla ingredient** where a matcher entry goes: everything a vanilla `Ingredient` can say can be written here — an item id, a list of item ids, a `#item tag`, or a custom ingredient such as `mxt:quality` (see [Spirit Crafting Recipes](../../json/spirit_crafting.md)).
+Matches any stack carrying the `mxt:resource_container` component. It matches by capability rather than by ID, so a content pack's own container item needs no matcher file to name it.
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `ingredient` | Ingredient | **Required**. Written exactly like any recipe ingredient. |
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| — | — | — | No fields |
 
 ```json
-{
-  "type": "mxt:ingredient",
-  "ingredient": {
-    "neoforge:ingredient_type": "mxt:quality",
-    "items": "mxt:blank_talisman",
-    "min_quality": "example:tier_3"
-  }
-}
+{"type": "mxt:resource_container"}
 ```
 
-It exists because **matcher entries and recipe ingredients are two different formats**: `mxt:quality` is itself an ingredient type, so it needs this entry to be written where only an `ItemMatcher` goes — `mxt:item` inside a `Cost`, the `items` of a binding table — which is exactly how the drawing's paper cost is written. `itemLevel()` takes the ingredient's own `isSimple()`: a simple ingredient (items, tags) is decided by the item alone, a custom one is not, so the latter is never cached per item.
+An empty container matches too: the entry only asks whether the component exists, and whether anything can be poured out is up to the logic using it. `itemLevel()` is false, because different stacks of the same item can hold different contents.
 
 ## Shorthand {#shorthand}
 
-A bare string and a `#tag` string are shorthands for `mxt:item` and `mxt:tag`, and the three forms can be mixed in one array:
+A bare string and a `#tag` string are shorthands for `mxt:item` and `mxt:tag` (both registered by Saturn), and the three forms can be mixed in one array:
 
 ```json
 "items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]

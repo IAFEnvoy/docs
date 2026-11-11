@@ -7,6 +7,12 @@ description: MiXianTu 内置类型分派的工作方式，以及每一族类型�
 
 <span id="类型参考" />
 
+:::info 与 Saturn 的分工
+MiXianTu 是 [Saturn](../../../../library/saturn/index.md) 的扩展：行为、条件、数值提供器、触发器、消耗等共享类型由 Saturn 注册并维护，本节只索引 MXT 自有类型，共享类型见 [Saturn 类型参考](../../../../library/saturn/types/index.md)。
+
+`mxt:` 前缀不只覆盖 MXT 自有类型：MXT 启动时通过 `SaturnAliases.add("mxt")` 为 Saturn 的数据包类型注册了别名，`mxt:heal`、`mxt:chance` 这类写法会解析到同名的 `saturn:` 条目。公式函数、公式变量、实体取值器与附件不参与别名，仍只认注册表原名。
+:::
+
 行为、条件、数值提供器这些东西都是**由代码持有的类型表**：模组把每个条目注册在一个 ID 下，数据包写 `type` 来选其中一个。
 
 ```json
@@ -24,7 +30,7 @@ description: MiXianTu 内置类型分派的工作方式，以及每一族类型�
 
 几个类型族接受**简写**：JSON 数字就是 `mxt:constant`，字符串就是 `mxt:expression`，`"minecraft:apple"` 这样的物品 ID 就是匹配器条目 `mxt:item`。能简写的地方，写全类型对象也一样有效。
 
-**一个分派注册表一页，挂在写出它的那个定义页下面**：技能类型、技能目标选择器、数据存储与载具渲染器在 [`ability`](../json/ability.md) 页下；诅咒类型在 [`curse`](../json/curse.md) 页下；阵法功能在 [`formation`](../json/formation.md) 页下；阵法的笔画类型在 [`formation_shape`](../json/formation_shape.md) 页下；天劫节拍在 [`tribulation`](../json/tribulation.md) 页下；秘境生成方式在 [`secret_realm`](../json/secret_realm.md) 页下；资源条的四族（上下文、绘制器、显示条件、数值来源）在 [`resource`](../json/resource.md) 页下；环境上限在 [`aura_zone`](../json/aura_zone.md) 页下；触发器在 [`trigger`](../json/trigger.md) 页下。行为、条件、消耗、物品匹配器、数值提供器与公式变量被满包引用、没有唯一归属，因此留在这个分组里。
+**一个分派注册表一页，挂在写出它的那个定义页下面**：技能类型、技能目标选择器、数据存储与载具渲染器在 [`ability`](../../../../library/saturn/data/ability.md) 页下；诅咒类型在 [`curse`](../json/curse.md) 页下；阵法功能在 [`formation`](../json/formation.md) 页下；阵法的笔画类型在 [`formation_shape`](../json/formation_shape.md) 页下；天劫节拍在 [`tribulation`](../json/tribulation.md) 页下；秘境生成方式在 [`secret_realm`](../json/secret_realm.md) 页下；资源条的四族（上下文、绘制器、显示条件、数值来源）在 [`resource`](../../../../library/saturn/data/resource.md) 页下；环境上限在 [`aura_zone`](../json/aura_zone.md) 页下；触发器在 [`trigger`](../../../../library/saturn/data/trigger.md) 页下。行为、条件、消耗、物品匹配器、数值提供器与公式变量被满包引用、没有唯一归属，因此留在这个分组里。
 
 ## 参与分派的字段 {#参与分派的字段}
 
@@ -32,20 +38,20 @@ description: MiXianTu 内置类型分派的工作方式，以及每一族类型�
 | --- | --- | --- |
 | `type`（技能顶层） | 技能类型 `saturn:ability_type` | [技能类型](./other/ability.md) |
 | `render.type` | 载具渲染器 `mxt:mount_render_type` | [载具渲染器](./other/mount-render.md) |
-| `type` | 目标选择器 `saturn:ability_target_selector_type` | [技能目标选择器](./other/ability-selector.md) |
-| `type` | 状态种类 `saturn:data_storage_type` | [数据存储](./other/data-storage.md) |
+| `type` | 目标选择器 `saturn:ability_target_selector_type` | [技能目标选择器](../../../../library/saturn/types/target.md) |
+| `type` | 状态种类 `saturn:data_storage_type` | [数据存储](../../../../library/saturn/types/storage.md) |
 | `type` | 诅咒类型 `mxt:curse_type` | [诅咒类型](./other/curse.md) |
 | `type` | 触发器 `saturn:trigger_type` | [触发器](./other/trigger-type.md) |
 | `type` | 消耗 `saturn:cost_type` | [消耗](./other/cost-type.md) |
 | `type` | 阵法功能模块 `mxt:formation_action_type` | [阵法功能](./other/formation-action.md) |
 | `type`（图形里的每一笔） | 阵法笔画 `mxt:formation_stroke_type` | [阵法笔画类型](./other/formation-stroke-type.md) |
-| `type` | 天劫节拍 `saturn:timeline_entry_type` | [天劫节拍](./other/timeline-entry.md) |
+| `type` | 天劫节拍 `saturn:timeline_entry_type` | [天劫节拍](../../../../library/saturn/types/timeline.md) |
 | `type` | 秘境生成方式 `mxt:secret_realm_generation_type` | [秘境生成方式](./other/secret-realm-generation.md) |
 | `type` | 资源数值来源 `saturn:resource_value_provider_type` | [资源数值来源](./other/resource-value-provider.md) |
 | `type` | 环境上限 `mxt:aura_maximum_type` | [环境上限](./other/aura-maximum.md) |
 | `context`（ID 字符串） | 资源条上下文 `saturn:resource_bar_context` | [资源条上下文](./other/resource-bar-context.md) |
-| `renderer.type` | 资源条绘制器 `saturn:resource_bar_render_data_type` | [资源条绘制器](./other/resource-bar-render.md) |
-| `visibility.type` | 资源条显示条件 `saturn:resource_bar_visibility_type` | [资源条显示条件](./other/resource-bar-visibility.md) |
+| `renderer.type` | 资源条绘制器 `saturn:resource_bar_render_data_type` | [资源条绘制器](../../../../library/saturn/types/bar-renderer.md) |
+| `visibility.type` | 资源条显示条件 `saturn:resource_bar_visibility_type` | [资源条显示条件](../../../../library/saturn/types/bar-visibility.md) |
 | `type` | 物品匹配器条目 `saturn:item_matcher_entry_type` | [物品匹配器](./other/item-matcher.md) |
 | `type` | 实体行为 | [实体行为](./action/entity_action_types.md) |
 | `type` | 双实体行为 | [双实体行为](./action/bientity_action_types.md) |
@@ -56,7 +62,7 @@ description: MiXianTu 内置类型分派的工作方式，以及每一族类型�
 | `type` | 方块条件 | [方块条件](./condition/block_condition_types.md) |
 | `type` | 物品条件 | [物品条件](./condition/item_condition_types.md) |
 | `type` | 伤害条件 | [伤害条件](./condition/damage_condition_types.md) |
-| `type` | 数值提供器 `saturn:number_provider_type` | [数值提供器](./number_provider_types.md) |
+| `type` | 数值提供器 `saturn:number_provider_type` | [数值提供器](../../../../library/saturn/types/number.md) |
 | 名字（不是字段） | 公式变量 `saturn:formula_variable` | [公式变量](./formula_variables.md) |
 
 行为和条件的**数组是简写**，表示按顺序全跑一遍：
@@ -93,5 +99,5 @@ description: MiXianTu 内置类型分派的工作方式，以及每一族类型�
 
 ## 相关 {#相关}
 
-- [技能定义](../json/ability.md) —— 技能类型写在哪、通用字段有哪些
+- [技能定义](../../../../library/saturn/data/ability.md) —— 技能类型写在哪、通用字段有哪些
 - [数组与简写](../overview.md) —— 行为、条件数组怎么合并

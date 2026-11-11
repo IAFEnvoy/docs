@@ -33,7 +33,7 @@ sidebar_position: 1
 }
 ```
 
-完整类型见[数值提供器](../types/number/index.md)。时间参数遵从所属字段说明；标为 tick 的字段在正常 20 TPS 下每 20 tick 为一秒。
+完整类型见[数值提供器](../types/number.md)。时间参数遵从所属字段说明；标为 tick 的字段在正常 20 TPS 下每 20 tick 为一秒。
 
 ## 动作和条件
 

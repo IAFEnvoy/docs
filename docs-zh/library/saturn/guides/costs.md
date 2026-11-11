@@ -12,7 +12,7 @@ sidebar_position: 2
 ]
 ```
 
-`example:mana` 须先定义并由宿主向付款实体提供。[物品费用](../types/cost/item.md)按匹配条目寻找物品并对数量向上取整；无可用容器或数量无效会返回失败。资源费用见[资源费用](../types/cost/resource.md)。
+`example:mana` 须先定义并由宿主向付款实体提供。[物品费用](../types/cost.md#saturnitem)按匹配条目寻找物品并对数量向上取整；无可用容器或数量无效会返回失败。资源费用见[资源费用](../types/cost.md#saturnresource)。
 
 ## 三个阶段
 

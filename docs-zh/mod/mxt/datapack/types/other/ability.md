@@ -7,30 +7,34 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 
 <span id="ability-type-技能类型" />
 
+:::info 与 Saturn 共享的类型
+`empty`、`active`、`triggered`、`channelled`、`targeted`、`aura`、`interval`、`modifier`、`upkeep` 由 Saturn 注册，本页只写 MXT 自己的四种类型；共享类型见 [Saturn 技能类型](../../../../../library/saturn/types/ability.md)。
+:::
+
 技能定义**顶层**的 `type` 取自这张表：
 
 ```json
 {"type": "mxt:active", "costs": [{"id": "example:qi", "amount": 10}], "cooldown": 40}
 ```
 
-通用字段（所有类型都会读的那几个）写在[技能定义](../../json/ability.md)那一页，这里只记每个类型**自己**读的键。没被列出的键写了也不会被读。
+通用字段（所有类型都会读的那几个）写在[技能定义](../../../../../library/saturn/data/ability.md)那一页，这里只记每个类型**自己**读的键。没被列出的键写了也不会被读。
 
 ## 一览 {#一览}
 
 | `type` | 一句话 | 按键 |
 | --- | --- | --- |
-| [`mxt:empty`](#mxt-empty) | 什么都不做 | 否 |
-| [`mxt:active`](#mxt-active) | 按一下，跑一次 | **是** |
-| [`mxt:triggered`](#mxt-triggered) | 信号到了跑一次 | 否 |
-| [`mxt:channelled`](#mxt-channelled) | 按住维持，每拍跑一次 | **是** |
-| [`mxt:targeted`](#mxt-targeted) | 按一下，对一片目标各跑一次载荷技能 | **是** |
-| [`mxt:aura`](#mxt-aura) | 每隔一段时间对半径内每个实体跑一次 | 否 |
-| [`mxt:interval`](#mxt-interval) | 自己按节拍反复跑 | 否 |
-| [`mxt:modifier`](#mxt-modifier) | 被动属性加成 | 否 |
+| [`mxt:empty`](../../../../../library/saturn/types/ability.md#saturnempty) | 什么都不做 | 否 |
+| [`mxt:active`](../../../../../library/saturn/types/ability.md#saturnactive) | 按一下，跑一次 | **是** |
+| [`mxt:triggered`](../../../../../library/saturn/types/ability.md#saturntriggered) | 信号到了跑一次 | 否 |
+| [`mxt:channelled`](../../../../../library/saturn/types/ability.md#saturnchannelled) | 按住维持，每拍跑一次 | **是** |
+| [`mxt:targeted`](../../../../../library/saturn/types/ability.md#saturntargeted) | 按一下，对一片目标各跑一次载荷技能 | **是** |
+| [`mxt:aura`](../../../../../library/saturn/types/ability.md#saturnaura) | 每隔一段时间对半径内每个实体跑一次 | 否 |
+| [`mxt:interval`](../../../../../library/saturn/types/ability.md#saturninterval) | 自己按节拍反复跑 | 否 |
+| [`mxt:modifier`](../../../../../library/saturn/types/ability.md#saturnmodifier) | 被动属性加成 | 否 |
 | [`mxt:mount`](#mxt-mount) | 声明这件法器是飞行法器 | 否 |
 | [`mxt:flight_control`](#mxt-flight-control) | 按一下起飞 / 落地 | **是** |
 | [`mxt:storage`](#mxt-storage) | 按一下打开自带储物 | **是** |
-| [`mxt:upkeep`](#mxt-upkeep) | 周期性扣费 | 否 |
+| [`mxt:upkeep`](../../../../../library/saturn/types/ability.md#saturnupkeep) | 周期性扣费 | 否 |
 | [`mxt:word`](#mxt-word) | 白名单里的两种效果 | 否 |
 
 **按键**这一列只影响轮盘：只有按键型会进轮盘池，其余类型不会。命令、脚本与物品承载的技能对任何类型都直接施放。
@@ -59,18 +63,9 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 
 | `type` | 自己读的字段 |
 | --- | --- |
-| `mxt:empty` | 无 |
-| `mxt:active` | `cooldown`、四个动作字段 |
-| `mxt:triggered` | `triggers`、`chance`、`damage_condition`、`cooldown`、四个动作字段 |
-| `mxt:channelled` | `cooldown`、`tick_interval`、`upkeep_costs`、四个动作字段 |
-| `mxt:targeted` | `target_selector`、`ability`、`cooldown` |
-| `mxt:aura` | `cooldown`、`interval`、`radius`、四个动作字段 |
-| `mxt:interval` | `interval`、四个动作字段 |
-| `mxt:modifier` | `modifiers` |
 | `mxt:mount` | `speed`、`seats`、`sit`、`render`、`entity_type`、`display`、`width`、`height`、`step_height`、`seat_offsets`、`mount_action`、`trail` |
 | `mxt:flight_control` | `hand`、`speed_multiplier`、`cooldown` |
 | `mxt:storage` | `slots`、`cooldown` |
-| `mxt:upkeep` | `interval`、`on_fail`、`owner_only` |
 | `mxt:word` | `effect`、`requires_operator`、`amount`、`cooldown` |
 
 `cooldown` 与 `damage_condition` 只有一部分类型读，所以它们不在通用字段表里，但 JSON 里照样写在 `type` 同级。
@@ -84,174 +79,11 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 
 | `type` | 声明的状态种类 |
 | --- | --- |
-| `mxt:empty` / `mxt:modifier` / `mxt:mount` / `mxt:upkeep` | 只有默认的 `mxt:active_state` |
-| `mxt:active` / `mxt:triggered` / `mxt:channelled` / `mxt:aura` | `mxt:active_state`、`mxt:cooldown`、写了 `charges` 时的 `mxt:charges`，以及 `mxt:toggle` / `mxt:timer` / `saturn:resource` / `mxt:target_lock` |
-| `mxt:interval` | `mxt:active_state` 与那四种内容自用种类；没有 `mxt:cooldown`、没有 `mxt:charges` |
-| `mxt:targeted` | `mxt:active_state`、`mxt:cooldown`、写了 `charges` 时的 `mxt:charges`；没有那四种 |
 | `mxt:flight_control` | `mxt:active_state`、`mxt:cooldown` |
 | `mxt:storage` | `mxt:active_state`、`mxt:cooldown`、`mxt:container` |
 | `mxt:word` | `mxt:active_state`、`mxt:cooldown`、写了 `charges` 时的 `mxt:charges` |
 
 这六种的字段、写法与读取方式见[技能施放](../../../technical/ability.md)。
-
-## `mxt:empty` {#mxt-empty}
-
-没有字段，也没有生命周期。`{"type": "mxt:empty"}` 就是整条技能。常用来占位，或者给"只想授予一个 id"的场合用。
-
-## `mxt:active` {#mxt-active}
-
-按一下跑一次四个动作字段；有 `cast_time` 时是走完的那一 tick。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `cooldown` | `NumberProvider` | `0` | 冷却长度，tick |
-| `entity_action` | `EntityAction` | `mxt:no_op` | 先对施法者跑 |
-| `target_selector` | `TargetSelector` | `mxt:self` | 怎么取目标 |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | 每个目标都要过 |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | 通过条件的目标才跑 |
-
-**它没有 `slot` 字段。** 技能落在轮盘哪一格由玩家自己的 12 格布局决定，与技能定义无关。
-
-```json
-{
-  "type": "mxt:active",
-  "costs": [{"id": "example:qi", "amount": 10}],
-  "cooldown": 40,
-  "entity_action": {"type": "mxt:spawn_particles", "particle": {"type": "minecraft:flame"}},
-  "target_selector": {"type": "mxt:ray", "length": 16},
-  "target_condition": {"type": "mxt:not_owner"},
-  "bi_entity_action": {"type": "mxt:set_on_fire", "ticks": 60}
-}
-```
-
-## `mxt:triggered` {#mxt-triggered}
-
-`triggers` 里的某个信号到达、`chance` 通过、费用付掉之后，跑一次四个动作字段。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `triggers` | `Trigger` 列表 | `[]` | 空列表＝永不触发 |
-| `chance` | `NumberProvider` | `1` | 这次算不算数 |
-| `damage_condition` | `DamageCondition` | `mxt:always` | 只在 `mxt:hurt` 信号上用 |
-| `cooldown` | `NumberProvider` | `0` | 冷却长度 |
-| `entity_action` | `EntityAction` | `mxt:no_op` | 先对施法者跑 |
-| `target_selector` | `TargetSelector` | `mxt:self` | 怎么取目标 |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | 每个目标都要过 |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | 通过条件的目标才跑 |
-
-`chance` 的口径：求值抛异常或不是有限数＝不放行，`≤ 0` 不放行，`≥ 1` 必放行，中间值按实体随机数掷一次。注意这与 [trigger 规则](../../json/trigger.md)里同名的 `chance` 不一样，那边算不出数时按 `1` 处理。
-
-```json
-{
-  "type": "mxt:triggered",
-  "triggers": [{"type": "mxt:item_use"}],
-  "costs": [{"id": "example:qi", "amount": "10 + level"}],
-  "cooldown": 100,
-  "condition": {"type": "mxt:sneaking"},
-  "entity_action": {"type": "mxt:spawn_particles", "particle": {"type": "minecraft:crit"}},
-  "target_selector": {"type": "mxt:ray", "length": 6, "limit": 1},
-  "target_condition": {"type": "mxt:not_owner"},
-  "bi_entity_action": {"type": "mxt:damage", "amount": "6 + level"}
-}
-```
-
-## `mxt:channelled` {#mxt-channelled}
-
-激活的那一次走完整施放，之后每 `tick_interval` 维持一次：先查 `condition`，再按 `upkeep_costs` 全有或全无扣费，成功了才跑四个动作字段。任一步失败就停止引导。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `cooldown` | `NumberProvider` | `0` | 冷却长度 |
-| `tick_interval` | `NumberProvider` | `1` | 两次维持之间的 tick 数 |
-| `upkeep_costs` | `Cost` 列表 | `[]` | 每次维持的代价 |
-| `entity_action` | `EntityAction` | `mxt:no_op` | 激活时与每次维持都先跑 |
-| `target_selector` | `TargetSelector` | `mxt:self` | 怎么取目标 |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | 每个目标都要过 |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | 通过条件的目标才跑 |
-
-```json
-{
-  "type": "mxt:channelled",
-  "tick_interval": 20,
-  "upkeep_costs": [{"id": "example:qi", "amount": 1}],
-  "entity_action": {"type": "mxt:add_resource", "resource": "example:qi", "amount": 2}
-}
-```
-
-## `mxt:targeted` {#mxt-targeted}
-
-按一下走一次完整施放，用 `target_selector` 挑出目标，然后对**每个目标**跑载荷技能 `ability` 的单目标那一半：载荷的 `target_condition` 过滤、载荷的 `bi_entity_action` 生效，行为者仍是按下的人。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `target_selector` | `TargetSelector` | **必填** | 这次够得着谁，距离与形状写在这里 |
-| `ability` | 技能 id | **必填** | 每个目标身上跑的载荷技能 |
-| `cooldown` | `NumberProvider` | `0` | 冷却长度 |
-
-载荷**只收具体 id，不收 `#标签`**，而且必须是会跑四个动作字段的五个类型之一；写了 `mxt:modifier` / `mxt:word` / 另一条 `mxt:targeted` 会在付款之前就被拒掉。
-
-载荷自己的 `costs` / `cast_time` / `cooldown` / `charges` / `condition` / 元素亲和，以及它的 `entity_action` 与 `target_selector`，一个都不读。
-
-一个目标都没选中（或全被载荷的 `target_condition` 挡掉）＝ `NO_TARGET`；载荷类型没有单目标那一半＝ `NOT_APPLICABLE`。两个都在付款之前判掉。
-
-## `mxt:aura` {#mxt-aura}
-
-每隔 `interval` 刻对自己周围跑一次脉冲。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `cooldown` | `NumberProvider` | `0` | 冷却长度 |
-| `interval` | `NumberProvider` | `20` | 两次脉冲之间的 tick 数 |
-| `radius` | `NumberProvider` | `4` | 脉冲范围 |
-| `entity_action` | `EntityAction` | `mxt:no_op` | 一次性发动时先对施法者跑；脉冲不读 |
-| `target_selector` | `TargetSelector` | `mxt:self` | 一次性发动时怎么取目标；脉冲不读 |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | 范围内每个实体都要过 |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | 通过条件的目标才跑 |
-
-脉冲选人**只用 `radius`**：以施法者为中心的球，逐个目标比直线距离，不读 `target_selector` 与 `entity_action`。`radius` 求值不是有限数或为负时这一拍跳过。脉冲会给双实体上下文多放两个公式变量：`aura_radius` 与 `distance`。
-
-被命令、脚本或符箓一次性发动时，它按普通路径跑一次整套。
-
-注意 `mxt:aura` 的 `radius` 是**球**，`mxt:area` 选择器的 `radius` 是**方盒**。两者名字一样，覆盖的实体不是一批。
-
-## `mxt:interval` {#mxt-interval}
-
-自己按节拍反复跑。每 `interval` 刻（世界时间能整除它的刻）且它算作生效时跑一次四个动作字段。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `interval` | `NumberProvider` | `20` | 两次动作之间的 tick 数 |
-| `entity_action` | `EntityAction` | `mxt:no_op` | 先对施法者跑 |
-| `target_selector` | `TargetSelector` | `mxt:self` | 怎么取目标 |
-| `target_condition` | `BiEntityCondition` | `mxt:always` | 每个目标都要过 |
-| `bi_entity_action` | `BiEntityAction` | `mxt:no_op` | 通过条件的目标才跑 |
-
-`interval` 求不出可用的刻数（不是有限数、或小于 `1`）时这一拍跳过。被命令或脚本一次性发动时不看节拍，直接跑一次。
-
-它不付款，所以没有 `cooldown` 也没有充能。
-
-## `mxt:modifier` {#mxt-modifier}
-
-被授予期间把 `modifiers` 贡献给持有者的原版属性，并且每 tick 重新过一遍 `condition`；不满足时贡献撤下。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `modifiers` | `AttributeEntry` 列表 | `[]` | 属性修正 |
-
-每条 `AttributeEntry` 是 `attribute` + `id` / `amount` / `operation`，另有可选的 `value`：写了 `value` 就用它求值，不写用 `amount`（每 tick 重算）。字段细节见[共享数据类型](../shared_data_types.md)。
-
-`amount` 不是有限数不会在加载期报错，运行期跳过那一条。
-
-它不是按键型，不执行 `entity_action`，也不进轮盘池。
-
-```json
-{
-  "type": "mxt:modifier",
-  "modifiers": [
-    {"attribute": "minecraft:attack_damage", "id": "example:blade", "amount": 2, "operation": "add_value"}
-  ]
-}
-```
 
 ## `mxt:mount` {#mxt-mount}
 
@@ -318,22 +150,6 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 内容住在物品组件 `mxt:storage` 上，按这条技能自己的 id 记一条记录。同一个载体上的两条储物技能各有各的箱子。
 
 它同样不扣充能。
-
-## `mxt:upkeep` {#mxt-upkeep}
-
-周期性代价：服务器每 tick 看在线玩家手里（主手、副手、全部 Curios 槽）的承载物，每 `interval` 刻把技能自己的 `costs` 全有或全无地扣一次。需要一件承载它的物品。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `interval` | `NumberProvider` | `20` | 两次结算之间的 tick 数 |
-| `on_fail` | `ItemAction` | `mxt:no_op` | 付不出时对持有者与该物品堆跑 |
-| `owner_only` | Boolean | `true` | 只有主人承担；为 `false` 时谁带着谁付 |
-
-`interval` 走世界时间，只在能被它整除的刻结算；求值不可用（不是有限数、小于 `1`、超出 64 位整数上限）时回退到默认 `20`，不会变成每 tick。
-
-跳过结算的情况：这件物品上没有 `mxt:upkeep`、`costs` 为空、`owner_only` 为真而持有者不是主人、当前刻不能被 `interval` 整除。
-
-它不是按键型。
 
 ## `mxt:word` {#mxt-word}
 

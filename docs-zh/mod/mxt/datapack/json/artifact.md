@@ -8,14 +8,14 @@ title: artifact（法器）
 
 文件位置：`data/<namespace>/mxt/artifact/<path>.json`
 
-法器不是一种新物品，而是**已有物品的一套规则**：`items` 声明这份定义认领哪些物品（与六种绑定表、`spirit_herb` 完全同一套 `ItemMatcher`），匹配到的物品堆就是这件法器。它做什么由 `abilities` 逐条声明：**每条写一个 `saturn:ability` 注册表条目的 id，或一个技能标签**——技能本身永远只在 `data/<命名空间>/mxt/ability/` 里定义一处（见[技能 · 技能类型](./ability.md#ability-types)）。法器能力与技能是同一个概念，所以这里没有任何法器专属的技能类型。定义**没有**「器型」这类自由标签字段：**它自己的注册表 id 就是这件法器的名字**，要「把一族法器归到一起」就用物品标签（`items` 里的 `#标签`）或 id 的命名空间与路径来表达。**定义里没有 `quality` 字段**：法器按**物品**认领（`items` 就是那套 `ItemMatcher`），堆上不装定义身份组件，没有可以问的对象，所以这族物品的档写在注册表 [default_quality](./default_quality.md) 里，按物品 id 或 `#标签` 给。
+法器不是一种新物品，而是**已有物品的一套规则**：`items` 声明这份定义认领哪些物品（与六种绑定表、`spirit_herb` 完全同一套 `ItemMatcher`），匹配到的物品堆就是这件法器。它做什么由 `abilities` 逐条声明：**每条写一个 `saturn:ability` 注册表条目的 id，或一个技能标签**——技能本身永远只在 `data/<命名空间>/mxt/ability/` 里定义一处（见[技能 · 技能类型](../../../../library/saturn/data/ability.md)）。法器能力与技能是同一个概念，所以这里没有任何法器专属的技能类型。定义**没有**「器型」这类自由标签字段：**它自己的注册表 id 就是这件法器的名字**，要「把一族法器归到一起」就用物品标签（`items` 里的 `#标签`）或 id 的命名空间与路径来表达。**定义里没有 `quality` 字段**：法器按**物品**认领（`items` 就是那套 `ItemMatcher`），堆上不装定义身份组件，没有可以问的对象，所以这族物品的档写在注册表 [default_quality](./default_quality.md) 里，按物品 id 或 `#标签` 给。
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `items` | 物品 id、`#标签` 或混合数组 | **必填** | 这份定义认领的物品：物品 id、`#标签` 或二者的混合数组，至少要匹配一件，见[匹配器](../types/shared_data_types.md#itemmatcher)。 |
 | `priority` | Int | `0` | 多份同类定义匹配同一件物品时的先后：数值大者先（见 [匹配器](../types/shared_data_types.md#itemmatcher)）；相同则按注册表顺序。它同时决定这件法器的长按手势在长按池里的先后（功法阅读与灌注都是 `0`）；同 `priority` 的两份定义还会被加载期报一条 problem。 |
 | `spirit_capacity` | 灵气 id 到数值的映射 | `{}` | 每种灵气的存储上限。键必须是**具体灵气**（不接受标签）；空表表示这件法器不存灵气。求值时非有限按 0，保留小数；温养加成 `× (1 + 0.5 × nourishment)` **由管线乘上，公式里不要再乘一遍**。 |
-| `abilities` | 技能 id 列表，条目可以是 `#标签` | `[]` | 这件法器给持有者什么。**每条是一个 `saturn:ability` 注册表条目的 id，或一个技能标签 `#命名空间:路径`**（标签在授予时展开成它列出的每条技能，顺序即注册表顺序）；单写一条或写成数组都行。一份定义可被多件法器共用，同一条技能也可以出现在技能书、命令、战利品里——**被动还是主动由技能自己的 `type` 决定**，法器不声明这件事。同名技能写两遍（直接写 + 经标签）会去重。见[技能 · 技能类型](./ability.md#ability-types)。 |
+| `abilities` | 技能 id 列表，条目可以是 `#标签` | `[]` | 这件法器给持有者什么。**每条是一个 `saturn:ability` 注册表条目的 id，或一个技能标签 `#命名空间:路径`**（标签在授予时展开成它列出的每条技能，顺序即注册表顺序）；单写一条或写成数组都行。一份定义可被多件法器共用，同一条技能也可以出现在技能书、命令、战利品里——**被动还是主动由技能自己的 `type` 决定**，法器不声明这件事。同名技能写两遍（直接写 + 经标签）会去重。见[技能 · 技能类型](../../../../library/saturn/data/ability.md)。 |
 | `curios_equipable` | bool | `false` | 这类法器是否允许放进 Curios 槽位。腰带槽在「武器与灵宝」模式下接收匹配 `weapon_binding` 的物品，或声明了 `true` 的法器；四个 `charm` 槽位**只**收声明 `true` 的法器（`curios:charm` 物品标签仍可放别的东西）。 |
 | `require_owner` | bool | `false` | 是否**必须先认主**才能飞行与储物。`false`（默认）时未认主的法器谁都能用，一旦被认主就只认主人——认主是「绑定归属」而不是使用前提；`true` 时未认主一律拒绝。不影响 `mxt:owned_by`（它问的就是「归属是不是你」）与授予能力。 |
 | `claim_action` | ItemAction | `{"type": "mxt:consume_health", "amount": 4}` | 认主写归属时对持有者与物品执行的行为。**认主的代价就在这条行为里**：认主做的全部事情都归它一个字段管。**不写就是这个默认值**——每次认主扣 4 点生命（两格心）。**免费认主必须显式写 `{"type": "mxt:no_op"}`：省略字段不等于免费。** 可以写单条，也可以写**数组**（数组等于 `mxt:sequence` 简写，按顺序全跑一遍，与其它 `ItemAction` 字段是同一套简写）；「既付代价又有效果」就写成数组——`mxt:consume_health` 后面接别的物品行为。 |
@@ -26,7 +26,7 @@ title: artifact（法器）
 | `element` | 元素 id 列表，条目可以是 `#标签` | `[]` | 这件法器**是什么元素**：条目是一个元素、`#` 标签是一组元素。这是「物品的元素」的第一顺位来源之一，完整口径见 [weapon_binding](./weapon_binding.md)。注意 `spirit_capacity` 里的灵气**不参与**这条读取：那说的是「能装什么」，不是「是什么」。 |
 | `attachment_multiplier` | Double | `1.0` | 这件法器**作为护身物**值多少：携带（双手与 Curios 槽）期间，打在携带者身上的打击留下的元素附着乘上它——`0.5` 只留一半、`0` 一点也不留，于是那条元素反应永远不会被这一击触发。多件法器**相乘**，不写就没有影响。这是「法宝抵消部分元素反应」的着力点：它压的是**攒的速度**，反应自身的效果不归它管。**只有法器有这个字段**（`item_binding` / `weapon_binding` 不提供），所以普通武器与物品不会意外变成护身物。 |
 
-`abilities` 里每一条都是**普通技能**，`type` 取自所有技能共用的固有分派表 `saturn:ability_type`（内置十三种：`empty`、`active`、`triggered`、`modifier`、`aura`、`interval`、`channelled`、`targeted`、`word`、`mount`、`flight_control`、`storage`、`upkeep`）。类型、字段与写法全在[技能 · 技能类型](./ability.md#ability-types)。
+`abilities` 里每一条都是**普通技能**，`type` 取自所有技能共用的固有分派表 `saturn:ability_type`（内置十三种：`empty`、`active`、`triggered`、`modifier`、`aura`、`interval`、`channelled`、`targeted`、`word`、`mount`、`flight_control`、`storage`、`upkeep`）。类型、字段与写法全在[技能 · 技能类型](../../../../library/saturn/data/ability.md)。
 
 `abilities` 里的条目**只能是 id 或 `#标签`**。写一个对象进去（也就是把技能整个内联在这份文件里）不是合法条目，会让**世界加载失败**。
 
@@ -147,7 +147,7 @@ stateDiagram-v2
 
 ## 需要按键的技能 {#toggable}
 
-判据只有一句：**凡是要按键才发动的都算技能、都进轮盘**。需要按键的有五个类型：`mxt:active`（按一下施放）、`mxt:channelled`（按一下进入引导，自己付款）、`mxt:targeted`（定向施放：按一下走一次完整施放，用 `target_selector` 圈出一批目标、对每个跑载荷技能的单目标那一半，见[定向施放](./ability.md#targeted)）、`mxt:flight_control`（开关：开＝起剑、关＝落剑）与 `mxt:storage`（一次性：打开储物箱，没有状态）。
+判据只有一句：**凡是要按键才发动的都算技能、都进轮盘**。需要按键的有五个类型：`mxt:active`（按一下施放）、`mxt:channelled`（按一下进入引导，自己付款）、`mxt:targeted`（定向施放：按一下走一次完整施放，用 `target_selector` 圈出一批目标、对每个跑载荷技能的单目标那一半，见[定向施放](../../../../library/saturn/types/ability.md#saturntargeted)）、`mxt:flight_control`（开关：开＝起剑、关＝落剑）与 `mxt:storage`（一次性：打开储物箱，没有状态）。
 
 - **一件法器可以给出好几条**：轮盘的条目身份就是**那条技能自己的注册表 id**（如 `mxt_test:bound_flight`），所以同一把剑可以既有飞行又有储物；一本书授予的主动技和一件法器给的开关在轮盘上是同一类格子，也共用一个 id 空间（同一份 `saturn:ability`）。布局校验问的是「这个 id 现在能不能解析出来」，编造的格子进不去。
 - 它出现在**声明它的那张从盘**上（主手 / 副手 / Curios），也可以被玩家钉到主盘——两处都读「那件法器此刻在不在双手或 Curios 槽里」，什么也不存。**能不能再钉一次看池子**：配置界面右边那一池收的是**学到的技能**（功法 / 灵根 / 体质 / 境界授予）与 **Curios 槽位上法器声明的技能**；只由**主手 / 副手物品**声明的技能（手里的法器给的储物就是这样）不进池子，它只在「主手物品 / 副手物品」那两页上——手是随时会换的东西。**已经钉在主盘上的格子不受影响**：解析主盘走的是「谁授予的都算」的那一份池子，服务端照旧受理。

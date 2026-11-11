@@ -7,7 +7,7 @@ description: Register mxt:js trigger matchers, publish custom signals and subscr
 
 <span id="mxttriggers-trigger-signals" />
 
-A trigger signal is the notification a data pack ability waits for, for example when its carrier lands a hit. `MxtTriggers` publishes the same signal from a script and lets a script wait for it, both through the runtime `TriggerDispatcher`, so script subscriptions, ability triggers and data pack [trigger rules](../../datapack/json/trigger.md) observe the same dispatch — a script-published signal can drive a rule, and a rule's action can publish a signal a script waits for.
+A trigger signal is the notification a data pack ability waits for, for example when its carrier lands a hit. `MxtTriggers` publishes the same signal from a script and lets a script wait for it, both through the runtime `TriggerDispatcher`, so script subscriptions, ability triggers and data pack [trigger rules](../../../../library/saturn/data/trigger.md) observe the same dispatch — a script-published signal can drive a rule, and a rule's action can publish a signal a script waits for.
 
 ## Methods {#methods}
 
@@ -85,6 +85,6 @@ Trigger subscriptions are runtime-only and are never saved. They are dropped whe
 
 ## Related {#related}
 
-- Data pack side: [`trigger`](../../datapack/json/trigger.md), [Triggers (trigger_type)](../../datapack/types/other/trigger-type.md) and [Costs (cost_type)](../../datapack/types/other/cost-type.md).
+- Data pack side: [`trigger`](../../../../library/saturn/data/trigger.md), [Triggers (trigger_type)](../../datapack/types/other/trigger-type.md) and [Costs (cost_type)](../../datapack/types/other/cost-type.md).
 - The side that waits on a signal: [MxtAbilities](./abilities.md) (triggers on an ability).
 - [KubeJS API Reference](../api-reference.md).

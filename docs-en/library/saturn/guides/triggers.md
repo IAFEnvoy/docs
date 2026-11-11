@@ -20,7 +20,7 @@ A trigger consists of two parts: "a game event publishes a signal" and "a rule o
 }
 ```
 
-For the structure see [Trigger rules](../data/trigger.md); for every matching type see the [trigger catalogue](../types/trigger/index.md). Vanilla criterion port types reuse the JSON parameters of the corresponding criterion: Saturn bridges the event or polls the state and does not create advancements.
+For the structure see [Trigger rules](../data/trigger.md); for every matching type see the [trigger catalogue](../types/trigger.md). Vanilla criterion port types reuse the JSON parameters of the corresponding criterion: Saturn bridges the event or polls the state and does not create advancements.
 
 ## Java subscriptions
 

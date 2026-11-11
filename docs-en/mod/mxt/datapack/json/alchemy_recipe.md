@@ -20,7 +20,7 @@ Every file declares `"type": "mxt:alchemy"`. A file placed in `mxt/alchemy_recip
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
 | `type` | String | **required** | Must be `mxt:alchemy`. |
-| `main_requirements` | Map of medicinal property ID to [`NumberProvider`](../types/number_provider_types.md) | **required**, non-empty | Main-role property to positive power threshold. A constant must be positive. |
+| `main_requirements` | Map of medicinal property ID to [`NumberProvider`](../../../../library/saturn/types/number.md) | **required**, non-empty | Main-role property to positive power threshold. A constant must be positive. |
 | `auxiliary_requirements` | same as above | `{}` | Auxiliary role thresholds. May be left empty. |
 | `catalyst_requirement` | `NumberProvider` | **required** | The catalyst's harmonising power threshold. A constant must be positive. |
 | `balance_tolerance` | `NumberProvider` | `0` | Thermal balance tolerance; a constant must lie in `[0,1]`. |

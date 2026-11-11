@@ -7,6 +7,10 @@ description: "Documentation for MiXianTu, a NeoForge cultivation mod framework: 
 
 <span id="mixiantu" />
 
+:::info Extension of Saturn
+MiXianTu is an extension of [Saturn](../../library/saturn/index.md): shared types such as actions, conditions, number providers, triggers and costs are registered by Saturn, and `mxt:` spellings of them resolve to the matching `saturn:` entries through Saturn aliases.
+:::
+
 MiXianTu is a **cultivation mod framework** for NeoForge. It provides the **generic rules and runtime** that cultivation gameplay needs — cultivation, aura environment, realms and resources, abilities, formations, tribulations, forging, alchemy and economy — without prescribing any particular setting or numbers.
 
 The actual items, blocks and recipes are provided by datapacks, KubeJS or other content mods, and MiXianTu's registries and binding tables give them gameplay.

@@ -7,7 +7,7 @@ description: "Publish a custom trigger signal from a server script, then let a d
 
 <span id="publish-a-trigger-signal" />
 
-A trigger signal is a notification the mod itself is waiting for: an entity took a hit, killed something, reached a new progression level. The built-in signals are published by the mod, and **a content pack can publish its own** — a server script calls `MxtTriggers.publish` once, and one of two consumers picks it up: a data pack [trigger rule](../datapack/json/trigger.md), or a subscription of the script's own.
+A trigger signal is a notification the mod itself is waiting for: an entity took a hit, killed something, reached a new progression level. The built-in signals are published by the mod, and **a content pack can publish its own** — a server script calls `MxtTriggers.publish` once, and one of two consumers picks it up: a data pack [trigger rule](../../../library/saturn/data/trigger.md), or a subscription of the script's own.
 
 Both sides go through **one dispatch**, so a signal a script published can drive a data pack rule, and a rule's behaviour can publish a signal a script is waiting for. This is the only way a data pack can react to a **custom** signal id: every built-in matcher (`mxt:tick`, `mxt:kill` and the rest) hard-codes one signal id and cannot express a name of your own, which leaves the `mxt:js` matcher plus a script callback.
 
@@ -161,6 +161,6 @@ A server script reload also replaces the callbacks `MxtTriggers.matcher` registe
 
 - [MxtTriggers: Trigger Signals](../kubejs/api/triggers.md) — every method, the payload, and the full subscription lifetime.
 - [MxtEvents: Events](../kubejs/api/events.md) — the other script entry point that pairs with signals: an event is a cancellable call, a signal is a notification after the fact.
-- [trigger (Event Rules)](../datapack/json/trigger.md) — the rule's fields and what `chance` and `cooldown` mean.
+- [trigger (Event Rules)](../../../library/saturn/data/trigger.md) — the rule's fields and what `chance` and `cooldown` mean.
 - [Define a Technique and Its Levels](./define-a-technique.md) — the chain the value this page's rule writes belongs to.
 - [Create Items and Bind Actions with KubeJS](./create-items-with-kubejs.md) — the page this one assumes is done.

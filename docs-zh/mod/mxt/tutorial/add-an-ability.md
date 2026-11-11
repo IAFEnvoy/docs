@@ -59,7 +59,7 @@ description: 定义一个主动技能与一个触发技能，为它们设置消�
 
 | 字段 | 作用 |
 | --- | --- |
-| `target_selector` | 双实体行为作用于哪些实体，默认 `mxt:self` 只选施法者；各选择器的形状、`limit` 与 `order` 见[技能目标选择器](../datapack/types/other/ability-selector.md)。例子用的是 `mxt:area`——**方盒**不是球，`include_actor` 决定施法者是否算在集合里。 |
+| `target_selector` | 双实体行为作用于哪些实体，默认 `mxt:self` 只选施法者；各选择器的形状、`limit` 与 `order` 见[技能目标选择器](../../../library/saturn/types/target.md)。例子用的是 `mxt:area`——**方盒**不是球，`include_actor` 决定施法者是否算在集合里。 |
 | `bi_entity_action` | 对每个选中的目标执行，某一个失败不会阻止其余目标。`mxt:target_action` 把一个实体行为转交给目标——这里是 6 点伤害加上施法者经验等级的一半。 |
 | `entity_action` | 对施法者执行。默认为 `mxt:no_op`；用于自我增益、粒子爆发或灵气变化。 |
 | `target_condition` | 每个目标都要过的双实体条件，默认为 `mxt:always`。 |
@@ -186,7 +186,7 @@ description: 定义一个主动技能与一个触发技能，为它们设置消�
 
 ## 接下来 {#接下来}
 
-- [ability（技能）](../datapack/json/ability.md) —— 完整字段表，包括 `charges` 与引导技能的维持消耗。
+- [ability（技能）](../../../library/saturn/data/ability.md) —— 完整字段表，包括 `charges` 与引导技能的维持消耗。
 - [定义功法与晋级](./define-a-technique.md) —— 把技能挂到一条会往上爬的进度链上，让熟练度决定什么时候解锁哪一个。
 - [行为类型](../datapack/types/action/entity_action_types.md)与[条件类型](../datapack/types/condition/entity_condition_types.md) —— 技能能做和能检查的一切。
 - [战利品与进度条件](../datapack/loot-and-criteria.md) —— 对突破与技能使用做出反应的奖励和进度。

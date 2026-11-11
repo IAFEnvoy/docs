@@ -37,5 +37,5 @@ The return value is a `Result<Map<Identifier, Double>>`: `getData()` is the tabl
 
 - A single `Cost` and its five shapes: [MxtCosts](./costs.md) and [Shared Data Types](../../datapack/types/shared_data_types.md#cost).
 - Which channel a cost is charged to (the payer, the aura pool underfoot, a block's own stock): [Shared Data Types](../../datapack/types/shared_data_types.md#cost).
-- The values behind it: [MxtValues](./values.md) and [`resource`](../../datapack/json/resource.md).
+- The values behind it: [MxtValues](./values.md) and [`resource`](../../../../library/saturn/data/resource.md).
 - [KubeJS API Reference](../api-reference.md).

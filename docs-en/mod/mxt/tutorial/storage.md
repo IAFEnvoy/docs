@@ -40,7 +40,7 @@ It reads two fields of its own:
 | `slots` | A number or a formula string | **required** | The declared slot count. |
 | `cooldown` | A number or a formula string | `0` | The cooldown after a press, in ticks. |
 
-The shared fields (`condition`, `icon` and so on — **but not `name`**: an ability's name is always derived from the registered id as `ability.mxt.<namespace>.<path>`, and only translating that key gives it a display name) work as usual; see [Ability (ability)](../datapack/json/ability.md).
+The shared fields (`condition`, `icon` and so on — **but not `name`**: an ability's name is always derived from the registered id as `ability.mxt.<namespace>.<path>`, and only translating that key gives it a display name) work as usual; see [Ability (ability)](../../../library/saturn/data/ability.md).
 
 `slots` always settles in this order:
 

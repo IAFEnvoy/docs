@@ -42,7 +42,7 @@ This tutorial hangs a lightning tribulation on the example pack's foundation sta
 | `success_action` | Runs once the cursor walks off the end of the timeline; default `mxt:no_op`. |
 | `fail_action` | Runs when a beat cannot continue; default `mxt:no_op`. |
 
-There are four kinds of beat, and writing a tribulation is lining them up in a row; the fields each beat reads and how a duration is converted are on [Timeline Entries](../datapack/types/other/timeline-entry.md). In order, this page uses `mxt:action`, `mxt:idle`, `mxt:wait_for` and `mxt:branch`.
+There are four kinds of beat, and writing a tribulation is lining them up in a row; the fields each beat reads and how a duration is converted are on [Timeline Entries](../../../library/saturn/types/timeline.md). In order, this page uses `mxt:action`, `mxt:idle`, `mxt:wait_for` and `mxt:branch`.
 
 The timeline is a **stored cursor**: it is copied into the entity's attachment when the run starts, and one beat is walked per tick, advancing each time it finishes. **The cursor is saved** (`mxt:branch` can move it to any beat, backwards included), so a `/reload` **cannot** change a run already in progress — but `difficulty_scale` and the two outcome actions are still read from the definition live. The `if_true` / `if_false` indices count from the **first beat of the copied timeline** (`0`-based), and an index out of range is refused **at start**.
 

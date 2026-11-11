@@ -7,7 +7,11 @@ description: 资源条上下文族 resource_bar_context 的五个 ID、取数来
 
 <span id="resource-bar-context-资源条上下文" />
 
-上下文从实体或客户端状态里提取当前值、最小值、最大值和最后变化 tick，并用传入的数值 ID 生成显示名。它写在 [resource](../../json/resource.md) 内联 `bars` 的 `context` 里。
+:::info 与 Saturn 共享的类型
+`self_hud`、`target_overlay`、`boss_overlay` 由 Saturn 注册，本页只列 MXT 自己的两个上下文；共享上下文见 [Saturn 资源条上下文](../../../../../library/saturn/types/bar-context.md)。
+:::
+
+上下文从实体或客户端状态里提取当前值、最小值、最大值和最后变化 tick，并用传入的数值 ID 生成显示名。它写在 [resource](../../../../../library/saturn/data/resource.md) 内联 `bars` 的 `context` 里。
 
 这一族由模组注册，数据包只能选用，不能新增。灵气区块的环境储存上限是另一族，见[灵气上限类型](./aura-maximum.md)。
 
@@ -15,9 +19,6 @@ description: 资源条上下文族 resource_bar_context 的五个 ID、取数来
 
 | ID | 布局 | 说明 |
 | --- | --- | --- |
-| `mxt:self_hud` | 自我 HUD | 读取实体上存下来的数值 |
-| `mxt:target_overlay` | 目标浮层 | 读取实体上存下来的数值 |
-| `mxt:boss_overlay` | Boss 浮层 | 读取实体上存下来的数值 |
 | `mxt:environment_concentration` | 自我 HUD | 只在客户端读同步下来的环境灵气模板，不含区块库存以及方块、阵法的贡献 |
 | `mxt:actual_concentration` | 自我 HUD | 只在客户端读同步下来的最终浓度，环境、区块库存、方块、阵法全都算上 |
 

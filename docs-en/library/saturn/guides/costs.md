@@ -12,7 +12,7 @@ sidebar_position: 2
 ]
 ```
 
-`example:mana` must be defined first and provided to the paying entity by the host. [Item cost](../types/cost/item.md) looks for items by matching entry and rounds the amount up; it returns a failure when no container is available or the amount is invalid. For resource costs, see [Resource cost](../types/cost/resource.md).
+`example:mana` must be defined first and provided to the paying entity by the host. [Item cost](../types/cost.md#saturnitem) looks for items by matching entry and rounds the amount up; it returns a failure when no container is available or the amount is invalid. For resource costs, see [Resource cost](../types/cost.md#saturnresource).
 
 ## Three stages
 

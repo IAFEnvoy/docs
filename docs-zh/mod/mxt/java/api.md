@@ -225,7 +225,7 @@ public interface QualityProvider {
 
 ## 灵气与资源 {#aura}
 
-这两件事一起讲，因为最容易混：**灵气（`aura`）是身份，资源（`resource`）是数值**。字段怎么写见 [aura](../datapack/json/aura.md) 与 [resource](../datapack/json/resource.md)，"某坐标的灵气到底怎么算出来"见[灵气计算](../technical/aura.md)。
+这两件事一起讲，因为最容易混：**灵气（`aura`）是身份，资源（`resource`）是数值**。字段怎么写见 [aura](../datapack/json/aura.md) 与 [resource](../../../library/saturn/data/resource.md)，"某坐标的灵气到底怎么算出来"见[灵气计算](../technical/aura.md)。
 
 ### `AuraService` {#auraservice}
 
@@ -369,8 +369,8 @@ public interface QualityProvider {
 
 - 凡是"按下某个开关"，服务端一律先经 `runtime/ability/AbilityActivationService`——轮盘、命令、KubeJS 与符箓都走它，**别在别处再写一套"按下某个开关"的分派**。实现了 `Togglable` 且 `gated(ctx)` 为真时它才回头调这里的 `gate`。
 - **冷却与消耗全由这条路负责**：`cooldown` 字段自己会写 `mxt:cooldown` 状态，内容不需要再声明一遍冷却。
-- **技能生效时做什么由类型回答**：四个动作字段（`entity_action` / `target_selector` / `target_condition` / `bi_entity_action`）由**会跑动作的类型各自声明并各自执行**，所以这条路走到"该做什么"那一步就是 `AbilityEffect.run(definition.type(), actor, context, origin)`——一个静态入口，内部只判断类型有没有实现 `AbilityEffect` 这个**能力接口**，不是按具体类型分派；四个字段的共享执行在 `ActionCarrier` 上。四个字段各自的时机见[ability（技能）· 四个动作字段](../datapack/json/ability.md#action-fields-by-type)。
-- **定向施放（`mxt:targeted`）走的也是这条路**：它实现能力接口 `AbilityApplier`（`reach` 挑这次够得着的实体 + `payload` 每个目标上跑的那条技能），运行时在**付款之前**先问一次 `reach`——一个人都没选中＝`NO_TARGET`，载荷类型没有单目标那一半＝`NOT_APPLICABLE`（两个都进上面的 `Failure`）；它自己的价格、冷却与元素亲和照常由这条路收一次。见[定向施放](../datapack/json/ability.md#targeted)。
+- **技能生效时做什么由类型回答**：四个动作字段（`entity_action` / `target_selector` / `target_condition` / `bi_entity_action`）由**会跑动作的类型各自声明并各自执行**，所以这条路走到"该做什么"那一步就是 `AbilityEffect.run(definition.type(), actor, context, origin)`——一个静态入口，内部只判断类型有没有实现 `AbilityEffect` 这个**能力接口**，不是按具体类型分派；四个字段的共享执行在 `ActionCarrier` 上。四个字段各自的时机见[技能类型 · 四个动作字段](../datapack/types/other/ability.md#action-fields-by-type)。
+- **定向施放（`mxt:targeted`）走的也是这条路**：它实现能力接口 `AbilityApplier`（`reach` 挑这次够得着的实体 + `payload` 每个目标上跑的那条技能），运行时在**付款之前**先问一次 `reach`——一个人都没选中＝`NO_TARGET`，载荷类型没有单目标那一半＝`NOT_APPLICABLE`（两个都进上面的 `Failure`）；它自己的价格、冷却与元素亲和照常由这条路收一次。见[定向施放](../../../library/saturn/types/ability.md#saturntargeted)。
 - 世界动作永不回滚，所以复合技能先 `prepare` 校验、再统一 `commit`。
 - 这个类**自己不检查客户端**，也从不产生 `Failure.SERVER_ONLY`——客户端那道 `SERVER_ONLY` 是调用方（例如 KubeJS 桥 `MxtKubeJsApi`）自己返回的。直接调 `use` 在客户端会真的动手。
 - 所有结果里的 `amounts` / `costs` 只用于展示与记录；**别拿它当回滚依据**。

@@ -75,7 +75,7 @@ Reset keeps the baseline; reopening keeps the saved draft; refreshing reads curr
 
 Input map names remain configurable: formulas read `input_bonus` and `input_roll`. Names must be nonempty and use only letters, digits and underscores accepted by Saturn variable names. Values are evaluated and saved at new-session creation. Clicks, Reset and reconnecting do not reroll them; an explicit refresh captures them again.
 
-Inputs and `initial` are evaluated before selection editing and should not depend on final draft variables. Other [NumberProviders](../../../library/saturn/types/number/index.md) can read real player state.
+Inputs and `initial` are evaluated before selection editing and should not depend on final draft variables. Other [NumberProviders](../../../library/saturn/types/number.md) can read real player state.
 
 ## Presets
 

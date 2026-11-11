@@ -209,4 +209,4 @@ give @s kubejs:azure_manual[mxt:technique="example:azure_breath"]
 - [progression（进度链）](../datapack/json/progression.md) —— 每一级的完整字段，以及链在运行期怎么编号。
 - [technique（功法）](../datapack/json/technique.md) —— 功法定义的完整字段与逐级配置的规则。
 - [定义技能](./add-an-ability.md) —— 这条链授予的那些能力本身怎么写。
-- [trigger（触发器）](../datapack/json/trigger.md) —— 触发规则的完整字段：信号、条件、概率与冷却。
+- [trigger（触发器）](../../../library/saturn/data/trigger.md) —— 触发规则的完整字段：信号、条件、概率与冷却。

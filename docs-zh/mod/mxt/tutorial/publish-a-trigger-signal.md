@@ -7,7 +7,7 @@ description: "从服务端脚本发布一个自定义触发器信号，再让数
 
 <span id="发布触发器信号" />
 
-触发器信号是模组内部在等待的通知：实体挨了一刀、击杀了一个东西、到达了新的进度等级。内置信号由模组自己发布，而**内容包也能发布自己的信号**——服务端脚本用 `MxtTriggers.publish` 发一次，然后由两种消费方之一接住：一条数据包[触发规则](../datapack/json/trigger.md)，或脚本自己的一个订阅。
+触发器信号是模组内部在等待的通知：实体挨了一刀、击杀了一个东西、到达了新的进度等级。内置信号由模组自己发布，而**内容包也能发布自己的信号**——服务端脚本用 `MxtTriggers.publish` 发一次，然后由两种消费方之一接住：一条数据包[触发规则](../../../library/saturn/data/trigger.md)，或脚本自己的一个订阅。
 
 两侧走的是**同一套派发**，所以脚本发布的信号能驱动数据包规则，规则里的行为也能发布脚本等待的信号。这条通路是数据包响应一个**自定义**信号 id 的唯一途径：内置匹配器（`mxt:tick`、`mxt:kill` 那一族）每个写死一个信号 id，表达不了你新起的名字，能表达的是 `mxt:js` 匹配器加一个脚本回调。
 
@@ -161,6 +161,6 @@ ServerEvents.tick(event => event.server.players.forEach(watch))
 
 - [MxtTriggers：触发器信号](../kubejs/api/triggers.md) —— 每个方法、载荷与订阅生命周期的完整说明。
 - [MxtEvents：事件](../kubejs/api/events.md) —— 与信号成对的另一套脚本入口：事件是可取消的一次调用，信号是事后通知。
-- [trigger（事件规则）](../datapack/json/trigger.md) —— 规则的字段、`chance` 与 `cooldown` 的口径。
+- [trigger（事件规则）](../../../library/saturn/data/trigger.md) —— 规则的字段、`chance` 与 `cooldown` 的口径。
 - [定义功法与晋级](./define-a-technique.md) —— 本页那条规则挂上的数值属于哪条链。
 - [KubeJS 创建物品并绑定行为](./create-items-with-kubejs.md) —— 本篇假定已完成的那一篇。

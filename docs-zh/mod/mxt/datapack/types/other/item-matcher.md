@@ -7,9 +7,13 @@ description: item_matcher_entry_type 的七个条目，各自的字段与匹配�
 
 <span id="item-matcher-entry-type-物品匹配器" />
 
+:::info 与 Saturn 共享的类型
+本页只列 MXT 自有类型；与 Saturn 共享的类型（含 `mxt:` 别名写法）见 [Saturn 类型参考](../../../../../library/saturn/types/item-matcher.md)。
+:::
+
 `item_matcher_entry_type` 是 [`ItemMatcher`](../shared_data_types.md#itemmatcher) 里每一项的类型族：一个 `ItemMatcher` 就是一个或多个这样的条目，每一项在 `type` 里写上下面某个 ID 来选择一种匹配方式；没有 `type` 的字符串按裸物品 ID 或 `#物品标签` 处理。
 
-`mxt:item` 和 `mxt:tag` 是简写形式的展开，`mxt:technique` 与 `mxt:spirit_storage` 没有任何字段。数组里的条目可以是纯字符串、带 `type` 的对象，或两者混在一起。
+`mxt:technique`、`mxt:spirit_storage` 与 `mxt:resource_container` 没有字段；`mxt:item`、`mxt:tag`、`mxt:wildcard`、`mxt:regex`、`mxt:ingredient` 由 Saturn 提供，见 [Saturn 物品匹配器](../../../../../library/saturn/types/item-matcher.md#saturningredient)。数组里的条目可以是纯字符串、带 `type` 的对象，或两者混在一起。
 
 这些条目由模组注册，数据包只能选用，不能新增。
 
@@ -17,15 +21,11 @@ description: item_matcher_entry_type 的七个条目，各自的字段与匹配�
 
 | `type` | 字段 |
 | --- | --- |
-| `mxt:item` | `item` |
-| `mxt:tag` | `tag` |
-| `mxt:wildcard` | `pattern` |
-| `mxt:regex` | `pattern` |
 | `mxt:technique` | 无 |
 | `mxt:spirit_storage` | 无 |
+| `mxt:resource_container` | 无 |
 | `mxt:herb_tag` | `element`、`material` |
 | `mxt:quality` | `items`、`quality`、`min_quality` |
-| `mxt:ingredient` | `ingredient` |
 
 ```json
 "items": [
@@ -33,54 +33,6 @@ description: item_matcher_entry_type 的七个条目，各自的字段与匹配�
   {"type": "mxt:wildcard", "pattern": "minecraft:*_sword"},
   {"type": "mxt:regex", "pattern": "othermod:(ruby|jade)_gem"}
 ]
-```
-
-### `mxt:item` {#mxt-item}
-
-匹配一个确切的物品。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `item` | Identifier | **必填** | 物品注册表 ID；简写形式是裸 ID 字符串 |
-
-```json
-{"type": "mxt:item", "item": "minecraft:apple"}
-```
-
-### `mxt:tag` {#mxt-tag}
-
-匹配物品标签中的每一个物品。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `tag` | 物品标签 ID | **必填** | 标签引用，这里写不带 `#` 的标签 ID；简写形式是带 `#` 前缀的字符串 |
-
-```json
-{"type": "mxt:tag", "tag": "minecraft:logs"}
-```
-
-### `mxt:wildcard` {#mxt-wildcard}
-
-用 `*` 和 `?` 通配符匹配物品 ID。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `pattern` | String | **必填** | `*` 匹配任意长度的字符，`?` 匹配单个字符；不能为空 |
-
-```json
-{"type": "mxt:wildcard", "pattern": "mxt:*_spirit_stone"}
-```
-
-### `mxt:regex` {#mxt-regex}
-
-用正则表达式匹配物品 ID。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `pattern` | String | **必填** | 对物品 ID 匹配的完整正则表达式；不能为空 |
-
-```json
-{"type": "mxt:regex", "pattern": "mxt:(medium|high)_spirit_stone"}
 ```
 
 ### `mxt:technique` {#mxt-technique}
@@ -164,30 +116,23 @@ description: item_matcher_entry_type 的七个条目，各自的字段与匹配�
 
 `quality` 与 `min_quality` 至少要写一个，两个都不写会被加载期拒绝。这个条目读的是堆上的档位，所以 `itemLevel()` 是假——按物品开缓存的调用方（例如长按识别）必须每个堆问一次。按档筛物品的各个口子见[品质 · 按档位筛物品](../../json/quality.md#gating)。
 
-## `mxt:ingredient` {#mxtingredient}
+### `mxt:resource_container` {#mxt-resource-container}
 
-把**一整个原版材料**当成一条匹配条目：凡是原版 `Ingredient` 写得出来的东西都能写在这里——物品 ID、物品 ID 数组、`#物品标签`，以及自定义材料（例如 `mxt:quality`，写法见[灵气合成](../../json/spirit_crafting.md)）。
+匹配任何带 `mxt:resource_container` 组件（资源容器）的物品堆。它是按能力而不是按 ID 匹配，因此内容包自己的容器物品不需要被任何匹配器文件点名。
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `ingredient` | 原版材料 | **必填**。写法与任何配方材料相同。 |
+| 字段 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| — | — | — | 没有字段 |
 
 ```json
-{
-  "type": "mxt:ingredient",
-  "ingredient": {
-    "neoforge:ingredient_type": "mxt:quality",
-    "items": "mxt:blank_talisman",
-    "min_quality": "example:tier_3"
-  }
-}
+{"type": "mxt:resource_container"}
 ```
 
-它用得上是因为**匹配器条目与配方材料是两套写法**：`mxt:quality` 本身是材料类型，只有包成这个条目才能写进 `Cost` 的 `mxt:item`、绑定表的 `items` 这些只吃 `ItemMatcher` 的位置——画符那次取纸的代价就是这么写的。`itemLevel()` 取那个材料自己的 `isSimple()`：普通材料（物品、标签）是"只看物品"，自定义材料不是，所以后者不会被按物品建索引。
+空容器也算命中：条目只看组件是否存在，能不能倒出东西由使用它的逻辑判断。`itemLevel()` 为假——同一个物品的不同堆可能有不同内容。
 
 ## 简写 {#简写}
 
-裸字符串和 `#标签` 字符串分别是 `mxt:item` 与 `mxt:tag` 的简写，三种写法可以混在一个数组里：
+裸字符串和 `#标签` 字符串分别是 `mxt:item` 与 `mxt:tag` 的简写（这两个条目由 Saturn 注册），三种写法可以混在一个数组里：
 
 ```json
 "items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]

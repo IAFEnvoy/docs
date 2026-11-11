@@ -20,4 +20,4 @@ title: Togglable
 
 服务端受理按压只有一条路，`AbilityActivationService.activate(holder, ability, carrier)`：实现 `Togglable` 的技能走它（`gated` 为真时先过 `AbilityService.gate`，再过就调 `activate`），不实现的技能在按下时回落成一次 `AbilityService.use`（给已保存的轮盘格子，它可以点名一个不可按键的技能）。轮盘的候选池也只筛"实现了 `Togglable`"这一条。
 
-今天有五个实现，都是普通技能类型：`mxt:active`（按一下施放）、`mxt:channelled`（按一下开始引导，之后按 `tick_interval` 收维持费）、`mxt:targeted`（按一下对选择器挑中的每个实体各跑一次子技能）、`mxt:flight_control`（开关：开＝起剑、关＝落剑）、`mxt:storage`（一次性：打开储物箱）。加一种要按键的技能就是加一个实现它的 `saturn:ability_type` 条目，不用动轮盘。技能本身的字段见 [ability](../../../datapack/json/ability.md)，玩家侧表现见[轮盘条目](../../wheel.md)。
+今天有五个实现，都是普通技能类型：`mxt:active`（按一下施放）、`mxt:channelled`（按一下开始引导，之后按 `tick_interval` 收维持费）、`mxt:targeted`（按一下对选择器挑中的每个实体各跑一次子技能）、`mxt:flight_control`（开关：开＝起剑、关＝落剑）、`mxt:storage`（一次性：打开储物箱）。加一种要按键的技能就是加一个实现它的 `saturn:ability_type` 条目，不用动轮盘。技能本身的字段见 [ability](../../../../../library/saturn/data/ability.md)，玩家侧表现见[轮盘条目](../../wheel.md)。

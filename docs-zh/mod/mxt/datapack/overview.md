@@ -53,10 +53,10 @@ data/example/mxt/artifact/charm/ward_jade_talisman.json
 
 ## 模块页面 {#模块页面}
 
-- [resource：资源与资源条](./json/resource.md)
+- [resource：资源与资源条](../../../library/saturn/data/resource.md)
 - [修炼、境界与灵根](./json/cultivation.md)
 - [灵气环境与灵气物品](./json/aura.md)
-- [Ability、Cost 与 Condition](./json/ability.md)
+- [Ability、Cost 与 Condition](../../../library/saturn/data/ability.md)
 - [物品绑定、品质与经济](./json/item_binding.md)
 - [阵法、锻造与炼丹](./json/formation.md)
 - [其他注册表](./json/index.md)

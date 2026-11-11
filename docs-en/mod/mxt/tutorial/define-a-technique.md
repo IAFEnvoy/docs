@@ -210,4 +210,4 @@ Every second the server checks each learned technique: once the value reaches th
 - [progression](../datapack/json/progression.md) — every field of a level, and how chains are numbered at runtime.
 - [technique](../datapack/json/technique.md) — the full technique definition and the rules for describing each level.
 - [Define an Ability](./add-an-ability.md) — how the abilities this chain grants are written.
-- [trigger](../datapack/json/trigger.md) — every field of a trigger rule: signal, condition, chance and cooldown.
+- [trigger](../../../library/saturn/data/trigger.md) — every field of a trigger rule: signal, condition, chance and cooldown.

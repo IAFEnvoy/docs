@@ -21,6 +21,14 @@ title: "系统"
 
 1.21.1 并非随每次主分支修改即时更新。使用下文的新功能或 JSON 字段前，请核对所安装版本；不要直接把 26.1.2 的依赖版本用于 1.21.1。
 
+:::info 扩展自 Saturn
+System 构建在 [Saturn](../../library/saturn/index.md) 之上：技能、费用、触发器、状态存储与玩家信息等类型由 Saturn 提供。
+:::
+
+:::info 扩展自 Saturn
+System 构建在 [Saturn](../../library/saturn/index.md) 之上：技能、费用、触发器、状态存储与玩家信息等类型由 Saturn 提供。
+:::
+
 ## 选择入口
 
 - 玩家：[安装与开始](./install.md)、[使用与配置](./guides/usage.md)、[语音输入](./guides/asr.md)、[语音播报](./guides/tts.md)。

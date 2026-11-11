@@ -8,7 +8,7 @@ File: `data/<namespace>/saturn/information_row/<path>.json`. An information row 
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `label` | Standard text component | yes | — | Default row title. |
-| `value` | [Information expression](../types/expression/index.md) | yes | — | Main value. |
+| `value` | [Information expression](../types/expression.md) | yes | — | Main value. |
 | `order` | Integer | no | `0` | Sorts ascending, then by ID. |
 | `importance` | Integer | no | `0` | Used by the interface to filter by minimum importance. |
 | `enabled` | Boolean | no | `true` | Whether this row is enabled. |

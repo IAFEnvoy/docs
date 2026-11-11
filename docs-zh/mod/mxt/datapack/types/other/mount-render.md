@@ -9,7 +9,7 @@ description: mxt:mount_render_type 的内置条目、字段、GeckoLib 资源路
 
 ## `mount_render_type` {#mount-render-type}
 
-[`mxt:mount`](../../json/ability.md) 的 `render` 用这一族选一套渲染器画载具。数据包只能选用已注册的类型，不能新增。渲染只发生在客户端：专用服务端把 `render` 当一段普通数据解开，既不画也不判断这台机器有没有对应的渲染器。
+[`mxt:mount`](../../../../../library/saturn/data/ability.md) 的 `render` 用这一族选一套渲染器画载具。数据包只能选用已注册的类型，不能新增。渲染只发生在客户端：专用服务端把 `render` 当一段普通数据解开，既不画也不判断这台机器有没有对应的渲染器。
 
 ```json
 "render": {
@@ -25,7 +25,7 @@ description: mxt:mount_render_type 的内置条目、字段、GeckoLib 资源路
 
 画承载物品的物品模型，用的是展示框那套上下文（原始大小、没有位移的卡片）。**默认就是它**：`render` 整个不写等于选它。
 
-它没有自己的字段。这一档会自动把模型底面贴到碰撞箱底面，所以换任何物品模型都落在同一个平面上；[`display`](../../json/ability.md#mount-render) 不写时是 `[0,0,0]` / `[90,0,-45]` / `[2,2,2]`。
+它没有自己的字段。这一档会自动把模型底面贴到碰撞箱底面，所以换任何物品模型都落在同一个平面上；[`display`](./ability.md#mxt-mount) 不写时是 `[0,0,0]` / `[90,0,-45]` / `[2,2,2]`。
 
 ### `mxt:geckolib` {#mxt-geckolib}
 

@@ -8,7 +8,7 @@ sidebar_position: 5
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
 | `label` | 文本组件 | 否 | 空组件 | 启用时必须非空。 |
-| `costs` | [Saturn 费用](../../../library/saturn/types/cost/index.md)数组 | 否 | `[]` | 空列表表示免费抽取。 |
+| `costs` | [Saturn 费用](../../../library/saturn/types/cost.md)数组 | 否 | `[]` | 空列表表示免费抽取。 |
 | `entries` | 奖品条目数组 | 否 | `[]` | 启用时至少一项。 |
 | `enabled` | 布尔值 | 否 | `true` | 可禁用覆盖。 |
 

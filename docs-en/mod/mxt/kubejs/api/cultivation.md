@@ -25,7 +25,7 @@ if (!result.advanced()) console.warn(`breakthrough refused: ${result.failure()}`
 
 ## Related {#related}
 
-- Data pack side: [`realm_stage`](../../datapack/json/realm_stage.md), [`resource`](../../datapack/json/resource.md) and [`aura`](../../datapack/json/aura.md).
+- Data pack side: [`realm_stage`](../../datapack/json/realm_stage.md), [`resource`](../../../../library/saturn/data/resource.md) and [`aura`](../../datapack/json/aura.md).
 - Read or change the surroundings and values involved: [MxtAura](./aura.md) and [MxtValues](./values.md).
 - Veto or rewrite a breakthrough's cost: `cultivationBreak` in [MxtEvents](./events.md).
 - [KubeJS API Reference](../api-reference.md).

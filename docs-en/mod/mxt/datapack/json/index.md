@@ -7,7 +7,7 @@ description: All 43 datapack registries with their file directory and purpose, p
 
 <span id="dynamic-registries" />
 
-The table below lists the mod's 43 datapack registries. In the field tables, "Default" is the value used when a field is omitted, and "Required" means loading fails without it.
+The table below lists the 43 datapack registries the mod uses; `resource`, `ability` and `trigger` are provided by Saturn, and their fields are documented in the [Saturn data definitions](../../../../library/saturn/data/index.md). In the field tables, "Default" is the value used when a field is omitted, and "Required" means loading fails without it.
 
 **Recipes are not in this table.** The recipe pages that go through the vanilla `RecipeManager` sit in the **Recipes** group below: alchemy recipes (`mxt:alchemy`), spirit crafting (`mxt:spirit_shaped` / `mxt:spirit_shapeless`) and talisman drawing (`mxt:talisman_drawing`). Their JSON goes in `data/<namespace>/recipe/`, never in `mxt/<recipe name>/`; they are not registries either, so `/reload` reloads them. File location, and how to sort JSON into subdirectories by category, is on the [Datapack Development Overview](../overview.md).
 
@@ -15,7 +15,7 @@ The table below lists the mod's 43 datapack registries. In the field tables, "De
 
 | Registry | Directory | Purpose |
 | --- | --- | --- |
-| `resource` | `saturn/resource` | Entity resources such as cultivation progress, spirit power and stamina, plus inline resource bars (registry id `saturn:resource`). |
+| `resource` | `saturn/resource` | Entity resources such as cultivation progress, spirit power and stamina, plus inline resource bars; see the [Saturn resource definition](../../../../library/saturn/data/resource.md). |
 | `artifact` | `mxt/artifact` | Artifacts: which existing items they claim, how much of each aura they store, and which abilities they offer. |
 | `aura` | `mxt/aura` | An aura definition for one value: element marks, the realm chain entry, regeneration and conversion. |
 | `realm_stage` | `mxt/realm_stage` | Linear realm chains and breakthrough. |
@@ -23,7 +23,7 @@ The table below lists the mod's 43 datapack registries. In the field tables, "De
 | `element_reaction` | `mxt/element_reaction` | The reaction fired once element accumulation meets its requirement. |
 | `spirit_root` | `mxt/spirit_root` | A spirit root bound to one or more elements: cultivation multiplier, affinity multiplier, granted abilities and exclusivity. |
 | `physique` | `mxt/physique` | Physique bonuses independent of elements: vanilla attributes, granted abilities and damage multipliers. |
-| `ability` | `saturn/ability` | Active, passive and triggered abilities (registry id `saturn:ability`). |
+| `ability` | `saturn/ability` | Active, passive and triggered abilities; see the [Saturn ability definition](../../../../library/saturn/data/ability.md). |
 | `ability_affinity` | `mxt/ability_affinity` | Element affinity of abilities: which elements, and how several matching roots combine; it does not live in the ability definition. |
 | `curse` | `mxt/curse` | Curse definitions and duration types that several modules can reference. |
 | `forging_method` | `mxt/forging_method` | A single forging strike method. |
@@ -46,7 +46,7 @@ The table below lists the mod's 43 datapack registries. In the field tables, "De
 | `technique_binding` | `mxt/technique_binding` | Bindings from existing items to cultivation technique learning. |
 | `aura_zone` | `mxt/aura_zone` | Environment aura templates. |
 | `quality` | `mxt/quality` | Shared quality: colour, three modifiers, a use condition, and where the tier sits on its ladder with what one step up costs. |
-| `trigger` | `saturn/trigger` | Event rules: a signal, a condition and an action. |
+| `trigger` | `saturn/trigger` | Event rules: a signal, a condition and an action; see the [Saturn trigger rule](../../../../library/saturn/data/trigger.md). |
 | `talisman` | `mxt/talisman` | Talisman definitions: the ability one inscribed talisman carries. |
 | `item_aura` | `mxt/item_aura` | The cultivation fuel an item provides: which items it claims, how much aura they hold and how fast it flows. |
 | `currency` | `mxt/currency` | An item's currency denomination and exchanges. |

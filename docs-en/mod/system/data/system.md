@@ -43,7 +43,7 @@ Registry: `system:system`. Defines the system name, description, enabled modules
 
 ## Module references
 
-`id` references a [module configuration](./module.md), not an Agent workflow or a server-side implementation class. `condition` uses Saturn [entity conditions](../../../library/saturn/types/entity-condition/index.md); omitting it means unconditional. Tag members are evaluated individually, and overlapping references are unioned; a manual disable takes priority over the definition, and a manual addition can override the condition.
+`id` references a [module configuration](./module.md), not an Agent workflow or a server-side implementation class. `condition` uses Saturn [entity conditions](../../../library/saturn/types/condition/entity-condition.md); omitting it means unconditional. Tag members are evaluated individually, and overlapping references are unioned; a manual disable takes priority over the definition, and a manual addition can override the condition.
 
 Create `data/example/tags/system/system_module/basic.json`, for example:
 

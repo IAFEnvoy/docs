@@ -10,6 +10,14 @@ sidebar_position: 0
 
 模组本身不内置职业、点数种类或数值平衡。资源、公式、条件、能力和动作复用 [Saturn](../../library/saturn/index.md)，支持多种点数、单选、多选、重复加点及选项间的价格和数量联动。
 
+:::info 扩展自 Saturn
+本模组构建在 [Saturn](../../library/saturn/index.md) 之上：资源、公式、条件、技能与动作等类型由 Saturn 提供。
+:::
+
+:::info 扩展自 Saturn
+本模组构建在 [Saturn](../../library/saturn/index.md) 之上：资源、公式、条件、技能与动作等类型由 Saturn 提供。
+:::
+
 ## 适用版本
 
 | 项目 | 本文对应版本 |

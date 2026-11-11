@@ -7,6 +7,10 @@ description: Every built-in block action type registered by the mod, and the JSO
 
 <span id="block-actions-block-action-type" />
 
+:::info Shared with Saturn
+This page lists only MiXianTu's own types; types shared with Saturn (including their `mxt:` alias spellings) are documented in [Saturn's type reference](../../../../../library/saturn/types/action/block-action.md).
+:::
+
 A **block action** operates on one block position in the world. The level and the position are supplied by whatever definition declares the action, and some callers also supply a facing direction; the action itself only describes what to do at that position.
 
 Block actions are a Java (built-in) registry: `type` ids are fixed, and a data pack can neither add entries to it nor remove them. `type` is written on the action object, side by side with its fields, and its value is one of the ids listed on this page, written with the `mxt` namespace. Adding a custom type means writing Java, or going through the KubeJS bridge — see the [KubeJS API](../../../kubejs/api-reference.md).
@@ -48,164 +52,7 @@ Several table types declare block fields and other action fields at the same tim
 The [Datapack Visual Editor](https://datapack.mcdev.tech/) lists a type's fields interactively, which is handy for checking field names without scrolling through the tables on this page.
 :::
 
-## Meta Types {#meta-types}
-
-Meta actions do not touch a block themselves. They decide whether another block action runs, which one runs, and at which position it runs.
-
-### mxt:no_op {#mxt-no-op}
-
-Does nothing and takes no fields. It is the default value of every optional action field.
-
-```json
-{ "type": "mxt:no_op" }
-```
-
-### mxt:js {#mxt-js}
-
-Calls a block action handler that was registered through the KubeJS bridge. The script-side callback receives the `Level`, the `BlockPos`, `params` and the evaluation context.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `id` | String | **required** | The id written when the callback was registered with `MxtActions.block(...)`. |
-| `params` | JSON object | Empty object | Passed to the callback as-is. |
-
-```json
-{
-  "type": "saturn:js",
-  "id": "example:my_block_action",
-  "params": { "radius": 3 }
-}
-```
-
-### mxt:sequence {#mxt-sequence}
-
-Runs a group of block actions in order.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `actions` | Block action array | **required** | The actions to run one after another. |
-
-```json
-{
-  "type": "mxt:sequence",
-  "actions": [
-    { "type": "mxt:light_up" },
-    { "type": "mxt:schedule_tick", "delay": 10 }
-  ]
-}
-```
-
-### mxt:chance {#mxt-chance}
-
-Runs `action` with probability `chance`, otherwise runs `fail_action`.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `action` | Block action | **required** | Runs when the roll succeeds. |
-| `chance` | Number | **required** | Probability of success, from `0` to `1`. |
-| `fail_action` | Block action | `mxt:no_op` | Runs when the roll fails. |
-
-```json
-{
-  "type": "mxt:chance",
-  "chance": 0.25,
-  "action": { "type": "mxt:bonemeal" },
-  "fail_action": { "type": "mxt:break_block" }
-}
-```
-
-A probability outside `0..1` is refused at load. The test is "a random number is less than `chance`", so `1` always succeeds and `0` never does.
-
-### mxt:if_else {#mxt-if-else}
-
-Runs `if_action` when the block condition passes, otherwise `else_action`.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `condition` | Block condition | **required** | The test. |
-| `if_action` | Block action | **required** | Runs when the condition passes. |
-| `else_action` | Block action | `mxt:no_op` | Runs when the condition fails. |
-
-```json
-{
-  "type": "mxt:if_else",
-  "condition": { "type": "mxt:block_tag", "tag": "minecraft:logs" },
-  "if_action": { "type": "mxt:break_block" },
-  "else_action": { "type": "mxt:light_up" }
-}
-```
-
-### mxt:choice {#mxt-choice}
-
-Picks one entry from a weighted list and runs it.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `actions` | Array of weighted entries | **required** | Whichever entry is picked is the one that runs. |
-
-Each entry has this shape:
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` | Block action | **required** | The action that runs when the entry is picked. |
-| `weight` | Integer | `1` | Relative weight; larger weights are picked more often, an entry with `≤0` is never picked, and a table where every entry is `0` picks one uniformly. |
-
-```json
-{
-  "type": "mxt:choice",
-  "actions": [
-    { "value": { "type": "mxt:light_up" }, "weight": 3 },
-    { "value": { "type": "mxt:break_block" }, "weight": 1 }
-  ]
-}
-```
-
-### mxt:offset {#mxt-offset}
-
-Runs a nested action at a relative block offset.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `action` | Block action | **required** | The action to run at the offset position. |
-| `x` | Integer | `0` | Offset along X. |
-| `y` | Integer | `0` | Offset along Y. |
-| `z` | Integer | `0` | Offset along Z. |
-
-```json
-{
-  "type": "mxt:offset",
-  "y": -1,
-  "action": { "type": "mxt:break_block" }
-}
-```
-
 ## Action Types {#action-types}
-
-### mxt:set_block {#mxt-set-block}
-
-Sets the block at the acted position to that block's default state.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `block` | Block ID | **required** | The block to place, in its default state. |
-
-```json
-{ "type": "mxt:set_block", "block": "minecraft:oak_log" }
-```
-
-Only takes effect on the server, and only when that position is loaded.
-
-### mxt:break_block {#mxt-break-block}
-
-Breaks the block at the acted position.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `drop` | Boolean | `true` | Whether it drops its loot. |
-
-```json
-{ "type": "mxt:break_block", "drop": false }
-```
 
 ### mxt:change_aura {#mxt-change-aura}
 
@@ -213,7 +60,7 @@ Changes the aura stored in the chunk that contains the acted position.
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aura` | Map of aura id to number provider | **required** | Keys are [aura](../../json/aura.md) ids and values are [number providers](../number_provider_types.md): how much of that aura to add this time. |
+| `aura` | Map of aura id to number provider | **required** | Keys are [aura](../../json/aura.md) ids and values are [number providers](../../../../../library/saturn/types/number.md): how much of that aura to add this time. |
 
 ```json
 {
@@ -227,102 +74,4 @@ Changes the aura stored in the chunk that contains the acted position.
 
 :::info `mxt:change_aura`
 Keys must be concrete aura ids; a `#tag` will not work. One action can change several aura pools at once. It is applied only on the server, and nothing changes on the client. If any value evaluates to a non-finite number, the whole change is dropped.
-:::
-
-### mxt:schedule_tick {#mxt-schedule-tick}
-
-Schedules one tick for the current block after the given delay.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `delay` | Integer | **required** | How many ticks to delay. |
-
-```json
-{ "type": "mxt:schedule_tick", "delay": 20 }
-```
-
-Only scheduled on the server, and only when that position is loaded.
-
-### mxt:bonemeal {#mxt-bonemeal}
-
-Applies bone meal to the block.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `effect` | Boolean | `true` | Whether to show the vanilla growth particles and sound. |
-
-```json
-{ "type": "mxt:bonemeal", "effect": false }
-```
-
-### mxt:light_up {#mxt-light-up}
-
-Takes no fields. When the block has the vanilla `lit` property, it is set to `true`; a block without that property does nothing.
-
-```json
-{ "type": "mxt:light_up" }
-```
-
-### mxt:explode {#mxt-explode}
-
-Creates an explosion at the acted position.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `power` | Number | **required** | Explosion power. |
-| `interaction` | Vanilla explosion interaction type | `mob` | For example `mob` or `none`. |
-| `indestructible` | Block condition | none | Matching blocks are protected from the explosion. |
-| `create_fire` | Boolean | `false` | Whether the explosion leaves fire behind. |
-
-```json
-{
-  "type": "mxt:explode",
-  "power": 3.0,
-  "interaction": "none",
-  "indestructible": { "type": "mxt:block_tag", "tag": "minecraft:logs" },
-  "create_fire": false
-}
-```
-
-When `power` is not finite, or is negative, nothing happens.
-
-### mxt:spawn_entity {#mxt-spawn-entity}
-
-Spawns an entity at the acted block position and runs an optional entity action on it.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `entity_type` | Entity type ID | **required** | Which entity to spawn. |
-| `tag` | NBT compound tag | none | NBT written into the new entity. |
-| `entity_action` | Entity action | `mxt:no_op` | Runs on the spawned entity. |
-
-```json
-{
-  "type": "mxt:spawn_entity",
-  "entity_type": "minecraft:zombie",
-  "entity_action": { "type": "mxt:set_on_fire", "ticks": 100 }
-}
-```
-
-Only spawned on the server, and only when that position is loaded. The spawn point is the centre of the block, not a corner.
-
-### mxt:send_message {#mxt-send-message}
-
-Sends one message to players.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `message` | Text | **required** | A string is read as a translation key, an object as a full text component. |
-| `channel` | `chat` / `action_bar` | `chat` | Whether the line goes to the chat log or above the hotbar. |
-| `target` | `self` / `other` / `all` | `self` | Who it is addressed to. A block action has only a place and no entity of its own, so only `all` finds anyone. |
-| `recipients` | Entity condition | always true | Asked per candidate player, to narrow the recipients down. |
-
-```json
-{ "type": "mxt:send_message", "message": "your.pack.message_key", "target": "all" }
-```
-
-The fields and what `target` can name are described under the [entity action](./entity_action_types.md#mxt-send-message).
-
-:::info Nested Values
-Only three fields take a value from another family: `condition` on `mxt:if_else` and `indestructible` on `mxt:explode` take a [block condition](../condition/block_condition_types.md), and `entity_action` on `mxt:spawn_entity` takes an [entity action](./entity_action_types.md).
 :::

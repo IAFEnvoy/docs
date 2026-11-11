@@ -9,7 +9,7 @@ sidebar_position: 4
 | --- | --- | --- | --- | --- |
 | `label` | 文本组件 | 否 | 空组件 | 启用条目必须有非空名称；裸字符串是字面文字。 |
 | `items` | ItemStackTemplate 数组 | 否 | `[]` | 启用时至少 1 项，最多 36 项。 |
-| `costs` | [Saturn 费用](../../../library/saturn/types/cost/index.md)数组 | 否 | `[]` | 启用商品必须至少一种费用。 |
+| `costs` | [Saturn 费用](../../../library/saturn/types/cost.md)数组 | 否 | `[]` | 启用商品必须至少一种费用。 |
 | `enabled` | 布尔值 | 否 | `true` | false 可用来禁用覆盖的旧条目。 |
 
 ## 示例

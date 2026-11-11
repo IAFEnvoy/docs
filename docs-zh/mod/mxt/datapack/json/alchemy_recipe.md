@@ -20,7 +20,7 @@ description: 丹方按药性匹配：它声明主药、辅药与药引各要多�
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `type` | String | **必填** | 固定 `mxt:alchemy`。 |
-| `main_requirements` | 药性 id 到 [`NumberProvider`](../types/number_provider_types.md) 的映射 | **必填**，非空 | 主药药性到正药力阈值。常量必须为正。 |
+| `main_requirements` | 药性 id 到 [`NumberProvider`](../../../../library/saturn/types/number.md) 的映射 | **必填**，非空 | 主药药性到正药力阈值。常量必须为正。 |
 | `auxiliary_requirements` | 同上 | `{}` | 辅药阈值。可以留空。 |
 | `catalyst_requirement` | `NumberProvider` | **必填** | 药引的调和药力阈值。常量必须为正。 |
 | `balance_tolerance` | `NumberProvider` | `0` | 寒热容限，常量必须在 `[0,1]`。 |

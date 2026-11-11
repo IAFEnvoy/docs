@@ -24,7 +24,7 @@ title: tribulation（天劫）
 
 `condition` 是**附加门槛**，不是事件触发器：决定要不要开一场天劫的是引用它的地方（`realm_stage` 的 `tribulation`），这里只决定那次启动是否被接受。
 
-`timeline` 的每一项是一个节拍。运行游标怎么走、每个节拍读哪些字段、等待时长怎么换算、启动前会预检什么，见[天劫节拍类型](../types/other/timeline-entry.md)。
+`timeline` 的每一项是一个节拍。运行游标怎么走、每个节拍读哪些字段、等待时长怎么换算、启动前会预检什么，见[天劫节拍类型](../../../../library/saturn/types/timeline.md)。
 
 `windup` 是**启动前摇**：天劫被接受之后先空转这么多 tick，第一拍才开始。它和等待时长走同一条换算规则（`windup × difficulty_scale × max(0, 1 + aura_tribulation_modifier)`；写 `0`、或算不出正数，就等于没有前摇），并在**启动那一刻结算一次**：之后每 tick 只减一，所以玩家看到的倒计时就是真正会走完的 tick 数，中途灵气变化不会把它拉长。前摇期间不消费节拍、不写现场，但这一场天劫已经算在进行——重复启动照样被拒绝，`status` 报的是「还在前摇，还剩 N tick」，`darken_sky` 也照常生效。剩余 tick 跟着附件一起存档、一起同步，所以存档退出再进来是接着倒计时，而不是从头开始。
 

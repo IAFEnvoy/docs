@@ -7,10 +7,10 @@ File: `data/<namespace>/saturn/trigger/<path>.json`. This file is the rule defin
 
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `trigger` | [Trigger](../types/trigger/index.md) | yes | — | The game signal to subscribe to and match. |
-| `condition` | [Entity condition](../types/entity-condition/index.md) | no | always true | Checks the actor after the signal matches. |
-| `action` | [Entity action](../types/entity-action/index.md) | no | empty action | Runs after the condition and chance pass. |
-| `chance` | [Number provider](../types/number/index.md) | no | `1` | Chance of matching, 0–1. |
+| `trigger` | [Trigger](../types/trigger.md) | yes | — | The game signal to subscribe to and match. |
+| `condition` | [Entity condition](../types/condition/entity-condition.md) | no | always true | Checks the actor after the signal matches. |
+| `action` | [Entity action](../types/action/entity-action.md) | no | empty action | Runs after the condition and chance pass. |
+| `chance` | [Number provider](../types/number.md) | no | `1` | Chance of matching, 0–1. |
 | `cooldown` | Number provider | no | `0` | Cooldown of the rule for the same actor, in ticks. |
 
 ## Example: notify when a specific advancement is completed

@@ -7,7 +7,7 @@ description: "Hangs an aura identity and cultivation behaviour on one stored val
 
 <span id="aura-aura" />
 
-[resource](./resource.md) only stores one number per entity: its bounds and how it is shown. An `aura` definition hangs an aura identity and cultivation behaviour on **one** value — which element it belongs to, which realm chain it enters through, how it regenerates on its own, how it converts back and forth with cultivation progress, and when it can be spent on purpose. The two are **one to one**: a value has at most one aura definition, and the server rejects a duplicate outright while it builds its cache.
+[resource](../../../../library/saturn/data/resource.md) only stores one number per entity: its bounds and how it is shown. An `aura` definition hangs an aura identity and cultivation behaviour on **one** value — which element it belongs to, which realm chain it enters through, how it regenerates on its own, how it converts back and forth with cultivation progress, and when it can be spent on purpose. The two are **one to one**: a value has at most one aura definition, and the server rejects a duplicate outright while it builds its cache.
 
 ## File Location {#file-location}
 
@@ -34,7 +34,7 @@ The filename corresponds to its ID, which is independent of the value it describ
 
 `aura_type` is also what a spirit burst depends on: an aura without this marker cannot be fired by a spirit burst, and both firing paths require it to exist.
 
-The value's own bounds (`min` / `max` / `default_value`), icon, ray colour and resource bars all live on the [resource](./resource.md) side and are not written out a second time here. A value with no matching aura definition is a plain counter: it can still be spent, compared and read by formulas, but it **cannot be stored in an item** — the access interfaces exchange auras, and a plain counter has no aura identity.
+The value's own bounds (`min` / `max` / `default_value`), icon, ray colour and resource bars all live on the [resource](../../../../library/saturn/data/resource.md) side and are not written out a second time here. A value with no matching aura definition is a plain counter: it can still be spent, compared and read by formulas, but it **cannot be stored in an item** — the access interfaces exchange auras, and a plain counter has no aura identity.
 
 `resource` takes a **single value ID only**: no `#tag`, and no array — one aura describes one value.
 

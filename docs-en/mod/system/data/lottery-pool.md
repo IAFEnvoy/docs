@@ -8,7 +8,7 @@ Registry: `system:lottery_pools`. Each confirmation draws one complete prize pac
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `label` | Text component | no | Empty component | Must be non-empty when enabled. |
-| `costs` | [Saturn cost](../../../library/saturn/types/cost/index.md) array | no | `[]` | An empty list means a free draw. |
+| `costs` | [Saturn cost](../../../library/saturn/types/cost.md) array | no | `[]` | An empty list means a free draw. |
 | `entries` | Prize entry array | no | `[]` | At least one entry when enabled. |
 | `enabled` | Boolean | no | `true` | Can be disabled by an override. |
 

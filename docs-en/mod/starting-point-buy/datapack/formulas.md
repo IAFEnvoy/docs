@@ -4,7 +4,7 @@ description: Generated variable names, evaluation order, linked choices, complet
 sidebar_position: 3
 ---
 
-Number fields use Saturn [NumberProvider](../../../library/saturn/types/number/index.md) directly: a constant, formula string or typed number object. Formulas use exp4j rather than JavaScript; combine Boolean logic with Saturn EntityConditions.
+Number fields use Saturn [NumberProvider](../../../library/saturn/types/number.md) directly: a constant, formula string or typed number object. Formulas use exp4j rather than JavaScript; combine Boolean logic with Saturn EntityConditions.
 
 ## Generated variable names
 

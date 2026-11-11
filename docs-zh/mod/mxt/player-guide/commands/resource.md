@@ -6,7 +6,7 @@ title: /resource
 
 <span id="resource" />
 
-`/resource` 管的是**数值账户**（`saturn:resource`）：读或改写自己身上某一份数值，以及看那份数值声明的[资源条](../../datapack/json/resource.md)现在会算出什么。**写入需要 gamemaster 权限，查询不需要。**
+`/resource` 管的是**数值账户**（`saturn:resource`）：读或改写自己身上某一份数值，以及看那份数值声明的[资源条](../../../../library/saturn/data/resource.md)现在会算出什么。**写入需要 gamemaster 权限，查询不需要。**
 
 <div className="cmd-tree">
 
@@ -46,7 +46,7 @@ title: /resource
 
 ## 与 HUD 的关系 {#与-hud-的关系}
 
-这条命令打的是**数值本身**，不是屏幕上画出来的像素。游戏里画条的是 HUD 元素（`resource_bars.left` / `resource_bars.right` / 目标 / Boss），它们的开关、位置和缩放见[HUD 与面板](../hud.md)与 `/hud`。两边读的是同一份定义与同一个上下文，所以命令里看到的值和条上应该一致；不一致时先看[可见性条件](../../datapack/json/resource.md)是不是把那一条挡掉了，或者锚点是不是被拖到了窗口外。
+这条命令打的是**数值本身**，不是屏幕上画出来的像素。游戏里画条的是 HUD 元素（`resource_bars.left` / `resource_bars.right` / 目标 / Boss），它们的开关、位置和缩放见[HUD 与面板](../hud.md)与 `/hud`。两边读的是同一份定义与同一个上下文，所以命令里看到的值和条上应该一致；不一致时先看[可见性条件](../../../../library/saturn/data/resource.md)是不是把那一条挡掉了，或者锚点是不是被拖到了窗口外。
 
 ## 顶层别名 {#顶层别名}
 

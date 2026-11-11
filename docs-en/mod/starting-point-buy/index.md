@@ -10,6 +10,14 @@ Starting Point Buy (mod ID: `spb`) provides a data-driven starting-point allocat
 
 The mod contains no built-in professions, currencies or balance values. Resources, formulas, conditions, abilities and actions use [Saturn](../../library/saturn/index.md). Plans support multiple resources, single choice, multiple choice, repeated purchases, and choices that change other prices or quantity limits.
 
+:::info Extension of Saturn
+This mod is built on [Saturn](../../library/saturn/index.md): types such as resources, formulas, conditions, abilities and actions are provided by Saturn.
+:::
+
+:::info Extension of Saturn
+This mod is built on [Saturn](../../library/saturn/index.md): types such as resources, formulas, conditions, abilities and actions are provided by Saturn.
+:::
+
 ## Applicable versions
 
 | Item | Version covered here |

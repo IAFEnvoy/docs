@@ -24,7 +24,7 @@ Java extensions should reuse the existing data definitions, actions, conditions,
 | **Datapack registries** | Add or override entries under `data/<namespace>/mxt/`; see [JSON Data Formats](../datapack/json/index.md). |
 | **Attachments** | Store per-entity, per-level and per-chunk state in NeoForge attachment types; the mod registers its own in `MxtAttachments`, for example `CULTIVATION`, `SPIRIT_IDENTITY` and `RESOURCE_HOLDER`, and they are read with `entity.getData(...)`. |
 | **Actions and conditions** | Reuse the built-in entity, bi-entity, block, item and damage action and condition types, or register new built-in types; see [Types Reference](../datapack/types/index.md). |
-| **Number providers** | Supply any numeric field from a constant, an expression or a registered provider type; see [Number Provider Types](../datapack/types/number_provider_types.md). |
+| **Number providers** | Supply any numeric field from a constant, an expression or a registered provider type; see [Number Provider Types](../../../library/saturn/types/number.md). |
 | **Formation modules** | Add a formation module by writing one `FormationActionType` record and registering it; see [Public API](./api.md). |
 | **Information panel** | Add your own lines to the character information panel with `InformationManager`; see [Information Panel](./information-panel.md). |
 | **Wheel entries** | Add a client-side wheel entry by implementing `WheelMenuEntry`; see [Wheel Entries](./wheel.md). |

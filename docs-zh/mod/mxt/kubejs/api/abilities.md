@@ -55,7 +55,7 @@ MxtAbilities.selector('example:nearest_three', (actor, context, params) => {
 
 ## 相关 {#相关}
 
-- 数据包侧：技能定义 [`ability`](../../datapack/json/ability.md)、法器 [`artifact`](../../datapack/json/artifact.md)、功法 [`technique`](../../datapack/json/technique.md)。
+- 数据包侧：技能定义 [`ability`](../../../../library/saturn/data/ability.md)、法器 [`artifact`](../../datapack/json/artifact.md)、功法 [`technique`](../../datapack/json/technique.md)。
 - 同一套来源账本的另一个使用者：[MxtCurses](./curses.md)。
 - 技能被触发时的回调：[MxtEvents](./events.md) 的 `abilityUse` 与 `abilityTriggered`。
 - [KubeJS API 参考](../api-reference.md)。
