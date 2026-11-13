@@ -82,16 +82,13 @@ sidebar_position: 3
 
 > **操作：** 能力 JSON 基本兼容。通过 `power.<ns>.<path>.name` / `.description` 键翻译能力名称和描述。
 
-### `origins:multiple` — 拆分为单独文件 {#originsmultiple--split-into-individual-files}
+### `origins:multiple` — 保留单文件中的子能力 {#originsmultiple--split-into-individual-files}
 
-Fabric 的 `origins:multiple` 能力类型（把多个子能力打包进一个 JSON 文件）在 NeoForge 中**不存在**。每个子能力都必须提取为独立的、单独的能力 JSON 文件。
+NeoForge **支持 `origins:multiple`**，可以在同一个 JSON 文件中组合多个子能力。移植时保留原有组合结构即可。
 
-| Fabric | NeoForge |
-|--------|----------|
-| 一个包含嵌套子能力的 `multiple` JSON | 每个能力一个文件，分别引用 |
-| `"type": "origins:multiple"` 加 `"powers": [...]` | 每个能力都有自己的文件，放在 `data/<ns>/origins/power/` |
+每个子能力直接作为 `origins:multiple` 对象中的具名字段，其值为完整的能力定义。保留字段与示例见 [`origins:multiple` 参考文档](../../types/power/regular.md#originsmultiple)。
 
-> **操作：** 为 `origins:multiple` 的 `powers` 列表中的每个条目创建一个单独的能力 JSON 文件。在起源的 `powers` 字段或能力 `#tag` 中引用所有拆分后的能力 ID。
+> **操作：** 将整个能力文件从 `data/<ns>/powers/` 移至 `data/<ns>/origins/power/`。在起源的 `powers` 字段或能力 `#tag` 中保留父能力 ID，并按本指南检查各子能力的字段、条件和动作是否需要调整。
 
 ---
 
@@ -155,7 +152,8 @@ Changes to apply:
    Use #tag references in origins instead of listing individual origin IDs.
 4. Update icon format: old "item"/"damage"/"nbt" → new {"id": "minecraft:..."}
    Use #tag references in powers instead of listing individual power IDs.
-5. Split any origins:multiple powers into individual power JSON files.
+5. Keep origins:multiple powers in one JSON file with named sub-power fields.
+   Port each sub-power's fields, conditions, and actions as needed.
 6. Replace removed condition types (command, category, high_humidity, owner) with equivalent alternatives or JS scripts. `entity_group` is available again as a limited power, not a condition.
 7. Check the porting guide at porting.md for the full list of differences.
 ```

@@ -82,16 +82,13 @@ All JSON files moved from custom paths to **Vanilla DataPack Registry** paths.
 
 > **Action:** Power JSONs are mostly compatible. Translate power names/descriptions via `power.<ns>.<path>.name` / `.description` keys.
 
-### `origins:multiple` — Split into individual files
+### `origins:multiple` — Keep sub-powers in one file {#originsmultiple--split-into-individual-files}
 
-Fabric's `origins:multiple` power type (which bundled several sub-powers into one JSON file) **does not exist** in NeoForge. Each sub-power must be extracted into its own standalone power JSON file.
+NeoForge **supports `origins:multiple`**, which groups several sub-powers in a single JSON file. Keep the existing grouping when porting.
 
-| Fabric | NeoForge |
-|--------|----------|
-| One `multiple` JSON with nested sub-powers | One file per power, referenced individually |
-| `"type": "origins:multiple"` with `"powers": [...]` | Each power gets its own file in `data/<ns>/origins/power/` |
+Each sub-power is a named field directly in the `origins:multiple` object, with a complete power definition as its value. See the [`origins:multiple` reference](../../types/power/regular.md#originsmultiple) for reserved fields and an example.
 
-> **Action:** For each entry in the `powers` list of an `origins:multiple`, create a separate power JSON file. Reference all the split power IDs in the origin's `powers` field or a power `#tag`.
+> **Action:** Move the entire power file from `data/<ns>/powers/` to `data/<ns>/origins/power/`. Keep the parent power ID in the origin's `powers` field or power `#tag`, and check each sub-power's fields, conditions, and actions for changes described in this guide.
 
 ---
 
@@ -155,7 +152,8 @@ Changes to apply:
    Use #tag references in origins instead of listing individual origin IDs.
 4. Update icon format: old "item"/"damage"/"nbt" → new {"id": "minecraft:..."}
    Use #tag references in powers instead of listing individual power IDs.
-5. Split any origins:multiple powers into individual power JSON files.
+5. Keep origins:multiple powers in one JSON file with named sub-power fields.
+   Port each sub-power's fields, conditions, and actions as needed.
 6. Replace removed condition types (command, category, high_humidity, owner) with equivalent alternatives or JS scripts. `entity_group` is available again as a limited power, not a condition.
 7. Check the porting guide at porting.md for the full list of differences.
 ```
