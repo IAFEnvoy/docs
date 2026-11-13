@@ -128,10 +128,10 @@ const config = {
             position: 'left',
             label: 'Libraries',
             items: [
-              { to: '/docs/library/jupiter', label: 'Jupiter' },
-              { to: '/docs/library/saturn', label: 'Saturn' },
-              { to: '/docs/library/uranus', label: 'Uranus' },
-              { to: '/docs/library/neptune', label: 'Neptune' },
+              { to: '/docs/library/jupiter', label: 'Jupiter', icon: 'img/navbar/jupiter.webp' },
+              { to: '/docs/library/saturn', label: 'Saturn', icon: 'img/navbar/saturn.webp' },
+              { to: '/docs/library/uranus', label: 'Uranus', icon: 'img/navbar/uranus.webp' },
+              { to: '/docs/library/neptune', label: 'Neptune', icon: 'img/navbar/neptune.webp' },
             ]
           },
           {
@@ -139,15 +139,15 @@ const config = {
             position: 'left',
             label: 'Mods',
             items: [
-              { to: '/docs/mod/dragon-mounts-reforged', label: 'Dragon Mounts: Reforged' },
-              { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE' },
-              { to: '/docs/mod/mxt', label: 'MiXianTu' },
-              { to: '/docs/mod/mite', label: 'MITE: Reforged' },
-              { to: '/docs/mod/origins', label: 'Origins (NeoForge)' },
-              { to: '/docs/mod/origins-js', label: 'Origins JS' },
-              { to: '/docs/mod/pendulum', label: 'Pendulum' },
-              { to: '/docs/mod/starting-point-buy', label: 'Starting Point Buy' },
-              { to: '/docs/mod/system', label: 'System' },
+              { to: '/docs/mod/dragon-mounts-reforged', label: 'Dragon Mounts: Reforged', icon: 'img/navbar/dragon-mounts-reforged.webp' },
+              { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE', icon: 'img/navbar/ice-and-fire-ce.webp' },
+              { to: '/docs/mod/mxt', label: 'MiXianTu', icon: 'img/navbar/mxt.webp' },
+              { to: '/docs/mod/mite', label: 'MITE: Reforged', icon: 'img/navbar/mite.webp' },
+              { to: '/docs/mod/origins', label: 'Origins (NeoForge)', icon: 'img/navbar/origins.webp' },
+              { to: '/docs/mod/origins-js', label: 'Origins JS', icon: 'img/navbar/origins-js.webp' },
+              { to: '/docs/mod/pendulum', label: 'Pendulum', icon: 'img/navbar/pendulum.webp' },
+              { to: '/docs/mod/starting-point-buy', label: 'Starting Point Buy', icon: 'img/navbar/starting-point-buy.webp' },
+              { to: '/docs/mod/system', label: 'System', icon: 'img/navbar/system.webp' },
             ]
           },
           {
@@ -163,10 +163,10 @@ const config = {
             position: 'left',
             label: 'Deprecated',
             items: [
-              { to: '/docs/library/annotation-lib', label: 'Annotation Lib' },
-              { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn' },
-              { to: '/docs/mod/mobs-banner', label: 'Mobs Banner' },
-              { to: '/docs/mod/tameable', label: 'Tameable' },
+              { to: '/docs/library/annotation-lib', label: 'Annotation Lib', icon: 'img/navbar/annotation-lib.webp' },
+              { to: '/docs/mod/avaritia-reborn', label: 'Avaritia Reborn', icon: 'img/navbar/avaritia-reborn.webp' },
+              { to: '/docs/mod/mobs-banner', label: 'Mobs Banner', icon: 'img/navbar/mobs-banner.webp' },
+              { to: '/docs/mod/tameable', label: 'Tameable', icon: 'img/navbar/tameable.webp' },
             ]
           },
           {
@@ -245,7 +245,7 @@ const config = {
       algolia: {
         appId: 'L0D3UPINT6',
         apiKey: 'e2e9ba7af6e58bfe5b708a92768cb4e2',
-        indexName: 'MAIN_INDEX',
+        indexName: 'MAIN_INDEX'
       },
     }),
 };

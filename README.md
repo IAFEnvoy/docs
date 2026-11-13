@@ -72,6 +72,16 @@ The command preserves existing messages and marks newly extracted entries. Revie
 
 Save intentional translation changes back to `locales/zh/`, then run `pnpm sync-i18n` to clear temporary extraction files. Do not use `--override` for this check. See [AGENTS.md](AGENTS.md) for document writing conventions and further translation checks.
 
+## Navbar icons
+
+Add an optional `icon` path to a navbar entry in `docusaurus.config.js`. It works on both dropdown headings and their links, on desktop and mobile:
+
+```js
+{ to: '/docs/mod/mxt', label: 'MiXianTu', icon: 'img/navbar/mxt.webp' }
+```
+
+Place the image under `static/` (the example uses `static/img/navbar/mxt.webp`). Images fit within a 20 × 20 px box; entries without `icon` keep their normal text layout. Keep `label` as plain text so native navbar translations and accessibility names continue to work. `src/theme/NavbarItem/NavbarNavLink/` adds the image while retaining the original link and dropdown behavior.
+
 ## Old links and language selection
 
 The root `/` and old `/docs/…` links use the last language saved in the browser's `localStorage` (`docs.preferredLocale`). Without a saved preference, they lead to `/en/language`, carrying the original document destination in the `from` parameter. Choosing a language or visiting an explicit `/en/` or `/zh/` page updates the preference. The original document path, query string and fragment are preserved.
