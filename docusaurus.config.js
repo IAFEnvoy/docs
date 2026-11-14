@@ -140,6 +140,7 @@ const config = {
             label: 'Mods',
             items: [
               { to: '/docs/mod/dragon-mounts-reforged', label: 'Dragon Mounts: Reforged', icon: 'img/navbar/dragon-mounts-reforged.webp' },
+              { to: '/docs/mod/evaluate', label: 'Evaluate', icon: 'img/navbar/evaluate.webp' },
               { to: '/docs/mod/ice-and-fire-ce', label: 'Ice And Fire CE', icon: 'img/navbar/ice-and-fire-ce.webp' },
               { to: '/docs/mod/mxt', label: 'MiXianTu', icon: 'img/navbar/mxt.webp' },
               { to: '/docs/mod/mite', label: 'MITE: Reforged', icon: 'img/navbar/mite.webp' },
