@@ -18,7 +18,7 @@ NLS 凭据为客户端 AppKey 与 AccessKey ID / Secret；`AliyunNlsToken` 通�
 | Minecraft / NeoForge | 26.1.2 / 26.1.2.114 |
 | ApricityUI | 1.2.9；客户端最低版本 1.2.9 |
 | Jupiter | CurseMaven 8569832 |
-| Saturn | 1.2.6 / CurseMaven 9509793；客户端和服务端均必装，统一 Cost、模块 DataStorage、Codec 工具、压缩 NBT 文件、玩家信息视图及 HUD 编辑器 |
+| Saturn | 1.3.1 / CurseMaven 9606807；客户端和服务端均必装，提供 CostTarget.display、Cost、模块 DataStorage、Codec 工具、压缩 NBT 文件、玩家信息视图及 HUD 编辑器 |
 | Simple Voice Chat | 2.6.26+26.1.2 / CurseMaven 9307181；可选客户端录音，compileOnly + localRuntime，不打入发布 JAR |
 | Card JSON 编辑器（独立开发工具） | Vite 8.3.6；Node.js ^20.19.0 或 >=22.12.0，位于 html/card-editor；不进入模组 JAR |
 | Gson | 2.13.2；主项目直接声明依赖，Minecraft 提供运行时类 |
@@ -29,7 +29,7 @@ NLS 凭据为客户端 AppKey 与 AccessKey ID / Secret；`AliyunNlsToken` 通�
 
 AUI 1.2.9 将布局状态从 `RenderElement` 拆到 `LayoutState`。卡片折叠与分页刷新通过 `Element.getLayout().invalidateLayoutSubtree()` 使布局失效，再由 `AssistantPages.commit` 提交更新。
 
-玩家查询与卡片使用 Saturn 的 `data.information.PlayerViews`、`PlayerInformation` 与 `InformationText`，展示结果类型为 `data.information.model.InformationEntry`。查询仍选取 basic/status 分组和既有行白名单，并保留 32 行、每行 256 字的上限；分组按 ResourceKey 从当前世界解析为 Holder，结果通过 entry.value()/label()/tooltip() 直接使用；排序和 importance 从原始行定义读取。Saturn 为必装依赖，最低版本为 1.2.6，通知位置编辑复用其 HUD 框架，存档使用其 `NBT_COMPRESSED` 入口。版本和 CurseMaven 文件 ID 分别由 `gradle.properties` 的 `saturn_version`、`saturn_file_id` 管理，依赖元数据同步使用同一最低版本。
+玩家查询与卡片使用 Saturn 的 `data.information.PlayerViews`、`PlayerInformation` 与 `InformationText`，展示结果类型为 `data.information.model.InformationEntry`。查询仍选取 basic/status 分组和既有行白名单，并保留 32 行、每行 256 字的上限；分组按 ResourceKey 从当前世界解析为 Holder，结果通过 entry.value()/label()/tooltip() 直接使用；排序和 importance 从原始行定义读取。Saturn 为必装依赖，最低版本为 1.3.1，通知位置编辑复用其 HUD 框架，存档使用其 `NBT_COMPRESSED` 入口。费用展示 API 已包含在发布版 1.3.1 中，依赖坐标为 `curse.maven:saturn-lib-1767455:9606807`；版本和 CurseMaven 文件 ID 分别由 `gradle.properties` 的 `saturn_version`、`saturn_file_id` 管理，依赖元数据使用同一最低版本。
 
 Agent 机制与接口保留在 `com.iafenvoy.system.agent`：引擎、执行器、上下文、Module/Tool/Store/Journal 契约、路由与模型调用。具体工作流和功能装配位于 `module/builtin`，MC 业务、绑定和交易位于 `assistant`，参数结果、持久化与资源加载位于 `data`，语音行为及任务口播位于 `speech`。业务 DataStorage 继续放在 `module/builtin/storage`，执行账本实现位于 `data/store`。通用工具、配置、游戏界面、网络与可选兼容层保留对应包；所有代码仍共用主源码集与 Java 25 工具链。详细边界见[包职责与数据流](architecture.md)及[功能模块化](modules.md)。
 
@@ -98,7 +98,7 @@ AssistantServer 的 INSTANCE 随服务端加载创建、卸载清空并关闭，
 
 SystemDataPackRegistries 通过 DataPackRegistryEvent 同时登记 system:system 和 system:system_module，两者均使用同一个数据/网络 Codec 同步。SystemDefinition 保存名称/介绍翻译键及模块引用；ModuleDefinition 的 Either 指向 `Holder<SystemModule>` 或 `TagKey<SystemModule>`，condition 使用 Saturn EntityCondition。模块配置文件为 `data/<namespace>/system/system_module/<path>.json`，server 通过 ServerModule.CODEC 分派，client 仅为本地实现 ID。系统仍按玩家绑定 ID 从 RegistryAccess 读取，不缓存跨世界快照。ModuleManager 以配置 ID 管理启停、运行时和权限，当前参数配置只在世界加载时读取，不是 /reload retained listener。手动覆盖仍由玩家 ModuleAccessDataStorage 保存，撤销删除业务数据但保留用量。
 
-同一入口还登记服务端专用的 system:signin_rewards、system:shop_offers、system:lottery_pools 三张原生数据包注册表，分别使用 SignInRewardEntry、ShopOfferEntry 和 LotteryPool 的 CODEC，不提供网络 Codec。模块的 rewards / offers / pools 使用 Saturn RegistryCodecs.keyOrTagList，在同步配置中只传 ResourceKey / TagKey，不要求客户端解析服务端 Cost 或全目录。三张目录注册表的条目在世界加载时读取，tag 由原版流程加载与重载。
+同一入口还登记服务端专用的 system:signin_reward、system:shop_offer、system:lottery_pool 三张原生数据包注册表，分别使用 SignInRewardEntry、ShopOfferEntry 和 LotteryPool 的 CODEC，不提供网络 Codec。模块的 rewards / offers / pools 使用 Saturn RegistryCodecs.keyOrTagList，在同步配置中只传 ResourceKey / TagKey，不要求客户端解析服务端 Cost 或全目录。在线作业另由服务端专用的 `system:online_job` 注册表加载；币种 `system:currency` 则同步元数据，不广播余额。定义在世界加载时读取，tag 由原版流程加载与重载。
 
 配置类各自声明 `FILE_NAME`、`CODEC` 和 `ConfigInstance<T> INSTANCE = ConfigInstance.of(...)`。容器首次初始化时从 `/defaults/<文件名>` 复制缺失的默认文件，再通过 Codec 读取；已有文件不覆盖，加载失败时记录错误并在内存中使用默认值。读取使用 `INSTANCE.get()`，提交不可变新值使用 `INSTANCE.set(next)`，实际变化由容器自动调用 `markDirty()`。若未来使用可变配置并原地修改，则必须显式调用 `INSTANCE.markDirty()`，不能绕过变更标记。
 
@@ -268,7 +268,7 @@ ModuleAccess 在登录事务中取得绑定 ID，在主线程确认定义仍存�
 
 ## 商城与目录扩展
 
-`data/catalog/CommerceCatalog` 从当前服务端 RegistryAccess 的三张目录注册表建立不可变业务快照；默认内容也放在 JAR 内 `data/system/system/signin_rewards/`、`shop_offers/` 与 `lottery_pools/`，原路径不变。CatalogReloadListener、目录文件扫描和逐 tick 发布逻辑已删除。原版负责资源优先级、条目 ID、Codec 加载与 tag，条目修改需重开世界 / 重启服务器；目录版本按服务端实例生成，不使用跨世界静态数据。提示词仍使用 retained reload listener 读取 txt。
+`data/catalog/CommerceCatalog` 从当前服务端 RegistryAccess 的三张目录注册表建立不可变业务快照；默认内容也放在 JAR 内 `data/system/system/signin_reward/`、`shop_offer/` 与 `lottery_pool/`，注册表目录统一为单数。CatalogReloadListener、目录文件扫描和逐 tick 发布逻辑已删除。原版负责资源优先级、条目 ID、Codec 加载与 tag，条目修改需重开世界 / 重启服务器；目录版本按服务端实例生成，不使用跨世界静态数据。提示词仍使用 retained reload listener 读取 txt。
 
 签到、商城和抽奖实现 CatalogModule，声明对应目录注册表与可选 ResourceKey / TagKey 列表。ModuleManager 将配置注册到 CommerceCatalogs，catalogs.available(player) 仅合并该玩家已启用定义允许的条目，同类配置取并集、目录顺序稳定且不重复；省略字段允许全表，空数组为空。内置三模块显式引用各表自己的 #system:default。所有列表、签到候选与提交、报价和扣款均读取这份受限视图，收件箱状态也使用同一入口；成就事件显式读取原始目录。原生 tag 重载无需重建业务内容快照，后续查询读取当前成员；确认和支付前还会检查报价来源是否仍可用。同类配置共用原有对应交易账本，允许重复装配同一静态 ModuleStorage，不重复注册存储类型。格式见 [扩展配置](https://github.com/IAFEnvoy/System-Mod/blob/master/docs/datapacks.md#模块目录可选项)。
 
@@ -280,7 +280,7 @@ ModuleAccess 在登录事务中取得绑定 ID，在主线程确认定义仍存�
 
 奖池浏览只发送一张 `LotteryCatalogOutput` 卡片：单元格携带奖池名与最多 2 件最稀有奖品的公开模板，点击格子才展开该奖池的 `system:lottery_preview`（沿用 `pool.<下标>` 服务端按钮，参数含目录版本），报价仍只在实际打开时求值。详情卡片 `LotteryPoolOutput.prizes` 通过 Codec 携带最多 64 个公开奖励模板、权重及完整总权重，货架与 tooltip 由同一份数据生成；`lottery_prize` 卡片类型保留给旧历史，不再逐奖品发送。预览不会生成抽奖结果、扣款或调用模型。单物品消耗统一由 `AssistantItems` 渲染，免费、资源及其他 Cost 使用文字；签到候选的物品卡片保留所属奖励包名称。
 
-商城 / 抽奖模块共用只读 `CommercePreviewTool`，由 `CommerceTransactions.preview` 在游戏线程按目录 ID 获取可信费用并生成 `CommerceCosts.Prepared`。Cost 只定价一次，短期报价保留绑定玩家实体、支付目标及金额的 Saturn `CostPayment`；确认沿用该账单，掉线 / 重生导致实体更换时拒绝旧账单。`CostContext` 包含 `origin=system:shop` / `system:lottery` 和 `system:source`，扩展 Cost 可读取。系统不再保留单独的系统币接口或自定义物品扣款器；币可由 Saturn 资源或扩展 Cost 表达。
+商城 / 抽奖模块共用只读 `CommercePreviewTool`，由 `CommerceTransactions.preview` 在游戏线程按目录 ID 获取可信费用并生成 `CommerceCosts.Prepared`。Cost 只定价一次，短期报价保留绑定玩家实体、支付目标及金额的 Saturn `CostPayment`；确认沿用该账单，掉线 / 重生导致实体更换时拒绝旧账单。`CostContext` 包含 `origin=system:shop` / `system:lottery` 和 `system:source`，扩展 Cost 可读取。系统不再保留自定义物品扣款器；[经济模块](../guides/economy.md)的钱包通过 `system:currency` Cost 接入同一支付流程，Saturn 资源费用仍可使用。
 
 `Prepared` 用 `Optional<Failure>` 表达定价拒绝（空即成功），展示价格单独作为字段持有——定价失败时预览仍需显示价格与失败说明，因此价格不能塞进「成败」里。对外以 `getData()` 读取展示价格、以 `isSuccess()` 判断是否可生成报价、以 `failure()` 读取拒绝原因；资源名由 `Failure.resource()` 提供（构造时会用 `withResource` 带上失败资源）。失败说明在创建不可变价格快照前加入，并由 `Failure.message(failedResource)` 格式化；账单、支付玩家及扣款跟踪留在服务端，不进入客户端快照。客户端 DTO 中的 `available` 仅是上述成功状态的投影。
 
@@ -369,3 +369,7 @@ AssistantServer 统一拥有 AgentDatabases：`<存档>/system/database/shared.d
 system:question 默认 6 次模型、9 次工具、20 步、90 秒，单次模型最多 20 秒，查库 / 内部 FTB 查询和网络步骤共用预算。Descriptor.optionalTools 声明可选只读依赖，未启用搜索模块不会禁用本地问答。数据库为空、当前 QuestionInput.allowWeb 明确允许且搜索工具已启用时才进入 WebResearch；有结果或查库失败均不搜索。问答语义样例仅作提示，不本地直达或缓存授权；网络已有证据时预留最终整理，不自动重试收费工具。详见[搜索配置与流程](../guides/search.md)。
 
 管理员 AI 权限由当前存档的 `AiAccessData` SavedData 保存，按 UUID 覆盖本存档默认等级，不改写玩家的外部 AI / 自由聊天 / 历史偏好。新流程及数据、接口见 [自由聊天](../guides/ai-modes.md)。
+
+## 系统钱包
+
+[币种定义](../data/currency.md)由同步注册表提供，余额由经济模块的 WalletDataStorage 按玩家持久保存。`system:add_currency` 实体动作、基于 Saturn Comparison 的 `system:currency` 实体条件，以及同名 Cost 分别注册到 Saturn 对应的类型表。查询只读自己的余额，修改留在服务端；格式与限制见[经济指南](../guides/economy.md)。

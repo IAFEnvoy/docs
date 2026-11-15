@@ -4,9 +4,9 @@ sidebar_label: "方块条件 (BlockCondition)"
 sidebar_position: 3
 ---
 
-# 方块条件
-
 检查上下文位置的方块或环境。嵌入 BlockCondition 字段。
+
+## 类型
 
 ### `saturn:adjacent` {#saturnadjacent}
 
@@ -30,6 +30,44 @@ sidebar_position: 3
   },
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:air` {#saturnair}
+
+目标是空气
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:air` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:air"
+}
+```
+
+</details>
+
+### `saturn:attachable` {#saturnattachable}
+
+至少一个相邻方块朝向目标的面可以支撑附着物
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:attachable` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:attachable"
 }
 ```
 
@@ -79,6 +117,25 @@ sidebar_position: 3
 
 </details>
 
+### `saturn:block_entity` {#saturnblock_entity}
+
+目标位置具有方块实体
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:block_entity` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:block_entity"
+}
+```
+
+</details>
+
 ### `saturn:block_id` {#saturnblock_id}
 
 检查当前位置的方块是否为指定类型。
@@ -100,6 +157,35 @@ sidebar_position: 3
 
 </details>
 
+### `saturn:block_state` {#saturnblock_state}
+
+检查方块属性：布尔值、序列化枚举名或整数比较；缺失属性或不匹配的字段返回 false
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:block_state` |
+| `property` | 字符串 | 是 | — | 方块状态属性名。 |
+| `value` | 布尔值 | 否 | 省略 | 固定布尔值；用于方块属性时，匹配或设置布尔属性。 |
+| `enum` | 字符串 | 否 | 省略 | 属性序列化后的名称，如 north、bottom。 |
+| `comparison` | 枚举字符串 | 否 | 省略 | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 否 | 省略 | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:block_state",
+  "property": "age",
+  "comparison": ">=",
+  "compare_to": 7
+}
+```
+
+</details>
+
+布尔属性使用 `value`，枚举属性使用 `enum`，整数属性同时使用 `comparison` 与 `compare_to`。类型不合适、字段不足或属性不存在时返回 false。
+
 ### `saturn:block_tag` {#saturnblock_tag}
 
 检查方块是否属于指定标签。
@@ -116,6 +202,46 @@ sidebar_position: 3
 {
   "type": "saturn:block_tag",
   "tag": "#minecraft:logs"
+}
+```
+
+</details>
+
+### `saturn:exposed_to_sky` {#saturnexposed_to_sky}
+
+目标位置可见天空
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:exposed_to_sky` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:exposed_to_sky"
+}
+```
+
+</details>
+
+### `saturn:fluid` {#saturnfluid}
+
+检查目标位置的流体 ID
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:fluid` |
+| `fluid` | 资源 ID | 是 | — | 注册的流体 ID。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:fluid",
+  "fluid": "minecraft:water"
 }
 ```
 
@@ -167,6 +293,82 @@ sidebar_position: 3
 
 </details>
 
+### `saturn:in_rain` {#saturnin_rain}
+
+目标位置正在淋雨
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:in_rain` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:in_rain"
+}
+```
+
+</details>
+
+### `saturn:in_snow` {#saturnin_snow}
+
+目标位置正在降雪
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:in_snow` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:in_snow"
+}
+```
+
+</details>
+
+### `saturn:in_thunderstorm` {#saturnin_thunderstorm}
+
+目标位置暴露于雷雨中
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:in_thunderstorm` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:in_thunderstorm"
+}
+```
+
+</details>
+
+### `saturn:light_blocking` {#saturnlight_blocking}
+
+目标方块可遮挡光线
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:light_blocking` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:light_blocking"
+}
+```
+
+</details>
+
 ### `saturn:light_level` {#saturnlight_level}
 
 比较指定光照层的光照等级。
@@ -211,6 +413,69 @@ sidebar_position: 3
 
 </details>
 
+### `saturn:nbt` {#saturnnbt}
+
+按 NBT 子集匹配目标方块实体的数据，目标没有方块实体则为 false
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:nbt` |
+| `nbt` | NBT 对象 | 是 | — | 要匹配的 NBT 子集，用 JSON 对象表示。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:nbt",
+  "nbt": {
+    "Items": []
+  }
+}
+```
+
+</details>
+
+按原版 `NbtUtils.compareNbt` 进行子集匹配；以当前版本实际保存的字段为准。方块条件只读取方块实体，不存在时返回 false。
+
+### `saturn:raining` {#saturnraining}
+
+当前维度正在下雨
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:raining` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:raining"
+}
+```
+
+</details>
+
+### `saturn:replaceable` {#saturnreplaceable}
+
+目标方块可以被替换
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:replaceable` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:replaceable"
+}
+```
+
+</details>
+
 ### `saturn:slipperiness` {#saturnslipperiness}
 
 比较方块的滑度。
@@ -229,6 +494,44 @@ sidebar_position: 3
   "type": "saturn:slipperiness",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:thundering` {#saturnthundering}
+
+当前维度处于雷暴
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:thundering` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:thundering"
+}
+```
+
+</details>
+
+### `saturn:water_loggable` {#saturnwater_loggable}
+
+方块支持含水状态
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:water_loggable` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:water_loggable"
 }
 ```
 
@@ -294,6 +597,27 @@ sidebar_position: 3
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+返回配置的固定布尔值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:constant` |
+| `value` | 布尔值 | 是 | — | 固定布尔值；用于方块属性时，匹配或设置布尔属性。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

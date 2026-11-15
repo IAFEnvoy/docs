@@ -4,9 +4,32 @@ sidebar_label: "伤害条件 (DamageCondition)"
 sidebar_position: 5
 ---
 
-# 伤害条件
-
 检查伤害来源、伤害量和相关实体。嵌入 DamageCondition 字段。
+
+## 类型
+
+### `saturn:amount` {#saturnamount}
+
+比较本次伤害数值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:amount` |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:amount",
+  "comparison": ">=",
+  "compare_to": 5
+}
+```
+
+</details>
 
 ### `saturn:amount_range` {#saturnamount_range}
 
@@ -26,6 +49,29 @@ sidebar_position: 5
   "type": "saturn:amount_range",
   "min": 1,
   "max": 1
+}
+```
+
+</details>
+
+### `saturn:attacker` {#saturnattacker}
+
+对伤害源的致伤实体检查实体条件；没有致伤实体时返回 false。
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:attacker` |
+| `entity_condition` | [实体条件](./entity-condition.md) | 是 | — | 筛选条件；类型由字段声明确定。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:attacker",
+  "entity_condition": {
+    "type": "saturn:living"
+  }
 }
 ```
 
@@ -212,6 +258,27 @@ sidebar_position: 5
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+返回配置的固定布尔值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:constant` |
+| `value` | 布尔值 | 是 | — | 固定布尔值；用于方块属性时，匹配或设置布尔属性。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

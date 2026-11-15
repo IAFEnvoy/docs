@@ -4,9 +4,9 @@ sidebar_label: "双实体动作 (BiEntityAction)"
 sidebar_position: 2
 ---
 
-# 双实体动作
-
 上下文包含 actor（发起者）与 target（目标）。同一个 ID 在实体动作和双实体动作注册表中可能有不同字段，不能跨种类替换。
+
+## 类型
 
 ### `saturn:add_velocity` {#saturnadd_velocity}
 
@@ -33,6 +33,33 @@ sidebar_position: 2
 ```
 
 </details>
+
+### `saturn:damage_target` {#saturndamage_target}
+
+使用指定伤害类型对实体造成伤害，金额可用数值提供器
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:damage_target` |
+| `damage_type` | 资源 ID | 是 | — | 原版伤害类型注册表引用。 |
+| `amount` | [数值提供器](../number.md) | 是 | — | 本次操作的数量。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:damage_target",
+  "damage_type": "minecraft:magic",
+  "amount": 2
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+非正数或非有限数值不产生伤害。
 
 ### `saturn:heal_target` {#saturnheal_target}
 
@@ -101,6 +128,48 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 ```
 
 </details>
+
+### `saturn:set_in_love` {#saturnset_in_love}
+
+令 target 动物进入繁殖状态；actor 为玩家时记录繁殖玩家，仅服务端有效
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:set_in_love` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:set_in_love"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+### `saturn:tame` {#saturntame}
+
+actor 为玩家且 target 可驯服时，将 target 驯服给 actor，仅服务端有效
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:tame` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:tame"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
 
 ### `saturn:teleport` {#saturnteleport}
 
@@ -230,6 +299,36 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+将动作重复执行指定次数，负数为零次，次数不超过 max_iterations
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:for_range` |
+| `range` | [数值提供器](../number.md) | 是 | — | 执行次数，求值后向零截断；负数不执行。 |
+| `action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `max_iterations` | 整数 | 否 | `1024` | 每次调用的最大迭代次数，至少为 1。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+次数在进入循环时求值一次，超过 `max_iterations` 时截断到上限。
+
 ### `saturn:if_else` {#saturnif_else}
 
 条件成立时执行 if_action，否则执行 else_action。
@@ -257,6 +356,70 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 ```
 
 </details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+按顺序检查条件，只执行第一个命中分支
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:if_else_list` |
+| `actions` | 分支数组 | 是 | — | 按顺序检查的分支，每项含 condition 和 action。 |
+
+每个 `actions` 条目：
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `condition` | `BiEntityCondition` | 是 | 该分支的匹配条件。 |
+| `action` | `BiEntityAction` | 是 | 匹配后执行；后续分支不再检查。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+### `saturn:invert` {#saturninvert}
+
+交换 actor 与 target 后执行动作
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:invert` |
+| `action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:invert",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
 
 ### `saturn:js` {#saturnjs}
 
@@ -323,6 +486,35 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 
 </details>
 
+### `saturn:side` {#saturnside}
+
+仅在指定逻辑端执行，不以客户端或服务端进程判断
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:side` |
+| `action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `side` | 枚举字符串 | 是 | — | 逻辑端，可选 client 或 server。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+判断 `Level` 的逻辑端。单人游戏的内置服务器属于 `server`，不会因为运行在客户端进程就当成 `client`；该动作不会主动发包或跨端执行。
+
 ### `saturn:target_action` {#saturntarget_action}
 
 把双实体上下文的 target 交给实体动作。
@@ -346,3 +538,36 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 ```
 
 </details>
+
+### `saturn:while` {#saturnwhile}
+
+条件成立时重复执行，超过 max_iterations 则终止并报告异常
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:while` |
+| `condition` | [双实体条件](../condition/bientity-condition.md) | 是 | — | 筛选条件；类型由字段声明确定。 |
+| `action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `max_iterations` | 整数 | 否 | `1024` | 每次调用的最大迭代次数，至少为 1。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+每轮重新检查条件。达到 `max_iterations` 后若仍满足条件，则抛出异常停止本次动作，防止错误数据包无限循环；已执行的动作不回滚。

@@ -11,6 +11,7 @@ Nodes are written into the body or children of a resource pack card template. Be
 | [`system:markdown`](./markdown.md) | Parses the controlled Markdown in AI replies. |
 | [`system:title`](./title.md) | Shows heading text and lets the host extract it as the card title. |
 | [`system:image`](./image.md) | Shows an image from the resource pack. |
+| [`system:expression`](./expression.md) | Resource-pack expression state machine, event/timed transitions and speech frames driven by actual playback. |
 | [`system:item`](./item.md) | Renders the item snapshot in the context and shows the item tooltip on hover. |
 | [`system:player`](./player.md) | Renders the player model given by the context, with controllable facing, scale and mouse following. |
 | [`system:ftb_icon`](./ftb_icon.md) | Shows the FTB quest or reward icon from the server snapshot. |

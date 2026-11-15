@@ -4,9 +4,51 @@ sidebar_label: "双实体条件 (BiEntityCondition)"
 sidebar_position: 2
 ---
 
-# 双实体条件
-
 检查 actor 和 target 的关系。交换双方会改变部分条件的含义。
+
+## 类型
+
+### `saturn:attack_target` {#saturnattack_target}
+
+target 是 actor 的攻击目标
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:attack_target` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:attack_target"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+### `saturn:attacker` {#saturnattacker}
+
+actor 是最近攻击 target 的生物
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:attacker` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:attacker"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
 
 ### `saturn:can_see` {#saturncan_see}
 
@@ -49,6 +91,48 @@ sidebar_position: 2
 ```
 
 </details>
+
+### `saturn:equal` {#saturnequal}
+
+两个参数指向同一实体
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:equal` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:equal"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+### `saturn:owner` {#saturnowner}
+
+actor 是 target 的主人
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:owner` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:owner"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
 
 ### `saturn:relation` {#saturnrelation}
 
@@ -96,6 +180,27 @@ sidebar_position: 2
 
 </details>
 
+### `saturn:riding` {#saturnriding}
+
+actor 正在直接骑乘 target
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:riding` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:riding"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
 ### `saturn:riding_recursive` {#saturnriding_recursive}
 
 检查多层骑乘关系。
@@ -114,6 +219,29 @@ sidebar_position: 2
 ```
 
 </details>
+
+### `saturn:riding_root` {#saturnriding_root}
+
+target 是 actor 最底层的载具
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:riding_root` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:riding_root"
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
+未骑乘时，实体的 root vehicle 是自身；因此同一个实体作为两端时也会匹配。
 
 ### `saturn:same_team` {#saturnsame_team}
 
@@ -265,6 +393,29 @@ sidebar_position: 2
 
 </details>
 
+### `saturn:constant` {#saturnconstant}
+
+返回配置的固定布尔值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:constant` |
+| `value` | 布尔值 | 是 | — | 固定布尔值；用于方块属性时，匹配或设置布尔属性。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
+
 ### `saturn:either` {#saturneither}
 
 对 actor 与 target 检查同一实体条件，至少一方成立即匹配。
@@ -287,6 +438,31 @@ sidebar_position: 2
 ```
 
 </details>
+
+### `saturn:invert` {#saturninvert}
+
+交换 actor 与 target 后检查条件
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:invert` |
+| `condition` | [双实体条件](./bientity-condition.md) | 是 | — | 筛选条件；类型由字段声明确定。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:invert",
+  "condition": {
+    "type": "saturn:always"
+  }
+}
+```
+
+</details>
+
+`actor` 为发起方，`target` 为目标方；二者的顺序由调用方决定。
 
 ### `saturn:js` {#saturnjs}
 

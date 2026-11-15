@@ -67,7 +67,7 @@ Fetching uses `web.fetch`, and the final answer uses `{"type":"answer","text":"a
 
 Repeated actions are not executed again and move on to final organization. When evidence already exists, recoverable model or search errors switch to organization at most once within the remaining quota; authorization and cancellation errors terminate directly. Round, model, token, tool or time budgets are not increased automatically for compensation, and billed requests are not retried automatically. Search keeps the sources it has already obtained; when ordinary analysis fails to organize, the card results already obtained are kept and the user is told that the analysis was not completed, and tool JSON is never passed off as the player's answer.
 
-The prompts are in `data/system/system/prompts/react.txt` and `web_search.txt`, and are reloaded through the existing txt reload listener and `/reload`. Each model request is still `system` and `user` JSON, with the observations placed explicitly in the input; the vendor's native tool_calls are not used, and the model's private reasoning text is not saved.
+The prompts are in `data/system/system/prompt/react.txt` and `web_search.txt`, and are reloaded through the existing txt reload listener and `/reload`. Each model request is still `system` and `user` JSON, with the observations placed explicitly in the input; the vendor's native tool_calls are not used, and the model's private reasoning text is not saved.
 
 This verification consisted of compilation, resource and static checks; the game was not started, and no real model or search API was requested.
 

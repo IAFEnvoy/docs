@@ -3,9 +3,9 @@ title: "Block condition"
 sidebar_position: 3
 ---
 
-# Block condition
-
 Checks the block or environment at the context position. Embedded in BlockCondition fields.
+
+## Types
 
 ### `saturn:adjacent` {#saturnadjacent}
 
@@ -29,6 +29,44 @@ Counts how many adjacent positions satisfy a block condition.
   },
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:air` {#saturnair}
+
+Checks whether the block is air.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:air` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:air"
+}
+```
+
+</details>
+
+### `saturn:attachable` {#saturnattachable}
+
+Checks whether any adjacent block face can support an attachment at this position.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:attachable` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:attachable"
 }
 ```
 
@@ -78,6 +116,25 @@ Compares the blast resistance of the block.
 
 </details>
 
+### `saturn:block_entity` {#saturnblock_entity}
+
+Checks whether a block entity exists at the target position.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:block_entity` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:block_entity"
+}
+```
+
+</details>
+
 ### `saturn:block_id` {#saturnblock_id}
 
 Checks whether the block at the current position is the given type.
@@ -99,6 +156,35 @@ Checks whether the block at the current position is the given type.
 
 </details>
 
+### `saturn:block_state` {#saturnblock_state}
+
+Checks a boolean, serialized enum value or integer comparison of a block property.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:block_state` |
+| `property` | String | yes | — | Block state property name. |
+| `value` | Boolean | no | omitted | The boolean result, or the expected/new boolean block property value. |
+| `enum` | String | no | omitted | Serialized property name, such as north or bottom. |
+| `comparison` | Enum string | no | omitted | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | no | omitted | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:block_state",
+  "property": "age",
+  "comparison": ">=",
+  "compare_to": 7
+}
+```
+
+</details>
+
+Use `value` for booleans, `enum` for enum properties, and both `comparison` and `compare_to` for integers. Wrong types, incomplete fields or missing properties return false.
+
 ### `saturn:block_tag` {#saturnblock_tag}
 
 Checks whether the block belongs to the given tag.
@@ -115,6 +201,46 @@ Checks whether the block belongs to the given tag.
 {
   "type": "saturn:block_tag",
   "tag": "#minecraft:logs"
+}
+```
+
+</details>
+
+### `saturn:exposed_to_sky` {#saturnexposed_to_sky}
+
+Checks whether the target block position can see the sky.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:exposed_to_sky` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:exposed_to_sky"
+}
+```
+
+</details>
+
+### `saturn:fluid` {#saturnfluid}
+
+Checks whether the block’s fluid state matches the exact registered fluid.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:fluid` |
+| `fluid` | Resource ID | yes | — | Registered fluid ID. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:fluid",
+  "fluid": "minecraft:water"
 }
 ```
 
@@ -166,6 +292,82 @@ Compares the Y coordinate of the block position.
 
 </details>
 
+### `saturn:in_rain` {#saturnin_rain}
+
+Checks whether the target is exposed to rain at its current location.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:in_rain` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:in_rain"
+}
+```
+
+</details>
+
+### `saturn:in_snow` {#saturnin_snow}
+
+Checks whether the target is exposed to snow at its current position.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:in_snow` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:in_snow"
+}
+```
+
+</details>
+
+### `saturn:in_thunderstorm` {#saturnin_thunderstorm}
+
+Checks whether the target is exposed to rain during a thunderstorm.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:in_thunderstorm` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:in_thunderstorm"
+}
+```
+
+</details>
+
+### `saturn:light_blocking` {#saturnlight_blocking}
+
+Checks whether the block state can occlude light.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:light_blocking` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:light_blocking"
+}
+```
+
+</details>
+
 ### `saturn:light_level` {#saturnlight_level}
 
 Compares the light level of the given light layer.
@@ -210,6 +412,69 @@ Checks whether the block blocks movement.
 
 </details>
 
+### `saturn:nbt` {#saturnnbt}
+
+Matches a subset of the target’s saved NBT, including subset matching for lists.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:nbt` |
+| `nbt` | NBT object | yes | — | NBT subset to match, expressed as a JSON object. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:nbt",
+  "nbt": {
+    "Items": []
+  }
+}
+```
+
+</details>
+
+Uses vanilla `NbtUtils.compareNbt` subset matching. Match the fields actually saved by this Minecraft version. Block conditions require a block entity and return false when none exists.
+
+### `saturn:raining` {#saturnraining}
+
+Checks whether the level currently reports rainy weather.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:raining` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:raining"
+}
+```
+
+</details>
+
+### `saturn:replaceable` {#saturnreplaceable}
+
+Checks whether the block state can be replaced.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:replaceable` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:replaceable"
+}
+```
+
+</details>
+
 ### `saturn:slipperiness` {#saturnslipperiness}
 
 Compares the slipperiness of the block.
@@ -228,6 +493,44 @@ Compares the slipperiness of the block.
   "type": "saturn:slipperiness",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:thundering` {#saturnthundering}
+
+Checks whether the level currently reports a thunderstorm.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:thundering` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:thundering"
+}
+```
+
+</details>
+
+### `saturn:water_loggable` {#saturnwater_loggable}
+
+Checks whether the block implements LiquidBlockContainer.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:water_loggable` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:water_loggable"
 }
 ```
 
@@ -293,6 +596,27 @@ Decides whether the check succeeds based on a given chance.
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+Returns the configured boolean value.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:constant` |
+| `value` | Boolean | yes | — | The boolean result, or the expected/new boolean block property value. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

@@ -3,9 +3,9 @@ title: "Block action"
 sidebar_position: 3
 ---
 
-# Block action
-
 Acts on the world and block position given by the context. It is not a standalone data pack file; embed it in a field that requires a BlockAction.
+
+## Types
 
 ### `saturn:bonemeal` {#saturnbonemeal}
 
@@ -46,6 +46,29 @@ Breaks the block at the context position and optionally controls whether items d
 ```
 
 </details>
+
+### `saturn:execute_command` {#saturnexecute_command}
+
+Executes a vanilla command with gamemaster permission (level 2).
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:execute_command` |
+| `command` | String | yes | — | Vanilla command; a leading / is optional. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:execute_command",
+  "command": "setblock ~ ~1 ~ minecraft:stone"
+}
+```
+
+</details>
+
+Server-only, with command feedback suppressed. Entity actions use the entity as `@s` at the activation position; block actions use the block centre and have no `@s` entity.
 
 ### `saturn:explode` {#saturnexplode}
 
@@ -89,6 +112,96 @@ Tries to set the context position on fire.
 ```
 
 </details>
+
+### `saturn:modify_block_state` {#saturnmodify_block_state}
+
+Cycles or sets a block property, or adds to an integer property. Server-only; invalid values leave the state unchanged.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:modify_block_state` |
+| `property` | String | yes | — | Block state property name. |
+| `cycle` | Boolean | no | `false` | When true, cycle to the next allowed value; takes precedence over other modification fields. |
+| `value` | Boolean | no | omitted | The boolean result, or the expected/new boolean block property value. |
+| `enum` | String | no | omitted | Serialized property name, such as north or bottom. |
+| `change` | [Number provider](../number.md) | no | omitted | Operand for an integer property, truncated toward zero after evaluation. |
+| `operation` | Enum string | no | `"add"` | add adjusts, or set replaces, an integer property. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:modify_block_state",
+  "property": "age",
+  "change": 1
+}
+```
+
+</details>
+
+`cycle` takes precedence; otherwise the property type selects value, enum or change. A value outside the property’s allowed set leaves it unchanged instead of clamping.
+
+### `saturn:region_apply` {#saturnregion_apply}
+
+Applies an action to matching targets in a region, preserving the parent context.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:region_apply` |
+| `radius` | [Number provider](../number.md) | no | `16` | Radius in blocks. |
+| `shape` | Enum string | no | `"cube"` | cube uses maximum axis distance; star uses Manhattan distance; sphere uses Euclidean distance. |
+| `block_action` | [Block actions](./block-action.md) | yes | — | Nested action of the declared context type. |
+| `block_condition` | [Block conditions](../condition/block-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:region_apply",
+  "radius": 2,
+  "block_condition": {
+    "type": "saturn:air"
+  },
+  "block_action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+Distances are relative to the query centre. Entity queries use entity positions and exclude spectators. Block radii are floored to a non-negative integer and positions are enumerated lazily. Negative or non-finite radii yield an empty region.
+
+The centre is the target block; nested actions keep the original face direction.
+
+### `saturn:relative_offset` {#saturnrelative_offset}
+
+Moves the block action along the context face by the evaluated distance.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:relative_offset` |
+| `action` | [Block actions](./block-action.md) | yes | — | Nested action of the declared context type. |
+| `distance` | [Number provider](../number.md) | yes | — | Block offset along the context face, truncated toward zero; may be negative. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:relative_offset",
+  "distance": 1,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+Does nothing if the context has no face direction. The shifted action keeps the face, formula and extension data.
 
 ### `saturn:schedule_tick` {#saturnschedule_tick}
 
@@ -243,6 +356,34 @@ Each entry contains value and weight; see [Weighted entries](../../data/common.m
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+Executes an action a fixed number of times, up to the configured iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:for_range` |
+| `range` | [Number provider](../number.md) | yes | — | Repetition count, truncated toward zero; negative values execute nothing. |
+| `action` | [Block actions](./block-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+The count is evaluated once before the loop and capped at `max_iterations`.
+
 ### `saturn:if_else` {#saturnif_else}
 
 Runs if_action when the condition holds, otherwise runs else_action.
@@ -266,6 +407,43 @@ Runs if_action when the condition holds, otherwise runs else_action.
   "if_action": {
     "type": "saturn:no_op"
   }
+}
+```
+
+</details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+Executes the first branch whose condition matches, then stops checking branches.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:if_else_list` |
+| `actions` | Branch array | yes | — | Ordered branches; each entry contains condition and action. |
+
+Each `actions` entry:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `condition` | `BlockCondition` | yes | Condition selecting this branch. |
+| `action` | `BlockAction` | yes | Action to run; later branches are not checked. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
 }
 ```
 
@@ -361,3 +539,61 @@ Runs several actions of the same kind in array order.
 ```
 
 </details>
+
+### `saturn:side` {#saturnside}
+
+Executes the nested action only on the selected logical side.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:side` |
+| `action` | [Block actions](./block-action.md) | yes | — | Nested action of the declared context type. |
+| `side` | Enum string | yes | — | Logical side: client or server. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+Uses the level’s logical side. An integrated server is `server` even inside a client process. This action does not send a packet or execute remotely.
+
+### `saturn:while` {#saturnwhile}
+
+Repeats an action while its condition matches, with a configurable iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:while` |
+| `condition` | [Block conditions](../condition/block-condition.md) | yes | — | Filter condition of the declared context type. |
+| `action` | [Block actions](./block-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+The condition is checked before every iteration. If it is still true after `max_iterations`, the action throws and stops; actions already executed are not rolled back.

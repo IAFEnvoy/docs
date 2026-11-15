@@ -4,9 +4,9 @@ sidebar_label: "物品条件 (ItemCondition)"
 sidebar_position: 4
 ---
 
-# 物品条件
-
 检查一个 ItemStack。不能将物品 ID 字符串直接当成任意 ItemCondition。
+
+## 类型
 
 ### `saturn:amount` {#saturnamount}
 
@@ -79,6 +79,25 @@ sidebar_position: 4
 
 </details>
 
+### `saturn:block_item` {#saturnblock_item}
+
+物品是方块物品
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:block_item` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:block_item"
+}
+```
+
+</details>
+
 ### `saturn:component` {#saturncomponent}
 
 检查物品堆指定组件的数据。
@@ -120,6 +139,63 @@ sidebar_position: 4
   "type": "saturn:durability",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:empty` {#saturnempty}
+
+物品堆为空
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:empty` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:empty"
+}
+```
+
+</details>
+
+### `saturn:enchantable` {#saturnenchantable}
+
+物品可通过附魔台附魔
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:enchantable` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:enchantable"
+}
+```
+
+</details>
+
+### `saturn:food` {#saturnfood}
+
+物品具有食物组件
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:food` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:food"
 }
 ```
 
@@ -185,6 +261,25 @@ sidebar_position: 4
 {
   "type": "saturn:ingredient",
   "ingredient": "#minecraft:logs"
+}
+```
+
+</details>
+
+### `saturn:is_damageable` {#saturnis_damageable}
+
+物品具有耐久度
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:is_damageable` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:is_damageable"
 }
 ```
 
@@ -317,6 +412,25 @@ sidebar_position: 4
 
 </details>
 
+### `saturn:smeltable` {#saturnsmeltable}
+
+物品是否有熔炉熔炼配方，仅服务端有效
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:smeltable` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:smeltable"
+}
+```
+
+</details>
+
 ### `saturn:tool_ability` {#saturntool_ability}
 
 检查物品是否支持指定 NeoForge ItemAbility。
@@ -398,6 +512,27 @@ sidebar_position: 4
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+返回配置的固定布尔值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:constant` |
+| `value` | 布尔值 | 是 | — | 固定布尔值；用于方块属性时，匹配或设置布尔属性。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

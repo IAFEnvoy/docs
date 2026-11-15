@@ -11,6 +11,7 @@ sidebar_position: 0
 | [`system:markdown`](./markdown.md) | 解析 AI 回复中的受控 Markdown。 |
 | [`system:title`](./title.md) | 显示标题文字，并允许宿主抽取为卡片主标题。 |
 | [`system:image`](./image.md) | 显示资源包内的图片。 |
+| [`system:expression`](./expression.md) | 资源包表情状态机、事件 / 定时切换与实际播音驱动的说话帧。 |
 | [`system:item`](./item.md) | 渲染上下文中的物品快照，悬浮时显示物品提示。 |
 | [`system:player`](./player.md) | 渲染上下文指定的玩家模型，可控制朝向、缩放和鼠标跟随。 |
 | [`system:ftb_icon`](./ftb_icon.md) | 显示服务端快照中的 FTB 任务或奖励图标。 |

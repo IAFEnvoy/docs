@@ -3,7 +3,9 @@ title: "提示词模板"
 sidebar_position: 6
 ---
 
-文件：`data/<namespace>/system/prompts/<path>.txt`，UTF-8 文本，也支持 BOM。例如 `data/example/system/prompts/personality/daily.txt` 对应 `example:personality/daily`。
+文件：`data/<namespace>/system/prompt/<path>.txt`，UTF-8 文本，也支持 BOM。例如 `data/example/system/prompt/personality/daily.txt` 对应 `example:personality/daily`。
+
+重载监听器 ID 为 `system:prompt`；逻辑模板 ID 不变，例如 `system:routing` 仍对应 `routing.txt`。
 
 ## 内置模板
 
@@ -27,7 +29,7 @@ sidebar_position: 6
 
 ## 示例人格
 
-```text title="data/example/system/prompts/personality/daily.txt"
+```text title="data/example/system/prompt/personality/daily.txt"
 你是宿主的补给助手，回答简短清楚，按 {{player_language}} 对话。
 涉及资源消耗时说明用途并等待确认，不虚构尚未获得的奖励。
 ```

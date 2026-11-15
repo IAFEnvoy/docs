@@ -31,6 +31,8 @@ Referenced rewards or tags must be defined separately. The system sets `"modules
 
 The rewards of sign-in, the offers of the shop and the pools of the lottery all accept a single ID, a #tag or a mixed array. Omitting the field adds no restriction, and an empty array means there are no selectable entries; the built-in configurations explicitly select `#system:default` of their respective catalogs. When multiple configurations are enabled, their available catalogs are unioned.
 
-A server-only module can provide only server; a client-only contribution can provide only client. Equal `order` values keep the original assembly order; when the same client implementation is merged for display, the largest order is used. The built-ins are player information 100, quests 90, sign-in 80, inbox 70, shop 60, lottery 50 and item query 40.
+A server-only module can provide only server; a client-only contribution can provide only client. Equal `order` values keep the original assembly order; when the same client implementation is merged for display, the largest order is used. The built-ins are player information 100, quests 90, sign-in 80, inbox 70, shop 60, wallet 55, lottery 50, workshop 45, and item query and online jobs 40.
 
 For the concrete server fields, see the [module type catalog](../types/module/index.md). Player overrides can be managed with `/system module add/remove <player> <module ID>`; `/system module list [player]` shows modules and completes their IDs.
+
+The [online jobs module](../types/module/online_jobs.md) also accepts IDs, #tags or mixed arrays in `jobs`, but multiple variants use the first selected workflow configuration rather than merging their candidates.

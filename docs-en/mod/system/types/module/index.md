@@ -19,3 +19,6 @@ The `server` object that is written into a module definition, with `type` select
 | [`system:advancement`](./advancement.md) | Listens to the rules in system-advancements.json and runs unlock marker and fixed reward workflows. |
 | [`system:ftb_quests`](./ftb_quests.md) | Provides quest search, details, submission, claiming, gift packs and guide book lookup. |
 | [`system:web_search`](./web_search.md) | Provides DeepSeek Search and Fetch capabilities after explicit authorization. |
+| [`system:economy`](./economy.md) | Provides multi-currency wallets, balance queries and administrator economy commands. |
+| [`system:workshop`](./workshop.md) | Quotes and repairs a damaged main-hand item after payment confirmation. |
+| [`system:online_jobs`](./online_jobs.md) | Times online jobs and manually credits completed outputs to the inbox. |

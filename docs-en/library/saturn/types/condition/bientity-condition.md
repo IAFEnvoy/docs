@@ -3,9 +3,51 @@ title: "Bi-entity condition"
 sidebar_position: 2
 ---
 
-# Bi-entity condition
-
 Checks the relationship between the actor and the target. Swapping the two sides changes the meaning of some conditions.
+
+## Types
+
+### `saturn:attack_target` {#saturnattack_target}
+
+Checks whether target is the mob actor’s current attack target.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:attack_target` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:attack_target"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+### `saturn:attacker` {#saturnattacker}
+
+Checks whether actor is the last living attacker of target.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:attacker` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:attacker"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
 
 ### `saturn:can_see` {#saturncan_see}
 
@@ -48,6 +90,48 @@ Checks whether the distance between the actor and the target is within the maxim
 ```
 
 </details>
+
+### `saturn:equal` {#saturnequal}
+
+Checks whether actor and target are the same entity instance.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:equal` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:equal"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+### `saturn:owner` {#saturnowner}
+
+Checks whether actor’s UUID matches the owner reference of target.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:owner` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:owner"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
 
 ### `saturn:relation` {#saturnrelation}
 
@@ -95,6 +179,27 @@ Compares the rotation difference between the actor and the target on the given a
 
 </details>
 
+### `saturn:riding` {#saturnriding}
+
+Checks whether actor is directly riding target.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:riding` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:riding"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
 ### `saturn:riding_recursive` {#saturnriding_recursive}
 
 Checks multi-level riding relationships.
@@ -113,6 +218,29 @@ Checks multi-level riding relationships.
 ```
 
 </details>
+
+### `saturn:riding_root` {#saturnriding_root}
+
+Checks whether target is actor’s root vehicle.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:riding_root` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:riding_root"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+An unmounted entity is its own root vehicle, so the same entity passed at both ends can also match.
 
 ### `saturn:same_team` {#saturnsame_team}
 
@@ -264,6 +392,29 @@ Decides whether the check succeeds based on a given chance.
 
 </details>
 
+### `saturn:constant` {#saturnconstant}
+
+Returns the configured boolean value.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:constant` |
+| `value` | Boolean | yes | — | The boolean result, or the expected/new boolean block property value. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
 ### `saturn:either` {#saturneither}
 
 Checks the same entity condition against the actor and the target; matches when at least one side holds.
@@ -286,6 +437,31 @@ Checks the same entity condition against the actor and the target; matches when 
 ```
 
 </details>
+
+### `saturn:invert` {#saturninvert}
+
+Swaps actor and target before evaluating the nested object.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:invert` |
+| `condition` | [Bi-entity conditions](./bientity-condition.md) | yes | — | Filter condition of the declared context type. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:invert",
+  "condition": {
+    "type": "saturn:always"
+  }
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
 
 ### `saturn:js` {#saturnjs}
 

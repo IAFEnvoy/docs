@@ -32,7 +32,7 @@ Registry: `system:system`. Defines the system name, description, enabled modules
 }
 ```
 
-`example:personality/daily` corresponds to `data/example/system/prompts/personality/daily.txt`. The name and description also require translations from the client resource pack:
+`example:personality/daily` corresponds to `data/example/system/prompt/personality/daily.txt`. The name and description also require translations from the client resource pack:
 
 ```json title="assets/example/lang/zh_cn.json"
 {

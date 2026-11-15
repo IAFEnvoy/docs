@@ -92,6 +92,8 @@ public record MyAuraCost(NumberProvider amount) implements Cost {
 
 - `CostContext` is `record(payer, formula, origin, account, itemTarget, data)`; `data` is an extension bag with `with(key, value)` / `get(key)`, and Saturn only carries it around without interpreting it, with all keys namespaced.
 - `CostTarget` is an **open interface**, so your `Transaction` can carry its own target type.
+- `CostTarget.display(double amount)` returns `CostDisplay(items, descriptions)` for an already bound amount. It does not re-evaluate formulas, trial a payment or read balances. Item previews are `ItemPreview(ItemStackTemplate, String amount)`, with textual quantities independent of stack limits; descriptions use vanilla `Component`. Built-in Items / Account targets own their presentation. Custom targets can override the method, with label and amount as the default. Consumers collect these results without instanceof branches by payment target.
+- `CostTarget.guard()` defines payment re-entrancy scope and defaults to the target itself; it is independent of display. Script fees can share a payer-and-script guard while retaining distinct fee identities.
 - `CostPayment.pay(List<Cost>, CostContext)`: first `prepare` everything, then trial-run `execute(true)` on everything, and finally `execute(false)` in order for the real deduction; a failed real deduction is logged and processing continues. Returns `Result<List<Debit>>`, and `CostPayment.resources(debits)` folds the receipts into a quantity table keyed by id.
 
 ### 3.2 Failures
@@ -318,3 +320,7 @@ NBT byte handling is isolated in the package-private `NbtFiles`, which does not 
 2026-11-08 build record: `gradlew compileJava jar --console=plain` passes; the IDE's static checks on `FileAccess` and `NbtFiles` no longer report class-loading deadlock warnings. The game was not started and no tests were run, so opening in real external editors, restoring old files and the compression round trip have not yet gone through acceptance testing.
 
 Atomic save is a newly added API that will ship with the next Saturn update, without changing the version number or downstream dependencies. System currently keeps its own `AtomicFiles`; after upgrading to a dependency that includes this API, `AtomicFiles.replace(path, bytes)` can be replaced with `FileAccess.write(path, bytes)` and the duplicate implementation removed. The earlier active cleanup of the fixed-name `.tmp` should be removed along with it, since Saturn now cleans up the new temporary file when the save method exits.
+
+## 8. Adapting Origins data
+
+Actions and conditions use the context and MapCodec registration APIs described above. See the [type reference](../types/index.md) for complete definitions, and [equivalent types, field differences and compatibility limits](./origins-ports.md) when converting Origins data to Saturn.

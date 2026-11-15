@@ -3,9 +3,9 @@ title: "Bi-entity action"
 sidebar_position: 2
 ---
 
-# Bi-entity action
-
 The context contains an actor (the initiator) and a target. The same ID may have different fields in the entity action and bi-entity action registries; the two kinds are not interchangeable.
+
+## Types
 
 ### `saturn:add_velocity` {#saturnadd_velocity}
 
@@ -32,6 +32,33 @@ Adds velocity, or replaces it with the given vector.
 ```
 
 </details>
+
+### `saturn:damage_target` {#saturndamage_target}
+
+Damages target on the server, with actor as the damage source entity.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:damage_target` |
+| `damage_type` | Resource ID | yes | — | Reference to the vanilla damage type registry. |
+| `amount` | [Number provider](../number.md) | yes | — | Amount for this operation. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:damage_target",
+  "damage_type": "minecraft:magic",
+  "amount": 2
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+Non-positive or non-finite amounts do not deal damage.
 
 ### `saturn:heal_target` {#saturnheal_target}
 
@@ -100,6 +127,48 @@ channel accepts chat and action_bar. target=self selects the actor / item holder
 ```
 
 </details>
+
+### `saturn:set_in_love` {#saturnset_in_love}
+
+Puts the target animal in love mode, recording actor when it is a player. Server-only.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:set_in_love` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:set_in_love"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+### `saturn:tame` {#saturntame}
+
+Tames target to actor when actor is a player and target is a tamable animal. Server-only.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:tame` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:tame"
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
 
 ### `saturn:teleport` {#saturnteleport}
 
@@ -229,6 +298,36 @@ Each entry contains value and weight; see [Weighted entries](../../data/common.m
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+Executes an action a fixed number of times, up to the configured iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:for_range` |
+| `range` | [Number provider](../number.md) | yes | — | Repetition count, truncated toward zero; negative values execute nothing. |
+| `action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+The count is evaluated once before the loop and capped at `max_iterations`.
+
 ### `saturn:if_else` {#saturnif_else}
 
 Runs if_action when the condition holds, otherwise runs else_action.
@@ -256,6 +355,70 @@ Runs if_action when the condition holds, otherwise runs else_action.
 ```
 
 </details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+Executes the first branch whose condition matches, then stops checking branches.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:if_else_list` |
+| `actions` | Branch array | yes | — | Ordered branches; each entry contains condition and action. |
+
+Each `actions` entry:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `condition` | `BiEntityCondition` | yes | Condition selecting this branch. |
+| `action` | `BiEntityAction` | yes | Action to run; later branches are not checked. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+### `saturn:invert` {#saturninvert}
+
+Swaps actor and target before evaluating the nested object.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:invert` |
+| `action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:invert",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
 
 ### `saturn:js` {#saturnjs}
 
@@ -322,6 +485,35 @@ Runs several actions of the same kind in array order.
 
 </details>
 
+### `saturn:side` {#saturnside}
+
+Executes the nested action only on the selected logical side.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:side` |
+| `action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+| `side` | Enum string | yes | — | Logical side: client or server. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+Uses the level’s logical side. An integrated server is `server` even inside a client process. This action does not send a packet or execute remotely.
+
 ### `saturn:target_action` {#saturntarget_action}
 
 Hands the target of the bi-entity context to an entity action.
@@ -345,3 +537,36 @@ Hands the target of the bi-entity context to an entity action.
 ```
 
 </details>
+
+### `saturn:while` {#saturnwhile}
+
+Repeats an action while its condition matches, with a configurable iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:while` |
+| `condition` | [Bi-entity conditions](../condition/bientity-condition.md) | yes | — | Filter condition of the declared context type. |
+| `action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+`actor` is the initiator and `target` the other entity; their order is defined by the caller.
+
+The condition is checked before every iteration. If it is still true after `max_iterations`, the action throws and stops; actions already executed are not rolled back.

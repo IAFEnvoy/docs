@@ -4,9 +4,9 @@ sidebar_label: "物品动作 (ItemAction)"
 sidebar_position: 4
 ---
 
-# 物品动作
-
 操作上下文中的物品堆以及持有者。它不是物品定义文件，应嵌入要求 ItemAction 的字段。
+
+## 类型
 
 ### `saturn:add_enchantment` {#saturnadd_enchantment}
 
@@ -111,6 +111,29 @@ sidebar_position: 4
 {
   "type": "saturn:damage_item",
   "amount": 1
+}
+```
+
+</details>
+
+### `saturn:holder_action` {#saturnholder_action}
+
+对物品持有者执行实体动作
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:holder_action` |
+| `action` | [实体动作](./entity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:holder_action",
+  "action": {
+    "type": "saturn:no_op"
+  }
 }
 ```
 
@@ -247,6 +270,34 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+将动作重复执行指定次数，负数为零次，次数不超过 max_iterations
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:for_range` |
+| `range` | [数值提供器](../number.md) | 是 | — | 执行次数，求值后向零截断；负数不执行。 |
+| `action` | [物品动作](./item-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `max_iterations` | 整数 | 否 | `1024` | 每次调用的最大迭代次数，至少为 1。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+次数在进入循环时求值一次，超过 `max_iterations` 时截断到上限。
+
 ### `saturn:if_else` {#saturnif_else}
 
 条件成立时执行 if_action，否则执行 else_action。
@@ -270,6 +321,43 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
   "if_action": {
     "type": "saturn:no_op"
   }
+}
+```
+
+</details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+按顺序检查条件，只执行第一个命中分支
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:if_else_list` |
+| `actions` | 分支数组 | 是 | — | 按顺序检查的分支，每项含 condition 和 action。 |
+
+每个 `actions` 条目：
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `condition` | `ItemCondition` | 是 | 该分支的匹配条件。 |
+| `action` | `ItemAction` | 是 | 匹配后执行；后续分支不再检查。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
 }
 ```
 
@@ -339,3 +427,61 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 ```
 
 </details>
+
+### `saturn:side` {#saturnside}
+
+仅在指定逻辑端执行，不以客户端或服务端进程判断
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:side` |
+| `action` | [物品动作](./item-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `side` | 枚举字符串 | 是 | — | 逻辑端，可选 client 或 server。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+判断 `Level` 的逻辑端。单人游戏的内置服务器属于 `server`，不会因为运行在客户端进程就当成 `client`；该动作不会主动发包或跨端执行。
+
+### `saturn:while` {#saturnwhile}
+
+条件成立时重复执行，超过 max_iterations 则终止并报告异常
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:while` |
+| `condition` | [物品条件](../condition/item-condition.md) | 是 | — | 筛选条件；类型由字段声明确定。 |
+| `action` | [物品动作](./item-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `max_iterations` | 整数 | 否 | `1024` | 每次调用的最大迭代次数，至少为 1。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+每轮重新检查条件。达到 `max_iterations` 后若仍满足条件，则抛出异常停止本次动作，防止错误数据包无限循环；已执行的动作不回滚。

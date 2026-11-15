@@ -83,7 +83,9 @@ When history is enabled, only up to the player's 20 most recent applicable messa
 
 ## System personality
 
-A system definition can reference `data/example/system/prompts/personality/sign_in.txt` through `"personality_prompt": "example:personality/sign_in"`. The field is an optional Identifier; when omitted only the base prompt is used. The default system ships with `system:personality/default`, which uses a restrained system-voice tone, addressing the player as "host" in the Chinese localization and as Host in English.
+Chat replies can include an AI-selected expression, shown as a resource-pack avatar to the left of the reply. Speech frames follow only that message's actual playback. See [Expression state machine](../types/node/expression.md) for resource fields and extension APIs.
+
+A system definition can reference `data/example/system/prompt/personality/sign_in.txt` through `"personality_prompt": "example:personality/sign_in"`. The field is an optional Identifier; when omitted only the base prompt is used. The default system ships with `system:personality/default`, which uses a restrained system-voice tone, addressing the player as "host" in the Chinese localization and as Host in English.
 
 AssistantServer looks up the server-side system definition from the current binding ID in this player's world save, then renders that TXT with the prompt snapshot of the ExecutionContext; the Agent layer only receives the text returned by the PromptProvider and does not query Minecraft registries. ChatSupport first builds the base instruction and then appends the personality, and both chat entry points share that flow; the ReAct of free mode captures the whole prompt at the start and does not read it again in later rounds. The personality and the base prompt belong to the same system message, add no model calls, and are still counted in the input and token budget. Permissions, tool allowlists and structured output keep their original code constraints.
 
@@ -91,7 +93,7 @@ Personality files support `{{player_language}}`. When none is specified, there i
 
 ## Extension entry points
 
-`engine.chat().prompts(PromptProvider)` can replace the base prompt provider; the default file `data/system/system/prompts/free_chat.txt` is loaded by the txt reload listener and contains direct answering, tool priority and the ReAct protocol. Replacing the base provider still appends the system personality; `engine.chat().personality(PromptProvider)` can replace that contribution separately, and its default game bridge is installed by AssistantServer.
+`engine.chat().prompts(PromptProvider)` can replace the base prompt provider; the default file `data/system/system/prompt/free_chat.txt` is loaded by the txt reload listener and contains direct answering, tool priority and the ReAct protocol. Replacing the base provider still appends the system personality; `engine.chat().personality(PromptProvider)` can replace that contribution separately, and its default game bridge is installed by AssistantServer.
 
 An underlying Tool is first registered with ToolRegistry in the original way, and `.forReasoning("description")` exposes a read-only operation carrying a SchemaMapCodec to analysis and free mode; PAID operations never enter the analysis catalog that only allows local reads. `.withPriority(ToolPriority.PAID)` marks extra cost, execution still has to pass the external service gate, and the handler is responsible for its own business authorization. Tools without a published description can be added per request through the interface below; unregistered, disabled, write and schema-less types are filtered out and never gain permission because a callback returned them:
 

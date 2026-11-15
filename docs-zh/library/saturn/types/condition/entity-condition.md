@@ -4,9 +4,9 @@ sidebar_label: "实体条件 (EntityCondition)"
 sidebar_position: 1
 ---
 
-# 实体条件
-
 检查一个实体。条件数组表示全部成立；这里的条件不等于原版 advancement JSON 的玩家谓词。
+
+## 类型
 
 ### `saturn:ability_storage_charges` {#saturnability_storage_charges}
 
@@ -141,6 +141,27 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:advancement` {#saturnadvancement}
+
+检查玩家是否完成指定原版进度，仅服务端有效
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:advancement` |
+| `advancement` | 资源 ID | 是 | — | 进度 ID；selection 为 everything 时忽略该 ID。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:advancement",
+  "advancement": "minecraft:story/root"
+}
+```
+
+</details>
+
 ### `saturn:air` {#saturnair}
 
 读取或比较实体的剩余空气值。
@@ -182,6 +203,44 @@ sidebar_position: 1
   "type": "saturn:attack_cooldown",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:attack_target_condition` {#saturnattack_target_condition}
+
+生物当前有攻击目标
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:attack_target_condition` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:attack_target_condition"
+}
+```
+
+</details>
+
+### `saturn:attacker_condition` {#saturnattacker_condition}
+
+实体最近受到过生物攻击
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:attacker_condition` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:attacker_condition"
 }
 ```
 
@@ -234,6 +293,39 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:block_in_radius` {#saturnblock_in_radius}
+
+统计实体周围符合条件的方块，位置按需遍历而不预先创建整个区域列表
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:block_in_radius` |
+| `block_condition` | [方块条件](./block-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `radius` | [数值提供器](../number.md) | 是 | — | 范围半径，单位为方块。 |
+| `shape` | 枚举字符串 | 否 | `"cube"` | cube 使用最大轴距离，star 使用曼哈顿距离，sphere 使用欧氏距离。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:block_in_radius",
+  "radius": 3,
+  "block_condition": {
+    "type": "saturn:block_id",
+    "block": "minecraft:diamond_ore"
+  },
+  "comparison": ">=",
+  "compare_to": 1
+}
+```
+
+</details>
+
+所有距离相对查询中心计算；实体使用位置坐标并排除旁观者。方块半径向下取整为非负整数，区域按需遍历。负数或非有限半径返回空区域。
+
 ### `saturn:brightness` {#saturnbrightness}
 
 比较实体所在位置的亮度。
@@ -278,6 +370,109 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:climbing` {#saturnclimbing}
+
+实体正在攀爬
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:climbing` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:climbing"
+}
+```
+
+</details>
+
+### `saturn:collided_horizontally` {#saturncollided_horizontally}
+
+实体与方块发生水平碰撞
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:collided_horizontally` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:collided_horizontally"
+}
+```
+
+</details>
+
+### `saturn:command` {#saturncommand}
+
+执行命令并比较其返回值，仅服务端有效；命令自身可能产生副作用
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:command` |
+| `command` | 字符串 | 是 | — | 原版命令，开头的 / 可省略。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:command",
+  "command": "data get entity @s Health",
+  "comparison": ">",
+  "compare_to": 10
+}
+```
+
+</details>
+
+执行身份为当前实体，位置为实体自身位置，权限等级为 2；不要用于需要保持只读的条件。
+
+### `saturn:creative_flying` {#saturncreative_flying}
+
+玩家正在使用创造飞行
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:creative_flying` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:creative_flying"
+}
+```
+
+</details>
+
+### `saturn:daytime` {#saturndaytime}
+
+当前为白天
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:daytime` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:daytime"
+}
+```
+
+</details>
+
 ### `saturn:dimension` {#saturndimension}
 
 检查实体所在维度。
@@ -299,6 +494,68 @@ sidebar_position: 1
 ```
 
 </details>
+
+### `saturn:enchantment` {#saturnenchantment}
+
+将全部装备槽的指定附魔等级求和或取最大值，再执行比较
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:enchantment` |
+| `enchantment` | 资源 ID | 是 | — | 指定附魔的注册表引用。 |
+| `calculation` | 枚举字符串 | 否 | `"sum"` | sum 求和或 max 取所有装备槽中的最大等级。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:enchantment",
+  "enchantment": "minecraft:protection",
+  "calculation": "sum",
+  "comparison": ">=",
+  "compare_to": 4
+}
+```
+
+</details>
+
+非生物返回 false；检查所有 `EquipmentSlot`，不只检查护甲。
+
+### `saturn:entity_in_radius` {#saturnentity_in_radius}
+
+统计指定范围内满足条件的非旁观实体，包含自身；形状按相对查询中心的距离计算
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:entity_in_radius` |
+| `entity_condition` | [实体条件](./entity-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `radius` | [数值提供器](../number.md) | 是 | — | 范围半径，单位为方块。 |
+| `shape` | 枚举字符串 | 否 | `"cube"` | cube 使用最大轴距离，star 使用曼哈顿距离，sphere 使用欧氏距离。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:entity_in_radius",
+  "radius": 8,
+  "shape": "sphere",
+  "entity_condition": {
+    "type": "saturn:hostile"
+  },
+  "comparison": ">=",
+  "compare_to": 1
+}
+```
+
+</details>
+
+所有距离相对查询中心计算；实体使用位置坐标并排除旁观者。方块半径向下取整为非负整数，区域按需遍历。负数或非有限半径返回空区域。
 
 ### `saturn:entity_tag` {#saturnentity_tag}
 
@@ -359,6 +616,25 @@ sidebar_position: 1
 {
   "type": "saturn:equipped_item",
   "equipment_slot": "mainhand"
+}
+```
+
+</details>
+
+### `saturn:exists` {#saturnexists}
+
+实体尚未被移除
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:exists` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:exists"
 }
 ```
 
@@ -471,6 +747,50 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:fall_flying` {#saturnfall_flying}
+
+实体正在滑翔
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:fall_flying` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:fall_flying"
+}
+```
+
+</details>
+
+### `saturn:fluid_height` {#saturnfluid_height}
+
+比较实体浸入指定流体类型的高度
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:fluid_height` |
+| `fluid` | 资源 ID | 是 | — | NeoForge fluid_type 注册表中的 ID，例如 minecraft:water；不是方块流体注册表。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:fluid_height",
+  "fluid": "minecraft:water",
+  "comparison": ">",
+  "compare_to": 0
+}
+```
+
+</details>
+
 ### `saturn:food_level` {#saturnfood_level}
 
 比较玩家的饥饿值。
@@ -534,6 +854,25 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:grounded` {#saturngrounded}
+
+实体接触地面
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:grounded` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:grounded"
+}
+```
+
+</details>
+
 ### `saturn:has_ability` {#saturnhas_ability}
 
 检查实体是否持有指定技能。
@@ -573,6 +912,25 @@ sidebar_position: 1
   "type": "saturn:health",
   "comparison": "<",
   "compare_to": 10
+}
+```
+
+</details>
+
+### `saturn:hostile` {#saturnhostile}
+
+实体属于敌对生物
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:hostile` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:hostile"
 }
 ```
 
@@ -629,6 +987,135 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:in_rain` {#saturnin_rain}
+
+实体当前淋雨
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:in_rain` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:in_rain"
+}
+```
+
+</details>
+
+### `saturn:in_snow` {#saturnin_snow}
+
+目标位置正在降雪
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:in_snow` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:in_snow"
+}
+```
+
+</details>
+
+检查实体脚下与眼睛位置是否存在原版降雪；遮挡天空或未下雨时为 false。
+
+### `saturn:in_thunderstorm` {#saturnin_thunderstorm}
+
+目标位置暴露于雷雨中
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:in_thunderstorm` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:in_thunderstorm"
+}
+```
+
+</details>
+
+### `saturn:inventory` {#saturninventory}
+
+统计实体原版背包与装备中满足条件的物品数量或堆数，玩家主手不会重复计数
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:inventory` |
+| `process_mode` | 枚举字符串 | 否 | `"items"` | items 统计物品数，stacks 统计非空物品堆数。 |
+| `item_condition` | [物品条件](./item-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `slot` | 整数 / 字符串 / 混合数组 | 否 | `[]` | 原版命令槽位整数或名称/范围，支持混合数组；空数组使用默认槽位集。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:inventory",
+  "item_condition": {
+    "type": "saturn:item_id",
+    "item": "minecraft:diamond"
+  },
+  "comparison": ">=",
+  "compare_to": 3
+}
+```
+
+</details>
+
+默认扫描 `hotbar.*`、`inventory.*`、`weapon.*`、`armor.*`、`saddle` 和 `mob.inventory.*`。仅访问实体实际提供的原版槽位；玩家选中快捷栏与主手别名去重，不读取 Origins Power 背包。
+
+### `saturn:invisible` {#saturninvisible}
+
+实体处于隐身状态
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:invisible` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:invisible"
+}
+```
+
+</details>
+
+### `saturn:living` {#saturnliving}
+
+实体是生物
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:living` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:living"
+}
+```
+
+</details>
+
 ### `saturn:main_hand_item` {#saturnmain_hand_item}
 
 检查实体主手物品是否满足物品条件。
@@ -670,6 +1157,33 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:nbt` {#saturnnbt}
+
+按 NBT 子集匹配实体保存数据，列表使用子集匹配
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:nbt` |
+| `nbt` | NBT 对象 | 是 | — | 要匹配的 NBT 子集，用 JSON 对象表示。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:nbt",
+  "nbt": {
+    "Tags": [
+      "example"
+    ]
+  }
+}
+```
+
+</details>
+
+按原版 `NbtUtils.compareNbt` 进行子集匹配；以当前版本实际保存的字段为准。方块条件只读取方块实体，不存在时返回 false。
+
 ### `saturn:on_block` {#saturnon_block}
 
 检查实体脚下方块是否满足方块条件。
@@ -688,6 +1202,25 @@ sidebar_position: 1
   "condition": {
     "type": "saturn:always"
   }
+}
+```
+
+</details>
+
+### `saturn:on_fire` {#saturnon_fire}
+
+实体正在燃烧
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:on_fire` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:on_fire"
 }
 ```
 
@@ -758,6 +1291,69 @@ sidebar_position: 1
   "type": "saturn:passenger_recursive",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:player_ability` {#saturnplayer_ability}
+
+检查原版玩家能力标记，包括飞行、无限物品、无敌和建造权限；与 Saturn Ability 技能不同
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:player_ability` |
+| `ability` | 枚举字符串 | 是 | — | 原版玩家能力：flying、instabuild、invulnerable、may_build、mayfly。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:player_ability",
+  "ability": "mayfly"
+}
+```
+
+</details>
+
+### `saturn:predicate` {#saturnpredicate}
+
+引用原版数据包 predicate，缺失或在客户端检查时为 false
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:predicate` |
+| `predicate` | 资源 ID | 是 | — | 原版 predicate ID，对应 `data/<namespace>/predicate/<path>.json`。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:predicate",
+  "predicate": "example:allowed"
+}
+```
+
+</details>
+
+提供原版 `COMMAND` loot context，包含 `ORIGIN` 和 `THIS_ENTITY`。缺失定义或客户端调用返回 false。
+
+### `saturn:raining` {#saturnraining}
+
+当前维度正在下雨
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:raining` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:raining"
 }
 ```
 
@@ -942,6 +1538,113 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:sprinting` {#saturnsprinting}
+
+实体正在疾跑
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:sprinting` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:sprinting"
+}
+```
+
+</details>
+
+### `saturn:stat` {#saturnstat}
+
+比较玩家原版统计值，支持自定义统计 ID 或带 stat_type/id 的类型统计
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:stat` |
+| `stat` | 资源 ID / 对象 | 是 | — | 自定义统计 ID，或 `{stat_type, id}` 对象。 |
+| `comparison` | 枚举字符串 | 是 | — | 比较运算符：`==`、`!=`、`<`、`<=`、`>`、`>=`。 |
+| `compare_to` | 数值 | 是 | — | 比较目标数值，与 comparison 配合使用。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:stat",
+  "stat": "minecraft:jump",
+  "comparison": ">=",
+  "compare_to": 10
+}
+```
+
+</details>
+
+字符串写法用于 `minecraft:custom` 统计，例如 `"minecraft:jump"`。有类型统计写成 `{"stat_type":"minecraft:mined","id":"minecraft:stone"}`；未知类型或条目不匹配/不执行。
+
+### `saturn:submerged_in` {#saturnsubmerged_in}
+
+检查实体眼睛是否浸没在指定流体类型中
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:submerged_in` |
+| `fluid` | 资源 ID | 是 | — | 注册的流体 ID。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:submerged_in",
+  "fluid": "minecraft:water"
+}
+```
+
+</details>
+
+配置写流体 ID，但眼睛检测按该流体的 NeoForge FluidType 判断；同类型的静止和流动流体会一起匹配。
+
+### `saturn:swimming` {#saturnswimming}
+
+实体正在游泳
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:swimming` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:swimming"
+}
+```
+
+</details>
+
+### `saturn:tamed` {#saturntamed}
+
+实体已经拥有主人
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:tamed` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:tamed"
+}
+```
+
+</details>
+
 ### `saturn:team` {#saturnteam}
 
 读取或检查实体的计分板队伍。
@@ -957,6 +1660,25 @@ sidebar_position: 1
 ```json
 {
   "type": "saturn:team"
+}
+```
+
+</details>
+
+### `saturn:thundering` {#saturnthundering}
+
+当前维度处于雷暴
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:thundering` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:thundering"
 }
 ```
 
@@ -1064,6 +1786,27 @@ sidebar_position: 1
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+返回配置的固定布尔值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:constant` |
+| `value` | 布尔值 | 是 | — | 固定布尔值；用于方块属性时，匹配或设置布尔属性。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

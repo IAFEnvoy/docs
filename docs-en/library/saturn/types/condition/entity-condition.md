@@ -3,9 +3,9 @@ title: "Entity condition"
 sidebar_position: 1
 ---
 
-# Entity condition
-
 Checks a single entity. The condition array means all conditions must hold; these conditions are not the same as the vanilla advancement JSON player predicate.
+
+## Types
 
 ### `saturn:ability_storage_charges` {#saturnability_storage_charges}
 
@@ -140,6 +140,27 @@ Checks the toggle value of the given ability storage.
 
 </details>
 
+### `saturn:advancement` {#saturnadvancement}
+
+Checks whether a server player has completed the specified advancement.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:advancement` |
+| `advancement` | Resource ID | yes | — | Advancement ID; ignored when selection is everything. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:advancement",
+  "advancement": "minecraft:story/root"
+}
+```
+
+</details>
+
 ### `saturn:air` {#saturnair}
 
 Reads or compares the remaining air of an entity.
@@ -181,6 +202,44 @@ Compares the attack charge progress of a player.
   "type": "saturn:attack_cooldown",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:attack_target_condition` {#saturnattack_target_condition}
+
+Checks whether a mob currently has an attack target.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:attack_target_condition` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:attack_target_condition"
+}
+```
+
+</details>
+
+### `saturn:attacker_condition` {#saturnattacker_condition}
+
+Checks whether a living entity has a last attacker.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:attacker_condition` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:attacker_condition"
 }
 ```
 
@@ -233,6 +292,39 @@ Checks whether the offset entity bounding box collides with blocks.
 
 </details>
 
+### `saturn:block_in_radius` {#saturnblock_in_radius}
+
+Counts matching blocks around the entity, enumerating positions lazily.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:block_in_radius` |
+| `block_condition` | [Block conditions](./block-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `radius` | [Number provider](../number.md) | yes | — | Radius in blocks. |
+| `shape` | Enum string | no | `"cube"` | cube uses maximum axis distance; star uses Manhattan distance; sphere uses Euclidean distance. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:block_in_radius",
+  "radius": 3,
+  "block_condition": {
+    "type": "saturn:block_id",
+    "block": "minecraft:diamond_ore"
+  },
+  "comparison": ">=",
+  "compare_to": 1
+}
+```
+
+</details>
+
+Distances are relative to the query centre. Entity queries use entity positions and exclude spectators. Block radii are floored to a non-negative integer and positions are enumerated lazily. Negative or non-finite radii yield an empty region.
+
 ### `saturn:brightness` {#saturnbrightness}
 
 Compares the brightness at the position of an entity.
@@ -277,6 +369,109 @@ Checks whether an entity can receive the given status effect.
 
 </details>
 
+### `saturn:climbing` {#saturnclimbing}
+
+Checks whether a living entity is on a climbable block.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:climbing` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:climbing"
+}
+```
+
+</details>
+
+### `saturn:collided_horizontally` {#saturncollided_horizontally}
+
+Checks the entity’s horizontal collision flag.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:collided_horizontally` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:collided_horizontally"
+}
+```
+
+</details>
+
+### `saturn:command` {#saturncommand}
+
+Executes a command and compares its result. The command may have side effects; this condition is server-only.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:command` |
+| `command` | String | yes | — | Vanilla command; a leading / is optional. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:command",
+  "command": "data get entity @s Health",
+  "comparison": ">",
+  "compare_to": 10
+}
+```
+
+</details>
+
+Runs as the entity at its own position, with permission level 2; do not use in a condition that must remain read-only.
+
+### `saturn:creative_flying` {#saturncreative_flying}
+
+Checks whether the player is currently using ability-based flight.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:creative_flying` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:creative_flying"
+}
+```
+
+</details>
+
+### `saturn:daytime` {#saturndaytime}
+
+Checks whether the overworld clock is within the first 13,000 ticks of the day.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:daytime` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:daytime"
+}
+```
+
+</details>
+
 ### `saturn:dimension` {#saturndimension}
 
 Checks the dimension an entity is in.
@@ -298,6 +493,68 @@ Checks the dimension an entity is in.
 ```
 
 </details>
+
+### `saturn:enchantment` {#saturnenchantment}
+
+Sums or takes the highest level of an enchantment across all equipment slots, then compares the result.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:enchantment` |
+| `enchantment` | Resource ID | yes | — | Registry reference to the enchantment. |
+| `calculation` | Enum string | no | `"sum"` | sum adds levels; max takes the highest level across equipment slots. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:enchantment",
+  "enchantment": "minecraft:protection",
+  "calculation": "sum",
+  "comparison": ">=",
+  "compare_to": 4
+}
+```
+
+</details>
+
+Non-living entities return false. All EquipmentSlot values are checked, including non-armour slots.
+
+### `saturn:entity_in_radius` {#saturnentity_in_radius}
+
+Counts matching non-spectator entities in a radius, including the entity itself when it matches.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:entity_in_radius` |
+| `entity_condition` | [Entity conditions](./entity-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `radius` | [Number provider](../number.md) | yes | — | Radius in blocks. |
+| `shape` | Enum string | no | `"cube"` | cube uses maximum axis distance; star uses Manhattan distance; sphere uses Euclidean distance. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:entity_in_radius",
+  "radius": 8,
+  "shape": "sphere",
+  "entity_condition": {
+    "type": "saturn:hostile"
+  },
+  "comparison": ">=",
+  "compare_to": 1
+}
+```
+
+</details>
+
+Distances are relative to the query centre. Entity queries use entity positions and exclude spectators. Block radii are floored to a non-negative integer and positions are enumerated lazily. Negative or non-finite radii yield an empty region.
 
 ### `saturn:entity_tag` {#saturnentity_tag}
 
@@ -358,6 +615,25 @@ Checks whether the item in the given equipment slot satisfies an item condition.
 {
   "type": "saturn:equipped_item",
   "equipment_slot": "mainhand"
+}
+```
+
+</details>
+
+### `saturn:exists` {#saturnexists}
+
+Checks whether the entity has not been removed; this is separate from being alive.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:exists` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:exists"
 }
 ```
 
@@ -470,6 +746,50 @@ Compares the accumulated fall distance of an entity.
 
 </details>
 
+### `saturn:fall_flying` {#saturnfall_flying}
+
+Checks whether a living entity is fall-flying.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:fall_flying` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:fall_flying"
+}
+```
+
+</details>
+
+### `saturn:fluid_height` {#saturnfluid_height}
+
+Compares the height of the specified NeoForge fluid type intersecting the entity.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:fluid_height` |
+| `fluid` | Resource ID | yes | — | ID in NeoForge’s fluid_type registry, e.g. minecraft:water; this is separate from the block fluid registry. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:fluid_height",
+  "fluid": "minecraft:water",
+  "comparison": ">",
+  "compare_to": 0
+}
+```
+
+</details>
+
 ### `saturn:food_level` {#saturnfood_level}
 
 Compares the food level of a player.
@@ -533,6 +853,25 @@ Checks whether an entity is glowing.
 
 </details>
 
+### `saturn:grounded` {#saturngrounded}
+
+Checks whether the entity is on the ground.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:grounded` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:grounded"
+}
+```
+
+</details>
+
 ### `saturn:has_ability` {#saturnhas_ability}
 
 Checks whether an entity has the given ability.
@@ -572,6 +911,25 @@ Reads or compares the current health of an entity.
   "type": "saturn:health",
   "comparison": "<",
   "compare_to": 10
+}
+```
+
+</details>
+
+### `saturn:hostile` {#saturnhostile}
+
+Checks whether the entity implements vanilla’s Enemy interface.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:hostile` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:hostile"
 }
 ```
 
@@ -628,6 +986,135 @@ Counts the blocks inside the entity bounding box that satisfy a condition.
 
 </details>
 
+### `saturn:in_rain` {#saturnin_rain}
+
+Checks whether the target is exposed to rain at its current location.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:in_rain` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:in_rain"
+}
+```
+
+</details>
+
+### `saturn:in_snow` {#saturnin_snow}
+
+Checks whether the target is exposed to snow at its current position.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:in_snow` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:in_snow"
+}
+```
+
+</details>
+
+Checks vanilla precipitation at the entity’s feet and eyes. Returns false when sheltered or when it is not raining.
+
+### `saturn:in_thunderstorm` {#saturnin_thunderstorm}
+
+Checks whether the target is exposed to rain during a thunderstorm.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:in_thunderstorm` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:in_thunderstorm"
+}
+```
+
+</details>
+
+### `saturn:inventory` {#saturninventory}
+
+Counts matching non-empty item stacks or items in vanilla inventory and equipment slots.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:inventory` |
+| `process_mode` | Enum string | no | `"items"` | items counts individual items; stacks counts non-empty stacks. |
+| `item_condition` | [Item conditions](./item-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `slot` | Integer / string / mixed array | no | `[]` | Vanilla command slot number or slot name/range; mixed arrays are accepted. An empty array selects the default slots. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:inventory",
+  "item_condition": {
+    "type": "saturn:item_id",
+    "item": "minecraft:diamond"
+  },
+  "comparison": ">=",
+  "compare_to": 3
+}
+```
+
+</details>
+
+Defaults to `hotbar.*`, `inventory.*`, `weapon.*`, `armor.*`, `saddle` and `mob.inventory.*`. Only vanilla slots exposed by the entity are visited. The player’s selected hotbar slot and main-hand alias are deduplicated. Origins Power inventories are not read.
+
+### `saturn:invisible` {#saturninvisible}
+
+Checks whether the entity is invisible.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:invisible` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:invisible"
+}
+```
+
+</details>
+
+### `saturn:living` {#saturnliving}
+
+Checks whether the entity is a living entity.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:living` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:living"
+}
+```
+
+</details>
+
 ### `saturn:main_hand_item` {#saturnmain_hand_item}
 
 Checks whether the main hand item of an entity satisfies an item condition.
@@ -669,6 +1156,33 @@ Checks whether an entity has the given status effect.
 
 </details>
 
+### `saturn:nbt` {#saturnnbt}
+
+Matches a subset of the target’s saved NBT, including subset matching for lists.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:nbt` |
+| `nbt` | NBT object | yes | — | NBT subset to match, expressed as a JSON object. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:nbt",
+  "nbt": {
+    "Tags": [
+      "example"
+    ]
+  }
+}
+```
+
+</details>
+
+Uses vanilla `NbtUtils.compareNbt` subset matching. Match the fields actually saved by this Minecraft version. Block conditions require a block entity and return false when none exists.
+
 ### `saturn:on_block` {#saturnon_block}
 
 Checks whether the block below the feet of an entity satisfies a block condition.
@@ -687,6 +1201,25 @@ Checks whether the block below the feet of an entity satisfies a block condition
   "condition": {
     "type": "saturn:always"
   }
+}
+```
+
+</details>
+
+### `saturn:on_fire` {#saturnon_fire}
+
+Checks whether the entity is on fire.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:on_fire` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:on_fire"
 }
 ```
 
@@ -757,6 +1290,69 @@ Recursively counts the passengers that satisfy a condition.
   "type": "saturn:passenger_recursive",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:player_ability` {#saturnplayer_ability}
+
+Checks a vanilla player ability flag; separate from Saturn’s Ability skill system.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:player_ability` |
+| `ability` | Enum string | yes | — | Vanilla ability flag: flying, instabuild, invulnerable, may_build or mayfly. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:player_ability",
+  "ability": "mayfly"
+}
+```
+
+</details>
+
+### `saturn:predicate` {#saturnpredicate}
+
+Evaluates a vanilla datapack predicate on the server. Missing predicates return false.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:predicate` |
+| `predicate` | Resource ID | yes | — | Vanilla predicate ID, at `data/<namespace>/predicate/<path>.json`. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:predicate",
+  "predicate": "example:allowed"
+}
+```
+
+</details>
+
+Provides the vanilla `COMMAND` loot context with `ORIGIN` and `THIS_ENTITY`. Missing definitions and client-side checks return false.
+
+### `saturn:raining` {#saturnraining}
+
+Checks whether the level currently reports rainy weather.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:raining` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:raining"
 }
 ```
 
@@ -941,6 +1537,113 @@ Checks whether an entity is sneaking.
 
 </details>
 
+### `saturn:sprinting` {#saturnsprinting}
+
+Checks whether the entity is sprinting.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:sprinting` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:sprinting"
+}
+```
+
+</details>
+
+### `saturn:stat` {#saturnstat}
+
+Compares a server player’s vanilla statistic.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:stat` |
+| `stat` | Resource ID / object | yes | — | A custom statistic ID, or a `{stat_type, id}` object. |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:stat",
+  "stat": "minecraft:jump",
+  "comparison": ">=",
+  "compare_to": 10
+}
+```
+
+</details>
+
+A string selects a `minecraft:custom` statistic, e.g. `"minecraft:jump"`. A typed statistic uses `{"stat_type":"minecraft:mined","id":"minecraft:stone"}`. Unknown types or entries do not match or execute.
+
+### `saturn:submerged_in` {#saturnsubmerged_in}
+
+Checks whether the entity’s eyes are in the NeoForge fluid type of the given fluid.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:submerged_in` |
+| `fluid` | Resource ID | yes | — | Registered fluid ID. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:submerged_in",
+  "fluid": "minecraft:water"
+}
+```
+
+</details>
+
+The configured value is a fluid ID, but the eye check uses that fluid’s NeoForge FluidType; source and flowing variants sharing the type both match.
+
+### `saturn:swimming` {#saturnswimming}
+
+Checks whether the entity is swimming.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:swimming` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:swimming"
+}
+```
+
+</details>
+
+### `saturn:tamed` {#saturntamed}
+
+Checks whether an ownable entity has an owner reference.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:tamed` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:tamed"
+}
+```
+
+</details>
+
 ### `saturn:team` {#saturnteam}
 
 Reads or checks the scoreboard team of an entity.
@@ -956,6 +1659,25 @@ Reads or checks the scoreboard team of an entity.
 ```json
 {
   "type": "saturn:team"
+}
+```
+
+</details>
+
+### `saturn:thundering` {#saturnthundering}
+
+Checks whether the level currently reports a thunderstorm.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:thundering` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:thundering"
 }
 ```
 
@@ -1063,6 +1785,27 @@ Decides whether the check succeeds based on a given chance.
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+Returns the configured boolean value.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:constant` |
+| `value` | Boolean | yes | — | The boolean result, or the expected/new boolean block property value. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

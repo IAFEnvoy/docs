@@ -3,9 +3,9 @@ title: "Entity action"
 sidebar_position: 1
 ---
 
-# Entity action
-
 Runs an operation on a single entity. Used in entity action fields such as `entity_action` and a trigger rule's `action`; action arrays run in order.
+
+## Types
 
 ### `saturn:add_experience` {#saturnadd_experience}
 
@@ -101,6 +101,61 @@ Applies a mob effect with the given duration and amplifier to the entity.
 
 </details>
 
+### `saturn:area_of_effect` {#saturnarea_of_effect}
+
+Applies a bi-entity action within a sphere; shares its implementation with entity region_apply.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:area_of_effect` |
+| `radius` | [Number provider](../number.md) | no | `16` | Radius in blocks. |
+| `bientity_action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+| `bientity_condition` | [Bi-entity conditions](../condition/bientity-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `include_target` | Boolean | no | `false` | Whether to include the acting entity itself; equivalent to region_apply’s include_actor. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:area_of_effect",
+  "radius": 8,
+  "bientity_action": {
+    "type": "saturn:heal_target",
+    "amount": 2
+  }
+}
+```
+
+</details>
+
+Distances are relative to the query centre. Entity queries use entity positions and exclude spectators. Block radii are floored to a non-negative integer and positions are enumerated lazily. Negative or non-finite radii yield an empty region.
+
+### `saturn:award_stat` {#saturnaward_stat}
+
+Increases one or more vanilla statistics for a server player.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:award_stat` |
+| `stat` | Resource ID / object / array | yes | — | A custom statistic ID, or a `{stat_type, id}` object. |
+| `amount` | [Number provider](../number.md) | no | `1` | Amount for this operation. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:award_stat",
+  "stat": "minecraft:jump",
+  "amount": 1
+}
+```
+
+</details>
+
+A string selects a `minecraft:custom` statistic, e.g. `"minecraft:jump"`. A typed statistic uses `{"stat_type":"minecraft:mined","id":"minecraft:stone"}`. Unknown types or entries do not match or execute.
+
 ### `saturn:block_action` {#saturnblock_action}
 
 Runs a block action on the block at the entity's position.
@@ -123,6 +178,50 @@ Runs a block action on the block at the entity's position.
 ```
 
 </details>
+
+### `saturn:crafting_table` {#saturncrafting_table}
+
+Opens a crafting menu for a server player without requiring a nearby crafting table.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:crafting_table` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:crafting_table"
+}
+```
+
+</details>
+
+### `saturn:damage` {#saturndamage}
+
+Damages the entity on the server with a specified damage type.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:damage` |
+| `damage_type` | Resource ID | yes | — | Reference to the vanilla damage type registry. |
+| `amount` | [Number provider](../number.md) | yes | — | Amount for this operation. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:damage",
+  "damage_type": "minecraft:magic",
+  "amount": 2
+}
+```
+
+</details>
+
+Non-positive or non-finite amounts do not deal damage.
 
 ### `saturn:dismount` {#saturndismount}
 
@@ -164,6 +263,25 @@ Emits a vanilla game event that sculk sensors and similar blocks can receive.
 
 </details>
 
+### `saturn:ender_chest` {#saturnender_chest}
+
+Opens the server player’s own ender chest.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:ender_chest` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:ender_chest"
+}
+```
+
+</details>
+
 ### `saturn:equipped_item_action` {#saturnequipped_item_action}
 
 Runs an item action on the item stack in the given equipment slot.
@@ -188,6 +306,29 @@ Runs an item action on the item stack in the given equipment slot.
 ```
 
 </details>
+
+### `saturn:execute_command` {#saturnexecute_command}
+
+Executes a vanilla command with gamemaster permission (level 2).
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:execute_command` |
+| `command` | String | yes | — | Vanilla command; a leading / is optional. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:execute_command",
+  "command": "effect give @s minecraft:speed 10"
+}
+```
+
+</details>
+
+Server-only, with command feedback suppressed. Entity actions use the entity as `@s` at the activation position; block actions use the block centre and have no `@s` entity.
 
 ### `saturn:exhaust` {#saturnexhaust}
 
@@ -322,6 +463,31 @@ Grants an ability to the entity under the given source ID.
 
 </details>
 
+### `saturn:grant_advancement` {#saturngrant_advancement}
+
+Awards advancements or named criteria to a server player.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:grant_advancement` |
+| `advancement` | Resource ID | yes | — | Advancement ID; ignored when selection is everything. |
+| `criterion` | String / string array | no | `[]` | Criterion name or array; omitted or empty means the whole advancement. |
+| `selection` | Enum string | no | `"only"` | only: itself; through: ancestors and descendants; from: descendants; until: ancestors; everything: all advancements. Every non-global mode includes the given advancement. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:grant_advancement",
+  "advancement": "minecraft:story/root"
+}
+```
+
+</details>
+
+Only affects server players. `everything` selects the entire advancement registry; other modes start at the given ID. Missing IDs do nothing. Named criteria are applied to each selected advancement.
+
 ### `saturn:heal` {#saturnheal}
 
 Restores the entity's health.
@@ -396,6 +562,39 @@ Only storage kinds that the ability has already declared are modified; when a ki
 
 </details>
 
+### `saturn:modify_inventory` {#saturnmodify_inventory}
+
+Executes an item action and an optional entity action once for each matching non-empty slot, on the server.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:modify_inventory` |
+| `item_condition` | [Item conditions](../condition/item-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `item_action` | [Item actions](./item-action.md) | yes | — | Nested action of the declared context type. |
+| `entity_action` | [Entity actions](./entity-action.md) | no | `saturn:no_op` | Nested action of the declared context type. |
+| `slot` | Integer / string / mixed array | no | `[]` | Vanilla command slot number or slot name/range; mixed arrays are accepted. An empty array selects the default slots. |
+| `limit` | Integer | no | `0` | Maximum matching slots to process; zero or negative means all. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:modify_inventory",
+  "slot": "weapon.mainhand",
+  "item_action": {
+    "type": "saturn:consume_item",
+    "count": 1
+  }
+}
+```
+
+</details>
+
+Defaults to `hotbar.*`, `inventory.*`, `weapon.*`, `armor.*`, `saddle` and `mob.inventory.*`. Only vanilla slots exposed by the entity are visited. The player’s selected hotbar slot and main-hand alias are deduplicated. Origins Power inventories are not read.
+
+Runs once per matching slot: `entity_action` first, then `item_action`. The limit counts slots, not individual items.
+
 ### `saturn:passenger_action` {#saturnpassenger_action}
 
 Runs an action on the passengers of the entity, and can walk multiple levels of passengers recursively.
@@ -444,6 +643,40 @@ Plays the given sound event at the entity.
 
 </details>
 
+### `saturn:region_apply` {#saturnregion_apply}
+
+Applies an action to matching targets in a region, preserving the parent context.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:region_apply` |
+| `radius` | [Number provider](../number.md) | no | `16` | Radius in blocks. |
+| `shape` | Enum string | no | `"cube"` | cube uses maximum axis distance; star uses Manhattan distance; sphere uses Euclidean distance. |
+| `bientity_action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+| `bientity_condition` | [Bi-entity conditions](../condition/bientity-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `include_actor` | Boolean | no | `false` | Whether to include the acting entity itself among the targets. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:region_apply",
+  "radius": 8,
+  "shape": "sphere",
+  "bientity_action": {
+    "type": "saturn:heal_target",
+    "amount": 2
+  }
+}
+```
+
+</details>
+
+Distances are relative to the query centre. Entity queries use entity positions and exclude spectators. Block radii are floored to a non-negative integer and positions are enumerated lazily. Negative or non-finite radii yield an empty region.
+
+The centre is the activation position; actor is the activating entity and target is each matching entity.
+
 ### `saturn:remove_ability` {#saturnremove_ability}
 
 Removes the ability granted by the given source; abilities from other sources are not affected.
@@ -488,6 +721,82 @@ Removes the given status effect from the entity.
 
 </details>
 
+### `saturn:replace_inventory` {#saturnreplace_inventory}
+
+Replaces each matching slot with a freshly created item template on the server; empty slots can match.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:replace_inventory` |
+| `stack` | Item ID / item template object | yes | — | Item template instantiated separately for each matching slot. |
+| `item_condition` | [Item conditions](../condition/item-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+| `slot` | Integer / string / mixed array | no | `[]` | Vanilla command slot number or slot name/range; mixed arrays are accepted. An empty array selects the default slots. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:replace_inventory",
+  "slot": "weapon.mainhand",
+  "stack": "minecraft:stick"
+}
+```
+
+</details>
+
+Defaults to `hotbar.*`, `inventory.*`, `weapon.*`, `armor.*`, `saddle` and `mob.inventory.*`. Only vanilla slots exposed by the entity are visited. The player’s selected hotbar slot and main-hand alias are deduplicated. Origins Power inventories are not read.
+
+Omitting `item_condition` matches every selected slot, including empty ones. Explicitly exclude `saturn:empty` to replace only existing stacks.
+
+### `saturn:reset_stat` {#saturnreset_stat}
+
+Resets one or more vanilla statistics for a server player.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:reset_stat` |
+| `stat` | Resource ID / object / array | yes | — | A custom statistic ID, or a `{stat_type, id}` object. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:reset_stat",
+  "stat": "minecraft:jump"
+}
+```
+
+</details>
+
+A string selects a `minecraft:custom` statistic, e.g. `"minecraft:jump"`. A typed statistic uses `{"stat_type":"minecraft:mined","id":"minecraft:stone"}`. Unknown types or entries do not match or execute.
+
+### `saturn:revoke_advancement` {#saturnrevoke_advancement}
+
+Revokes advancements or named criteria from a server player.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:revoke_advancement` |
+| `advancement` | Resource ID | yes | — | Advancement ID; ignored when selection is everything. |
+| `criterion` | String / string array | no | `[]` | Criterion name or array; omitted or empty means the whole advancement. |
+| `selection` | Enum string | no | `"only"` | only: itself; through: ancestors and descendants; from: descendants; until: ancestors; everything: all advancements. Every non-global mode includes the given advancement. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:revoke_advancement",
+  "advancement": "minecraft:story/root"
+}
+```
+
+</details>
+
+Only affects server players. `everything` selects the entire advancement registry; other modes start at the given ID. Missing IDs do nothing. Named criteria are applied to each selected advancement.
+
 ### `saturn:riding_action` {#saturnriding_action}
 
 Runs an action on what the entity is riding, and can walk the riding chain recursively.
@@ -506,6 +815,34 @@ Runs an action on what the entity is riding, and can walk the riding chain recur
 ```json
 {
   "type": "saturn:riding_action"
+}
+```
+
+</details>
+
+### `saturn:selector_action` {#saturnselector_action}
+
+Selects entities with a vanilla selector, filters them and executes a bi-entity action on the server.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:selector_action` |
+| `selector` | String | yes | — | Vanilla entity selector, evaluated with the acting entity and activation position as command context. |
+| `bientity_action` | [Bi-entity actions](./bientity-action.md) | yes | — | Nested action of the declared context type. |
+| `bientity_condition` | [Bi-entity conditions](../condition/bientity-condition.md) | no | `saturn:always` | Filter condition of the declared context type. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:selector_action",
+  "selector": "@e[type=minecraft:zombie,distance=..8]",
+  "bientity_action": {
+    "type": "saturn:damage_target",
+    "damage_type": "minecraft:magic",
+    "amount": 2
+  }
 }
 ```
 
@@ -839,6 +1176,34 @@ Each entry contains value and weight; see [Weighted entries](../../data/common.m
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+Executes an action a fixed number of times, up to the configured iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:for_range` |
+| `range` | [Number provider](../number.md) | yes | — | Repetition count, truncated toward zero; negative values execute nothing. |
+| `action` | [Entity actions](./entity-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+The count is evaluated once before the loop and capped at `max_iterations`.
+
 ### `saturn:if_else` {#saturnif_else}
 
 Runs if_action when the condition holds, otherwise runs else_action.
@@ -862,6 +1227,43 @@ Runs if_action when the condition holds, otherwise runs else_action.
   "if_action": {
     "type": "saturn:no_op"
   }
+}
+```
+
+</details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+Executes the first branch whose condition matches, then stops checking branches.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:if_else_list` |
+| `actions` | Branch array | yes | — | Ordered branches; each entry contains condition and action. |
+
+Each `actions` entry:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `condition` | `EntityCondition` | yes | Condition selecting this branch. |
+| `action` | `EntityAction` | yes | Action to run; later branches are not checked. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
 }
 ```
 
@@ -931,3 +1333,61 @@ Runs several actions of the same kind in array order.
 ```
 
 </details>
+
+### `saturn:side` {#saturnside}
+
+Executes the nested action only on the selected logical side.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:side` |
+| `action` | [Entity actions](./entity-action.md) | yes | — | Nested action of the declared context type. |
+| `side` | Enum string | yes | — | Logical side: client or server. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+Uses the level’s logical side. An integrated server is `server` even inside a client process. This action does not send a packet or execute remotely.
+
+### `saturn:while` {#saturnwhile}
+
+Repeats an action while its condition matches, with a configurable iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:while` |
+| `condition` | [Entity conditions](../condition/entity-condition.md) | yes | — | Filter condition of the declared context type. |
+| `action` | [Entity actions](./entity-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+The condition is checked before every iteration. If it is still true after `max_iterations`, the action throws and stops; actions already executed are not rolled back.

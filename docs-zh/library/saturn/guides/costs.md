@@ -23,3 +23,7 @@ sidebar_position: 2
 `CostPayment.pay` 组织以上步骤。它不替调用方保存订单或回滚已经发生的外部支付；多通道实扣期间发生的异常需要业务自己的账本与恢复流程。系统另有持久化订单和奖励交付逻辑，不能用重复调用 pay 处理未知订单。
 
 扩展费用实现 `Cost`，注册到 `SaturnResourceKeys.COST_TYPE`，返回自己的 `MapCodec`。失败使用 `Result.failure(Failure)`，不要用成功空值假装扣款完成。
+
+## 费用展示
+
+报价绑定完成后，对每个费用目标调用 `target.display(boundAmount)`，得到物品预览和文字描述。不要为了渲染价格重新运行 `prepare` 或试扣款。自定义支付渠道自行重写展示；默认实现显示目标 label 和金额，界面无需辨别 Target 实现类型。详见[开发 API](../development/api.md)。

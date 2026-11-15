@@ -19,3 +19,6 @@ sidebar_position: 0
 | [`system:advancement`](./advancement.md) | 监听 system-advancements.json 规则，执行解锁标记与固定奖励工作流。 |
 | [`system:ftb_quests`](./ftb_quests.md) | 提供任务查询、详情、提交、领奖、礼包和说明书检索。 |
 | [`system:web_search`](./web_search.md) | 提供显式授权后的 DeepSeek Search 与 Fetch 能力。 |
+| [`system:economy`](./economy.md) | 提供多币种钱包、余额查询及管理员经济指令。 |
+| [`system:workshop`](./workshop.md) | 为主手受损装备报价并经确认付款维修。 |
+| [`system:online_jobs`](./online_jobs.md) | 在线计时作业，完成后手动入账至收件箱。 |

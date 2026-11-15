@@ -32,7 +32,7 @@ sidebar_position: 1
 }
 ```
 
-`example:personality/daily` 对应 `data/example/system/prompts/personality/daily.txt`。名称和介绍还需客户端资源包提供翻译：
+`example:personality/daily` 对应 `data/example/system/prompt/personality/daily.txt`。名称和介绍还需客户端资源包提供翻译：
 
 ```json title="assets/example/lang/zh_cn.json"
 {

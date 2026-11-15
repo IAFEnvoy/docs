@@ -9,3 +9,4 @@ sidebar_position: 0
 | --- | --- |
 | [`system:has_module`](./has_module.md) | 检查玩家实际启用的模块。 |
 | [`system:has_system`](./has_system.md) | 检查玩家是否绑定并初始化了系统，可筛选系统 ID。 |
+| [`system:currency`](./currency.md) | 使用 comparison 比较钱包余额，不扣款。 |

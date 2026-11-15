@@ -9,3 +9,4 @@ The entity conditions System provides for Saturn. They can be combined with Satu
 | --- | --- |
 | [`system:has_module`](./has_module.md) | Checks the modules actually enabled for the player. |
 | [`system:has_system`](./has_system.md) | Checks whether the player has bound and initialized a system; the system ID can be filtered. |
+| [`system:currency`](./currency.md) | Compares wallet balances with comparison, without charging. |

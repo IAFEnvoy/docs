@@ -7,9 +7,10 @@ sidebar_position: 0
 
 | 分类 | 类型数 |
 | --- | --- |
-| [模块类型](./module/index.md) | 12 |
+| [模块类型](./module/index.md) | 15 |
 | [卡片节点](./node/index.md) | 18 |
-| [实体动作](./entity-action/index.md) | 2 |
-| [实体条件](./entity-condition/index.md) | 2 |
+| [实体动作](./entity-action/index.md) | 3 |
+| [实体条件](./entity-condition/index.md) | 3 |
+| [费用类型](./cost/index.md) | 1 |
 
 这些条目大多是嵌入字段的 type 对象，不要直接按类型名创建数据文件。独立文件的目录与结构见[数据定义](../data/index.md)。

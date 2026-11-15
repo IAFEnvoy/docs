@@ -23,3 +23,7 @@ sidebar_position: 2
 `CostPayment.pay` orchestrates the steps above. It does not save the order for the caller or roll back external payments that have already happened; exceptions raised while real charges run across multiple channels need the business's own ledger and recovery flow. System has separate persistent order and reward delivery logic, so an unknown order must not be handled by calling pay again.
 
 A custom cost implements `Cost`, registers with `SaturnResourceKeys.COST_TYPE` and returns its own `MapCodec`. On failure use `Result.failure(Failure)`; do not pretend the charge succeeded by returning a successful empty value.
+
+## Cost presentation
+
+After quoting and binding fees, call `target.display(boundAmount)` on each target to obtain item previews and descriptions. Do not prepare or trial payments again to draw a price. Custom payment channels own their presentation; the default uses the target label and amount. The UI does not need to distinguish target implementation classes. See the [development API](../development/api.md).

@@ -3,7 +3,7 @@ title: "Registry index"
 sidebar_position: 6
 ---
 
-The keys of all formal registries are collected in [`SystemResourceKeys`](https://github.com/IAFEnvoy/System-Mod/blob/master/src/main/java/com/iafenvoy/system/registry/SystemResourceKeys.java), and the instances in [`SystemRegistries`](https://github.com/IAFEnvoy/System-Mod/blob/master/src/main/java/com/iafenvoy/system/registry/SystemRegistries.java). Code definitions join the built-in root registry through NeoForge `NewRegistryEvent`, entries are declared through `DeferredRegister`, and the mod loading flow freezes them all. Protocol types and card nodes use the formal registries; ASR / TTS use independent plain factory Maps, as described below.
+The keys of all formal registries are collected in [`SystemResourceKeys`](https://github.com/IAFEnvoy/System-Mod/blob/master/src/main/java/com/iafenvoy/system/registry/SystemResourceKeys.java), and the instances in [`SystemRegistries`](https://github.com/IAFEnvoy/System-Mod/blob/master/src/main/java/com/iafenvoy/system/registry/SystemRegistries.java). Code definitions join the built-in root registry through NeoForge `NewRegistryEvent`, entries are declared through `DeferredRegister`, and the mod loading flow freezes them all. Registry IDs and their data and tag directories use singular names; the old plural directories are no longer loading paths. Module IDs and collection fields keep their names. Protocol types and card nodes use the formal registries; ASR / TTS use independent plain factory Maps, as described below.
 
 ## Client module binding cache
 
@@ -30,7 +30,7 @@ There are 6 code registries in total. Only the card node DeferredRegister is bou
 
 ### Built-in modules
 
-The server types include core, binding, usage, player, items, signin, inbox, shop, lottery, advancement, ftb_quests and web_search, all in the system namespace. Each type provides CODEC / codec(), parameterless types use the MapCodec.unit singleton, and ServerModule.CODEC dispatches by type from SERVER_MODULE.
+The server types include core, binding, usage, player, items, economy, workshop, online_jobs, signin, inbox, shop, lottery, advancement, ftb_quests and web_search, all in the system namespace. Each type provides CODEC / codec(), parameterless types use the MapCodec.unit singleton, and ServerModule.CODEC dispatches by type from SERVER_MODULE.
 
 Dynamic configurations are registered separately in `system:system_module` and accessed through `SystemDataPackRegistries.modules(RegistryAccess)`. Built-in dynamic entries use the same-name ID, and extensions can create different IDs and parameters for the same type; the static SERVER_MODULE cannot be used to query module configurations or to obtain a player's available entries.
 
@@ -44,16 +44,16 @@ Client implementations live in a plain Map in SystemClientModules, initialized t
 | WorkflowModule | Server-side workflows and lifecycle; advancements use this type |
 | SharedModule | Extends WorkflowModule and adds server-side game commands; does not extend ClientModule |
 | CoreModule | Extends SharedModule; required once bound and cannot be removed |
-| CatalogModule | Extends SharedModule; provides the registry keys of the three business catalogs and optional ResourceKey/TagKey lists |
+| CatalogModule | Extends SharedModule; provides the registry keys of business catalogs and optional ResourceKey/TagKey lists |
 | ClientModule | Client interface, local actions and clientCommands |
 
 Categories are expressed as interfaces, and available() only checks dependencies. Both pure tools and workflows keep the owner by configuration ID. The Agent workflow and tool catalog support multiple candidates of the same type and select the implementation according to the modules currently enabled for the player; the client cache groups by client ID and assembles only one UI. See [Functional modularity](modules.md) for details.
 
 ### Card data and action payloads
 
-There are 31 card types: `chat`, `text`, `selection`, `binding`, `shop_offer`, `shop_catalog`, `shop_quote`, `player`, `items`, `item_sources`, `delivery_state`, `reward`, `entitlement`, `purchase`, `quest`, `quest_guide`, `claim`, `sign_in_status`, `shop_order`, `lottery_catalog`, `lottery_pool`, `lottery_prize`, `quest_list`, `quest_unlocked`, `quest_notice`, `quest_startup`, `starter_gift`, `quest_submit`, `web_search`, `knowledge_answer`, `quest_pin`. `quest_unlocked` uses QuestUnlockedOutput and the existing quest_list template to aggregate the quests unlocked in the same batch; the common payload does not reference FTB classes. State and history are no longer registered as cards.
+There are 35 card types: `chat`, `text`, `selection`, `binding`, `shop_offer`, `shop_catalog`, `shop_quote`, `player`, `items`, `item_sources`, `item_inspection`, `repair_quote`, `online_jobs`, `wallet`, `delivery_state`, `reward`, `entitlement`, `purchase`, `quest`, `quest_guide`, `claim`, `sign_in_status`, `shop_order`, `lottery_catalog`, `lottery_pool`, `lottery_prize`, `quest_list`, `quest_unlocked`, `quest_notice`, `quest_startup`, `starter_gift`, `quest_submit`, `web_search`, `knowledge_answer`, `quest_pin`. `quest_unlocked` uses QuestUnlockedOutput and the existing quest_list template to aggregate the quests unlocked in the same batch; the common payload does not reference FTB classes. State and history are no longer registered as cards.
 
-There are 24 action types: `free_chat`, `help`, `player_query`, `inbox`, `sign_in`, `item_query`, `item_sources`, `deliver`, `shop`, `shop_quote`, `shop_purchase`, `lottery`, `lottery_preview`, `lottery_draw`, `quest_query`, `quest_guide`, `quest_detail`, `quest_claim`, `starter_gift`, `starter_gifts`, `quest_submit`, `advancement_followup`, `question`, `reasoning`.
+There are 32 action types: `free_chat`, `help`, `player_query`, `inbox`, `balance`, `sign_in`, `item_query`, `item_sources`, `item_inspect`, `repair_quote`, `repair_confirm`, `online_jobs`, `job_start`, `job_claim`, `job_cancel`, `deliver`, `shop`, `shop_quote`, `shop_purchase`, `lottery`, `lottery_preview`, `lottery_draw`, `quest_query`, `quest_guide`, `quest_detail`, `quest_claim`, `starter_gift`, `starter_gifts`, `quest_submit`, `advancement_followup`, `question`, `reasoning`.
 
 All built-in entries are exposed as `public static DeferredHolder`. Card implementations implement `CardData` and action implementations implement `AgentAction`; both create and pass data objects directly, and each implementation's `codec()` returns its own registered MapCodec:
 
@@ -90,7 +90,7 @@ A Codec accesses the registry only on the first encode or decode, avoiding resol
 
 ### Card nodes
 
-SystemCardNodeTypes declares 18 MapCodecs: text, markdown, title; image, item, player, ftb_icon; flex, grid; container, groups, details; button, link; divider, progress; player_information, recipe. The IDs are all in the system: namespace and are placed in the corresponding sub-package of screen.card.node by function. Only the physical client binds the DeferredRegister; the dedicated server loads neither AUI nor the node implementations.
+SystemCardNodeTypes declares 19 MapCodecs: text, markdown, title; image, expression, item, player, ftb_icon; flex, grid; container, groups, details; button, link; divider, progress; player_information, recipe. The IDs are all in the system: namespace and are placed in the corresponding sub-package of screen.card.node by function. Only the physical client binds the DeferredRegister; the dedicated server loads neither AUI nor the node implementations. Expression profiles use a client resource-reload Map for `expression/*.json`, rather than a synchronized game registry.
 
 CardNode only provides codec/css/render; the text projection, plain-text eligibility, title, children and collection index are each provided by capability interfaces. The recursive children Codec uses CardTemplate.NODES for lazy initialization. One client built-in registry is enough; no additional registries are needed per category.
 
@@ -117,19 +117,22 @@ The internal `Map<String, Supplier<...>>` uses ConcurrentHashMap and is maintain
 | --- | --- | --- |
 | System module data pack registry `system:system_module` | `SystemDataPackRegistries`, `SystemResourceKeys.SYSTEM_MODULE` | `modules/moduleIds(RegistryAccess)`; module configuration, server type dispatch and client ID |
 | System data pack registry `system:system` | `SystemDataPackRegistries`, `SystemResourceKeys.SYSTEM` | `SystemDataPackRegistries.get/ids(RegistryAccess, ...)`; system name, description and module definitions |
-| Sign-in reward registry `system:signin_rewards` | `SystemDataPackRegistries`, `SystemResourceKeys.SIGNIN_REWARDS` | Server-side SignInRewardEntry; module rewards filtering |
-| Shop offer registry `system:shop_offers` | `SystemDataPackRegistries`, `SystemResourceKeys.SHOP_OFFERS` | Server-side ShopOfferEntry; module offers filtering |
-| Lottery pool registry `system:lottery_pools` | `SystemDataPackRegistries`, `SystemResourceKeys.LOTTERY_POOLS` | Server-side LotteryPool; module pools filtering |
-| Saturn `SaturnResourceKeys.ENTITY_ACTION_TYPE` | `SystemEntityActions` | `system:add_module`, `system:remove_module` |
-| Saturn `SaturnResourceKeys.ENTITY_CONDITION_TYPE` | `SystemEntityConditions` | `system:has_module`, `system:has_system` |
-| Saturn `SaturnRegistries.DATA_STORAGE_TYPE` | `SystemDataStorages` | DataStorage Codec for module permissions, advancements, Agent logs, transactions, inbox, sign-in and persistent cards; `DISPLAY_CARDS` corresponds to system:display_cards |
+| Sign-in reward registry `system:signin_reward` | `SystemDataPackRegistries`, `SystemResourceKeys.SIGNIN_REWARD` | Server-side SignInRewardEntry; module rewards filtering |
+| Shop offer registry `system:shop_offer` | `SystemDataPackRegistries`, `SystemResourceKeys.SHOP_OFFER` | Server-side ShopOfferEntry; module offers filtering |
+| Lottery pool registry `system:lottery_pool` | `SystemDataPackRegistries`, `SystemResourceKeys.LOTTERY_POOL` | Server-side LotteryPool; module pools filtering |
+| [Online job registry](../data/online-job.md) `system:online_job` | `SystemDataPackRegistries`, `SystemResourceKeys.ONLINE_JOB` | Server-side OnlineJobEntry; module jobs selection, tags at tags/system/online_job |
+| [Currency registry](../data/currency.md) `system:currency` | `SystemDataPackRegistries`, `SystemResourceKeys.CURRENCY` | Synced CurrencyDefinition metadata, without player balances |
+| Saturn `SaturnResourceKeys.COST_TYPE` | `SystemCosts` | [system:currency](../types/cost/currency.md); charges the System wallet |
+| Saturn `SaturnResourceKeys.ENTITY_ACTION_TYPE` | `SystemEntityActions` | `system:add_module`, `system:remove_module`, [`system:add_currency`](../types/entity-action/add_currency.md) |
+| Saturn `SaturnResourceKeys.ENTITY_CONDITION_TYPE` | `SystemEntityConditions` | `system:has_module`, `system:has_system`, [`system:currency`](../types/entity-condition/currency.md) |
+| Saturn `SaturnRegistries.DATA_STORAGE_TYPE` | `SystemDataStorages` | DataStorage Codec for module permissions, advancements, Agent logs, transactions, inbox, sign-in, online jobs, wallets and persistent cards; `ECONOMY` corresponds to system:economy, `ONLINE_JOBS` to system:online_jobs, `DISPLAY_CARDS` corresponds to system:display_cards |
 | Vanilla `Registries.SOUND_EVENT` | `SystemSoundEvents` | `system:notification` |
 | Client key mapping registration event | `SystemKeyMappings` | `CATEGORY`, `TOGGLE_INTERFACE`, `VOICE_INPUT`; registered with a NeoForge dedicated event |
 | Saturn HUD registration table | `SystemHudEntries` | `NOTIFICATIONS` / `DISPLAY_CARDS`; layout keys `system.notification` / `system.cards`, registered once on the physical client, sharing the AuiHudEntry coordinate bridge and the Saturn editor / layout storage |
 
 Systems and module definitions are queried through `RegistryAccess`, read when the world loads and synchronized when connecting; changing a definition or its parameters requires reopening the world or restarting the server, and tags still follow the vanilla resource reload rules. The static `SystemRegistries` cannot be used to query world data pack entries. The system file path is `data/<entry namespace>/system/system/<path>.json`; for the format see the [data pack documentation](https://github.com/IAFEnvoy/System-Mod/blob/master/docs/datapacks.md).
 
-The three catalog tables are loaded on the server only and register no network Codec; the paths stay `data/<namespace>/system/signin_rewards`, `shop_offers` and `lottery_pools`, and the tags live in `data/<namespace>/tags/system/<catalog name>/<path>.json` respectively. Module selection fields use Saturn's `RegistryCodecs.keyOrTagList` / `matchesKeys`, supporting IDs, `#tag` and mixed arrays, and configuration synchronization only encodes the resource keys. The three built-in modules reference `#system:default` of each table, and tags are never mixed across tables; for the exact semantics and examples see [Module catalog options](https://github.com/IAFEnvoy/System-Mod/blob/master/docs/datapacks.md#模块目录可选项). `CatalogReloadListener` is no longer registered, so changing an entry requires reloading the world.
+The three catalog tables are loaded on the server only and register no network Codec; the paths are `data/<namespace>/system/signin_reward`, `shop_offer` and `lottery_pool`, and the tags live in `data/<namespace>/tags/system/<catalog name>/<path>.json` respectively. Module selection fields use Saturn's `RegistryCodecs.keyOrTagList` / `matchesKeys`, supporting IDs, `#tag` and mixed arrays, and configuration synchronization only encodes the resource keys. The three built-in modules reference `#system:default` of each table, and tags are never mixed across tables; for the exact semantics and examples see [Module catalog options](https://github.com/IAFEnvoy/System-Mod/blob/master/docs/datapacks.md#模块目录可选项). `CatalogReloadListener` is no longer registered, so changing an entry requires reloading the world.
 
 The `modules` of a system definition may reference dynamic `SYSTEM_MODULE` entries or tags, for example `"system:signin"`, `"#example:basic"` or `{ "id": "#example:basic", "condition": ... }`. `ModuleDefinition`'s Either is a `Holder<SystemModule>` or a `TagKey<SystemModule>`, evaluated by Saturn's `RegistryCodecs.holderOrTag` / `matches` against the current world's registry. The module tag path is `data/<namespace>/tags/system/system_module/<path>.json`; the client state synchronizes the configuration IDs that are actually enabled. For the full data format see [Data packs](https://github.com/IAFEnvoy/System-Mod/blob/master/docs/datapacks.md#系统模块定义).
 

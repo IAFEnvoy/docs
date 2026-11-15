@@ -11,7 +11,7 @@ System provides a configurable "system" assistant for Minecraft. Players can que
 | System | 1.0-beta.3 development branch, not yet released |
 | Minecraft / Java | 26.1.2 / 25 |
 | NeoForge | Development version 26.1.2.114 |
-| Required dependencies | Saturn 1.2.6, Jupiter; the client also needs ApricityUI 1.2.9 |
+| Required dependencies | Saturn 1.3.1, Jupiter; the client also needs ApricityUI 1.2.9 |
 | Optional dependencies | FTB Quests; speech recording can use Simple Voice Chat |
 
 | Version branch | Maintenance | Sync status |
@@ -32,7 +32,7 @@ System is built on [Saturn](../../library/saturn/index.md): types such as abilit
 ## Where to start
 
 - Players: [Installation and getting started](./install.md), [Usage and configuration](./guides/usage.md), [Voice input](./guides/asr.md), [Voice narration](./guides/tts.md).
-- Server administrators: [AI permissions and modes](./guides/ai-modes.md), [Config files](./config/index.md), [Usage and cost](./guides/usage-statistics.md), [External APIs](./guides/external-apis.md).
+- Server administrators: [AI permissions and modes](./guides/ai-modes.md), [Config files](./config/index.md), [Usage and cost](./guides/usage-statistics.md), [System coins and wallets](./guides/economy.md), [External APIs](./guides/external-apis.md).
 - Modpack authors: [Data definitions](./data/index.md), [Module types](./types/module/index.md), [Card templates](./cards/template.md), [Card nodes](./types/node/index.md).
 - Mod authors: [Agent and module extension](./development/agent.md), [Registries](./development/registries.md), [Card build events](./cards/overview.md).
 

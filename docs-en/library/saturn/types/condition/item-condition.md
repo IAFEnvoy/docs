@@ -3,9 +3,9 @@ title: "Item condition"
 sidebar_position: 4
 ---
 
-# Item condition
-
 Checks a single ItemStack. An item ID string cannot be treated directly as an arbitrary ItemCondition.
+
+## Types
 
 ### `saturn:amount` {#saturnamount}
 
@@ -78,6 +78,25 @@ Compares the level of the given base enchantment on the item.
 
 </details>
 
+### `saturn:block_item` {#saturnblock_item}
+
+Checks whether the item is a block item.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:block_item` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:block_item"
+}
+```
+
+</details>
+
 ### `saturn:component` {#saturncomponent}
 
 Checks the data of the given component on the item stack.
@@ -119,6 +138,63 @@ Compares the remaining durability of the item.
   "type": "saturn:durability",
   "comparison": ">=",
   "compare_to": 1
+}
+```
+
+</details>
+
+### `saturn:empty` {#saturnempty}
+
+Checks whether the item stack is empty.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:empty` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:empty"
+}
+```
+
+</details>
+
+### `saturn:enchantable` {#saturnenchantable}
+
+Checks whether the stack can currently be enchanted at an enchanting table.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:enchantable` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:enchantable"
+}
+```
+
+</details>
+
+### `saturn:food` {#saturnfood}
+
+Checks whether the stack has a food data component.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:food` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:food"
 }
 ```
 
@@ -184,6 +260,25 @@ Matches items using a Minecraft Ingredient.
 {
   "type": "saturn:ingredient",
   "ingredient": "#minecraft:logs"
+}
+```
+
+</details>
+
+### `saturn:is_damageable` {#saturnis_damageable}
+
+Checks whether the stack is damageable.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:is_damageable` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:is_damageable"
 }
 ```
 
@@ -316,6 +411,25 @@ Compares the ratio of the remaining durability to the max durability.
 
 </details>
 
+### `saturn:smeltable` {#saturnsmeltable}
+
+Checks whether the stack has a furnace smelting recipe. Server-only.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:smeltable` |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:smeltable"
+}
+```
+
+</details>
+
 ### `saturn:tool_ability` {#saturntool_ability}
 
 Checks whether the item supports the given NeoForge ItemAbility.
@@ -397,6 +511,27 @@ Decides whether the check succeeds based on a given chance.
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+Returns the configured boolean value.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:constant` |
+| `value` | Boolean | yes | — | The boolean result, or the expected/new boolean block property value. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

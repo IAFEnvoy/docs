@@ -9,3 +9,4 @@ sidebar_position: 0
 | --- | --- |
 | [`system:add_module`](./add_module.md) | 为已绑定玩家持久添加模块。 |
 | [`system:remove_module`](./remove_module.md) | 为已绑定玩家持久禁用模块。 |
+| [`system:add_currency`](./add_currency.md) | 增加或扣除系统钱包中的指定货币。 |

@@ -3,9 +3,9 @@ title: "Item action"
 sidebar_position: 4
 ---
 
-# Item action
-
 Operates on the item stack and its holder from the context. It is not an item definition file; embed it in a field that requires an ItemAction.
+
+## Types
 
 ### `saturn:add_enchantment` {#saturnadd_enchantment}
 
@@ -110,6 +110,29 @@ Applies the given durability loss to the item stack.
 {
   "type": "saturn:damage_item",
   "amount": 1
+}
+```
+
+</details>
+
+### `saturn:holder_action` {#saturnholder_action}
+
+Executes an entity action on the item holder.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:holder_action` |
+| `action` | [Entity actions](./entity-action.md) | yes | — | Nested action of the declared context type. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:holder_action",
+  "action": {
+    "type": "saturn:no_op"
+  }
 }
 ```
 
@@ -246,6 +269,34 @@ Each entry contains value and weight; see [Weighted entries](../../data/common.m
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+Executes an action a fixed number of times, up to the configured iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:for_range` |
+| `range` | [Number provider](../number.md) | yes | — | Repetition count, truncated toward zero; negative values execute nothing. |
+| `action` | [Item actions](./item-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+The count is evaluated once before the loop and capped at `max_iterations`.
+
 ### `saturn:if_else` {#saturnif_else}
 
 Runs if_action when the condition holds, otherwise runs else_action.
@@ -269,6 +320,43 @@ Runs if_action when the condition holds, otherwise runs else_action.
   "if_action": {
     "type": "saturn:no_op"
   }
+}
+```
+
+</details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+Executes the first branch whose condition matches, then stops checking branches.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:if_else_list` |
+| `actions` | Branch array | yes | — | Ordered branches; each entry contains condition and action. |
+
+Each `actions` entry:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `condition` | `ItemCondition` | yes | Condition selecting this branch. |
+| `action` | `ItemAction` | yes | Action to run; later branches are not checked. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
 }
 ```
 
@@ -338,3 +426,61 @@ Runs several actions of the same kind in array order.
 ```
 
 </details>
+
+### `saturn:side` {#saturnside}
+
+Executes the nested action only on the selected logical side.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:side` |
+| `action` | [Item actions](./item-action.md) | yes | — | Nested action of the declared context type. |
+| `side` | Enum string | yes | — | Logical side: client or server. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+Uses the level’s logical side. An integrated server is `server` even inside a client process. This action does not send a packet or execute remotely.
+
+### `saturn:while` {#saturnwhile}
+
+Repeats an action while its condition matches, with a configurable iteration limit.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:while` |
+| `condition` | [Item conditions](../condition/item-condition.md) | yes | — | Filter condition of the declared context type. |
+| `action` | [Item actions](./item-action.md) | yes | — | Nested action of the declared context type. |
+| `max_iterations` | Integer | no | `1024` | Maximum iterations per invocation; must be at least 1. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+The condition is checked before every iteration. If it is still true after `max_iterations`, the action throws and stops; actions already executed are not rolled back.

@@ -3,9 +3,32 @@ title: "Damage condition"
 sidebar_position: 5
 ---
 
-# Damage condition
-
 Checks the damage source, damage amount and related entities. Embedded in DamageCondition fields.
+
+## Types
+
+### `saturn:amount` {#saturnamount}
+
+Compares the damage amount with a number.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:amount` |
+| `comparison` | Enum string | yes | — | Comparison operator: `==`, `!=`, `<`, `<=`, `>` or `>=`. |
+| `compare_to` | Number | yes | — | Numeric comparison target, used with comparison. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:amount",
+  "comparison": ">=",
+  "compare_to": 5
+}
+```
+
+</details>
 
 ### `saturn:amount_range` {#saturnamount_range}
 
@@ -25,6 +48,29 @@ Checks whether the damage amount is between min and max, inclusive.
   "type": "saturn:amount_range",
   "min": 1,
   "max": 1
+}
+```
+
+</details>
+
+### `saturn:attacker` {#saturnattacker}
+
+Checks the causing entity of the damage source; returns false when there is none.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:attacker` |
+| `entity_condition` | [Entity conditions](./entity-condition.md) | yes | — | Filter condition of the declared context type. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:attacker",
+  "entity_condition": {
+    "type": "saturn:living"
+  }
 }
 ```
 
@@ -211,6 +257,27 @@ Decides whether the check succeeds based on a given chance.
 {
   "type": "saturn:chance",
   "chance": 1
+}
+```
+
+</details>
+
+### `saturn:constant` {#saturnconstant}
+
+Returns the configured boolean value.
+
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | Resource ID | yes | — | `saturn:constant` |
+| `value` | Boolean | yes | — | The boolean result, or the expected/new boolean block property value. |
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "type": "saturn:constant",
+  "value": true
 }
 ```
 

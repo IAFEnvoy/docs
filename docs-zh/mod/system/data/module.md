@@ -31,6 +31,8 @@ sidebar_position: 2
 
 签到的 rewards、商城的 offers、抽奖的 pools 均支持单 ID、#tag 或混合数组。省略不增加该字段限制，空数组表示无可选项；内置配置明确选择各自目录的 #system:default。多个启用配置的可用目录取并集。
 
-纯服务端模块可只填 server；纯客户端贡献可只填 client。`order` 相同保留原有装配顺序；同一客户端实现合并展示时取最大 order。内置玩家信息 100、任务 90、签到 80、收件箱 70、商城 60、抽奖 50、物品查询 40。
+纯服务端模块可只填 server；纯客户端贡献可只填 client。`order` 相同保留原有装配顺序；同一客户端实现合并展示时取最大 order。内置玩家信息 100、任务 90、签到 80、收件箱 70、商城 60、钱包 55、抽奖 50、工坊 45、物品查询与在线作业 40。
 
 具体 server 字段见[模块类型目录](../types/module/index.md)。玩家覆盖可由 `/system module add/remove <玩家> <模块ID>` 管理；`/system module list [玩家]` 查看模块并补全 ID。
+
+[在线作业模块](../types/module/online_jobs.md)的 `jobs` 也支持 ID、#tag 或混合数组，但多个变体按工作流规则选择首个配置，不合并候选。

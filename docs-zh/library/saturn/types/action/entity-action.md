@@ -4,9 +4,9 @@ sidebar_label: "实体动作 (EntityAction)"
 sidebar_position: 1
 ---
 
-# 实体动作
-
 以一个实体为对象执行操作。用于 entity_action、触发规则的 action 等实体动作字段；动作数组会按顺序执行。
+
+## 类型
 
 ### `saturn:add_experience` {#saturnadd_experience}
 
@@ -102,6 +102,61 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:area_of_effect` {#saturnarea_of_effect}
+
+球形范围动作，复用 region_apply 的区域查询
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:area_of_effect` |
+| `radius` | [数值提供器](../number.md) | 否 | `16` | 范围半径，单位为方块。 |
+| `bientity_action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `bientity_condition` | [双实体条件](../condition/bientity-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `include_target` | 布尔值 | 否 | `false` | 是否包含激活实体自身，与 region_apply 的 include_actor 等价。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:area_of_effect",
+  "radius": 8,
+  "bientity_action": {
+    "type": "saturn:heal_target",
+    "amount": 2
+  }
+}
+```
+
+</details>
+
+所有距离相对查询中心计算；实体使用位置坐标并排除旁观者。方块半径向下取整为非负整数，区域按需遍历。负数或非有限半径返回空区域。
+
+### `saturn:award_stat` {#saturnaward_stat}
+
+增加玩家的一项或多项原版统计值
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:award_stat` |
+| `stat` | 资源 ID / 对象 / 数组 | 是 | — | 自定义统计 ID，或 `{stat_type, id}` 对象。 |
+| `amount` | [数值提供器](../number.md) | 否 | `1` | 本次操作的数量。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:award_stat",
+  "stat": "minecraft:jump",
+  "amount": 1
+}
+```
+
+</details>
+
+字符串写法用于 `minecraft:custom` 统计，例如 `"minecraft:jump"`。有类型统计写成 `{"stat_type":"minecraft:mined","id":"minecraft:stone"}`；未知类型或条目不匹配/不执行。
+
 ### `saturn:block_action` {#saturnblock_action}
 
 对实体所在位置的方块执行方块动作。
@@ -124,6 +179,50 @@ sidebar_position: 1
 ```
 
 </details>
+
+### `saturn:crafting_table` {#saturncrafting_table}
+
+为服务端玩家打开不依赖实体工作台的合成界面
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:crafting_table` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:crafting_table"
+}
+```
+
+</details>
+
+### `saturn:damage` {#saturndamage}
+
+使用指定伤害类型对实体造成伤害，金额可用数值提供器
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:damage` |
+| `damage_type` | 资源 ID | 是 | — | 原版伤害类型注册表引用。 |
+| `amount` | [数值提供器](../number.md) | 是 | — | 本次操作的数量。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:damage",
+  "damage_type": "minecraft:magic",
+  "amount": 2
+}
+```
+
+</details>
+
+非正数或非有限数值不产生伤害。
 
 ### `saturn:dismount` {#saturndismount}
 
@@ -165,6 +264,25 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:ender_chest` {#saturnender_chest}
+
+为服务端玩家打开其末影箱
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:ender_chest` |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:ender_chest"
+}
+```
+
+</details>
+
 ### `saturn:equipped_item_action` {#saturnequipped_item_action}
 
 对指定装备槽的物品堆执行物品动作。
@@ -189,6 +307,29 @@ sidebar_position: 1
 ```
 
 </details>
+
+### `saturn:execute_command` {#saturnexecute_command}
+
+以实体身份在激活位置执行原版命令，权限等级为 2
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:execute_command` |
+| `command` | 字符串 | 是 | — | 原版命令，开头的 / 可省略。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:execute_command",
+  "command": "effect give @s minecraft:speed 10"
+}
+```
+
+</details>
+
+仅服务端执行，不输出命令反馈。实体动作以该实体为 `@s`，位置使用激活位置；方块动作位于方块中心，没有 `@s` 实体。
 
 ### `saturn:exhaust` {#saturnexhaust}
 
@@ -323,6 +464,31 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:grant_advancement` {#saturngrant_advancement}
+
+授予原版进度或指定判据
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:grant_advancement` |
+| `advancement` | 资源 ID | 是 | — | 进度 ID；selection 为 everything 时忽略该 ID。 |
+| `criterion` | 字符串 / 字符串数组 | 否 | `[]` | 判据名或数组；省略或空数组时处理整个进度。 |
+| `selection` | 枚举字符串 | 否 | `"only"` | only 本身、through 祖先及后代、from 后代、until 祖先、everything 全部；均包含指定进度。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:grant_advancement",
+  "advancement": "minecraft:story/root"
+}
+```
+
+</details>
+
+仅对服务端玩家生效。`everything` 选择整个进度注册表，其他选项从给定 ID 开始选择；缺失 ID 不执行。判据名会应用到每个被选中的进度。
+
 ### `saturn:heal` {#saturnheal}
 
 恢复实体的生命值。
@@ -397,6 +563,39 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:modify_inventory` {#saturnmodify_inventory}
+
+对筛选出的非空原版槽位各执行一次物品动作与可选实体动作；limit 为零或负数时处理全部匹配槽位
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:modify_inventory` |
+| `item_condition` | [物品条件](../condition/item-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `item_action` | [物品动作](./item-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `entity_action` | [实体动作](./entity-action.md) | 否 | `saturn:no_op` | 要执行的嵌套动作；类型由字段声明确定。 |
+| `slot` | 整数 / 字符串 / 混合数组 | 否 | `[]` | 原版命令槽位整数或名称/范围，支持混合数组；空数组使用默认槽位集。 |
+| `limit` | 整数 | 否 | `0` | 最多处理多少个匹配槽位；0 或负数表示全部。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:modify_inventory",
+  "slot": "weapon.mainhand",
+  "item_action": {
+    "type": "saturn:consume_item",
+    "count": 1
+  }
+}
+```
+
+</details>
+
+默认扫描 `hotbar.*`、`inventory.*`、`weapon.*`、`armor.*`、`saddle` 和 `mob.inventory.*`。仅访问实体实际提供的原版槽位；玩家选中快捷栏与主手别名去重，不读取 Origins Power 背包。
+
+每个匹配槽位执行一次，先运行 `entity_action` 再运行 `item_action`；`limit` 统计槽位，不是物品数量。
+
 ### `saturn:passenger_action` {#saturnpassenger_action}
 
 对实体的乘客执行动作，可递归处理多层乘客。
@@ -445,6 +644,40 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:region_apply` {#saturnregion_apply}
+
+对激活位置周围实体执行双实体动作，可选立方体、曼哈顿距离或球体
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:region_apply` |
+| `radius` | [数值提供器](../number.md) | 否 | `16` | 范围半径，单位为方块。 |
+| `shape` | 枚举字符串 | 否 | `"cube"` | cube 使用最大轴距离，star 使用曼哈顿距离，sphere 使用欧氏距离。 |
+| `bientity_action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `bientity_condition` | [双实体条件](../condition/bientity-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `include_actor` | 布尔值 | 否 | `false` | 是否将激活实体自身作为目标。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:region_apply",
+  "radius": 8,
+  "shape": "sphere",
+  "bientity_action": {
+    "type": "saturn:heal_target",
+    "amount": 2
+  }
+}
+```
+
+</details>
+
+所有距离相对查询中心计算；实体使用位置坐标并排除旁观者。方块半径向下取整为非负整数，区域按需遍历。负数或非有限半径返回空区域。
+
+查询中心为激活位置，双实体动作中 actor 为激活实体，target 为每个匹配实体。
+
 ### `saturn:remove_ability` {#saturnremove_ability}
 
 移除指定来源授予的技能，不影响其他来源。
@@ -489,6 +722,82 @@ sidebar_position: 1
 
 </details>
 
+### `saturn:replace_inventory` {#saturnreplace_inventory}
+
+将筛选出的槽位替换为独立创建的物品模板，允许显式匹配空槽
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:replace_inventory` |
+| `stack` | 物品 ID / 物品模板对象 | 是 | — | 每个匹配槽位独立创建一份物品模板。 |
+| `item_condition` | [物品条件](../condition/item-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+| `slot` | 整数 / 字符串 / 混合数组 | 否 | `[]` | 原版命令槽位整数或名称/范围，支持混合数组；空数组使用默认槽位集。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:replace_inventory",
+  "slot": "weapon.mainhand",
+  "stack": "minecraft:stick"
+}
+```
+
+</details>
+
+默认扫描 `hotbar.*`、`inventory.*`、`weapon.*`、`armor.*`、`saddle` 和 `mob.inventory.*`。仅访问实体实际提供的原版槽位；玩家选中快捷栏与主手别名去重，不读取 Origins Power 背包。
+
+省略 `item_condition` 会匹配所有被选槽位，包括空槽。只替换已有物品时，请显式排除 `saturn:empty`。
+
+### `saturn:reset_stat` {#saturnreset_stat}
+
+将玩家的一项或多项原版统计值重置为零
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:reset_stat` |
+| `stat` | 资源 ID / 对象 / 数组 | 是 | — | 自定义统计 ID，或 `{stat_type, id}` 对象。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:reset_stat",
+  "stat": "minecraft:jump"
+}
+```
+
+</details>
+
+字符串写法用于 `minecraft:custom` 统计，例如 `"minecraft:jump"`。有类型统计写成 `{"stat_type":"minecraft:mined","id":"minecraft:stone"}`；未知类型或条目不匹配/不执行。
+
+### `saturn:revoke_advancement` {#saturnrevoke_advancement}
+
+撤销原版进度或指定判据
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:revoke_advancement` |
+| `advancement` | 资源 ID | 是 | — | 进度 ID；selection 为 everything 时忽略该 ID。 |
+| `criterion` | 字符串 / 字符串数组 | 否 | `[]` | 判据名或数组；省略或空数组时处理整个进度。 |
+| `selection` | 枚举字符串 | 否 | `"only"` | only 本身、through 祖先及后代、from 后代、until 祖先、everything 全部；均包含指定进度。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:revoke_advancement",
+  "advancement": "minecraft:story/root"
+}
+```
+
+</details>
+
+仅对服务端玩家生效。`everything` 选择整个进度注册表，其他选项从给定 ID 开始选择；缺失 ID 不执行。判据名会应用到每个被选中的进度。
+
 ### `saturn:riding_action` {#saturnriding_action}
 
 对实体乘坐的对象执行动作，可递归处理坐骑链。
@@ -507,6 +816,34 @@ sidebar_position: 1
 ```json
 {
   "type": "saturn:riding_action"
+}
+```
+
+</details>
+
+### `saturn:selector_action` {#saturnselector_action}
+
+用原版实体选择器选择目标，再筛选并执行双实体动作，仅服务端有效
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:selector_action` |
+| `selector` | 字符串 | 是 | — | 原版实体选择器，以当前实体和激活位置为命令上下文。 |
+| `bientity_action` | [双实体动作](./bientity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `bientity_condition` | [双实体条件](../condition/bientity-condition.md) | 否 | `saturn:always` | 筛选条件；类型由字段声明确定。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:selector_action",
+  "selector": "@e[type=minecraft:zombie,distance=..8]",
+  "bientity_action": {
+    "type": "saturn:damage_target",
+    "damage_type": "minecraft:magic",
+    "amount": 2
+  }
 }
 ```
 
@@ -840,6 +1177,34 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 
 </details>
 
+### `saturn:for_range` {#saturnfor_range}
+
+将动作重复执行指定次数，负数为零次，次数不超过 max_iterations
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:for_range` |
+| `range` | [数值提供器](../number.md) | 是 | — | 执行次数，求值后向零截断；负数不执行。 |
+| `action` | [实体动作](./entity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `max_iterations` | 整数 | 否 | `1024` | 每次调用的最大迭代次数，至少为 1。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:for_range",
+  "range": 3,
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+次数在进入循环时求值一次，超过 `max_iterations` 时截断到上限。
+
 ### `saturn:if_else` {#saturnif_else}
 
 条件成立时执行 if_action，否则执行 else_action。
@@ -863,6 +1228,43 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
   "if_action": {
     "type": "saturn:no_op"
   }
+}
+```
+
+</details>
+
+### `saturn:if_else_list` {#saturnif_else_list}
+
+按顺序检查条件，只执行第一个命中分支
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:if_else_list` |
+| `actions` | 分支数组 | 是 | — | 按顺序检查的分支，每项含 condition 和 action。 |
+
+每个 `actions` 条目：
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `condition` | `EntityCondition` | 是 | 该分支的匹配条件。 |
+| `action` | `EntityAction` | 是 | 匹配后执行；后续分支不再检查。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:if_else_list",
+  "actions": [
+    {
+      "condition": {
+        "type": "saturn:always"
+      },
+      "action": {
+        "type": "saturn:no_op"
+      }
+    }
+  ]
 }
 ```
 
@@ -932,3 +1334,61 @@ channel 可用 chat、action_bar。target=self 选择 actor / 物品持有者，
 ```
 
 </details>
+
+### `saturn:side` {#saturnside}
+
+仅在指定逻辑端执行，不以客户端或服务端进程判断
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:side` |
+| `action` | [实体动作](./entity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `side` | 枚举字符串 | 是 | — | 逻辑端，可选 client 或 server。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:side",
+  "side": "server",
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+判断 `Level` 的逻辑端。单人游戏的内置服务器属于 `server`，不会因为运行在客户端进程就当成 `client`；该动作不会主动发包或跨端执行。
+
+### `saturn:while` {#saturnwhile}
+
+条件成立时重复执行，超过 max_iterations 则终止并报告异常
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| `type` | 资源 ID | 是 | — | `saturn:while` |
+| `condition` | [实体条件](../condition/entity-condition.md) | 是 | — | 筛选条件；类型由字段声明确定。 |
+| `action` | [实体动作](./entity-action.md) | 是 | — | 要执行的嵌套动作；类型由字段声明确定。 |
+| `max_iterations` | 整数 | 否 | `1024` | 每次调用的最大迭代次数，至少为 1。 |
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "type": "saturn:while",
+  "max_iterations": 64,
+  "condition": {
+    "type": "saturn:never"
+  },
+  "action": {
+    "type": "saturn:no_op"
+  }
+}
+```
+
+</details>
+
+每轮重新检查条件。达到 `max_iterations` 后若仍满足条件，则抛出异常停止本次动作，防止错误数据包无限循环；已执行的动作不回滚。

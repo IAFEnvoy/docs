@@ -92,6 +92,8 @@ public record MyAuraCost(NumberProvider amount) implements Cost {
 
 - `CostContext` 是 `record(payer, formula, origin, account, itemTarget, data)`；`data` 是 `with(key, value)` / `get(key)` 的扩展袋子，Saturn 只搬运不解释，键一律带命名空间。
 - `CostTarget` 是**开放接口**，你的 `Transaction` 可以带自己的目标类型。
+- `CostTarget.display(double amount)` 返回 `CostDisplay(items, descriptions)`，只描述已绑定金额，不重新求值、试扣款或读取余额。物品预览是 `ItemPreview(ItemStackTemplate, String amount)`，数量为文本，不受物品堆叠上限限制；文本为原版 `Component`。内置 Items / Account 自己决定展示，扩展费用可重写此方法，默认显示 label 和数量。调用方只收集结果，不需要按目标类写 instanceof 分支。
+- `CostTarget.guard()` 定义支付重入保护范围，默认返回目标本身；它与 display 无关。Script 的多个费用条目可通过同一付款人和脚本 ID 共用 guard，同时保留各自的费用标识。
 - `CostPayment.pay(List<Cost>, CostContext)`：先全部 `prepare`，再全部 `execute(true)` 试算，最后按序 `execute(false)` 实扣；实扣失败记日志并继续。返回 `Result<List<Debit>>`，`CostPayment.resources(debits)` 把凭据折成 id 键的数量表。
 
 ### 3.2 失败
@@ -318,3 +320,7 @@ NBT 字节处理独立在包内 `NbtFiles`，不继承 `FileAccess`；NBT 单例
 2026-11-08 编译记录：`gradlew compileJava jar --console=plain` 通过；IDE 对 `FileAccess` 和 `NbtFiles` 的静态检查不再报告类加载死锁警告。未启动游戏或执行测试，实际外部编辑器打开、旧文件恢复和压缩往返尚未运行验收。
 
 原子保存是后续新增 API，随下一次 Saturn 更新发布，未改版本号或下游依赖。系统当前保留自身的 `AtomicFiles`；升级到包含本 API 的依赖后，可将 `AtomicFiles.replace(path, bytes)` 换成 `FileAccess.write(path, bytes)` 并移除重复实现。原先固定名称 `.tmp` 的主动清理应一并移除，新的临时文件由 Saturn 在保存方法退出时负责清理。
+
+## 8. Origins 数据适配
+
+动作与条件使用本页的上下文和 MapCodec 注册方式。完整定义见[类型参考](../types/index.md)；将 Origins 数据转换为 Saturn 格式时，参考[类型对应、字段差异与不兼容范围](./origins-ports.md)。

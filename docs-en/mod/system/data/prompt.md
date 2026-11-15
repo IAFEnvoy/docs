@@ -3,7 +3,9 @@ title: "Prompt template"
 sidebar_position: 6
 ---
 
-File: `data/<namespace>/system/prompts/<path>.txt`, UTF-8 text, BOM also supported. For example `data/example/system/prompts/personality/daily.txt` corresponds to `example:personality/daily`.
+File: `data/<namespace>/system/prompt/<path>.txt`, UTF-8 text, BOM also supported. For example `data/example/system/prompt/personality/daily.txt` corresponds to `example:personality/daily`.
+
+The reload listener ID is `system:prompt`. Logical template IDs are unchanged: for example, `system:routing` still maps to `routing.txt`.
 
 ## Built-in templates
 
@@ -27,7 +29,7 @@ The player language is provided by the execution context and modules cannot over
 
 ## Example personality
 
-```text title="data/example/system/prompts/personality/daily.txt"
+```text title="data/example/system/prompt/personality/daily.txt"
 You are the host's supply assistant. Answer concisely and clearly, and speak in {{player_language}}.
 When resource consumption is involved, explain the purpose and wait for confirmation; do not invent rewards that have not been granted.
 ```
