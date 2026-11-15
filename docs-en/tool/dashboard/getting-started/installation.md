@@ -33,6 +33,7 @@ Configuration lives in the `config/` directory. Copy the checked-in templates an
 | `config/ai.yml` | (Optional) AI providers / models for the Agent system |
 | `config/mcps.yml` | (Optional) External MCP servers |
 | `config/agents.yml` | (Optional) Agent definitions and tool bindings |
+| `config/bots.yml` | (Optional, disabled by default) QQ Bot credentials, notification switches and static recipients; restart after changes |
 
 Sensitive values may reference environment variables with the `${ENV_VAR}` syntax, e.g.:
 
@@ -43,6 +44,8 @@ curseforge:
 ```
 
 See [Configuration Overview](/docs/tool/dashboard/getting-started/configuration) for the full file list.
+
+Follow [Bot notifications and group binding](../features/bot-notifications.md) to enable QQ. Automatic preprocessing is enabled after login under **Agent → Settings**; first prepare the [local checkout and default model](../features/issue-preprocessing.md).
 
 ## Step 3: Build & run
 

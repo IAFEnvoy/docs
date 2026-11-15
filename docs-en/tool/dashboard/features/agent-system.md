@@ -145,6 +145,12 @@ In conversations bound to a project, a 📋 button opens an **Issue Picker** pan
 - **SVG state icons**: Same visual style as the GitHub panel
 - Selected issues are sent as attachment when the user clicks Send, alongside any typed prompt
 
+## Automatic preprocessing and settings
+
+After login, **Agent → Settings**, to the right of **MCP Servers**, contains the preprocessing switch and QQ group bindings. Preprocessing detects new Open issues after successful GitHub TTL or manual cache-clear refreshes. Each repository's first successful fetch after every restart only establishes a baseline.
+
+The built-in `issue-preprocessor` Agent only reads evidence and proposes solutions. File changes, Shell, external MCP tools and sub-agents are prohibited, including with approval bypass. See [Automatic issue preprocessing](./issue-preprocessing.md) for prerequisites, delta rules and retries, and [Bot notifications](./bot-notifications.md) for report delivery and group binding.
+
 ## Security
 
 | Layer | Mechanism |

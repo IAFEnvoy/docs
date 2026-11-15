@@ -22,6 +22,8 @@ ModList Dashboard is a full-stack project for managing and displaying Minecraft 
 | **Cache Management** | One-click per-source cache clearing (database / CurseForge / GitHub / Codacy / all) from the admin menu |
 | **Badge API** | Public SVG badges (`/api/badge/...`) for mod READMEs — CurseForge / GitHub stats, loaders, license, docs, Discord. Served from cache, no login required |
 | **AI Agent** | LangChainGo-powered multi-Agent chat with native Function Calling, streaming SSE, MCP toolchain, user approval, Issue Dispatch, issue picker, and real token tracking |
+| **[Automatic Issue Preprocessing](./features/issue-preprocessing.md)** | An authenticated switch enables read-only validity analysis and solution reports for newly observed Open issues |
+| **[Bot Notifications](./features/bot-notifications.md)** | Optional QQ WebSocket reception, website codes for group binding, and new-issue/report notifications |
 | **Drive** | Lightweight built-in file manager rooted at `data/drive` |
 | **i18n** | Built-in Chinese & English bilingual support |
 
@@ -32,6 +34,7 @@ ModList Dashboard is a full-stack project for managing and displaying Minecraft 
 - **AI**: LangChainGo `v0.1.14` with native OpenAI-compatible Function Calling; DeepSeek-compatible API with thinking mode
 - **MCP**: stdio + streamableHttp + SSE transport support
 - **Data Sources**: CurseForge API, GitHub API, Codacy API
+- **Optional Bot**: Official QQ BotGo `v0.2.1`, WebSocket event reception and message API delivery
 
 ## Storage Layout
 
@@ -39,10 +42,12 @@ All runtime state is stored under `config/`, `data/`, and `cache/` at the projec
 
 | Path | Content |
 |------|---------|
-| `config/` | YAML / JSON configuration (`config.yml`, `auth.yml`, `ai.yml`, `agents.yml`, `mcps.yml`, `rate.yml`, `editor.yml`, `configuration.json`, `status_config.json`) |
+| `config/` | YAML / JSON configuration (`config.yml`, `auth.yml`, `ai.yml`, `agents.yml`, `mcps.yml`, `bots.yml`, `rate.yml`, `editor.yml`, `configuration.json`, `status_config.json`) |
 | `data/mods.db` | Normalized mod catalog (mods, versions × loaders, tags, co-authors, difficulty) plus the cached primary-key → result mapping |
 | `data/users.db` | Admin / user accounts |
 | `data/sessions.db` | AI Agent sessions & message history |
+| `data/issue-preprocess.json` | Preprocessing switch, repository baselines and task index; full reports remain in the session database |
+| `data/bot-notifications.json` | Bot bindings, one-time code hashes, notification baselines, queue and delivery progress |
 | `data/todos.json` | Bug / TODO items |
 | `data/drive/` | Built-in Drive files |
 | `cache/` | Per-source HTTP caches (`curseforge/`, `github/`, `codacy/`) and MCP discovery cache (`mcp_cache.json`) |
@@ -76,6 +81,8 @@ ModList-Dashboard/
 │   ├── share.go         # Session share pages
 │   └── ...
 ├── drive-mcp/           # Optional Drive MCP server
+├── bot/                 # Shared notification events, bindings, queue and retries
+│   └── qqbot/           # QQ authentication, WebSocket receiver and sender
 ├── static/              # Frontend static assets (HTML / CSS / JS / i18n locales)
 ├── config/              # YAML + JSON configuration
 ├── data/                # Runtime databases & Drive root

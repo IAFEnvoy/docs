@@ -22,6 +22,8 @@ ModList Dashboard 是一个全栈项目，用于管理和展示 Minecraft 模组
 | **缓存管理** | 在管理员菜单中一键清理单个来源的缓存（database / CurseForge / GitHub / Codacy / 全部） |
 | **徽章 API** | 面向模组 README 的公开 SVG 徽章（`/api/badge/...`）——CurseForge / GitHub 统计、加载器、许可证、文档、Discord。由缓存提供，无需登录 |
 | **AI 智能体** | 由 LangChainGo 驱动的多智能体对话，支持原生 Function Calling、SSE 流式输出、MCP 工具链、用户审批、Issue 派发、Issue 选择器以及真实令牌统计 |
+| **[自动预处理 Issue](./features/issue-preprocessing.md)** | 需登录开启，按刷新差量分析新增 Open Issue 的真实性并生成解决方案报告，只读不改代码 |
+| **[Bot 通知](./features/bot-notifications.md)** | 可选 QQ WebSocket 接入、网站一次性码绑定群聊、推送新增 Issue 和预处理报告 |
 | **Drive** | 内置轻量文件管理器，根目录为 `data/drive` |
 | **i18n** | 内置中英双语支持 |
 
@@ -32,6 +34,7 @@ ModList Dashboard 是一个全栈项目，用于管理和展示 Minecraft 模组
 - **AI**：LangChainGo `v0.1.14`，使用原生 OpenAI 兼容的 Function Calling；兼容 DeepSeek 的 API，支持思考模式
 - **MCP**：支持 stdio + streamableHttp + SSE 传输
 - **数据来源**：CurseForge API、GitHub API、Codacy API
+- **可选 Bot**：QQ 官方 BotGo `v0.2.1`，WebSocket 事件接收与消息 API 发送
 
 ## 存储布局
 
@@ -39,10 +42,12 @@ ModList Dashboard 是一个全栈项目，用于管理和展示 Minecraft 模组
 
 | 路径 | 内容 |
 |------|---------|
-| `config/` | YAML / JSON 配置（`config.yml`、`auth.yml`、`ai.yml`、`agents.yml`、`mcps.yml`、`rate.yml`、`editor.yml`、`configuration.json`、`status_config.json`） |
+| `config/` | YAML / JSON 配置（`config.yml`、`auth.yml`、`ai.yml`、`agents.yml`、`mcps.yml`、`bots.yml`、`rate.yml`、`editor.yml`、`configuration.json`、`status_config.json`） |
 | `data/mods.db` | 规范化后的模组目录（模组、版本 × 加载器、标签、共同作者、维护难度）以及缓存的主键 → 结果映射 |
 | `data/users.db` | 管理员 / 用户账号 |
 | `data/sessions.db` | AI 智能体会话与消息历史 |
+| `data/issue-preprocess.json` | 自动预处理开关、仓库基线与任务索引；完整报告仍在会话数据库中 |
+| `data/bot-notifications.json` | Bot 绑定、一次性码哈希、通知基线、队列与发送进度 |
 | `data/todos.json` | Bug / TODO 条目 |
 | `data/drive/` | 内置 Drive 文件 |
 | `cache/` | 按来源划分的 HTTP 缓存（`curseforge/`、`github/`、`codacy/`）以及 MCP 发现缓存（`mcp_cache.json`） |
@@ -76,6 +81,8 @@ ModList-Dashboard/
 │   ├── share.go         # Session share pages
 │   └── ...
 ├── drive-mcp/           # Optional Drive MCP server
+├── bot/                 # Shared notification events, bindings, queue and retries
+│   └── qqbot/           # QQ authentication, WebSocket receiver and sender
 ├── static/              # Frontend static assets (HTML / CSS / JS / i18n locales)
 ├── config/              # YAML + JSON configuration
 ├── data/                # Runtime databases & Drive root

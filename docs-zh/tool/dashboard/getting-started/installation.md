@@ -33,6 +33,7 @@ cd ModList-Dashboard
 | `config/ai.yml` | （可选）智能体系统使用的 AI 提供商 / 模型 |
 | `config/mcps.yml` | （可选）外部 MCP 服务器 |
 | `config/agents.yml` | （可选）智能体定义与工具绑定 |
+| `config/bots.yml` | （可选，默认关闭）QQ Bot 凭据、通知开关与固定接收目标；修改后需重启 |
 
 敏感值可以用 `${ENV_VAR}` 语法引用环境变量，例如：
 
@@ -43,6 +44,8 @@ curseforge:
 ```
 
 完整文件列表见[配置概览](./configuration)。
+
+启用 QQ 的步骤见 [Bot 通知与群绑定](../features/bot-notifications.md)。自动预处理则在登录后的 **Agent → 设置** 中开启，使用前先准备[本地源码和默认模型](../features/issue-preprocessing.md)。
 
 ## 步骤 3：构建并运行
 

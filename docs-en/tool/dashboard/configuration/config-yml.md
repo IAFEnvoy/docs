@@ -46,7 +46,7 @@ codacy:
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `port` | int | `3456` | HTTP listening port |
-| `cache_ttl_minutes` | int | `90` | Data source cache duration |
+| `cache_ttl_minutes` | int | `90` | Data source cache duration in minutes; preprocessing or new-issue notifications refresh GitHub lists at each repository's cache expiry |
 | `cache_dir` | string | `cache` | Disk cache directory path |
 
 ### datasources
@@ -86,6 +86,8 @@ Exponential-backoff retry strategy for failed upstream requests.
 List of directories where Agent projects live. When a user picks a project in the Agent UI, the system searches these paths in order; if a repo is missing, it is auto-cloned with `git clone` into the first writable path.
 
 - **Leave empty** to default to the current working directory
+
+[Automatic issue preprocessing](../features/issue-preprocessing.md) only uses existing `<repository-name>` checkouts under these paths. Missing local source causes failure rather than automatic cloning.
 
 Example:
 ```yaml

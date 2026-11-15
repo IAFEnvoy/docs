@@ -51,6 +51,8 @@ Opened by clicking a card or a scatter dot. Contains:
 - Version support matrix — each row is a Minecraft version, each column a loader (Fabric / Forge / NeoForge…). Loader headers are colored via `colors.loader`, cells use the `icons.versions` emoji (✅ supported / ⚠️ partial / …)
 - Issues / PRs tab (filterable, paginated), with 🚀 dispatch to the AI Agent
 
+With [automatic preprocessing](./issue-preprocessing.md) enabled, select **View report** beside an issue to open its analysis. The switch is under **Agent → Settings** after login. Clearing GitHub or all caches triggers a new fetch using the same delta rules: only new Open issues are processed, and the first fetch after a restart only establishes the baseline. [Bot notifications](./bot-notifications.md) can deliver new issues and reports.
+
 ## Mod Meta Editor (Admin)
 
 Reachable from **🛠 Admin → Edit Mods** or `/mod-editor.html`. Two independently scrolling panes fill the whole viewport: the left is the mod list, the right is the editor form.

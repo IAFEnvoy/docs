@@ -50,6 +50,8 @@ X 轴：维护难度，Y 轴：热度（下载总量的 log10）。
 - 版本支持矩阵——每一行是一个 Minecraft 版本，每一列是一个加载器（Fabric / Forge / NeoForge…）。加载器表头通过 `colors.loader` 着色，单元格使用 `icons.versions` 中的 emoji（✅ 支持 / ⚠️ 部分支持 / …）
 - Issue / PR 标签页（可筛选、分页），带有 🚀 派发到 AI 智能体的按钮
 
+[自动预处理](./issue-preprocessing.md) 开启后，可从 Issue 旁的 **查看报告** 打开分析结果；开关位于登录后的 **Agent → 设置**。手动清除 GitHub 或全部缓存会触发重新拉取，仍只处理相对上次基线新增的 Open Issue，不重跑历史记录；重启后首次拉取仅校准基线。也可通过 [Bot 通知](./bot-notifications.md) 接收新增 Issue 与报告。
+
 ## 模组元数据编辑器（管理员）
 
 可从 **🛠 Admin → Edit Mods** 或 `/mod-editor.html` 进入。两个独立滚动的面板占满整个视口：左侧是模组列表，右侧是编辑表单。

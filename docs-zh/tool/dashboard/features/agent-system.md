@@ -145,6 +145,12 @@ User message → SSE stream_start
 - **SVG 状态图标**：与 GitHub 面板相同的视觉风格
 - 用户点击发送时，选中的 Issue 会作为附件发送，并附带已输入的提示词
 
+## 自动预处理与设置
+
+登录后的 **Agent → 设置** 标签位于 **MCP 服务器** 右侧，集中管理自动预处理开关和 QQ 群通知绑定。自动预处理按 GitHub TTL 或手动清缓存后的成功刷新识别新增 Open Issue；每次重启后各仓库首次成功拉取只更新基线，不派发任务。
+
+内置 `issue-preprocessor` 助手只读分析问题真实性、证据与解决方案，禁止修改文件、Shell、外部 MCP 和子 Agent；审批绕过不会放宽这些限制。完整使用条件、增量规则与失败重试见[自动预处理 Issue](./issue-preprocessing.md)，推送报告和绑定群聊见 [Bot 通知](./bot-notifications.md)。
+
 ## 安全 {#security}
 
 | 层级 | 机制 |
