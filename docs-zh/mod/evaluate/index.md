@@ -14,7 +14,7 @@ Evaluate（模组 ID：`evaluate`）为整合包和其他模组计算**物品的
 
 | 组件 | 本文对应版本 |
 | --- | --- |
-| Evaluate | `1.0-beta.1` |
+| Evaluate | `1.0-beta.2` |
 | Minecraft | `26.1.2` |
 | NeoForge | 开发与验证版本为 `26.1.2.126` |
 | Java | `25` |
@@ -53,3 +53,4 @@ Evaluate（模组 ID：`evaluate`）为整合包和其他模组计算**物品的
 | 用脚本定值或编写计算器 | [KubeJS](./kubejs.md) |
 | 从消耗物品的任务推导固定奖励 | [FTB Quests](./ftb-quests.md) |
 | 在 Java 中查询或扩展计算来源 | [Java API](./java.md) |
+| 在 Saturn 定义中设置价值、组合比较条件 | [Saturn 动作与条件](./saturn.md) |

@@ -2,14 +2,8 @@
 title: /wheel
 ---
 
-# `/wheel`
-
 <span id="wheel" />
 
-<div className="cmd-tree">
+`/wheel` or `/wheel configure` opens wheel configuration without administrator permission. Saturn provides the command, equivalent to Open Wheel Configuration, which is unbound by default.
 
-- `/wheel [configure]`
-
-  Opens the **wheel editor**, the same as the `key.mxt.wheel_configuration` keybind (**unbound by default** - set one in the controls screen if you want it).
-
-</div>
+See [Keys and Wheel](../keys-and-wheel.md#wheel-configuration) for controls.

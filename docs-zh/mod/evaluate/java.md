@@ -14,12 +14,12 @@ import com.iafenvoy.evaluate.api.ValueKey;
 
 OptionalDouble diamond = ItemValues.get(server, Items.DIAMOND);
 OptionalDouble variant = ItemValues.get(server, stack);
-Map<ValueKey.Item, Double> snapshot = ItemValues.all(server);
+Object2DoubleMap<ValueKey.ItemValue> snapshot = ItemValues.all(server);
 ```
 
 结果均为单件价值，不乘栈数量。未知和免费物品返回 `OptionalDouble.empty()`。
 
-`get(server, stack)` 依次查询最终覆盖、匹配实际栈的固定基础规则，以及精确物品／组件键对应的推导结果。组件敏感查询应使用该方法。`all()` 只包含已经收集的变体，返回不可变 Map。
+`get(server, stack)` 依次查询存档价值、最终覆盖、匹配实际栈的固定基础规则，以及精确物品／组件键对应的推导结果。组件敏感查询应使用该方法。`all()` 只包含已经收集的变体，返回不可变的 fastutil `Object2DoubleMap`。
 
 服务端会缓存计算快照。重载或外部重算后需要重新获取，之前返回的 Map 保持原样。
 
@@ -29,6 +29,15 @@ Registry<ValueOverride> overrides = ItemValues.overrides(server);
 ```
 
 原生键为 `EvaluateResourceKeys.EVALUATOR` 和 `EvaluateResourceKeys.VALUE_OVERRIDE`。运行时应通过上述 API 取得当前重载版本，Minecraft 初始注册表层不会自动变成新的运行时快照。重载后也需要重新获取注册表。
+
+## 修改存档价值
+
+```java
+boolean changed = ItemValues.set(server, stack, 12.5);
+boolean removed = ItemValues.reset(server, stack);
+```
+
+从服务端线程调用。它们与指令及 [Saturn 动作](./saturn.md)共用行为：精确组件键、单件价值、保存在当前世界、立即重算并使客户端缓存失效。`set` 要求物品栈非空，数值有限且非负；`0` 隐藏公开价值。`reset` 仅删除精确变体的存档覆盖。没有实际变更时返回 `false`，不触发重算。
 
 ## 注册计算器类型
 

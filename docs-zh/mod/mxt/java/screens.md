@@ -58,24 +58,9 @@ MyBar bar = HudManager.register(new MyBar());
 
 ## 轮盘选择系统 `screen.wheel` {#轮盘选择系统-screen-wheel}
 
-按住按键（`key.mxt.wheel`，默认 `R`），屏幕上出现一个 **12 扇**的轮盘：指针**朝哪个方向**就选中哪一扇，选中的扇区**底色变深**并向外扩一点，**这一扇的名字与 tooltip 写在轮盘正中间**。它是技能与灵气**唯一的触发入口**——法器能力就是技能，原来"技能栏 + 灵力栏"两条快捷栏与它们各自的配置界面已经删除（过程见 `research/28_技能与灵气归一化设计.md`）。
+轮盘与配置界面由 Saturn 的原版 Screen 提供，不依赖 AUI。主盘12格与主手、副手、扩展装备和契约派生页共用分页、选中编号、输入和 HUD；MiXianTu 注册灵气与契约条目，并追加业务 tooltip。
 
-**轮盘由"主盘 + 从盘"组成，用一套连续编号串起来**（见 `research/31_多轮盘与轮盘来源设计.md` §10）：主盘是玩家自己摆的 12 格（编号 `0..11`），从盘（主手物品 / 副手物品 / 法器 / 契约灵兽）按随身装备与手里的御兽铃**自动生成、不存储**（内容是这些装备此刻授予的主动技能，加上它们作为法器声明的**技能**；契约灵兽那一页是铃对准的灵宠认的行为），格子从 `12` 起接着排；**一页 12 格**，一个来源占 `ceil(条目数 / 12)` 页（一条都没有就一页都不占），所以"一个从盘不够用就再开一个新的"。翻页是两把键（`key.mxt.wheel_previous` / `key.mxt.wheel_next`，默认键盘左 / 右方向键，**默认两头环绕**，由客户端配置「轮盘选择 → 循环翻页」决定绕回还是停在两端），`R` **打开始终回到主盘（第一页）**。**页只是视图，编号才是选择**：轮盘画当前页、HUD 轮盘格画整张轮盘、12 把槽位键作用于当前页，关着时的 `V` 作用于编号此刻代表的那一格（**编号指向不存在的格子时落到最后一个有东西的格子，编号落在空格子上时落到第一个有内容的格子，编号本身不改写**）。
-
-框架（几何、开合状态机、选择语义）在 `screen.wheel`，环与它的动画由 ApricityUI 页面画（`assets/apricityui/apricity/mxt/wheel/`，页面随模组打包在 jar 里、直接从资源包读），内容（技能与灵气怎样变成条目、每个来源贡献什么）在 `screen.wheel/content`，编辑界面是 `WheelConfigurationScreen`；接法、布局的存储与校验、编号与分页、触发分派见[轮盘条目](./wheel.md)，这里只记要点：
-
-- **框架不决定轮盘上有什么**：`WheelMenuProvider` 回答"这个来源现在贡献哪些条目"，并且**按来源 id 登记**（`WheelMenuContent.register(source, provider)`；内建那五页由 `WheelContent` 在客户端初始化时一起登记，所以内容模组加的是**自己那一页**，不会顶掉内建页），入参是玩家与来源 `api/WheelSource`（`runtime/wheel/WheelSourceTypes` 注册出来的实例，**不再是枚举**；一条来源要回答 `id()` / `displayName()` / `configured()` / `grantSources(entity)` / `equipment(entity)` / `offers(entity, kind, id)`）；返回值可以比一页长，分页由 `WheelMenuContent` 做。条目契约是 `WheelMenuEntry`（`kind` / `id` / `title` / `icon` / `tooltip` / `cooldown` / `usable` / `onSelected`）。这替换掉了框架最初"模块静态登记 12 个槽位"的做法：内容已经是玩家自己的布局，第二条入口只会和它抢格子。
-- **布局内容存在服务端**：玩家附件 `wheel_layout` 存一份 12 格 `WheelLayout`（每格 `WheelSlot = 种类 + id`，**种类也按 id 存、也按 id 读**，空格是 `EMPTY` 哨兵，**只有主盘进附件**），以及一个 `armed` 字段存"当前选中的格子编号"（`Optional<Integer>`，一个数字）；配置界面关闭时发 `WheelLayoutC2SPayload`，服务端 `WheelService.sanitize` 强制 12 格、逐格问该种类的 `exists` 后再写回。编号走 `WheelSelectionC2SPayload`，由 `screen.wheel/content/WheelSelectionSync` 在登录时恢复、编号变化时上送——细节见[轮盘条目](./wheel.md#选中项跨会话)。
-- **一个事实只留一份：指针方向 → 扇区号的换算只在 `WheelGeometry` 里**（`sectorStart` / `sectorCentre` / `sectorAt` 由同一组常量推出，`sectorAt(sectorCentre(k)) == k` 恒成立）。绘制、命中、图标摆位全部问它。MineMenu 把这段换算抄了三处，其中一处的角度约定还和另外两处不同。
-- **判扇区只看方向，不看距离**：指针还在内圈里也算数，所以中间那块空地能一直显示"当前指着的扇区叫什么"。
-- **扇区数是 `WheelLayout.SLOTS`（12）**，几何从它取数，"一页 12 格"也取自它（`WheelMenuContent.SECTORS`），所以不会有"12 扇的几何配 10 格的页"这种事。
-- **空格子画成很淡的占位块**，不响应指针、中间也不显示文字；**整张轮盘一格有内容的都没有**时按键提醒一句「轮盘上还没有任何条目」而不是打开。
-- **选择与使用是两个键**：`key.mxt.wheel`（默认 `R`）只**选**——按住打开、指针决定格子，松开（`mode = HOLD`）或再按一次（`TOGGLE`）**只关闭、不触发**；`key.mxt.wheel_use`（默认 `V`）负责**用**——轮盘开着时用掉指针那一格且**不关轮盘**，关着时用掉**编号此刻代表的那一格**（客户端 `WheelSelectionState` 里是 `page` + `number` 两个值；`LoggingIn` 先清空，随后由服务端记住的 `armed` 填回来，见[选中项跨会话](./wheel.md#选中项跨会话)），左键等同于它。`WheelSelection.Method` 是 `KEY` / `CLICK`，只表示请求来自键盘还是鼠标。客户端配置「轮盘选择」现在有三项：`mode`（按住 / 切换）、`scroll_switch`（滚轮翻页，默认开）与 `wrap_pages`（循环翻页，默认开）；`release_to_select` 已随这次改版删除。
-- **触发不关屏**：用掉一格不会关闭轮盘，所以一次按住可以连用几格；轮盘的开关只由轮盘键决定。
-- **按键不能用 `KeyMapping#isDown()` 读**：`Minecraft#setScreen` 一开界面就 `KeyMapping.releaseAll()`，用 `isDown()` 的话轮盘会在出现的那一帧就被判成已松手。第二个理由与使用键有关：按着 `V` 松开 `R` 时 `MouseHandler#grabMouse()` 里的 `KeyMapping.setAll()` 会按物理状态把 `V` 重新置成按下、补出一次假按下，等于多触发一次。控制器因此对轮盘键、使用键和两把切盘键都用 `InputConstants` / GLFW 直接读原始状态，并且一个键只在一处判边沿；`KeyMapping` 只负责让它们出现在按键设置里。代价是判定精度为客户端刻。
-- **它是个 `Screen`，不是 GUI 层**：开界面时原版会自动放开鼠标（指针才能指方向，而且角度与 GUI 缩放无关），关掉时又会把准心收回来。它不暂停游戏，也不画背景——默认背景会把这之前提取的整层 HUD 糊掉。
-- **半径与适配缩放是常量**（`WheelGeometry`，窗口太小时扇环整体缩小），**颜色与动画时长写在页面 CSS 里**：整套是灰阶，指向那一扇压深一档；HUD 的「轮盘格」选中框仍是金色贴图。
-- **按住轮盘时角色会停下**：原版对任何 `Screen` 都会 `KeyMapping.releaseAll()`，移动键随之松开（松开轮盘键时 `setScreen(null)` 又会 `grabMouse()` 把物理按键状态同步回来，不用重新按）。要"边跑边开"就得改成 GUI 层并自己接管指针。
+配置界面为一个可滚动候选网格，下方12格保留颜色条，窄窗口可换行。服务端统一校验来源及条目存在性；能力继续复用激活管线。扩展方式见[轮盘条目](./wheel.md)，玩家操作见[按键与轮盘](../player-guide/keys-and-wheel.md)。
 
 ## 法器储物窗口 `MxtMenus.ARTIFACT_STORAGE` {#法器储物窗口-mxtmenus-artifact-storage}
 
@@ -97,7 +82,7 @@ MyBar bar = HudManager.register(new MyBar());
 
 这几页要自己改时记住三条：**面板不要写 `border`**（页面的定位基准是面板的内容盒，加了边框，页面里每个坐标都会整体偏一点，边框用 `box-shadow: inset` 画）；**别用 `overflow: hidden` 裁内容**（游戏里会画出一块暗色方块）；页面里容器要带 `primary="true"`，否则重复生成的槽位不会展开、槽位序号也不会归一化。人物信息的面板会随窗口缩放，所以它的位置与尺寸不是写死的，而是每次开界面按窗口算出来的；它左上角的两个页签（**人物信息**与**习得功法**）在两页之间切换，两页共用同一块面板，面板上没有单独那行标题。
 
-还有一类界面**整幅窗口都是页面**：阵法 `/formation show` 的结构预览（`assets/apricityui/apricity/mxt/multiblock/`）。上下两条压边、标题、层号、提示、播放控制与时间轴都由页面画，只有三维场景仍由 Java 以画中画（picture-in-picture）提交到页面留出的那块矩形里，所以那块矩形**必须保持透明**。这一页里一个坐标都不写——场景、按键与时间轴的盒子由 Java 按窗口尺寸写进去（窗口一变就重写一遍），按键的悬停与按下交给 CSS，只有"点时间轴跳层"与"在场景里拖动转视角"这两件要看指针位置的事仍由 Java 处理。
+阵法 `/formation show` 使用内置的 Ponder 界面预览服务端解析的结构。播放、重播、关键帧、视角控制与方块识别由 Ponder 提供，不经过 AUI 页面。客户端无需提供与服务端相同的结构模板资源。
 
 监控页画的是服务端下发的只读读数（`AlchemyStateS2CPayload`，见[网络协议](./network.md)），界面自己不算配方，也不显示丹方名或丹方按钮；温度输入框、开始与终止只是把那三件事发回服务端。页面里的 `player_inventory` 与 `machine` 都是真实槽位，机器槽位与玩家物品栏同在菜单里；监控页没有机器槽。
 

@@ -34,7 +34,7 @@ Inspects active formations, maintains their ownership lists, previews a formatio
 
   - `... show <formation>`
 
-    Opens a **structure preview** on the client: the shape the formation declares is built up layer by layer, and you can drag to turn it and click the timeline to jump to a layer.
+    Opens a **Ponder structure preview** on the client: the declared shape is built up layer by layer, using Ponder playback, replay, keyframes and camera controls.
 
   - `... bind <formation>`
 
@@ -52,7 +52,7 @@ Ownership is a set of UUIDs: everyone on the list counts as an owner, so `mxt:fo
 
 ## show {#show}
 
-Run by a player, no permission needed. The shape is resolved on the server and sent with the packet — a `structure_template` is server-side data and the client may not hold the same packs. Blocks come from the template's **first palette**, and air cells are not drawn. A formation with `structure_check: always` declares no shape at all, so it says so instead of opening an empty view. Hovering a cell highlights that block with a white outline and shows its item tooltip.
+Run by a player, no permission needed. The shape is resolved on the server and sent with the packet — a `structure_template` is server-side data and the client may not hold the same packs. Blocks come from the template's **first palette**, and air cells are not drawn. A formation with `structure_check: always` declares no shape at all, so it says so instead of opening an empty view. Use Ponder identification mode to inspect blocks and their item tooltips. A preview accepts at most 4096 structure entries and a span of 64 blocks along each axis. It centres the shape while preserving block spacing and states. Ponder and its runtime dependencies are bundled; no separate installation is needed.
 
 ## bind {#bind}
 

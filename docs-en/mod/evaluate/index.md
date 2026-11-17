@@ -14,7 +14,7 @@ These numbers describe configured acquisition costs. Evaluate does not add a cur
 
 | Component | Version covered here |
 | --- | --- |
-| Evaluate | `1.0-beta.1` |
+| Evaluate | `1.0-beta.2` |
 | Minecraft | `26.1.2` |
 | NeoForge | Developed and verified with `26.1.2.126` |
 | Java | `25` |
@@ -53,3 +53,4 @@ This is a fixed base value: recipes that consume diamonds use `10000.5`. To chan
 | Set values or write evaluators in scripts | [KubeJS](./kubejs.md) |
 | Infer fixed rewards from item-consuming quests | [FTB Quests](./ftb-quests.md) |
 | Query values or add an evaluator type in Java | [Java API](./java.md) |
+| Use value actions and comparisons in Saturn definitions | [Saturn actions and conditions](./saturn.md) |

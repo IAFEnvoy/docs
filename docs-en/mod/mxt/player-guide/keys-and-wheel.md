@@ -19,33 +19,26 @@ title: Keys and Wheel
 | Wheel Previous / Next Page | `←` / `→` | Turns pages in the wheel screen, switching between the main wheel and the pages behind it |
 | Flight: Descend | `X` | The descend key while flying an artifact mount |
 | Open Wheel Configuration | unbound | Opens the wheel editor (the same as `/wheel`) |
-| Wheel Slots 1–12 | unbound | Uses the ability or spirit power in that cell of the main wheel, the same as pointing at it and pressing `V` |
+| Wheel Slots 1–12 | unbound | Uses the ability or spirit power in that cell of the current page, the same as pointing at it and pressing `V` |
 
 ## Wheel {#wheel}
 
-![Main wheel](../assets/images/player-guide/main-wheel.webp)
+Saturn supplies the wheel; MiXianTu adds aura, artifact, and contract content. The main wheel is twelve cells you arrange. Hands, extension equipment, and the Beast Taming Bell supply derived pages, splitting after every twelve entries.
 
-The wheel picks abilities and spirit power. **The main wheel** is the twelve cells you arrange yourself; **the pages behind it** are the abilities your gear gives you (what the main hand, the off hand and artifacts declare), and the left / right page keys or the mouse wheel turn between them.
-
-**Skills that need a key.** Some skills only fire from a key, and they sit on the wheel like any other entry:
-
-- **A cast**: an active ability you have learned (`mxt:active`) casts once per press.
-- **A targeted cast**: a targeted skill (`mxt:targeted`) is one full cast per press as well, except that it first marks out the **entities it reaches** with a selector (an area, a line or a cone, with **the distance written in the definition**) and then runs the payload ability it names on each of them.
-- **Flight switch**: once you have learned the flying skill (`mxt:flight_control`, usually granted by a technique), that page gains a cell for it - **press `V` to take a flying artifact from the main hand and then the off hand and take off, press it again to land**.
-- **Storage**: when an artifact declares storage slots, that page gains a "Storage" cell - **press `V` to open the artifact's own box**.
+Hold `R` to select by pointer direction, then use `V` or left click. Releasing `R` only closes the wheel. With it closed, `V` uses the remembered entry. Arrow keys and scrolling turn pages. Slot keys address the current page, including derived pages.
 
 ## Wheel Configuration {#wheel-configuration}
 
-![Wheel editor](../assets/images/player-guide/wheel-config.webp)
+Open `/wheel` or `/wheel configure`, or bind Open Wheel Configuration. Slots 1–12 are under Saturn: Wheel Slots; the remaining wheel bindings use the main Saturn category.
 
-**What sits on the main wheel is the player's own choice.** Type `/wheel` in chat, or press "Open Wheel Configuration", to open the **wheel editor**:
+- The top is **one combined candidate pool** for abilities and aura. Scroll or drag its scrollbar when entries do not fit.
+- Twelve fixed main slots sit below and wrap in narrow windows. Left-click a candidate, then a slot to place it; click the selected candidate again to deselect. Right-click a slot, or click with no candidate selected, to clear it.
+- Bottom color strips still distinguish kinds and states. Stale entries retain their position with a red border and explanatory tooltip until cleared.
+- Closing saves automatically. Derived pages follow equipment and contracts and are not edited here. Abilities granted only by the hands remain on their own derived pages.
+- A new main layout is empty. Its left-side HUD hides only the empty main page; automatically discovered entries remain visible without a blank gap. Configuring an entry restores the main page, and clearing all slots hides it again. Nothing is assigned automatically; `R` displays a notice when the entire wheel has no entries.
 
-- The top row is two pools of entries: **six columns of spirit power on the left, six columns of abilities on the right** (the skills the body was taught - by a technique, a spirit root, a physique or a realm - plus the skills the artifacts in the Curios slots declare; a skill that only a main-hand or off-hand item declares is not in that pool).
-- The bottom row is **twelve shared cells**, the **main wheel's** twelve cells (**`1` is straight up, counting clockwise**). Left-click an entry in a pool to pick it up, then click a cell to put it there; clicking a cell with nothing picked clears it. A filled cell has a coloured strip along its bottom edge saying which kind it holds (spirit power blue, ability gold; a skill that needs a key green or grey by its switch state, violet when it is a one-shot).
-- **Only the main wheel is edited here**: the pages behind it come from what you carry.
-- **A fresh save starts with an empty wheel**: nothing is filled in for you, so put entries in with `/wheel` first. With **the whole wheel empty**, `R` does not open the wheel (there is nothing to choose), and the "Wheel Grid" on the left is four empty frames (one page's three rows).
-- A saved cell whose entry has gone away (a revoked grant, a deleted definition, a spirit power you can no longer pay for) shows a red `?` and a tooltip that names what is missing. It is **never swapped for something else**: cells do not drift, and clicking the cell clears it.
+Saturn's client options `wheel.hold`, `wheel.scroll_switch`, and `wheel.wrap_pages` control hold-to-open, scrolling, and page wrapping. All default to enabled.
 
-## Extending {#extending}
+## Extensions / Customization {#extensions-customization}
 
-Another mod can add its own abilities or spirit power to the wheel by implementing the `WheelMenuEntry` interface. The interface describes an entry: kind, ID, title, icon, tooltip, cooldown, usability and the callback for a selection. See [the Java wheel page](../java/wheel.md).
+Content mods can register sources, kinds, candidates, and additional tooltips. See [Wheel Entries](../java/wheel.md).

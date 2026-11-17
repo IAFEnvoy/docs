@@ -2,14 +2,8 @@
 title: /wheel
 ---
 
-# `/wheel`
-
 <span id="wheel" />
 
-<div className="cmd-tree">
+`/wheel` 或 `/wheel configure` 打开轮盘配置，无需管理员权限。命令由 Saturn 提供，与「打开轮盘配置」按键作用相同，默认未绑定。
 
-- `/wheel [configure]`
-
-  打开**轮盘配置界面**，等同于按键 `key.mxt.wheel_configuration`（默认未绑定，可以在按键设置里自己设一个）。
-
-</div>
+操作方式见[按键与轮盘](../keys-and-wheel.md#轮盘配置)。

@@ -14,12 +14,12 @@ import com.iafenvoy.evaluate.api.ValueKey;
 
 OptionalDouble diamond = ItemValues.get(server, Items.DIAMOND);
 OptionalDouble variant = ItemValues.get(server, stack);
-Map<ValueKey.Item, Double> snapshot = ItemValues.all(server);
+Object2DoubleMap<ValueKey.ItemValue> snapshot = ItemValues.all(server);
 ```
 
 Every result is a value per item, independent of stack count. Unknown and free items return `OptionalDouble.empty()`.
 
-`get(server, stack)` checks final overrides, then fixed base rules against the actual stack, then the inferred result for its exact item/component key. Use this method for component-sensitive queries. `all()` only includes collected variants and returns an immutable map.
+`get(server, stack)` checks world-owned values, then final overrides, then fixed base rules against the actual stack, then the inferred result for its exact item/component key. Use this method for component-sensitive queries. `all()` only includes collected variants and returns an immutable fastutil `Object2DoubleMap`.
 
 The snapshot is cached on the server. Reacquire it after reload or external recalculation; a previously returned map stays unchanged.
 
@@ -29,6 +29,15 @@ Registry<ValueOverride> overrides = ItemValues.overrides(server);
 ```
 
 The native keys are `EvaluateResourceKeys.EVALUATOR` and `EvaluateResourceKeys.VALUE_OVERRIDE`. Use these API accessors for the current reload's registries; Minecraft's initial registry layer does not become the new runtime snapshot. Reacquire the registries after reload too.
+
+## Edit world values
+
+```java
+boolean changed = ItemValues.set(server, stack, 12.5);
+boolean removed = ItemValues.reset(server, stack);
+```
+
+Call on the server thread. These methods share the command and [Saturn action](./saturn.md) behavior: exact component keys, per-item values, storage in the current world, immediate recalculation, and client cache invalidation. `set` requires a nonempty stack and a finite nonnegative value; `0` hides the public value. `reset` removes only the exact stack variant's override. Unchanged values return `false` without recalculation.
 
 ## Register an evaluator type
 
