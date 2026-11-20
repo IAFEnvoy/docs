@@ -7,7 +7,7 @@ description: Every item data component the mod registers - what it holds, who wr
 
 <span id="data-components" />
 
-Every piece of state the mod hangs on an item stack goes through a vanilla **data component** (`DataComponentType`). There is no "mod-specific NBT on the item" anywhere. All 35 are registered in one place, `registry.MxtDataComponents`, and each declares both a **persistent codec** and a **network codec** (`persistent(...).networkSynchronized(...)`) - so they all save with the world and all sync to the client. There is no server-only component and no session-only component.
+Every piece of state the mod hangs on an item stack goes through a vanilla **data component** (`DataComponentType`). There is no "mod-specific NBT on the item" anywhere. Core components are registered in one place, `registry.MxtDataComponents`, and each declares both a **persistent codec** and a **network codec** (`persistent(...).networkSynchronized(...)`) - so they all save with the world and all sync to the client. There is no server-only component and no session-only component.
 
 A component is **this stack's own fact**: it was forged, it has a talisman inscribed on it, it holds this much aura. The other half is the **datapack declaration** ("what this kind of item usually is"). Which way they merge is fixed in [Data Loading](./data-loading.md).
 
@@ -21,14 +21,6 @@ The **Payload** column is the Java shape the codec decodes into, not JSON key na
 | --- | --- | --- |
 | `mxt:quality` | `Holder<ItemQuality>` | **The only component in the whole mod that holds a tier**, and layer one of quality resolution. It holds a **whole quality object**, so it decides the tier *and* which ladder this stack reads: writing it means "this stack is this tier". `/quality set`, a successful upgrade, a Forge Table settlement and a talisman inscription all write it; `/quality clear` removes it and the stack falls back to the tier its carried definition declares. |
 | `mxt:element` | `List<Either<Holder<Element>, TagKey<Element>>>` | Elements this stack carries **in addition to** the definition's, unioned. Either a concrete element or an element tag. |
-
-### Forging {#forging}
-
-| Component id | Payload | What it does |
-| --- | --- | --- |
-| `mxt:forging_result` | `ForgingResultComponent` (`blueprint`, `final_value`, `actual_steps`, `optimal_steps`, `extra_steps`) | What a **successful** forging session did: which blueprint, the final value, the steps actually taken and the shortest solution. The constructor requires `actual_steps - optimal_steps == extra_steps`. It holds **no tier** - the tier the session settled on goes to `mxt:quality`, so `/quality clear` takes that with it. |
-| `mxt:forging_methods` | `List<Holder<ForgingMethod>>` | Methods this stack can run **when used as a tool**. Decoded tolerantly (a bad entry is logged and dropped), unioned with the definition's. |
-| `mxt:forging_blueprints` | `List<Holder<ForgingBlueprint>>` | Blueprints this stack carries, unioned with the definition's; a tolerantly decoded list as well. |
 
 ### Pills {#pills}
 
@@ -104,13 +96,11 @@ The **Payload** column is the Java shape the codec decodes into, not JSON key na
 | `mxt:talisman` | `TalismanComponent` (`talisman`, `mode`) | The talisman **inscribed on one carrier**: a single `talisman` entry, absent on a blank carrier, and inscribing another replaces it. `mode` is `fire` (default) or `store` and lives **on the stack, not on any definition**, so the same inscription behaves differently on different carriers. Its tooltip is drawn separately by `TalismanTooltipAppender` so those lines sit above the carrier's charge line. |
 | `mxt:brush_pigment` | `int` (0 to a cap) | The talisman brush's own **pigment store**, a non-negative integer where **1 unit is 1 pixel of arc length**. Not writing the component and writing `0` are the same thing. It is not a cost entry: refilling is the vanilla bundle's click, and the judgement and conversion live in exactly one place, `runtime.talisman.BrushPigmentService`. |
 
-### Herbs, Furnaces and Spirit Roots {#herbs-furnaces-and-spirit-roots}
+### Herbs and Spirit Roots {#herbs-furnaces-and-spirit-roots}
 
 | Component id | Payload | What it does |
 | --- | --- | --- |
 | `mxt:herb_age` | `int` (0 to a cap) | The **age** of a spirit herb fruit. Breaking a mature plant stamps the grown years, floored, onto every drop here, and **at that same moment** looks that age up in the herb's own `quality_by_age` ladder, writing the tier it hits to `mxt:quality`. It is also an **input to the potency formulas** (the `herb_age` variable) rather than a second multiplier - a pack that wants older herbs to be stronger reads it there. |
-| `mxt:alchemy_furnace` | `Holder<AlchemyFurnaceDefinition>` | Which **furnace specification** this furnace core was built to. One specification is shared by the one block item, which cannot say which tier applies, so the tier is read from this reference too. |
-| `mxt:alchemy_wall_material` | `Holder<AlchemyWallMaterial>` | Which **wall material** this block is, that is, its temperature rating. The furnace ceiling is the **lowest** of the 18 wall cells. |
 | `mxt:spirit_root` | `Holder<SpiritRoot>` | Which spirit root definition this item (usually a spirit root stone) carries. |
 | `mxt:physique` | `Holder<Physique>` | Which physique definition this item (usually a physique stone or scroll) carries. |
 
@@ -124,7 +114,7 @@ The **Payload** column is the Java shape the codec decodes into, not JSON key na
 
 Read together, the table above collapses into three sentences:
 
-- **Only `mxt:quality` holds a tier.** No other component carries quality, and `mxt:forging_result` only records the forging session.
+- **Only `mxt:quality` holds a tier.** No other component carries quality, and `mxt_forging:forging_result` only records the forging session.
 - **`mxt:pill` / `mxt:technique` / `mxt:technique_reading` take part in "which declaration applies".** The first two can name or pick out a declaration; the third overrides a layer of parameters on top. Those three are the entire contents of the "components override declarations" table in [Data Loading](./data-loading.md).
 - **Everything else only holds state.** They never affect which declaration applies; they only answer "what is this stack right now".
 

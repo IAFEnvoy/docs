@@ -3,6 +3,8 @@ title: Define a Talisman
 description: Write a talisman definition, hand it to a player, pour aura into it and fire it — capacity and cost as two fields, the two carrier modes, the hand and display-stand rules, and why inscribing is still command-only.
 ---
 
+
+
 # Define a Talisman
 
 <span id="define-a-talisman" />
@@ -11,9 +13,9 @@ A talisman carries abilities on an item: it inscribes a few abilities, you fill 
 
 :::warning Inscribing by hand has no entry point yet
 
-The brush `mxt:talisman_brush` now only carries its own **pigment store** (dipping, see [Brushes and Pigment](../player-guide/alchemy-and-brush.md)); "hold the brush and write the ability onto it" is still not wired up — writing a talisman means tracing a formula in the **drawing workstation** (see [Write a Drawing Recipe](./author-a-talisman-drawing.md)), or writing the item directly: `/talisman give …`, item component syntax (the `components` of `/give`), and the single-inscription item the creative picker builds.
+The brush `mxt:talisman_brush` now only carries its own **pigment store** (dipping, see [Brushes and Pigment](../player-guide/brush-and-pigment.md)); "hold the brush and write the ability onto it" is still not wired up — writing a talisman means tracing a formula in the **drawing workstation** (see [Write a Drawing Recipe](../addons/talisman/tutorial/author-a-talisman-drawing.md)), or writing the item directly: `/talisman give …`, item component syntax (the `components` of `/give`), and the single-inscription item the creative picker builds.
 
-So this tutorial covers the chain that genuinely runs today: **define → hand out → pour → fire** (step 3 is exactly the "hand it to a player" routes); the manual, traced path belongs to [Write a Drawing Recipe](./author-a-talisman-drawing.md), and the field table is still in [talisman_drawing](../datapack/json/talisman_drawing.md).
+So this tutorial covers the chain that genuinely runs today: **define → hand out → pour → fire** (step 3 is exactly the "hand it to a player" routes); the manual, traced path belongs to [Write a Drawing Recipe](../addons/talisman/tutorial/author-a-talisman-drawing.md), and the field table is still in [talisman_drawing](../addons/talisman/datapack/talisman_drawing.md).
 
 :::
 
@@ -168,4 +170,4 @@ Datapack registries are read while the **world loads**, so reopen the world firs
 - [Built-in Items](../player-guide/items.md) — how talismans, brushes and stands behave in game.
 - [item_aura](../datapack/json/item_aura.md) — the storage shared with spirit stones.
 - [Define an Ability](./add-an-ability.md) — writing the abilities that get inscribed.
-- [Write a Drawing Recipe](./author-a-talisman-drawing.md) — write a formula for the drawing workstation: the shape, what completion decides, and where paper and pigment come from.
+- [Write a Drawing Recipe](../addons/talisman/tutorial/author-a-talisman-drawing.md) — write a formula for the drawing workstation: the shape, what completion decides, and where paper and pigment come from.

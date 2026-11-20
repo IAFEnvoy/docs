@@ -146,7 +146,7 @@ description: 把已有方块声明成灵植：药性药力、寒热与药龄，�
 
 ## 与其他系统的关系 {#与其他系统的关系}
 
-- 炼丹：灵植的**果实**是[丹方](./alchemy_recipe.md)的材料，`main_effects` / `auxiliary_effects` / `catalyst_power` 就是主药、辅药与药引读到的药力；药性本身由[药性](./medicinal_property.md)定义。
+- 炼丹：灵植的**果实**是[丹方](../../addons/alchemy/datapack/alchemy_recipe.md)的材料，`main_effects` / `auxiliary_effects` / `catalyst_power` 就是主药、辅药与药引读到的药力；药性本身由[药性](./medicinal_property.md)定义。
 - 匹配：`mxt:herb_tag` 是物品匹配器的一个条目类型，按 `element` 或 `material` 认出「这一堆是不是那种草的产物」，所以能写进任何接受 `ItemMatcher` 的地方。两个字段至少要写一个，写了的每个字段都必须在这株草上成立。
 - 品质：灵植定义**不声明 `quality` 字段**——它不携带物品身份，堆上没有装定义身份组件可问，所以这株草的档默认由 [default_quality](./default_quality.md) 按果实物品 id 或 `#标签` 给；写了 `quality_by_age` 的草由采收按药龄写第 1 层，见[药龄与品质](#age-and-quality)与[品质是哪一档](./quality.md#resolution)。
 - Jade：装了 Jade 时看着一株草会显示它的名字、药龄与成熟状态。

@@ -1,17 +1,15 @@
 ---
 title: Dynamic Registries
-description: All 43 datapack registries with their file directory and purpose, plus the built-in type dispatch table and the KubeJS extension types.
+description: Core and optional addon datapack registries, file locations and purposes, built-in type dispatch, and KubeJS extension types.
 ---
 
 # Dynamic Registries
 
 <span id="dynamic-registries" />
 
-The table below lists the 43 datapack registries the mod uses; `resource`, `ability` and `trigger` are provided by Saturn, and their fields are documented in the [Saturn data definitions](../../../../library/saturn/data/index.md). In the field tables, "Default" is the value used when a field is omitted, and "Required" means loading fails without it.
+The table below lists the shared datapack registries provided by MiXianTu and Saturn. Workstation definitions belong to [Alchemy Workstations](../../addons/alchemy/index.md) and [Forging Workstations](../../addons/forging/index.md) and require their respective addons. See [Saturn data definitions](../../../../library/saturn/data/index.md) for Saturn fields. "Default" is used when a field is omitted; "Required" means loading fails without it.
 
-**Recipes are not in this table.** The recipe pages that go through the vanilla `RecipeManager` sit in the **Recipes** group below: alchemy recipes (`mxt:alchemy`), spirit crafting (`mxt:spirit_shaped` / `mxt:spirit_shapeless`) and talisman drawing (`mxt:talisman_drawing`). Their JSON goes in `data/<namespace>/recipe/`, never in `mxt/<recipe name>/`; they are not registries either, so `/reload` reloads them. File location, and how to sort JSON into subdirectories by category, is on the [Datapack Development Overview](../overview.md).
-
-**Refilling a brush is not a recipe.** It is the vanilla bundle's click: with the brush on the cursor, click a stack of pigment, see [`mxt:talisman_drawing`](./talisman_drawing.md#materials-and-pigment).
+**Recipes are not in this table.** Core [spirit crafting](./spirit_crafting.md) uses the vanilla recipe types `mxt:spirit_shaped` / `mxt:spirit_shapeless`. JSON goes under `data/<namespace>/recipe/` and can be reloaded with `/reload`. See the [alchemy addon](../../addons/alchemy/datapack/alchemy_recipe.md) and [drawing addon](../../addons/talisman/datapack/talisman_drawing.md) for their recipes.
 
 | Registry | Directory | Purpose |
 | --- | --- | --- |
@@ -26,15 +24,11 @@ The table below lists the 43 datapack registries the mod uses; `resource`, `abil
 | `ability` | `saturn/ability` | Active, passive and triggered abilities; see the [Saturn ability definition](../../../../library/saturn/data/ability.md). |
 | `ability_affinity` | `mxt/ability_affinity` | Element affinity of abilities: which elements, and how several matching roots combine; it does not live in the ability definition. |
 | `curse` | `mxt/curse` | Curse definitions and duration types that several modules can reference. |
-| `forging_method` | `mxt/forging_method` | A single forging strike method. |
-| `forging_blueprint` | `mxt/forging_blueprint` | Forging targets and quality settlement. |
 | `technique` | `mxt/technique` | Cultivation technique definitions: learnable, granting abilities and cultivation modifiers by progression level. |
 | `progression` | `mxt/progression` | One level of a progression chain. |
 | `cultivation` | `mxt/cultivation` | One cultivation routine: which ambient aura it absorbs, what it does every tick and on a tick that settles, and what it costs and yields. |
 | `spirit_herb` | `mxt/spirit_herb` | Spirit herb metadata for existing items. |
 | `medicinal_property` | `mxt/medicinal_property` | Medicinal identities: the identity of one medicinal effect. |
-| `alchemy_furnace` | `mxt/alchemy_furnace` | Furnace specifications: slots, per-batch capacity and cooling rate. |
-| `alchemy_wall_material` | `mxt/alchemy_wall_material` | Wall materials: the temperature limit of one casing block. |
 | `formation` | `mxt/formation` | Formation lifecycle and aura overrides. |
 | `formation_shape` | `mxt/formation_shape` | The figure a formation draws: circles and polylines, and the paint, density and growth window each stroke carries. |
 | `tribulation` | `mxt/tribulation` | A tribulation: its start gate, timeline beats, and what happens on success or failure. |
@@ -53,13 +47,11 @@ The table below lists the 43 datapack registries the mod uses; `resource`, `abil
 | `default_quality` | `mxt/default_quality` | An item's default quality when nothing else supplies a tier (the third and last layer of quality resolution). |
 | `item_binding` | `mxt/item_binding` | An existing item's actions, conditions and element. |
 | `weapon_binding` | `mxt/weapon_binding` | An existing item's weapon attributes and three actions. |
-| `tool_binding` | `mxt/tool_binding` | The forging methods a tool item unlocks. |
-| `blueprint_binding` | `mxt/blueprint_binding` | The blueprints a blueprint item offers. |
 | `block_aura` | `mxt/block_aura` | Aura provided by a block. |
 | `heat_source` | `mxt/heat_source` | How hot and how fast a block heats a furnace. |
 | `incomplete` | `saturn/incomplete` | Marks an item as unfinished: the client draws a warning badge on its slot. |
 
-Seven of these — `item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding`, `tool_binding` and `blueprint_binding` — claim items (`currency` through `item`, the other six through `items`), while `block_aura` and `heat_source` claim blocks through `blocks`; their shape is that of every other registry, and the file layout is on the [Datapack Development Overview](../overview.md).
+Five registries claim items: `item_aura`, `currency`, `default_quality`, `item_binding` and `weapon_binding` (`currency` uses `item`; the others use `items`). `block_aura` and `heat_source` claim blocks through `blocks`. See the [Datapack Development Overview](../overview.md) for file layout.
 
 ## Built-in Type Dispatch {#built-in-type-dispatch}
 

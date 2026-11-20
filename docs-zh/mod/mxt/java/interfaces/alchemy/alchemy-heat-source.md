@@ -2,6 +2,9 @@
 title: AlchemyHeatSource
 ---
 
+此接口与 `mxt:heat_source` 均由 **MiXianTu 本体**提供，可供不同工作站共用。下文以 **Alchemy Workstations** 的丹炉为例。
+
+
 # AlchemyHeatSource
 
 <span id="alchemyheatsource" />
@@ -17,6 +20,6 @@ title: AlchemyHeatSource
 
 **返回值必须有限且大于 0**，否则丹炉把这一格当成没有热源：`maxTemperature` 不合法时整炉的可设上限是 `0`，`heatingPerTick` 不合法时按完全不供热处理，炉温只回落。不要每个 tick 现造一份温度曲线或分配临时对象——丹炉只读这两个数，温度怎么推进由它自己定。
 
-**写炉温不属于实现方**：温度是丹炉核心自己的状态（`setTemperature` / `setTargetTemperature` 是 [AlchemyWorkstation](./alchemy-workstation.md) 的成员），只有服务端的炼丹服务会推进它；方块不要自己改批次，也不要自己写温度。读取只在服务端发生，也不会为了问这一句去加载区块。
+**写炉温不属于实现方**：温度是丹炉核心自己的状态（`setTemperature` / `setTargetTemperature` 是 [AlchemyWorkstation](../../../addons/alchemy/java/alchemy-workstation.md) 的成员），只有服务端的炼丹服务会推进它；方块不要自己改批次，也不要自己写温度。读取只在服务端发生，也不会为了问这一句去加载区块。
 
-**本体不提供生产用的热源方块**：接口在 `api`，方块由内容包自己注册，数值也可以只写 `mxt:heat_source`。炉型规格、可设上限与温度容差见 [alchemy_furnace](../../../datapack/json/alchemy_furnace.md)，供热格的位置与注册表本身见 [heat_source](../../../datapack/json/heat_source.md)。测试包里有三个只供测试的方块：`mxt_test:alchemy_test_fire`（150 / 40，靠方块标签的条目）、`mxt_test:alchemy_weak_fire`（80 / 10，靠 `priority: 5` 的条目压过标签）与 `mxt_test:alchemy_advanced_fire`（实现本接口，点着时 250 / 25、熄灭时 0），它们不是内容包要照抄的方块。
+**本体不提供生产用的热源方块**：接口在 `api`，方块由内容包自己注册，数值也可以只写 `mxt:heat_source`。炉型规格、可设上限与温度容差见 [alchemy_furnace](../../../addons/alchemy/datapack/alchemy_furnace.md)，供热格的位置与注册表本身见 [heat_source](../../../datapack/json/heat_source.md)。炼丹附属测试包里有三个只供测试的方块：`mxt_test:alchemy_test_fire`（150 / 40，靠方块标签的条目）、`mxt_test:alchemy_weak_fire`（80 / 10，靠 `priority: 5` 的条目压过标签）与 `mxt_test:alchemy_advanced_fire`（实现本接口，点着时 250 / 25、熄灭时 0），它们不是内容包要照抄的方块。

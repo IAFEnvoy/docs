@@ -29,6 +29,10 @@ Saturn is the library this mod builds on - abilities, triggers, actions and cond
 | Saturn | [https://www.curseforge.com/minecraft/mc-mods/saturn-lib](https://www.curseforge.com/minecraft/mc-mods/saturn-lib) |
 | ApricityUI | [https://www.curseforge.com/minecraft/mc-mods/apricityui](https://www.curseforge.com/minecraft/mc-mods/apricityui) |
 
+## Workstation addons
+
+Install Alchemy Workstations, Forging Workstations or Talisman Workstations on both client and server for the corresponding workflow. They work separately or together. Addons own workstation blocks and process data; MiXianTu owns shared materials and outputs. All addon items use the MiXianTu creative tab.
+
 ## Optional Integrations {#optional-integrations}
 
 | Mod | Purpose |

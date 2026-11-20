@@ -29,6 +29,10 @@ Saturn 是本模组依赖的前置代码库（技能、触发器、行为与条�
 | Saturn | https://www.curseforge.com/minecraft/mc-mods/saturn-lib |
 | ApricityUI | https://www.curseforge.com/minecraft/mc-mods/apricityui |
 
+## 工作站附属
+
+需要生产流程时，在客户端和服务端分别安装 Alchemy Workstations（炼丹）、Forging Workstations（锻器）或 Talisman Workstations（画符）。三者可单独安装，也可共存；方块与专用数据由附属提供，共享材料和产物由本体提供，所有附属物品加入 MiXianTu 创造栏。
+
 ## 可选兼容 {#可选兼容}
 
 | 模组 | 作用 |

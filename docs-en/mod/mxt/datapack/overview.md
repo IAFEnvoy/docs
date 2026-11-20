@@ -10,10 +10,10 @@ description: MiXianTu data pack file layout, registry index, loading and overrid
 ## File Location {#file-location}
 
 ```text
-data/<namespace>/mxt/<registry>/<path>.json
+data/<namespace>/<registry_namespace>/<registry>/<path>.json
 ```
 
-For example, the definition in `data/example/saturn/ability/fireball.json` has the ID `example:fireball`.
+For example, `data/example/saturn/ability/fireball.json` defines `example:fireball`. `namespace` belongs to the entry, while `registry_namespace` belongs to the registry: `mxt` for the core, `saturn` for shared library registries, and `mxt_alchemy` or `mxt_forging` for addons. Changing registry ownership does not change the entry ID.
 
 **Once there is a lot of content, sort the JSON into subdirectories by category.** With dozens or hundreds of files sitting flat in one registry directory, "which of these are the passives of the same school" can only be guessed from the filenames; once they are sorted, the path is the index:
 
@@ -28,10 +28,10 @@ data/example/mxt/artifact/charm/ward_jade_talisman.json
 There is no hard rule for how to categorise: by purpose (`passive/`, `active/`), by school (`sword/`, `alchemy/`) or by the batch an update added are all fine. A few things to keep in mind:
 
 - **The directories are part of the ID**: `data/example/saturn/ability/sword/slash.json` has the ID `example:sword/slash`, so **moving a file to another directory changes its ID**. Other definitions, tags and saved data (the ability grant ledger, cooldowns, the ids in wheel cells) all store that ID, so settle the categories before writing content.
-- The `name` / `description` keys generated from the id carry that path too (`<category>.mxt.<namespace>.<path>`, with the `/` in the path kept as written), so folders do not introduce a second set of translation-key rules.
-- Tags have a tree of their own (`tags/mxt/<registry>/...`) and do **not** have to mirror the definition directories level for level; keeping the same habit there only makes them easier to find. The values in a tag still have to be the **full ID including the directories**.
-- The levels only affect readability and take **no part in loading or validation**: the first level under `data/<namespace>/mxt/` is always the registry name (`artifact/`, `aura/`, …), and categories can only go below it; cramming every file into one registry directory works just as well.
-- **Four registries live under saturn/.** `resource`, `ability`, `trigger` and `incomplete` are registered by the Saturn library, so their registry ids are `saturn:*` and their files go under `data/<namespace>/saturn/<registry>/`. An old pack that writes `mxt:` ids still resolves (the library registers every built-in under the old id as well), but **the directory has to move** - the directory follows the registry key.
+- Name keys use `<registry_namespace>.<registry>.<namespace>.<path>`; description keys append `.description`. Slashes in the entry path remain unchanged.
+- Tags have their own tree (`tags/<registry_namespace>/<registry>/...`) and need not mirror definition subdirectories; tag values still use the full entry ID, including subdirectories.
+- Categories affect entry IDs and readability, not the loading mechanism. The first directory below `data/<namespace>/<registry_namespace>/` is always the registry name; categories go below that.
+- Saturn's `resource`, `ability`, `trigger` and `incomplete` live under `data/<namespace>/saturn/<registry>/`. See the index below for other registries.
 
 Data packs load through the native NeoForge writable registry, and the server syncs it to the client after loading. A definition decodes read-only: do not modify the collections you get out of one at runtime.
 
@@ -44,13 +44,13 @@ The rules shared by every definition are on [Datapack Conventions](./conventions
 | Resources and cultivation | `resource`, `aura`, `element`, `element_reaction`, `realm_stage`, `spirit_root`, `physique`, `technique`, `progression`, `cultivation` |
 | Abilities and rules | `ability`, `curse`, `formation`, `tribulation`, `trigger`, `talisman` |
 | Aura and world | `aura_zone`, `secret_realm`, `block_aura` |
-| Items and quality | `pill`, `pill_binding`, `technique_binding`, `artifact`, `quality`, `item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding`, `tool_binding`, `blueprint_binding` |
-| Alchemy and herbs | `medicinal_property`, `spirit_herb`, `alchemy_furnace`, `alchemy_wall_material`, `heat_source` |
-| Economy and content | `forging_method`, `forging_blueprint`, `creature_profile`, `contract_type` |
+| Items and quality | `pill`, `pill_binding`, `technique_binding`, `artifact`, `quality`, `item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding` |
+| Medicinal properties and heat | `medicinal_property`, `spirit_herb`, `heat_source` |
+| Economy and content | `creature_profile`, `contract_type` |
 
-**Seven item-keyed registries** (`item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding`, `tool_binding`, `blueprint_binding`): all of them except `currency` claim items through `items` (`currency` uses `item`), and **two block-keyed ones** (`block_aura`, `heat_source`) claim blocks through `blocks`; their file layout, field shape and loading rules are exactly those of every other registry, see [JSON Data Formats](./json/index.md).
+**Five item-keyed registries** (`item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding`) use `items`, except `currency`, which uses `item`. `block_aura` and `heat_source` claim blocks through `blocks`. See [JSON Data Formats](./json/index.md) for fields and loading rules.
 
-An alchemy recipe is not a registry: `mxt:alchemy` is a vanilla recipe type whose files live under `data/<namespace>/recipe/`, see [Alchemy Recipe](./json/alchemy_recipe.md).
+Workstation process definitions, recipes and bindings are documented under [Alchemy Workstations](../addons/alchemy/index.md), [Forging Workstations](../addons/forging/index.md) and [Talisman Workstations](../addons/talisman/index.md).
 
 ## Module Pages {#module-pages}
 
@@ -59,17 +59,19 @@ An alchemy recipe is not a registry: `mxt:alchemy` is a vanilla recipe type whos
 - [Aura Environment and Aura Items](./json/aura.md)
 - [Ability, Cost and Condition](../../../library/saturn/data/ability.md)
 - [Item Bindings, Quality and Economy](./json/item_binding.md)
-- [Formations, Forging and Alchemy](./json/formation.md)
+- [Formations](./json/formation.md)
 - [Other Registries](./json/index.md)
 - [Datapack Examples](./examples.md)
 
 ## Loading and Overriding {#loading-and-overriding}
 
-The 43 data pack registries load through the native NeoForge data pack registry system; they are read and validated **while the world loads**, and a read-only snapshot is provided to the client on join through the vanilla synchronisation mechanism. From a file on disk to what the player sees is the path below.
+The core's 34 datapack registries load through the native NeoForge data pack registry system; they are read and validated **while the world loads**, and a read-only snapshot is provided to the client on join through the vanilla synchronisation mechanism. From a file on disk to what the player sees is the path below.
+
+`mxt:heat_source` is provided by the core and works without a workstation addon. Alchemy Workstations adds 2 process registries, and Forging Workstations adds 4; they exist only when the corresponding addon is installed. Drawing and alchemy recipes use the vanilla recipe system. Saturn provides its own shared registries.
 
 ```mermaid
 flowchart TD
-    A["Datapack definition files<br/>one JSON file per entry"] --> B["43 data pack registries<br/>native NeoForge data pack registries"]
+    A["Datapack definition files<br/>one JSON file per entry"] --> B["Datapack registries<br/>native NeoForge data pack registries"]
     B --> C["Read and validated at world load<br/>JSON / references / field validation"]
     C --> D["Decoding fails: the world cannot load<br/>fix that file before entering again"]
     C --> E["neoforge:conditions<br/>an entry whose condition fails never enters the registry"]

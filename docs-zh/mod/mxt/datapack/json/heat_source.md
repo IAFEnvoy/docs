@@ -3,6 +3,10 @@ title: heat_source（供热方块）
 description: 供热方块的温度与升温速度定义：底层正中央那一格放什么，以及整炉炉温上限怎么算。
 ---
 
+:::info 本体通用供热
+`mxt:heat_source`、动态供热接口与热源提示均由 **MiXianTu 本体**统一提供，无需安装工作站附属。下文以 **Alchemy Workstations**（`mxt_alchemy`）的丹炉为使用示例；炉型、炉壁与升温流程由该附属提供。
+:::
+
 # heat_source（供热方块）
 
 <span id="heat_source" />
@@ -58,7 +62,7 @@ data/<namespace>/mxt/heat_source/<条目>.json
 
 ## 炉温上限 {#炉温上限}
 
-整炉实际可设的炉温上限是三者取最低：**这个方块给出的最高温**、18 块炉壁里最低的那个耐温、以及[炉型规格](./alchemy_furnace.md)自己可选的 `max_temperature`。炉壁的耐温见[炉壁材料](./alchemy_wall_material.md)，设定温度与回落速度见[炉型规格](./alchemy_furnace.md)。
+整炉实际可设的炉温上限是三者取最低：**这个方块给出的最高温**、18 块炉壁里最低的那个耐温、以及[炉型规格](../../addons/alchemy/datapack/alchemy_furnace.md)自己可选的 `max_temperature`。炉壁的耐温见[炉壁材料](../../addons/alchemy/datapack/alchemy_wall_material.md)，设定温度与回落速度见[炉型规格](../../addons/alchemy/datapack/alchemy_furnace.md)。
 
 ## 方块自己回答 {#方块自己回答}
 

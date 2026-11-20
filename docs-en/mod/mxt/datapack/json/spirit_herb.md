@@ -146,7 +146,7 @@ The result of that catch-up is **written into the chunk record**, and the herb i
 
 ## Relationship to Other Systems {#relationship-to-other-systems}
 
-- Alchemy: the herb's **fruit** is a material for [alchemy recipes](./alchemy_recipe.md); `main_effects` / `auxiliary_effects` / `catalyst_power` are the power the main, auxiliary and catalyst slots read, and the properties themselves are defined by [medicinal_property](./medicinal_property.md).
+- Alchemy: the herb's **fruit** is a material for [alchemy recipes](../../addons/alchemy/datapack/alchemy_recipe.md); `main_effects` / `auxiliary_effects` / `catalyst_power` are the power the main, auxiliary and catalyst slots read, and the properties themselves are defined by [medicinal_property](./medicinal_property.md).
 - Matching: `mxt:herb_tag` is an entry type of the item matcher, recognising "is this stack that kind of herb's produce" by `element` or `material`, so it can be written anywhere an `ItemMatcher` is accepted. At least one of the two fields must be given, and every field given must hold on the herb.
 - Quality: a spirit herb definition **declares no `quality` field** — it carries no item identity, so there is no definition-identity component on the stack to ask, and this herb's tier defaults to [default_quality](./default_quality.md) by the fruit's item id or `#`-prefixed tag; a herb that writes `quality_by_age` has its tier stamped into layer 1 at harvest, see [Age and Quality](#age-and-quality) and [Which Tier](./quality.md#resolution).
 - Jade: with Jade installed, looking at a herb shows its name, age and whether it is mature.

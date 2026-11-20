@@ -11,7 +11,7 @@ File location: `data/<namespace>/mxt/talisman/<path>.json`
 
 **Purpose**: talisman definitions: the abilities one inscribed talisman carries.
 
-A talisman definition says what happens once it is inscribed onto a carrier: which abilities invoking it grants, how much aura the carrier can hold, and what every invocation pays. **A carrier can also be drawn at the talisman workstation**: a drawing recipe's top-level `talisman` field names one of these definitions by id, and that is what comes out, see [`mxt:talisman_drawing`](./talisman_drawing.md).
+A talisman definition says what happens once it is inscribed onto a carrier: which abilities invoking it grants, how much aura the carrier can hold, and what every invocation pays. **A carrier can also be drawn at the talisman workstation**: a drawing recipe's top-level `talisman` field names one of these definitions by id, and that is what comes out, see [`mxt_talisman:talisman_drawing`](../../addons/talisman/datapack/talisman_drawing.md).
 
 **The effect is dispatched by `type`.** The common fields are only `type` / `condition` / `costs` (plus the carrier's own `capacity`); `type` is a **required** dispatch key, and the effect and its targets live in the fields **it dispatches to**: the four use types are `mxt:self`, `mxt:area`, `mxt:crosshair` and `mxt:thrown`, see [Use Types](#use-types). **The old `abilities` / `durability` / `consume` keys are gone**: writing them is silently ignored (the unknown-key rule), which turns that talisman into one that does nothing, see [Use Types](#use-types) for the migration.
 

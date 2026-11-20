@@ -15,7 +15,7 @@ The mod itself provides framework items, slots, commands and interaction; the ac
 | Look up keybinds, the wheel and paging | [Keys and Wheel](./keys-and-wheel.md) |
 | Place the HUD, read the bars and open the character panel | [HUD and Panels](./hud.md) |
 | Use the Spirit Crafting Table, display stands and Curios slots | [Workstations, Display Stands and Slots](./workstations.md) |
-| Brew pills, draw talismans and refill pigment | [Alchemy and the Brush](./alchemy-and-brush.md) |
+| Brew pills, draw talismans and refill pigment | [Alchemy and the Brush](./brush-and-pigment.md) |
 | Look up the Rift block and the Rift Anchor | [Rifts](./rift.md) |
 | Summon and customize burning meteors | [Meteors](./meteor.md) |
 | Debug or manage gameplay with commands | [Commands](./commands.md) |

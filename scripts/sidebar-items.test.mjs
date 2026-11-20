@@ -59,7 +59,7 @@ for (const locale of ['en', 'zh']) {
     });
     assert.deepEqual(output.map(item => item.customProps.project ?? item.link?.id?.split('/')[1]), [
       'avaritia-reborn', 'dragon-mounts-reforged', 'ice-and-fire-ce', 'mite', 'mxt', 'mobs-banner',
-      'origins', 'origins-js', 'pendulum', 'system', 'tameable',
+      'origins', 'origins-js', 'starting-point-buy', 'system', 'tameable',
     ]);
     for (const item of output) {
       if (item.link?.id === 'mod/mxt/index') continue;
@@ -129,4 +129,26 @@ test('MiXianTu keeps nested definition families and both locales share the same 
   const commands = allItems(en).find(item => item.link?.id === 'mod/mxt/player-guide/commands');
   assert.equal(commands.items[0].id, 'mod/mxt/player-guide/commands/mxt');
   assert.equal(zh.items[1].label, '游玩指南');
+  const addonNames = ['alchemy', 'forging', 'talisman'];
+  assert.deepEqual(zh.items.slice(-4).map(item => item.label), [
+    '炼丹工作站附属', '锻器工作站附属', '画符工作站附属', '工具',
+  ]);
+  assert.deepEqual(en.items.slice(-4).map(item => item.label), [
+    'Alchemy Workstations Addon', 'Forging Workstations Addon', 'Talisman Workstations Addon', 'Tools',
+  ]);
+  for (const sidebar of [en, zh]) {
+    for (const [index, addon] of addonNames.entries()) {
+      const category = sidebar.items.at(index - 4);
+      const prefix = `mod/mxt/addons/${addon}/`;
+      const addonLinks = references(category);
+      assert(addonLinks.length > 1);
+      assert(addonLinks.every(id => id.startsWith(prefix)));
+      assert.deepEqual(new Set(addonLinks), new Set(docs
+        .map(doc => doc.id).filter(id => id.startsWith(prefix) && !id.endsWith('-full'))));
+    }
+    assert([...sidebar.items.slice(0, -4), sidebar.items.at(-1)]
+      .flatMap(references).every(id => !id.startsWith('mod/mxt/addons/')));
+  }
+  const zhDocs = await collect(new URL('../docs-zh/mod/mxt/', import.meta.url));
+  assert.deepEqual(zhDocs.map(doc => doc.id).sort(), docs.map(doc => doc.id).sort());
 });

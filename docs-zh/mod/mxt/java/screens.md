@@ -68,23 +68,13 @@ MyBar bar = HudManager.register(new MyBar());
 
 内容那一侧是 `runtime/artifact/ArtifactStorageContainer`（`SimpleContainer` 子类）：开窗时从承载物的 `mxt:storage` 组件读进来——内容是其中按**这条储物技能自己的 id** 寻址的一条 `mxt:container` 记录（组件 `mxt:artifact_storage` 已删除），之后**每一次改动都在 `setChanged()` 里整份写回**（`ArtifactStorageService#replace`，一次组件更新而不是每格一次）。它**故意不持有那个物品堆**——法器的位置是会变的，往一个没人拿着的栈里写就是物品消失的经典成因：所以每次读写都按"这件法器还在不在玩家身上"重新解析（`ArtifactService#carried` 扫双手、背包与 Curios），`stillValid` 一旦为假，服务端每刻的菜单检查就会把窗口关掉。储物格数由定义给出：**按 9 向上取整、最多 6 行（54 格）**，容量与窗口永远是同一个数。
 
-## 丹炉的四个界面 {#丹炉的四个界面}
-
-四个页面分别由核心、主药仓、辅药仓、产物仓打开，炉壁不打开任何界面。唯一开界面入口是 `AlchemyFurnaceMenus.open(ServerPlayer, BlockPos)`：方块右键时把访问位置交过去，它按那个位置的方块决定页面（核心＝监控、主药仓＝主药、辅药仓＝辅药、产物仓＝产物），别的方块什么都不开。
-
-布局不在 Java 里：四个页面各对应一份随模组发布的 HTML 与共用样式表——`monitor.html`、`main_input.html`、`auxiliary_input.html`、`output.html` 与 `alchemy.css`，由 ApricityUI 渲染，皮肤是随模组发布的扁平半透明深色样式表，文字用游戏自带的字体绘制（页面不写 `font-family`）。Java 只按稳定 ID 抓节点，然后绑状态与事件（**槽位不归它**，见下句），**不手写布局树，也没有备用树**：四个页面都要有 `panel`、`title`、`inventory_label`、`player_inventory`，三个仓页另有 `machine`，监控页**没有 `machine`**（供热是世界里的一格方块）；监控页另有 `temperature`、`limit`、`status`、`progress`（进度条本身是 `progress_fill`）、`target`、`apply`、`start`、`abort`。`machine` 声明这一页的机器槽位数（主药 2、辅药 3、产物 4），`player_inventory` 是 36 格玩家物品栏。缺了哪个必需节点，那一页的页面绑定就整份丢掉、屏幕上一个字都不画，只在日志里留一条 WARN：`Page <name> does not match its contract: <missing piece>`（槽位是 ApricityUI 按菜单布局绑的，不受这条契约影响，所以格子照旧能点）——视觉重排随便改，这些 ID 与这两个容器不能改。槽位归 ApricityUI：页面里的 `<slot>` 按祖先 `<container id>` 与组内 `slot-index` 绑到菜单槽位，`Slot.x/y` 每帧由它写回，物品、悬停高亮、拖拽与槽位提示框也都是它的；Java 这边只剩读面板的实时矩形，喂给屏幕自己的命中判定与 `hasClickedOutside`。**页面不要写 `aui-mouse-events` 这个 meta**，写了点击会被页面吃掉，槽位就点不动了。页面要自己撑满视口做居中时用视口单位（`height: 100vh`）：ApricityUI 里 `body` 的百分比高度不生效，写 `height: 100%` 面板会一直贴着顶边。宿主屏幕在 `extractBackground` 里先画原版那层半透明灰底（`AuiStyles.extract`，就是原版容器界面那块渐变）再交页面；**别调 `super.extractBackground`**——普通 `Screen` 宿主的 `isInGameUi()` 是 false，super 会走「模糊 + 菜单底图」那一支，把已经画好的 HUD 一起糊掉。**唯一的例外是轮盘菜单**：它是边玩边读的，`extractBackground` 保持空的，世界与 HUD 都按原亮度显示。
-
-页面随模组打包在 `assets/apricityui/apricity/mxt/alchemy/` 下，每次打开都直接从资源包读。所以改页面就是改 jar（或资源包）里的那一份：开着热重载时存盘即生效，否则在游戏里按 END 重扫资源、再重开丹炉界面。游戏目录下的 `<gameDir>/apricity/` 只是玩家的覆盖层，同名文件优先于 jar。
-
 ## 其余容器界面 {#其余容器界面}
 
-锻造台、灵气工作台、经济组（交易站顾客与店主两页、兑换站、支票台、玩家交易）与人物信息是同一套：面板、文字、选择格与数值尺都由页面画（`assets/apricityui/apricity/mxt/forging/`、`assets/apricityui/apricity/mxt/spirit_crafting/`、`assets/apricityui/apricity/mxt/economy/`、`assets/apricityui/apricity/mxt/information/`，共用 `assets/apricityui/apricity/mxt/common/theme.css`），槽位由 ApricityUI 绑到菜单槽位上，页面里的 `<slot>` 放在"凹面格"的位置上（物品画在格里的 +1 处，偏移来自 ApricityUI `global.css` 里的 `slot > item`）。这些页面和丹炉一样随模组打包、直接从资源包读，游戏目录里不写任何东西。玩家交易的界面可以在**开发环境**里一个人验收：`/trade` 的目标写自己就直接开一场自己对自己的交易（一个人占两侧、按一次确认即算双方确认），正式环境仍然拒绝。
+灵气工作台、经济组（交易站顾客与店主两页、兑换站、支票台、玩家交易）与人物信息是同一套：面板、文字、选择格与数值尺都由页面画（`assets/apricityui/apricity/mxt/spirit_crafting/`、`assets/apricityui/apricity/mxt/economy/`、`assets/apricityui/apricity/mxt/information/`，共用 `assets/apricityui/apricity/mxt/common/theme.css`），槽位由 ApricityUI 绑到菜单槽位上，页面里的 `<slot>` 放在"凹面格"的位置上（物品画在格里的 +1 处，偏移来自 ApricityUI `global.css` 里的 `slot > item`）。这些页面随模组打包、直接从资源包读，游戏目录里不写任何东西。玩家交易的界面可以在**开发环境**里一个人验收：`/trade` 的目标写自己就直接开一场自己对自己的交易（一个人占两侧、按一次确认即算双方确认），正式环境仍然拒绝。
 
 这几页要自己改时记住三条：**面板不要写 `border`**（页面的定位基准是面板的内容盒，加了边框，页面里每个坐标都会整体偏一点，边框用 `box-shadow: inset` 画）；**别用 `overflow: hidden` 裁内容**（游戏里会画出一块暗色方块）；页面里容器要带 `primary="true"`，否则重复生成的槽位不会展开、槽位序号也不会归一化。人物信息的面板会随窗口缩放，所以它的位置与尺寸不是写死的，而是每次开界面按窗口算出来的；它左上角的两个页签（**人物信息**与**习得功法**）在两页之间切换，两页共用同一块面板，面板上没有单独那行标题。
 
 阵法 `/formation show` 使用内置的 Ponder 界面预览服务端解析的结构。播放、重播、关键帧、视角控制与方块识别由 Ponder 提供，不经过 AUI 页面。客户端无需提供与服务端相同的结构模板资源。
-
-监控页画的是服务端下发的只读读数（`AlchemyStateS2CPayload`，见[网络协议](./network.md)），界面自己不算配方，也不显示丹方名或丹方按钮；温度输入框、开始与终止只是把那三件事发回服务端。页面里的 `player_inventory` 与 `machine` 都是真实槽位，机器槽位与玩家物品栏同在菜单里；监控页没有机器槽。
 
 ## 物品选择器 {#物品选择器}
 

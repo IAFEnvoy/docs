@@ -105,7 +105,7 @@ A stack takes the **first tier it can get**, in this order:
 
 Layer 2 answers for "several definitions of a type share one built-in item, so the item cannot say which tier applies": technique manuals, pills, furnace specifications, spirit-root stones and physique stones each share one built-in item, and nine definitions declare `quality` themselves. The list and the carrier component of each are on [quality](../datapack/json/quality.md).
 
-The component holds a **whole quality object**, so it decides both the tier and the ladder it belongs to: `example:common` puts that pill on `example:pill`. Binding tables declare no quality, so do not write a ladder into a binding. The forging record `mxt:forging_result` keeps only the blueprint id and the step counts and **never a tier**. This pill is an ordinary KubeJS-registered item with no component on it that names a definition, so only layers 1 and 3 can answer for it. When none of the three layers answers, the pill simply **has no quality** and no ladder's entry tier is supplied for it.
+The component holds a **whole quality object**, so it decides both the tier and the ladder it belongs to: `example:common` puts that pill on `example:pill`. Binding tables declare no quality, so do not write a ladder into a binding. The forging record `mxt_forging:forging_result` keeps only the blueprint id and the step counts and **never a tier**. This pill is an ordinary KubeJS-registered item with no component on it that names a definition, so only layers 1 and 3 can answer for it. When none of the three layers answers, the pill simply **has no quality** and no ladder's entry tier is supplied for it.
 
 | Command | What it does |
 | --- | --- |

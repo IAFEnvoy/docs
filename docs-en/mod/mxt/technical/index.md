@@ -22,7 +22,7 @@ It answers a different question from the other two categories:
 | Article | Contents |
 | --- | --- |
 | [Data Loading](./data-loading.md) | What one JSON file passes through on its way to a settlement: what the content and binding layers are, the four outcomes of decoding, where a world load and a `/reload` align the caches, where cross-entry validation reports, and why a component overrides a declaration. |
-| [Data Components](./data-components.md) | All 33 item data components the mod registers, one by one: what each holds, who writes it, who reads it, and which ones take part in "which declaration applies" rather than only holding state. |
+| [Data Components](./data-components.md) | The core item data components, one by one: what each holds, who writes it, who reads it, and which ones take part in "which declaration applies" rather than only holding state. |
 | [Attachments](./attachments.md) | All 30 attachments the mod registers, one by one: whether each hangs on an entity, a chunk or a level, the three sync tiers (saves, syncs, follows through death), how a dirty flag reaches the client, and how "one per module" is decided. |
 | [Damage System](./damage.md) | The full path from a strike being dealt to a target losing health: why outgoing and incoming damage have to be settled in two different places, how element relations take part, which damage-dealing paths were folded into the pipeline, and the real order of operations behind a combat number. |
 | [Foe Identification](./identification.md) | How "does this entity count as mine" is answered: where the lists live, how the relation event overrides them, who answers for an offline player, how team mods plug in, and which callers ask the question today. |
@@ -30,7 +30,7 @@ It answers a different question from the other two categories:
 | [Tick Task Dispatcher](./tick-dispatcher.md) | How due queues, random intervals, count budgets and their switch work, including callback changes, clock jumps, failure reports and block-cache integration boundaries. |
 | [Ability Casting](./ability.md) | What one cast passes through and in what order, the difference between a wheel key and a direct cast, where an ability's state is kept and how content writes and reads it — the six kinds, cooldown and charges, and what clearing a grant does. |
 | [Cost](./cost.md) | How one payment goes from "what must be paid" to the real deduction: why the amount is bound while pricing, why one store should only be written by one entry, why the ledger-and-shares design was deleted (it produced four kinds of defect that charge the wrong amount), and what the current shape still costs (no rollback, an opaque script, no shared slot plan). |
-| [Talisman Scoring](./talisman-scoring.md) | How a traced drawing becomes a completion between 0 and 1: the scoring parameters, each of steps 0 to 7 with its formulas, why shape is an F1, why translation and scale are not judged while rotation is, the numbers the probe legs measured with two known deviations, and what server authority and point-by-point reconciliation do and do not stop. |
+| [Talisman Scoring](../addons/talisman/technical/talisman-scoring.md) | How a traced drawing becomes a completion between 0 and 1: the scoring parameters, each of steps 0 to 7 with its formulas, why shape is an F1, why translation and scale are not judged while rotation is, the numbers the probe legs measured with two known deviations, and what server authority and point-by-point reconciliation do and do not stop. |
 
 ## Source Map {#source-map}
 

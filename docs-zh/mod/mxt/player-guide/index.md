@@ -15,7 +15,7 @@ description: 本体提供的框架级物品、Curios 槽位、快捷键、HUD �
 | 查按键、轮盘与翻页 | [按键与轮盘](./keys-and-wheel.md) |
 | 摆 HUD、看资源条与人物面板 | [HUD 与面板](./hud.md) |
 | 用灵气工作台、展示架与 Curios 槽位 | [工作台、展示架与槽位](./workstations.md) |
-| 炼丹、画符与颜料 | [炼丹与符笔](./alchemy-and-brush.md) |
+| 炼丹、画符与颜料 | [炼丹与符笔](./brush-and-pigment.md) |
 | 查裂隙方块与裂隙锚的用法 | [裂隙](./rift.md) |
 | 召唤与调整燃烧流星 | [流星](./meteor.md) |
 | 用命令调试或管理玩法 | [命令](./commands.md) |

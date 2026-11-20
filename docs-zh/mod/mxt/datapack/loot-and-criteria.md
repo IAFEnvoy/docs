@@ -18,13 +18,12 @@ description: MiXianTu 提供的战利品函数、战利品条件与进度准则�
 
 ## 进度准则 {#进度准则}
 
-四种准则形状相同：一个可选的 `definition` 过滤器，加上标准的原版玩家谓词。准则写在 `criteria` 段的 `trigger` 里，`conditions` 就是下面两个字段。
+以下准则形状相同：一个可选的 `definition` 过滤器，加上标准的原版玩家谓词。准则写在 `criteria` 段的 `trigger` 里，`conditions` 就是下面两个字段。
 
 | 准则 | 触发时机 | `definition` 的取值 |
 | --- | --- | --- |
 | `mxt:breakthrough` | 一次突破成功 | 所达到的境界阶段 |
 | `saturn:ability` | 一次施法提交完成 | 该技能 |
-| `mxt:alchemy` | 一批炼丹完成 | 该配方 |
 | `mxt:tribulation` | 一次天劫成功完成 | 该天劫 |
 
 | 字段 | 类型 | 默认 | 说明 |
@@ -47,6 +46,8 @@ description: MiXianTu 提供的战利品函数、战利品条件与进度准则�
   "requirements": [["foundation"]]
 }
 ```
+
+炼丹完成准则见[炼丹工作站附属](../addons/alchemy/datapack/alchemy_recipe.md#advancement)。
 
 ## 战利品条件 {#战利品条件}
 

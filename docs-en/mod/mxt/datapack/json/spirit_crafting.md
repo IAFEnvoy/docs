@@ -18,7 +18,7 @@ Spirit crafting recipes are ordinary recipe files, so they go in `data/<namespac
 The type is written in the file itself: `"type": "mxt:spirit_shaped"` or `"type": "mxt:spirit_shapeless"`.
 
 :::warning Spirit crafting and alchemy are separate tracks
-The table only accepts the two types above. `mxt:alchemy` recipes never run here, and whatever is in the table never enters the alchemy flow — nothing converts between the two.
+The table only accepts the two types above. `mxt_alchemy:alchemy` recipes never run here, and whatever is in the table never enters the alchemy flow — nothing converts between the two.
 :::
 
 ## Recipe Types {#recipe-types}

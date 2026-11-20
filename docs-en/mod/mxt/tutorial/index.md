@@ -1,6 +1,6 @@
 ---
 title: Tutorials
-description: "Step-by-step walkthroughs that build a small MiXianTu content pack: aura and realms, element reactions, the aura environment, items and bindings, abilities and sword auras, costs and quality, formations, secret realms, talismans and their formulas, tribulations, forging, alchemy, contracts and currency."
+description: "Step-by-step walkthroughs that build a small MiXianTu content pack: aura and realms, element reactions, the aura environment, items and bindings, abilities and sword auras, costs and quality, formations, secret realms, talismans, tribulations, contracts and currency."
 ---
 
 # Tutorials
@@ -17,13 +17,23 @@ Every tutorial extends the same small content pack in the `example` namespace. T
 
 ```text
 data/example/
+├── saturn/
+│   ├── resource/qi.json                     The stored value
+│   ├── resource/azure_mastery.json          Mastery of a technique, a plain value
+│   ├── ability/qi_bolt.json                 An active ability
+│   ├── ability/qi_recovery.json             A triggered ability
+│   ├── ability/spark.json                   An ability a talisman inscribes
+│   ├── ability/sword_aura.json              The ability that launches a sword aura
+│   ├── ability/blade_storage.json           A storage ability: slots and cooldown
+│   ├── ability/azure_sword_mount.json       The vehicle: speed, seats, fuel, looks
+│   ├── ability/azure_sword_flight.json      The flying skill: which hand, and its own price
+│   ├── trigger/azure_mastery_from_kill.json  A kill raises mastery
+│   └── trigger/azure_mastery_signal.json    A signal of your own raises it too
 ├── mxt/
 │   ├── element/common.json                  Element named by the qi aura
 │   ├── element/fire.json                    Element for the fire spirit root
 │   ├── element/water.json                   The second element a reaction needs
 │   ├── element_reaction/steam_burst.json     What happens once both attachments add up
-│   ├── resource/qi.json                     The stored value
-│   ├── resource/azure_mastery.json          Mastery of a technique, a plain value
 │   ├── aura/qi.json                         The aura the value carries, and its realm chain entry
 │   ├── realm_stage/qi_condensation.json     Realm chain
 │   ├── realm_stage/foundation.json
@@ -39,14 +49,7 @@ data/example/
 │   ├── progression/azure_breath_2.json
 │   ├── progression/azure_breath_3.json
 │   ├── technique/azure_breath.json
-│   ├── ability/qi_bolt.json                 An active ability
-│   ├── ability/qi_recovery.json             A triggered ability
-│   ├── ability/spark.json                   An ability a talisman inscribes
-│   ├── ability/sword_aura.json              The ability that launches a sword aura
-│   ├── ability/blade_storage.json           A storage ability: slots and cooldown
 │   ├── artifact/blade_sheath.json           Claims an item and hangs the storage ability on it
-│   ├── ability/azure_sword_mount.json       The vehicle: speed, seats, fuel, looks
-│   ├── ability/azure_sword_flight.json      The flying skill: which hand, and its own price
 │   ├── artifact/azure_sword.json            Claims the sword and declares the vehicle on it
 │   ├── curse/qi_backlash.json               A timed curse: on_apply, per-tick, stacking
 │   ├── talisman/flame_sigil.json            The talisman: abilities + capacity + costs
@@ -54,11 +57,6 @@ data/example/
 │   ├── formation/ward_array.json            Protection + attack modules
 │   ├── secret_realm/trial_realm.json      A pocket world template
 │   ├── tribulation/heavenly_gate.json       The trial a breakthrough starts
-│   ├── forging_method/light_strike.json     One strike: meter shift, cost, cooldown
-│   ├── forging_method/heavy_strike.json
-│   ├── forging_method/quench.json           A strike that only moves the meter down
-│   ├── forging_method/temper.json           A strike that only moves it up
-│   ├── forging_blueprint/spirit_sword.json  Materials, target band, quality ladder
 │   ├── quality/common.json             Quality tiers: chain identity, next tier, step cost
 │   ├── quality/refined.json
 │   ├── quality/flawless.json
@@ -67,16 +65,12 @@ data/example/
 │   ├── spirit_herb/herb_a.json              Main herb, auxiliary herb and catalyst
 │   ├── spirit_herb/herb_c.json
 │   ├── spirit_herb/herb_d.json
-│   ├── alchemy_furnace/basic.json           Furnace specification: slots, capacity, cooling
-│   ├── alchemy_wall_material/basic_wall.json  How hot one wall block may get
 │   ├── heat_source/magma_block.json         What a heating block supplies
 │   ├── pill/qi_pill.json                   What the pill does: dose action, toxicity, overdose
 │   ├── pill_binding/qi_pill.json            Which items are that pill, and their cap and cooldown
 │   ├── pill/warming_pill.json               A second pill
 │   ├── pill_binding/warming_pill.json
 │   ├── technique_binding/azure_manual.json
-│   ├── trigger/azure_mastery_from_kill.json  A kill raises mastery
-│   ├── trigger/azure_mastery_signal.json    A signal of your own raises it too
 │   ├── contract_type/spirit_familiar.json   Conditions, costs and caps for one beast
 │   ├── creature_profile/spirit_beast.json   The beast's own mastery chain
 │   ├── currency/spirit_coin.json            An item that is money, and what it exchanges for
@@ -84,10 +78,7 @@ data/example/
 │   ├── item_binding/qi_pill.json            Rules attached to real items
 │   ├── item_binding/root_pellet.json
 │   ├── weapon_binding/spirit_sword.json     Weapon attributes and the three combat hooks
-│   ├── tool_binding/smith_hammer.json       Which methods a tool item unlocks
-│   ├── blueprint_binding/sword_manual.json  Which blueprints a blueprint item offers
 │   └── block_aura/spirit_stone_ore.json     Blocks that emit aura
-├── recipe/talisman/flame_sigil.json         The formula the drawing workstation shows
 ├── tags/entity_type/contract/spirit_familiar.json  Narrows which entities it accepts
 └── (kubejs/startup_scripts/mxt_items.js)    The items themselves, registered by KubeJS
     (kubejs/server_scripts/mxt_costs.js)     A cost only a script can answer
@@ -115,17 +106,16 @@ data/example/
 | [Define a Formation](./define-a-formation.md) | An array that activates on a structure and pays upkeep every period: buff, aura-zone, attack and protection modules, plus the plate. | You want the player to build something that keeps running. |
 | [Define a Secret Realm](./open-a-realm.md) | A pocket-world template that opens separate instance dimensions: generation, border, landing points, claiming and lifetime. | You want a throwaway or claimable little world. |
 | [Define a Talisman](./inscribe-a-talisman.md) | Carrying abilities on an item, pouring aura into it, firing it, and the two rule sets for the hand and a display stand. | You want magic the player can carry around. |
-| [Write a Drawing Recipe](./author-a-talisman-drawing.md) | The formula the drawing workstation shows: the shape, how it is judged, and which grade its completion hits. | You want the manual inscribing route in your own content pack. |
 | [Define a Tribulation](./bring-down-a-tribulation.md) | A tribulation timeline a breakthrough starts: wind-up, beats, coloured lightning, and what success and failure do. | You want a breakthrough to be dangerous. |
 | [Define a Curse](./define-a-curse.md) | A curse that fires on a timer or a signal, stacks, and can be cleansed. | You want a state that keeps coming back on the player. |
-| [Forge a Treasure](./forge-a-treasure.md) | A forge-table line that runs end to end: methods, tool bindings, a blueprint item, plus the meter, target range, finish pattern, quality ladder and failure settlement. | You want the player to *hammer* an item out rather than craft it. |
-| [Refine a Pill](./refine-a-pill.md) | Hand-build a 3×3×3 furnace, write a recipe that settles on the actual medicinal properties, and heat it into the target range with a heat block. | You want to make pills and heat blocks of your own. |
 | [Contract a Beast](./contract-a-beast.md) | A contract type: who may sign, what it costs, the two caps, the orders, recall and the bag. | You want to take another mod's beasts as your own. |
 | [Define a Currency](./define-a-currency.md) | Turning an item into money: its value, when a stack is not worth anything, and the exchange entries the station uses. | You want items to really work as money. |
 | [Storage and Spirit Vessels](./storage-and-spirit-vessels.md) | The shape and the limits of the spirit vessel, plus the two sub-tutorials hanging under it. | You want an item to hold things, or to fly. |
 | [Storage](./storage.md) | A storage ability hung on an item: how the slot count settles, where the box lives, how to pre-fill it. | You want an item to hold things. |
 | [Flying Mounts](./flying-mount.md) | An item that flies: the mount definition, the flying skill, take-off and landing, and the two aura fuel bills. | You want the player to ride a flying sword. |
 | [Rifts](./rifts.md) | Rifts raised with a block and commands: target dimension, colour, links and landing. | You want a road of your own between dimensions. |
+
+Workstation tutorials live under [Alchemy Workstations](../addons/alchemy/tutorial/refine-a-pill.md), [Forging Workstations](../addons/forging/tutorial/forge-a-treasure.md) and [Talisman Workstations](../addons/talisman/tutorial/author-a-talisman-drawing.md), and require their respective addons.
 
 ## Conventions {#conventions}
 

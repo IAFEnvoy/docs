@@ -10,7 +10,7 @@ title: talisman（符箓）
 
 **用途**：符箓定义：一张符箓**怎么被使用**（使用类型 + 目标 + 动作）。
 
-一张符箓的定义写的是：铭刻到载体上之后，激发它**做什么、对谁做**、载体能存下多少灵气、每次发动要付什么。**载体也可以由画符工作站画出来**：符方 `mxt:talisman_drawing` 在顶层用 `talisman` 字段按 id 点名这里的一份定义，画出来的就是它，见 [`mxt:talisman_drawing`](./talisman_drawing.md)。
+一张符箓的定义写的是：铭刻到载体上之后，激发它**做什么、对谁做**、载体能存下多少灵气、每次发动要付什么。**载体也可以由画符工作站画出来**：符方 `mxt_talisman:talisman_drawing` 在顶层用 `talisman` 字段按 id 点名这里的一份定义，画出来的就是它，见 [`mxt_talisman:talisman_drawing`](../../addons/talisman/datapack/talisman_drawing.md)。
 
 **效果由 `type` 分派。** 公共字段只有 `type` / `condition` / `costs`（外加载体自己的 `capacity`）；`type` 是**必填**的分派键，效果与目标写在**它分派出来的字段**里：四种使用类型是 `mxt:self`（自己身上使用）、`mxt:area`（范围使用）、`mxt:crosshair`（准星对准使用）与 `mxt:thrown`（丢掷使用），见[使用类型](#usage-types)。**旧的 `abilities` / `durability` / `consume` 三个键已作废**：写了会被静默忽略（按未知键口径），那条符就成了没有效果的符，迁移见[使用类型](#usage-types)。
 

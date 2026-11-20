@@ -45,15 +45,13 @@ Editing a startup script needs a **game restart**: startup scripts run before th
 
 ## Attaching Rules with Registries and Binding Tables {#attaching-rules-with-registries-and-binding-tables}
 
-MiXianTu owns behaviour, conditions, aura, currency and tooltips; these tables connect a registered item to those rules. All six tables are **data pack registries**: one file is one definition, it lives at `kubejs/data/<namespace>/mxt/<table>/<entry>.json`, and an entry claims its items through `items`. All six tables only reference items that KubeJS, vanilla or another mod has already registered:
+MiXianTu owns behaviour, conditions, aura, currency and tooltips; these tables connect a registered item to those rules. All four tables are **data pack registries**: one file is one definition, it lives at `kubejs/data/<namespace>/mxt/<table>/<entry>.json`, and an entry claims its items through `items`. All four tables only reference items that KubeJS, vanilla or another mod has already registered:
 
 | Table | File | Attaches |
 | --- | --- | --- |
 | Item binding | `mxt/item_binding/<entry>.json` | Ordered entity actions and tooltip conditions for any item. |
 | Weapon binding | `mxt/weapon_binding/<entry>.json` | Vanilla attribute modifiers (attack damage and speed go here too), weapon actions. |
 | Pill binding | `mxt/pill_binding/<entry>.json` | Claims this family of registered items as one pill and gives it a use cap and cooldown; what a dose does is in [Pill](../datapack/json/pill.md). |
-| Tool binding | `mxt/tool_binding/<entry>.json` | Claims tool items and lists the forging methods they unlock. |
-| Blueprint binding | `mxt/blueprint_binding/<entry>.json` | Claims blueprint items and lists the forging blueprints they offer. |
 | Technique binding | `mxt/technique_binding/<entry>.json` | Which items are one technique's manual, the item the mod generates as its carrier, and the conditions that gate learning. A manual's identity is the stack's `mxt:technique` component; `items` is the optional second route. |
 
 Bind a pill that grants a spirit root:
@@ -115,7 +113,9 @@ Bind a cultivation technique to its carrier item:
 }
 ```
 
-All six tables are **registries** whose entries claim their items through `items`: write an item id, a `#`-prefixed item tag, or a typed matcher entry, so one definition can cover a whole family of items. A `technique_binding` declaration is matched by technique id, and its `items` is the optional second route: what makes a stack a manual is its own `mxt:technique` component, and only without one does the `items` of a declaration decide — so the item above can either be handed out as the generated carrier from `/picker mxt:technique`, or its id can be written into the declaration's `items` directly. None of these tables **declares a quality ladder**: the ladder's name is written on the `quality` entry itself (that tier's `quality`), so an item sits on whichever ladder its resolved tier belongs to, see [quality](../datapack/json/quality.md). When the `items` of one of these tables names an item ID that does not exist, the data pack fails to load, so no unresolvable item rule is created. The full field list of each table is in [Item Binding](../datapack/json/item_binding.md), [Weapon Binding](../datapack/json/weapon_binding.md), [Pill](../datapack/json/pill.md), [Pill Binding](../datapack/json/pill_binding.md), [Tool Binding](../datapack/json/tool_binding.md), [Blueprint Binding](../datapack/json/blueprint_binding.md) and [Technique Binding](../datapack/json/technique_binding.md).
+All four tables are **registries** whose entries claim their items through `items`: write an item id, a `#`-prefixed item tag, or a typed matcher entry, so one definition can cover a whole family of items. A `technique_binding` declaration is matched by technique id, and its `items` is the optional second route: what makes a stack a manual is its own `mxt:technique` component, and only without one does the `items` of a declaration decide — so the item above can either be handed out as the generated carrier from `/picker mxt:technique`, or its id can be written into the declaration's `items` directly. None of these tables **declares a quality ladder**: the ladder's name is written on the `quality` entry itself (that tier's `quality`), so an item sits on whichever ladder its resolved tier belongs to, see [quality](../datapack/json/quality.md). When the `items` of one of these tables names an item ID that does not exist, the data pack fails to load, so no unresolvable item rule is created. The full field list of each table is in [Item Binding](../datapack/json/item_binding.md), [Weapon Binding](../datapack/json/weapon_binding.md), [Pill](../datapack/json/pill.md), [Pill Binding](../datapack/json/pill_binding.md) and [Technique Binding](../datapack/json/technique_binding.md).
+
+Forging tool and blueprint bindings belong to the [Forging Workstations addon](../addons/forging/kubejs.md).
 
 ## Reloading {#reloading}
 

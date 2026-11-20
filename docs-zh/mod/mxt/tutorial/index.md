@@ -1,6 +1,6 @@
 ---
 title: 教程
-description: "一步步搭建一个小型 MiXianTu 内容包：灵气与境界、元素反应、灵气环境、物品与绑定、技能与剑气、代价与品质、阵法、秘境、符箓与符方、天劫、锻造、炼丹、契约与货币。"
+description: "一步步搭建一个小型 MiXianTu 内容包：灵气与境界、元素反应、灵气环境、物品与绑定、技能与剑气、代价与品质、阵法、秘境、符箓、天劫、契约与货币。"
 ---
 
 # 教程
@@ -17,13 +17,23 @@ description: "一步步搭建一个小型 MiXianTu 内容包：灵气与境界�
 
 ```text
 data/example/
+├── saturn/
+│   ├── resource/qi.json                     The stored value
+│   ├── resource/azure_mastery.json          Mastery of a technique, a plain value
+│   ├── ability/qi_bolt.json                 An active ability
+│   ├── ability/qi_recovery.json             A triggered ability
+│   ├── ability/spark.json                   An ability a talisman inscribes
+│   ├── ability/sword_aura.json              The ability that launches a sword aura
+│   ├── ability/blade_storage.json           A storage ability: slots and cooldown
+│   ├── ability/azure_sword_mount.json       The vehicle: speed, seats, fuel, looks
+│   ├── ability/azure_sword_flight.json      The flying skill: which hand, and its own price
+│   ├── trigger/azure_mastery_from_kill.json  A kill raises mastery
+│   └── trigger/azure_mastery_signal.json    A signal of your own raises it too
 ├── mxt/
 │   ├── element/common.json                  Element named by the qi aura
 │   ├── element/fire.json                    Element for the fire spirit root
 │   ├── element/water.json                   The second element a reaction needs
 │   ├── element_reaction/steam_burst.json     What happens once both attachments add up
-│   ├── resource/qi.json                     The stored value
-│   ├── resource/azure_mastery.json          Mastery of a technique, a plain value
 │   ├── aura/qi.json                         The aura the value carries, and its realm chain entry
 │   ├── realm_stage/qi_condensation.json     Realm chain
 │   ├── realm_stage/foundation.json
@@ -39,14 +49,7 @@ data/example/
 │   ├── progression/azure_breath_2.json
 │   ├── progression/azure_breath_3.json
 │   ├── technique/azure_breath.json
-│   ├── ability/qi_bolt.json                 An active ability
-│   ├── ability/qi_recovery.json             A triggered ability
-│   ├── ability/spark.json                   An ability a talisman inscribes
-│   ├── ability/sword_aura.json              The ability that launches a sword aura
-│   ├── ability/blade_storage.json           A storage ability: slots and cooldown
 │   ├── artifact/blade_sheath.json           Claims an item and hangs the storage ability on it
-│   ├── ability/azure_sword_mount.json       The vehicle: speed, seats, fuel, looks
-│   ├── ability/azure_sword_flight.json      The flying skill: which hand, and its own price
 │   ├── artifact/azure_sword.json            Claims the sword and declares the vehicle on it
 │   ├── curse/qi_backlash.json               A timed curse: on_apply, per-tick, stacking
 │   ├── talisman/flame_sigil.json            The talisman: abilities + capacity + costs
@@ -54,11 +57,6 @@ data/example/
 │   ├── formation/ward_array.json            Protection + attack modules
 │   ├── secret_realm/trial_realm.json      A pocket world template
 │   ├── tribulation/heavenly_gate.json       The trial a breakthrough starts
-│   ├── forging_method/light_strike.json     One strike: meter shift, cost, cooldown
-│   ├── forging_method/heavy_strike.json
-│   ├── forging_method/quench.json           A strike that only moves the meter down
-│   ├── forging_method/temper.json           A strike that only moves it up
-│   ├── forging_blueprint/spirit_sword.json  Materials, target band, quality ladder
 │   ├── quality/common.json             Quality tiers: chain identity, next tier, step cost
 │   ├── quality/refined.json
 │   ├── quality/flawless.json
@@ -67,16 +65,12 @@ data/example/
 │   ├── spirit_herb/herb_a.json              Main herb, auxiliary herb and catalyst
 │   ├── spirit_herb/herb_c.json
 │   ├── spirit_herb/herb_d.json
-│   ├── alchemy_furnace/basic.json           Furnace specification: slots, capacity, cooling
-│   ├── alchemy_wall_material/basic_wall.json  How hot one wall block may get
 │   ├── heat_source/magma_block.json         What a heating block supplies
 │   ├── pill/qi_pill.json                   What the pill does: dose action, toxicity, overdose
 │   ├── pill_binding/qi_pill.json            Which items are that pill, and their cap and cooldown
 │   ├── pill/warming_pill.json               A second pill
 │   ├── pill_binding/warming_pill.json
 │   ├── technique_binding/azure_manual.json
-│   ├── trigger/azure_mastery_from_kill.json  A kill raises mastery
-│   ├── trigger/azure_mastery_signal.json    A signal of your own raises it too
 │   ├── contract_type/spirit_familiar.json   Conditions, costs and caps for one beast
 │   ├── creature_profile/spirit_beast.json   The beast's own mastery chain
 │   ├── currency/spirit_coin.json            An item that is money, and what it exchanges for
@@ -84,10 +78,7 @@ data/example/
 │   ├── item_binding/qi_pill.json            Rules attached to real items
 │   ├── item_binding/root_pellet.json
 │   ├── weapon_binding/spirit_sword.json     Weapon attributes and the three combat hooks
-│   ├── tool_binding/smith_hammer.json       Which methods a tool item unlocks
-│   ├── blueprint_binding/sword_manual.json  Which blueprints a blueprint item offers
 │   └── block_aura/spirit_stone_ore.json     Blocks that emit aura
-├── recipe/talisman/flame_sigil.json         The formula the drawing workstation shows
 ├── tags/entity_type/contract/spirit_familiar.json  Narrows which entities it accepts
 └── (kubejs/startup_scripts/mxt_items.js)    The items themselves, registered by KubeJS
     (kubejs/server_scripts/mxt_costs.js)     A cost only a script can answer
@@ -115,17 +106,16 @@ data/example/
 | [定义阵法](./define-a-formation.md) | 一座按结构激活、每周期收维持费的阵法：增益、灵气域、攻击与守御模块，以及阵盘。 | 想让玩家搭出会运转的东西时。 |
 | [定义秘境](./open-a-realm.md) | 一份能开出独立实例维度的秘境模板：生成、边界、落点、认领与时限。 | 想要一次性或可认领的小世界时。 |
 | [定义符箓](./inscribe-a-talisman.md) | 把技能铭刻到载体上、灌注灵气、右键发动，以及手持与展示架的两套规则。 | 想让法术能被带在身上时。 |
-| [编写画符配方](./author-a-talisman-drawing.md) | 画符工作站里展示的那张符方：符形怎么画、判分看什么、完成度命中的档位与产出。 | 想把"铭刻"那条手工路接进自己的内容包时。 |
 | [定义天劫](./bring-down-a-tribulation.md) | 一条突破时启动的天劫时间线：前摇、节拍、带颜色的雷击与成败结果。 | 想让突破有风险时。 |
 | [定义诅咒](./define-a-curse.md) | 一条按时间或信号发作、可以叠层、可以解毒的诅咒。 | 想给玩家一个会持续发作的状态时。 |
-| [锻造法器](./forge-a-treasure.md) | 一条能跑通的锻造产线：手法、工具绑定、图纸物品，以及锻打条、目标区间、收尾模式、品质阶梯与失败结算。 | 想让玩家把东西"打"出来，而不是合成出来时。 |
-| [炼制丹药](./refine-a-pill.md) | 手搭一座 3×3×3 部件丹炉，写一条按药性判定的丹方，用供热方块把炉温升到目标区间并收下成品。 | 想自己造丹药与热源方块时。 |
 | [契约灵兽](./contract-a-beast.md) | 一份契约类型：谁签得了、代价多少、两个上限、几条命令，以及召回与灵兽袋。 | 想把别的模组的兽收成自己的时。 |
 | [定义货币](./define-a-currency.md) | 把物品定义成货币：面值、什么时候这一栈不算钱、兑换条目，以及兑换站怎么用它。 | 想让物品真的能当钱花时。 |
 | [储物与灵器](./storage-and-spirit-vessels.md) | 灵力容器那件东西的形状与边界，以及挂在它下面的两篇子教程。 | 想让物品能装东西、或者想让它能飞时。 |
 | [储物](./storage.md) | 一条挂在物品上的储物技能：格数怎么算、箱子存在哪、怎么预填。 | 想让物品能装东西时。 |
 | [飞行法器](./flying-mount.md) | 一件会飞的物品：载具定义、御器之术、起剑落地与灵气燃料的两笔账。 | 想让玩家御剑飞行时。 |
 | [裂隙](./rifts.md) | 用方块与命令架起会传送的裂隙：目标维度、颜色、连通与落点。 | 想在维度之间开一条自己的路时。 |
+
+工作站工艺教程分别收在[炼丹工作站附属](../addons/alchemy/tutorial/refine-a-pill.md)、[锻器工作站附属](../addons/forging/tutorial/forge-a-treasure.md)和[画符工作站附属](../addons/talisman/tutorial/author-a-talisman-drawing.md)目录中，需要对应附属。
 
 ## 约定 {#约定}
 

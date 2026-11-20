@@ -14,7 +14,7 @@ This page follows **one JSON file from disk to the object a settlement reads**: 
 | Class | Responsibility |
 | --- | --- |
 | `registry.MxtResourceKeys` | The `ResourceKey` of every table, kept apart from the registry instances and the registration events so codecs and runtime services can read registry identity without depending on a registration class. |
-| `registry.MxtDatapackRegistries` | Registration and the single reading entry point for the 40 datapack registries; nine of them claim their entries through the item key (`items`, or `item` on `currency`) or the block key (`blocks`). It holds **no snapshot**, because reloading and client synchronisation belong to the vanilla registry system. |
+| `registry.MxtDatapackRegistries` | Shared registration and reading for the core's 34 datapack registries and installed workstation addons; nine of them claim their entries through the item key (`items`, or `item` on `currency`) or the block key (`blocks`). It holds **no snapshot**, because reloading and client synchronisation belong to the vanilla registry system. |
 | `registry.MxtRegistries` | The `DeferredRegister`s of the built-in registries: the `type` dispatch layer (actions, conditions, costs, ability types, …). |
 | `registry.MxtDataComponents` | Registration of the item data components; each one declares a persistent codec and a network codec. |
 | `runtime.ServerCache` | The one rebuild point after a world load or `/reload`: cross-entry indexes plus the validation report. |
@@ -32,10 +32,10 @@ The registries are split by **the question they answer** into two layers; nine m
 | --- | --- | --- |
 | Content | `artifact`, `spirit_herb` | "What this item **is**". The definition itself is that thing (its registry id is its name), and it claims a set of items as its carriers. |
 | Content | `resource`, `aura`, `realm_stage`, `element`, `spirit_root`, `physique`, `ability`, `technique`, `quality`, `formation`, `talisman`, `pill` and the rest | Other definitions refer to them by id; they claim no items. |
-| Binding | `item_binding`, `weapon_binding`, `tool_binding`, `blueprint_binding`, `pill_binding`, `technique_binding` | "What this **already existing** item also counts as here", and which rules it picks up. |
+| Binding | `item_binding`, `weapon_binding`, `pill_binding`, `technique_binding` | "What this **already existing** item also counts as here", and which rules it picks up. |
 | Binding | `item_aura`, `currency`, `default_quality` (item-keyed), `block_aura`, `heat_source` (block-keyed) | "What value **this one** entry carries": the value the item or block itself holds. |
 
-The binding-layer tables share one shape: one file is one definition, files live at `data/<namespace>/mxt/<table>/<entry>.json`, an entry claims its items and blocks through the item key (`items`, or `item` on `currency`) or the block key (`blocks`), and `priority` decides who wins when several hit at once - the larger number wins, and a tie falls back to registry order (`block_aura` has no such field: several definitions hitting one block all apply and add up). None of them **ever defines the item itself**: the physical item was registered by vanilla, a mod or KubeJS, and the binding layer only attaches rules to it - an `ItemStack` **never stores a logical item definition**, only components.
+The binding-layer tables share one shape: one file is one definition, files live at `data/<namespace>/<registry_namespace>/<table>/<entry>.json`, an entry claims its items and blocks through the item key (`items`, or `item` on `currency`) or the block key (`blocks`), and `priority` decides who wins when several hit at once - the larger number wins, and a tie falls back to registry order (`block_aura` has no such field: several definitions hitting one block all apply and add up). None of them **ever defines the item itself**: the physical item was registered by vanilla, a mod or KubeJS, and the binding layer only attaches rules to it - an `ItemStack` **never stores a logical item definition**, only components.
 
 The difference between the content and binding layers is not "does it read an item" (the two content tables claim items through the same matcher), it is **whether it defines a thing or a rule**: an `artifact` says "these items are artifacts and here is what they do", while a `weapon_binding` says "when this item swings, run this behaviour too". So one item may be claimed by an `artifact`, carry a `weapon_binding` and pick up an `item_binding` after-use behaviour at the same time.
 
@@ -47,8 +47,6 @@ What each binding-layer table adds:
 | `weapon_binding` | Attack / use / per-tick actions, plus `attributes` written into the stack's `ATTRIBUTE_MODIFIERS` | On attack, on use, refreshed every tick |
 | `pill_binding` | Which pill this item family is, plus its own use cap and cooldown | On a dose (gate and count) |
 | `technique_binding` | Which technique the item counts as a manual of, and the conditions that gate learning it | When a technique is read |
-| `tool_binding` | Which forging methods the tool unlocks | Forging |
-| `blueprint_binding` | Which forging blueprints the item provides | Forging |
 
 ## The journey of one JSON file {#the-journey-of-one-json-file}
 
@@ -68,7 +66,7 @@ flowchart TD
 
 **Registration.** Datapack registries are registered on the `NewRegistry` event, and the save codec and the sync codec handed in are the same object, so a definition writes its codec once. A reference from one definition to another uses the **Holder codec** (`X.CODEC`, a `RegistryFixedCodec`), and the holder it decodes **does not consult the registry**.
 
-**Files and decoding.** Files live at `data/<namespace>/mxt/<registry path>/<entry path>.json`, and the entry id is the namespace plus the path - the nine registries claiming entries by item or block go the same way: one file is one definition, and every entry has an id of its own. Decoding is the table's own codec's job, and four outcomes are worth telling apart:
+**Files and decoding.** Files live at `data/<namespace>/<registry_namespace>/<registry path>/<entry path>.json`, and the entry id is the namespace plus the path - the nine registries claiming entries by item or block go the same way: one file is one definition, and every entry has an id of its own. Decoding is the table's own codec's job, and four outcomes are worth telling apart:
 
 - **Unknown keys are dropped silently**: `RecordCodecBuilder` does not know a field nobody wrote, so a file still carrying an old field loads fine and that key simply stops working. Nothing will report a renamed field for you.
 - **Empty tables, empty lists and illegal values are refused**: those go through `.validate(...)` and fail the load.
@@ -91,7 +89,7 @@ flowchart TD
 - A `trigger` with no action (the default is `mxt:no_op`) is readable by design, but is almost always a forgotten field.
 - A technique entering a progression level while not configuring every level it must walk through afterwards.
 
-Every problem carries a path like `data/<namespace>/mxt/<table>/<entry>`, they are collected and logged in one go, and **loading is not aborted**: a problematic entry is simply not indexed while the definitions around it keep working. Problems a single entry has with itself (an illegal value, an empty list) were already refused while decoding and never reach this step.
+Every problem carries a path like `data/<namespace>/<registry_namespace>/<table>/<entry>`, they are collected and logged in one go, and **loading is not aborted**: a problematic entry is simply not indexed while the definitions around it keep working. Problems a single entry has with itself (an illegal value, an empty list) were already refused while decoding and never reach this step.
 
 **Attachments are outside the reload.** Entity, chunk and level attachments are decoded once, at **world load**; `/reload` does not decode them again. So "the body holds a holder the current pack no longer provides" is a normal state: to ask whether it still exists, look the id up in the registry rather than treating the holder in hand as proof. For which attachments exist and what each hangs on, see [Attachments](./attachments.md).
 
@@ -118,7 +116,7 @@ The remaining components (`mxt:spirit_storage`, `mxt:artifact_state`, `mxt:curse
 2. the tier **the definition the stack itself carries** declares (the optional `quality` field) - a definition type implements `QualityProvider` and registers its carrier component, with `QualityService.carry` as the only registration entry point; a carrier answers from the stack alone, and a reference the current pack does not provide leaves this layer without an answer too. The nine definitions declaring it are `technique` / `alchemy_furnace` / `alchemy_wall_material` / `spirit_root` / `physique` / `pill` / `formation` / `secret_realm` / `contract_type`;
 3. the `default_quality` registry - what answers when the stack has no definition to ask: a bare creative or `/give` item, and the by-item definitions `artifact` / `spirit_herb`.
 
-`artifact` and `spirit_herb` deliberately have no `quality`: `ItemMatcher` claims them by item, so the stack carries no component naming a definition identity. Neither does `talisman`: its carrier holds a list of bill ids and there is no single definition to ask, so a drawing recipe writes the component and only a drawing that writes none falls through to layer 3. Each module plugs its own logic in as well: forging follows the blueprint's `quality_by_extra_steps` curve, a drawing follows completion's `grades[].quality`, and a spirit herb follows `quality_by_age` against its age, and each writes the settled tier into layer 1's component. `mxt:forging_result` only keeps the forging record (blueprint id and step counts) and **never a tier**, which is why `/quality clear` clears a forge or inscription tier along with the component and falls back to layer 2 and then layer 3.
+`artifact` and `spirit_herb` deliberately have no `quality`: `ItemMatcher` claims them by item, so the stack carries no component naming a definition identity. Neither does `talisman`: its carrier holds a list of bill ids and there is no single definition to ask, so a drawing recipe writes the component and only a drawing that writes none falls through to layer 3. Each module plugs its own logic in as well: forging follows the blueprint's `quality_by_extra_steps` curve, a drawing follows completion's `grades[].quality`, and a spirit herb follows `quality_by_age` against its age, and each writes the settled tier into layer 1's component. `mxt_forging:forging_result` only keeps the forging record (blueprint id and step counts) and **never a tier**, which is why `/quality clear` clears a forge or inscription tier along with the component and falls back to layer 2 and then layer 3.
 
 `hasOverride(stack)` asks whether the component is there, which is a different question from whether a tier resolves: an item backed by the definition it carries or by this registry still shows a tier while carrying no component.
 

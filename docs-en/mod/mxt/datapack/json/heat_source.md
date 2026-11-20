@@ -3,6 +3,10 @@ title: Heat Source (heat_source)
 description: The temperature and heating rate of a heat block, which cell it stands in, and how the furnace's temperature ceiling is settled.
 ---
 
+:::info Shared core heat sources
+**MiXianTu** provides `mxt:heat_source`, the dynamic heat interface and heat displays without a workstation addon. The furnace below is a usage example from **Alchemy Workstations** (`mxt_alchemy`), which provides furnace specifications, walls and the heating workflow.
+:::
+
 # Heat Source (heat_source)
 
 <span id="heat_source" />
@@ -58,7 +62,7 @@ A heat block is not consumed. Breaking the core does not drop it - it is a separ
 
 ## The Temperature Ceiling {#the-temperature-ceiling}
 
-What a player may actually set is the lowest of three: **the highest temperature this block gives**, the lowest rating among the 18 casings, and the [furnace specification](./alchemy_furnace.md)'s own optional `max_temperature`. The casings are described under [Wall Material](./alchemy_wall_material.md), and the set point with the cooling rate under [Furnace Specification](./alchemy_furnace.md).
+What a player may actually set is the lowest of three: **the highest temperature this block gives**, the lowest rating among the 18 casings, and the [furnace specification](../../addons/alchemy/datapack/alchemy_furnace.md)'s own optional `max_temperature`. The casings are described under [Wall Material](../../addons/alchemy/datapack/alchemy_wall_material.md), and the set point with the cooling rate under [Furnace Specification](../../addons/alchemy/datapack/alchemy_furnace.md).
 
 ## When the Block Answers for Itself {#when-the-block-answers-for-itself}
 

@@ -11,12 +11,16 @@ description: "Documentation for MiXianTu, a NeoForge cultivation mod framework: 
 MiXianTu is an extension of [Saturn](../../library/saturn/index.md): shared types such as actions, conditions, number providers, triggers and costs are registered by Saturn, and `mxt:` spellings of them resolve to the matching `saturn:` entries through Saturn aliases.
 :::
 
-MiXianTu is a **cultivation mod framework** for NeoForge. It provides the **generic rules and runtime** that cultivation gameplay needs — cultivation, aura environment, realms and resources, abilities, formations, tribulations, forging, alchemy and economy — without prescribing any particular setting or numbers.
+MiXianTu is a **cultivation mod framework** for NeoForge. It provides the **generic rules and runtime** that cultivation gameplay needs — cultivation, aura environment, realms and resources, abilities, formations, tribulations and economy — without prescribing any particular setting or numbers.
 
 The actual items, blocks and recipes are provided by datapacks, KubeJS or other content mods, and MiXianTu's registries and binding tables give them gameplay.
 
 - **Players**: installing the mod on its own only gives you framework items, Curios slots, HUD and commands; what you can actually play depends on the datapack or content pack you use.
 - **Content and mod authors**: define your own cultivation rules, aura distribution, abilities, formations, crafts and item bindings with datapacks, KubeJS or the Java API, without changing the mod itself.
+
+:::info Workstation addons
+Furnaces, forge tables, drawing tables and their workflows are provided by three optional workstation addons. The core keeps shared brushes, cinnabar, paper, dregs, pills and talismans. Addon items use the MiXianTu creative tab.
+:::
 
 :::warning Work in progress
 
@@ -74,11 +78,11 @@ The **status** column says how far along a module is (it follows the code, and i
 | Creature Profiles and Contracts | 🚧 | Creature profiles define a creature's strength, inner core and spawn action, and can declare a progression chain the beast climbs with mastery; players can contract a beast and order it to follow, wander, hold or come back with the Beast Taming Bell, or carry it in a Spirit Beast Bag. |
 | Secret Realms | 🚧 | Each entry opens an instance dimension on demand from a secret realm definition, with its own border, generation, structures and landing spot, claimable terrain, member and time limits, and enter/exit conditions. Includes planar portal editing, token summons and layout export. |
 | Spirit Crafting Table | ✅ | Crafting with a spirit crafting recipe at the Spirit Crafting Table costs aura in addition to materials, deducted when the result is taken out. |
-| Forging | ✅ | At a Forge Table, several materials are hammered into a result following a blueprint; different tools unlock different methods, and the quality of the result depends on the process and the number of steps. |
-| Alchemy | 🚧 | Hand-build a 3×3×3 furnace from a core, role bins and walls, and put a heat block in the bottom centre cell. When the player starts, it resolves the output from the actual properties. Pills keep use limits, cooldowns and toxicity. |
+| Forging Workstations (addon) | 🚧 | The addon provides forge tables, blueprints, tool bindings and forging workflows; shared materials and outputs stay in the core. |
+| Pills and Alchemy | 🚧 | The core keeps pills, herbs, medicinal properties, toxicity and shared heat sources. Alchemy Workstations provides the furnace, walls and recipes. |
 | Spirit Herbs | ✅ | Any existing block can be a spirit herb: a definition claims blocks with `blocks` and its own fruit with `growth.drops`; placing one starts its age, world-generated ones already carry their own, and breaking it tiers the fruit by that age. |
 | Item Binding | ✅ | Brings existing items into gameplay: attach passive behavior and vanilla attribute modifiers to any item, or bind abilities that fire on right-click use and on attack. |
-| Talismans | ✅ | A Talisman Brush inscribes ability definitions onto a carrier ; holding right-click until it is full fires them, spending a carrier or the wear a definition declares. A drawing workstation shows a formula's shape, the player traces it, and how well it was traced decides success and tier. |
+| Talismans | ✅ | The core provides carriers, aura infusion and invocation; Talisman Workstations provides drawing tables, scoring, sessions and drawing recipes. |
 | Quality | ✅ | Items carry a quality shown in their tooltip; each tier links to the next with `quality` / `next` to form a low-to-high ladder, and the entry tier can be climbed; a stack's tier resolves in three layers: the item component, the `quality` the definition it carries declares, and the `default_quality` registry. |
 | Artifacts | ✅ | Items become artifacts via `artifact`: `items` claims them, `spirit_capacity` sets a per-aura ceiling, and `abilities` names what carrying it grants. An artifact declares itself a flying mount (speed, seats, fuel, looks) that a technique-granted flying skill takes from either hand; storage is another ability type. |
 | Economy | ✅ | Items can be defined as currency with a value, supporting exchange and change; players can trade directly with each other, or use trade stations and cheques to settle transactions. |

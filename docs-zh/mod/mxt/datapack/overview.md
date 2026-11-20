@@ -10,10 +10,10 @@ description: MiXianTu 数据包的文件布局、注册表索引、加载与覆�
 ## 文件路径 {#文件路径}
 
 ```text
-data/<namespace>/mxt/<registry>/<path>.json
+data/<namespace>/<registry_namespace>/<registry>/<path>.json
 ```
 
-例如 `data/example/saturn/ability/fireball.json` 的定义 ID 是 `example:fireball`。
+例如 `data/example/saturn/ability/fireball.json` 的定义 ID 是 `example:fireball`。`namespace` 是条目的命名空间，`registry_namespace` 是注册表所属模组：本体用 `mxt`，通用前置表用 `saturn`；附属用 `mxt_alchemy` 或 `mxt_forging`。改变注册表所属命名空间不会改变条目自己的 ID。
 
 **内容一多，请按类别把 JSON 分进子文件夹。** 一个注册表目录下平铺几十上百个文件时，「哪几个是同一套流派的被动」只能靠文件名猜；分好类之后路径本身就是索引：
 
@@ -28,9 +28,10 @@ data/example/mxt/artifact/charm/ward_jade_talisman.json
 分类方式没有硬性规定，按用途（`passive/`、`active/`）、按流派（`sword/`、`alchemy/`）或按一次更新的批次都行。几条要注意：
 
 - **目录就是 ID 的一部分**：`data/example/saturn/ability/sword/slash.json` 的 ID 是 `example:sword/slash`，**换目录等于换 ID**。别的定义、标签、存档（技能授予账本、冷却、轮盘格子的 id）存的全是这个 ID，所以分类要在写内容之前定好。
-- 按 id 生成的 `name` / `description` 键也带这段路径（`<类别>.mxt.<命名空间>.<路径>`，路径里的 `/` 原样保留），分文件夹不会多出第二套翻译键规则。
-- 标签有自己的一棵树（`tags/mxt/<注册表名>/...`），**不必**与定义目录逐层对应；按同一个分类习惯摆只是为了好找。标签里的值要写带目录的**完整 ID**。
-- 层级只影响可读性，**不参与加载与校验**：`data/<命名空间>/mxt/` 下面第一层永远是注册表名（`artifact/`、`aura/`……），分类只能加在它下面；把所有文件塞进同一个注册表目录也照样能跑。`n- **四张注册表在 `saturn/` 下。** `resource`、`ability`、`trigger`、`incomplete` 由 Saturn 前置注册，注册表 id 是 `saturn:*`，文件因此放在 `data/`<命名空间>`/saturn/`<注册表>`/`；旧数据包写的 `mxt:` id 仍能解析（前置会把每个内置条目用旧 id 再注册一次），但**文件目录必须搬**——目录跟注册表 key 走。
+- 按 id 生成的名字键是 `<registry_namespace>.<registry>.<namespace>.<path>`，描述键追加 `.description`；路径中的 `/` 原样保留。
+- 标签有自己的一棵树（`tags/<registry_namespace>/<registry>/...`），不必与定义目录逐层对应；标签里的值仍须写带目录的完整条目 ID。
+- 分类只影响条目 ID 和可读性，不改变加载方式：`data/<namespace>/<registry_namespace>/` 的下一层始终是注册表名，分类目录只能放在它下面。
+- Saturn 的 `resource`、`ability`、`trigger`、`incomplete` 位于 `data/<namespace>/saturn/<registry>/`；其他注册表的实际目录见下表。
 
 数据包加载使用 NeoForge 原生可写注册表，服务器加载后同步到客户端。定义读出来就是只读的，不要在运行时改动从定义里取到的集合。
 
@@ -43,13 +44,13 @@ data/example/mxt/artifact/charm/ward_jade_talisman.json
 | 资源与修炼 | `resource`、`aura`、`element`、`element_reaction`、`realm_stage`、`spirit_root`、`physique`、`technique`、`progression`、`cultivation` |
 | 技能与规则 | `ability`、`curse`、`formation`、`tribulation`、`trigger`、`talisman` |
 | 灵气与世界 | `aura_zone`、`secret_realm`、`block_aura` |
-| 物品与品质 | `pill`、`pill_binding`、`technique_binding`、`artifact`、`quality`、`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding` |
-| 炼丹与灵植 | `medicinal_property`、`spirit_herb`、`alchemy_furnace`、`alchemy_wall_material`、`heat_source` |
-| 经济与内容 | `forging_method`、`forging_blueprint`、`creature_profile`、`contract_type` |
+| 物品与品质 | `pill`、`pill_binding`、`technique_binding`、`artifact`、`quality`、`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding` |
+| 药性与供热 | `medicinal_property`、`spirit_herb`、`heat_source` |
+| 经济与内容 | `creature_profile`、`contract_type` |
 
-**七张物品键的注册表**（`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`）里，`currency` 用 `item` 认领物品、其余六张用 `items`，**两张方块键的**（`block_aura`、`heat_source`）按 `blocks` 认领方块；文件、字段形状与加载规则与其余注册表完全一致，见 [JSON 数据格式](./json/index.md)。
+**五张物品键注册表**（`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`）中，`currency` 用 `item`，其余用 `items`；`block_aura` 与 `heat_source` 用 `blocks` 认领方块。字段与加载规则见 [JSON 数据格式](./json/index.md)。
 
-丹方不是注册表：它是原版配方类型 `mxt:alchemy`，文件放在 `data/<命名空间>/recipe/` 下，字段见[炼丹配方](./json/alchemy_recipe.md)。
+工作站工艺定义、配方与绑定见[炼丹工作站附属](../addons/alchemy/index.md)、[锻器工作站附属](../addons/forging/index.md)和[画符工作站附属](../addons/talisman/index.md)。
 
 ## 模块页面 {#模块页面}
 
@@ -58,17 +59,19 @@ data/example/mxt/artifact/charm/ward_jade_talisman.json
 - [灵气环境与灵气物品](./json/aura.md)
 - [Ability、Cost 与 Condition](../../../library/saturn/data/ability.md)
 - [物品绑定、品质与经济](./json/item_binding.md)
-- [阵法、锻造与炼丹](./json/formation.md)
+- [阵法](./json/formation.md)
 - [其他注册表](./json/index.md)
 - [数据包示例](./examples.md)
 
 ## 加载与覆盖 {#加载与覆盖}
 
-40 个数据包注册表使用 NeoForge 原版数据包注册表加载；**世界加载时**读取并校验，并在客户端加入时通过原版同步机制提供只读快照。从磁盘上的文件到玩家看到的结果就是下面这条路径。
+本体的 34 个数据包注册表使用 NeoForge 原版数据包注册表加载；**世界加载时**读取并校验，并在客户端加入时通过原版同步机制提供只读快照。从磁盘上的文件到玩家看到的结果就是下面这条路径。
+
+`mxt:heat_source` 由本体统一提供，不要求安装工作站附属。本体之外，炼丹附属提供 2 张工艺表，锻器附属提供 4 张工艺表；这些表仅在对应附属已安装时存在。画符与炼丹配方使用原版配方系统。Saturn 的通用数据表由 Saturn 提供。
 
 ```mermaid
 flowchart TD
-    A["数据包定义文件<br/>一份 JSON 一个条目"] --> B["40 个数据包注册表<br/>NeoForge 原版数据包注册表"]
+    A["数据包定义文件<br/>一份 JSON 一个条目"] --> B["数据包注册表<br/>NeoForge 原版数据包注册表"]
     B --> C["世界加载时读取并校验<br/>JSON / 引用 / 字段校验"]
     C --> D["解码失败：世界无法加载<br/>修好该文件后才能再次进入"]
     C --> E["neoforge:conditions<br/>条件不成立的条目根本不进注册表"]

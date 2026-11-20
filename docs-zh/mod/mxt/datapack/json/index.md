@@ -6,11 +6,9 @@ title: 动态注册表
 
 <span id="动态注册表" />
 
-下表列出本模组使用的 43 个数据包注册表；其中 `resource`、`ability`、`trigger` 由 Saturn 提供，字段见 [Saturn 数据定义](../../../../library/saturn/data/index.md)。字段表里的「默认」是省略该字段时用的值，「必填」表示缺失时加载失败。
+下表列出 MiXianTu 本体与 Saturn 提供的通用数据包注册表。工作站专用定义分别见[炼丹工作站附属](../../addons/alchemy/index.md)与[锻器工作站附属](../../addons/forging/index.md)，只有安装对应附属后才可使用。Saturn 表的字段见 [Saturn 数据定义](../../../../library/saturn/data/index.md)。字段表里的「默认」是省略字段时的值，「必填」表示缺失时加载失败。
 
-**配方不在表里。** 走原版 `RecipeManager` 的配方页收在下面的「合成表」分组里：炼丹配方（`mxt:alchemy`）、灵气合成（`mxt:spirit_shaped` / `mxt:spirit_shapeless`）与画符配方（`mxt:talisman_drawing`）。它们的 JSON 放在 `data/<namespace>/recipe/`，**不要**放进 `mxt/<配方名>/`；它们也不是注册表，所以 `/reload` 会重新读取它们。文件位置与「按类别把 JSON 分进子文件夹」的写法见[数据包开发总览](../overview.md)。
-
-**给符笔加颜料不是配方。** 它是原版储物袋那套点击：光标提着符笔对着颜料物品点一下就蘸，见 [`mxt:talisman_drawing`](./talisman_drawing.md#材料与颜料)。
+**配方不在表里。** 本体的[灵气合成](./spirit_crafting.md)使用原版配方类型 `mxt:spirit_shaped` / `mxt:spirit_shapeless`，JSON 放在 `data/<namespace>/recipe/`，可用 `/reload` 重读。炼丹和画符配方分别见[炼丹附属](../../addons/alchemy/datapack/alchemy_recipe.md)与[画符附属](../../addons/talisman/datapack/talisman_drawing.md)。
 
 | 注册表 | 文件目录 | 用途 |
 | --- | --- | --- |
@@ -25,15 +23,11 @@ title: 动态注册表
 | `ability` | `saturn/ability` | 主动、被动和触发技能；字段见 [Saturn 技能定义](../../../../library/saturn/data/ability.md)。 |
 | `ability_affinity` | `mxt/ability_affinity` | 技能的元素亲和：哪些元素、多个灵根匹配时怎么合并；不在技能定义里。 |
 | `curse` | `mxt/curse` | 可被多个模块引用的诅咒定义与持续类型。 |
-| `forging_method` | `mxt/forging_method` | 单次锻打方式。 |
-| `forging_blueprint` | `mxt/forging_blueprint` | 锻造目标和品质结算。 |
 | `technique` | `mxt/technique` | 功法定义：可学习、按进度等级授予能力与修炼修正。 |
 | `progression` | `mxt/progression` | 进度链的单级定义。 |
 | `cultivation` | `mxt/cultivation` | 一次运功法门：吸收哪些环境灵气、每 tick 做什么、结算成功那一拍做什么、代价与收获。 |
 | `spirit_herb` | `mxt/spirit_herb` | 已有物品的灵植元数据。 |
 | `medicinal_property` | `mxt/medicinal_property` | 药性身份：一种药用效果的身份。 |
-| `alchemy_furnace` | `mxt/alchemy_furnace` | 炉型规格：槽位、一炉容量与炉温回落速度。 |
-| `alchemy_wall_material` | `mxt/alchemy_wall_material` | 炉壁材料：一块炉壁的耐温上限。 |
 | `formation` | `mxt/formation` | 阵法生命周期和灵气覆写。 |
 | `formation_shape` | `mxt/formation_shape` | 阵法画出来的图形：折线与圆两种笔画，以及每笔自己的颜色、疏密与生长窗口。 |
 | `tribulation` | `mxt/tribulation` | 天劫：启动门槛、时间线节拍与成败行为。 |
@@ -52,13 +46,11 @@ title: 动态注册表
 | `default_quality` | `mxt/default_quality` | 物品在没有任何别的档位来源时的默认品质（品质解析的第三层、也是最后一层）。 |
 | `item_binding` | `mxt/item_binding` | 现有物品的行为、条件与元素。 |
 | `weapon_binding` | `mxt/weapon_binding` | 现有物品的武器属性与三个动作。 |
-| `tool_binding` | `mxt/tool_binding` | 工具物品解锁的锻打方式。 |
-| `blueprint_binding` | `mxt/blueprint_binding` | 图纸物品提供的蓝图。 |
 | `block_aura` | `mxt/block_aura` | 方块提供的灵气。 |
 | `heat_source` | `mxt/heat_source` | 供热方块的温度与升温速度。 |
 | `incomplete` | `saturn/incomplete` | 给一件物品打「未完成」标记：客户端在槽位里画一个警告角标。 |
 
-`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding` 七张按物品键认领物品（`currency` 用 `item`，其余六张用 `items`），`block_aura` 与 `heat_source` 两张按 `blocks` 认领方块；形状与其余注册表一致，文件路径见[数据包开发总览](../overview.md)。
+`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding` 五张按物品键认领物品（`currency` 用 `item`，其余四张用 `items`）；`block_aura` 与 `heat_source` 按 `blocks` 认领方块。文件布局见[数据包开发总览](../overview.md)。
 
 ## 固有类型分派 {#固有类型分派}
 

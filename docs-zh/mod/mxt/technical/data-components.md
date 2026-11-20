@@ -7,7 +7,7 @@ description: 本体注册的每一个物品数据组件：装什么、谁来写�
 
 <span id="数据组件" />
 
-本体往物品堆上挂的状态**全部**走原版数据组件（`DataComponentType`），没有"往物品上存一份模组自己的 NBT"这回事。全部 35 个登记在 `registry.MxtDataComponents` 一处，每一个都同时声明**持久化 codec** 与**网络 codec**（`persistent(...).networkSynchronized(...)`），所以它们都跟着存档走、也跟着同步给客户端——组件里没有"只服务端"或"只在本次会话有效"的类别。
+本体往物品堆上挂的状态**全部**走原版数据组件（`DataComponentType`），没有"往物品上存一份模组自己的 NBT"这回事。本体组件统一登记在 `registry.MxtDataComponents` 一处，每一个都同时声明**持久化 codec** 与**网络 codec**（`persistent(...).networkSynchronized(...)`），所以它们都跟着存档走、也跟着同步给客户端——组件里没有"只服务端"或"只在本次会话有效"的类别。
 
 组件是**这一堆物品自己的事实**：它被锻造过、它铭刻了哪条符、它装了多少灵气。与之相对的是**数据包声明**（"这类物品通常怎样"），两者的合并方向写死在[数据加载](./data-loading.md)的「组件压过声明」一节。
 
@@ -21,14 +21,6 @@ description: 本体注册的每一个物品数据组件：装什么、谁来写�
 | --- | --- | --- |
 | `mxt:quality` | `Holder<ItemQuality>` | **全模组唯一一个装档位的组件**，也是品质解析三层里的第一层。它装的是**整份品质对象**，所以它既定档位、也定这一堆读哪条链：写上去就是"这一堆是这个档"。`/quality set`、一次成功的升级、锻造台结算与画符铭刻写的都是它；`/quality clear` 摘掉它，这一堆退回携带的定义那一层。 |
 | `mxt:element` | `List<Either<Holder<Element>, TagKey<Element>>>` | 这一堆**额外**带的元素，与定义里写的取并集。可以写具体元素，也可以写元素标签。 |
-
-### 锻造 {#锻造}
-
-| 组件 id | 载荷 | 作用 |
-| --- | --- | --- |
-| `mxt:forging_result` | `ForgingResultComponent`（`blueprint`、`final_value`、`actual_steps`、`optimal_steps`、`extra_steps`） | 一次**成功的**锻造会话留下的记录：按哪份蓝图、最终值、实走步数与最短步数。构造器要求 `actual_steps - optimal_steps == extra_steps`。**不含档位**——会话定下的档写进 `mxt:quality`，所以 `/quality clear` 会把它一起清掉。 |
-| `mxt:forging_methods` | `List<Holder<ForgingMethod>>` | 这一堆**当工具用时**能执行的锻造手法。逐条容错（坏条目打日志后丢弃），与定义里的手法取并集。 |
-| `mxt:forging_blueprints` | `List<Holder<ForgingBlueprint>>` | 这一堆携带的锻造蓝图，与定义取并集；同样是逐条容错的列表。 |
 
 ### 丹药 {#丹药}
 
@@ -104,13 +96,11 @@ description: 本体注册的每一个物品数据组件：装什么、谁来写�
 | `mxt:talisman` | `TalismanComponent`（`talisman`、`mode`） | 一张载体上**已铭刻的那条符箓**：单个 `talisman` 条目，缺省即一张空白载体；再刻一条会顶掉前一条。`mode` 是 `fire`（缺省）或 `store`，**存在堆上而不是任何定义上**，所以同一条铭刻在不同载体上可以有不同行为。它的提示框由 `TalismanTooltipAppender` 单独画，好让那些行落在载体的充能行上面。 |
 | `mxt:brush_pigment` | `int`（`0` 到上限） | 符笔自己的**颜料存量**，一个非负整数，**1 单位就是 1 像素弧长**。没写这个组件与写 `0` 是一回事。它不是消耗品条目：加料是原版储物袋那套点击，判定与换算只在 `runtime.talisman.BrushPigmentService` 一处。 |
 
-### 灵植、丹炉与灵根 {#灵植、丹炉与灵根}
+### 灵植与灵根 {#灵植、丹炉与灵根}
 
 | 组件 id | 载荷 | 作用 |
 | --- | --- | --- |
 | `mxt:herb_age` | `int`（`0` 到上限） | 一株灵植果实的**药龄**。破坏成熟植株时，已生长的年数向下取整写进掉落的每一堆，**同一刻**再按它去查这株灵植自己的 `quality_by_age` 阶梯，命中的那一档写进 `mxt:quality`。它同时是**药力公式的输入**（变量 `herb_age`），而不是第二个乘数——想让老药更值钱，就在药力公式里读它。 |
-| `mxt:alchemy_furnace` | `Holder<AlchemyFurnaceDefinition>` | 这件丹炉核心是按**哪份炉型规格**造的。一类规格共用一件方块物品，物品本身说不清是哪一档，所以档也从这份引用读。 |
-| `mxt:alchemy_wall_material` | `Holder<AlchemyWallMaterial>` | 这块炉壁是哪种**炉壁材料**，即它的耐温等级。炉温上限取 18 块炉壁里的**最低**那个。 |
 | `mxt:spirit_root` | `Holder<SpiritRoot>` | 这件物品（通常是灵根石）携带**哪条灵根定义**。 |
 | `mxt:physique` | `Holder<Physique>` | 这件物品（通常是体质石或卷轴）携带**哪条体质定义**。 |
 
@@ -124,7 +114,7 @@ description: 本体注册的每一个物品数据组件：装什么、谁来写�
 
 看完上面那张表，组件与声明的关系可以收成三句：
 
-- **只有 `mxt:quality` 装档位。** 别的组件都不带品质，`mxt:forging_result` 只记锻造记录。
+- **只有 `mxt:quality` 装档位。** 别的组件都不带品质，`mxt_forging:forging_result` 只记锻造记录。
 - **`mxt:pill` / `mxt:technique` / `mxt:technique_reading` 参与"哪条声明适用"。** 前两者能指名或挑出声明，后者再覆盖一层参数。这三条是[数据加载](./data-loading.md)里那张「组件压过声明」表的全部成员。
 - **其余全部只装状态。** 它们不影响"适用哪条声明"，只回答"这一堆现在是什么样"。
 

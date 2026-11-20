@@ -91,13 +91,13 @@ description: 定义一档品质的颜色与三个修正，以及它在品质链�
 
 **第一层，堆上的 `mxt:quality` 组件**（整份品质对象）。每个写档的地方写的都是它：[`/quality set`](../../player-guide/commands/quality.md) 与 [MxtQuality](../../kubejs/api/quality.md)，一次成功的 `upgrade`，以及**锻造台结算**与**画符铭刻**。它按注册表读回，所以当前包不再提供的那一档答不出东西，这一层落空后继续往下走，不会留下一个死的档位。
 
-**第二层，这一堆携带的定义自己声明的 `quality`。** 一类定义共用一件内置物品——每本功法手册都是 `mxt:technique_book`、每颗丹都是 `mxt:pill`、每份炉型规格都是方块物品 `mxt:alchemy_furnace`、灵根石是 `mxt:spirit_root`、体质石是 `mxt:physique`——物品本身说不清是哪一档，只有堆上携带的这份定义说得清。这个字段一律可选，为了从堆上读到它，那一类定义要有一个已登记的载体组件（模组在类加载时登记自己的几个；附属模组登记自己的载体是另一页的事）。九个定义声明 `quality`，各由一个已登记的载体读到：
+**第二层，这一堆携带的定义自己声明的 `quality`。** 一类定义共用一件内置物品——每本功法手册都是 `mxt:technique_book`、每颗丹都是 `mxt:pill`、每份炉型规格都是方块物品 `mxt_alchemy:alchemy_furnace`、灵根石是 `mxt:spirit_root`、体质石是 `mxt:physique`——物品本身说不清是哪一档，只有堆上携带的这份定义说得清。这个字段一律可选，为了从堆上读到它，那一类定义要有一个已登记的载体组件（模组在类加载时登记自己的几个；附属模组登记自己的载体是另一页的事）。九个定义声明 `quality`，各由一个已登记的载体读到：
 
 | 定义 | 载体组件 |
 | --- | --- |
 | `technique` | `mxt:technique`，值就是这份定义 |
-| `alchemy_furnace` | `mxt:alchemy_furnace`，值就是这份定义 |
-| `alchemy_wall_material` | `mxt:alchemy_wall_material` |
+| `alchemy_furnace` | `mxt_alchemy:alchemy_furnace`，值就是这份定义 |
+| `alchemy_wall_material` | `mxt_alchemy:alchemy_wall_material` |
 | `spirit_root` | `mxt:spirit_root` |
 | `physique` | `mxt:physique` |
 | `pill` | `mxt:pill`，组件是一个 record，定义在它里面的 `pill` 下 |
@@ -116,7 +116,7 @@ description: 定义一档品质的颜色与三个修正，以及它在品质链�
 - `artifact` 与 `spirit_herb` 都不携带物品身份（`artifact` 按物品认领、`spirit_herb` 按它的果实认领），堆上没有装定义身份的组件，没有可问的对象。它们的档写在 `default_quality` 里；一件物品只意味着一份定义时，这就是准确答案。灵植多一条路：定义写了 `quality_by_age` 时，[采收](./spirit_herb.md#age-and-quality)那一刻按药龄把档写进第 1 层组件，没写这条阶梯的草照旧兜底到 `default_quality`。
 - `talisman` 的载体组件 `mxt:talisman` 装的是一**列**铭刻，同一堆上可能有好几张符，没有单份定义可问。它的档由画符配方的 `grades[].quality` 定，铭刻时写进 `mxt:quality` 组件；写不上才兜底到 `default_quality`。
 
-**装列表的载体一律不登记**：`mxt:forging_methods`、`mxt:forging_blueprints`、`mxt:element`、`mxt:talisman`——一列东西答不出「这一堆是哪一档」。
+**装列表的载体一律不登记**：`mxt_forging:forging_methods`、`mxt_forging:forging_blueprints`、`mxt:element`、`mxt:talisman`——一列东西答不出「这一堆是哪一档」。
 
 链看这一堆解析出的那一档：链名写在档位自己身上，所以绑定表与组件都不必声明链。三层都没有答案时这一堆就是**没有品质**，不会去补某条链的入口档。
 
@@ -137,11 +137,11 @@ description: 定义一档品质的颜色与三个修正，以及它在品质链�
 
 1. **物品条件 `mxt:item_quality`**（`quality` 与新增的可选 `min_quality`）：任何跑物品条件的地方都能用，例如货币的 `unavailable_when`、绑定表的 `conditions`；见[物品条件](../types/condition/item_condition_types.md)。
 2. **匹配器条目 `mxt:quality`**（`items` 必填，再加上面两个字段）：凡是用 [ItemMatcher](../types/other/item-matcher.md) 的地方都能用——`Cost` 的 `mxt:item`、`artifact` / `pill_binding` / `technique_binding` 的 `items`、`spirit_herb` 的 `blocks`、`mxt:item_matcher` / `mxt:item_id` / `mxt:item_tag` 条件、灵植的种子、拾取器。
-3. **自定义材料 `mxt:quality`**（`neoforge:ingredient_type` + `items` + 上面两个字段）：**凡是用原版 `Ingredient` 的地方都能用**——原版与别的模组的配方、灵气合成、画符、`mxt:ingredient` 条件、[锻造蓝图](./forging_blueprint.md)的 `input`（那一项就是 sized ingredient），以及[画符配方](./talisman_drawing.md)的 `paper`（那一项就是 ingredient）；见[灵气合成](./spirit_crafting.md)。
+3. **自定义材料 `mxt:quality`**（`neoforge:ingredient_type` + `items` + 上面两个字段）：**凡是用原版 `Ingredient` 的地方都能用**——原版与别的模组的配方、灵气合成、画符、`mxt:ingredient` 条件、[锻造蓝图](../../addons/forging/datapack/forging_blueprint.md)的 `input`（那一项就是 sized ingredient），以及[画符配方](../../addons/talisman/datapack/talisman_drawing.md)的 `paper`（那一项就是 ingredient）；见[灵气合成](./spirit_crafting.md)。
 
 还有一条窄路只对"材料条目"成立：匹配器条目 [**`mxt:ingredient`**](../../../../library/saturn/types/item-matcher.md) 能把一整个原版材料（含 `mxt:quality`）写进任何接受 `ItemMatcher` 的地方，画符那次取纸的代价走的就是它。
 
-丹方还有两个字段挂在机器侧，不是物品自己的匹配条目：[`furnace_quality`](./alchemy_recipe.md) 要求**丹炉核心**的档位，[`input_quality`](./alchemy_recipe.md) 逐格要求输入仓里**每一格非空物品**（主药、辅药、药引都算；炉壁与多方块结构不看品质）。两份形状相同，都至少写一个字段、写空对象会被拒；不过就拒绝开炉、不扣料、不动供热方块。核心的档位还能作为变量 **`furnace_rank`** 进丹方自己的公式字段（药力公式与任何 `alchemy_modifier` 公式读不到它）；核心那一档自己的 `alchemy_modifier` 也进这一炉的时长换算，所以更高级的炉子炼得越快。
+丹方还有两个字段挂在机器侧，不是物品自己的匹配条目：[`furnace_quality`](../../addons/alchemy/datapack/alchemy_recipe.md) 要求**丹炉核心**的档位，[`input_quality`](../../addons/alchemy/datapack/alchemy_recipe.md) 逐格要求输入仓里**每一格非空物品**（主药、辅药、药引都算；炉壁与多方块结构不看品质）。两份形状相同，都至少写一个字段、写空对象会被拒；不过就拒绝开炉、不扣料、不动供热方块。核心的档位还能作为变量 **`furnace_rank`** 进丹方自己的公式字段（药力公式与任何 `alchemy_modifier` 公式读不到它）；核心那一档自己的 `alchemy_modifier` 也进这一炉的时长换算，所以更高级的炉子炼得越快。
 
 **两处槽位自己的谓词今天仍读不到档**：**丹炉输入仓**（认"被哪条 `spirit_herb` 认领 + 那味药的药力"；要按档筛投进去的药材就写在丹方的 `input_quality` 上，它在开局时逐格判，不是槽位谓词）与**符笔颜料**（`mxt:brush_pigment` 标签 + 服务端配置）。**画符符纸格**已经从硬 id 放宽成 `mxt:talisman_paper` 标签（内容把自己的纸加进标签即可），而"至少某档"这类要求现在写在**符方自己的 `paper` 字段**上——那一格答的是"这算不算纸"（客户端也答得出），"这份符方收不收"在开局时判。
 

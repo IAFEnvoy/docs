@@ -11,7 +11,7 @@ MiXianTu does not preset numbers for any gameplay system, but it does provide a 
 
 ## Generic Items {#generic-items}
 
-The mod currently ships the spirit stone series, spirit iron ingots, spirit wood, cinnabar, talisman paper, talismans, the contract scroll, the recall talisman, the Beast Taming Bell, tokens, the spirit stone bag, rings, the forging table, furnace parts, pill carriers, alchemy dregs, impurity, the reward box and display stands. The registry names are in `src/main/java/com/iafenvoy/mxt/registry` and the resource files.
+The mod currently ships the spirit stone series, spirit iron ingots, spirit wood, cinnabar, talisman paper, talismans, the contract scroll, the recall talisman, the Beast Taming Bell, tokens, the spirit stone bag, rings, pill carriers, alchemy dregs, impurity, the reward box and display stands. The registry names are in `src/main/java/com/iafenvoy/mxt/registry` and the resource files.
 
 ## Item Aura {#item-aura}
 
@@ -62,7 +62,7 @@ The items below are backed by a unified server-side implementation shipped with 
 | Identification Mirror | `mxt:identification` | Resolves items that carry an identification component in a unified way; the items to identify come from content packs or other mods. |
 | Spirit Root | `mxt:spirit_root` | Stores a `spirit_root` definition; right-click to gain that root. |
 | Physique | `mxt:physique` | Stores a `physique` definition; right-click to gain that physique. |
-| Talisman Brush | `mxt:brush_pigment` | A brush holds a pigment store of its own; click pigment with the brush in the inventory to add pigment (see [Alchemy and the Brush](./alchemy-and-brush.md#brushes-and-pigment)). |
+| Talisman Brush | `mxt:brush_pigment` | A brush holds a pigment store of its own; click pigment with the brush in the inventory to add pigment (see [Alchemy and the Brush](./brush-and-pigment.md#brushes-and-pigment)). |
 | Talisman | `mxt:talisman` <br /> `mxt:spirit_storage` | Holds the inscribed talisman; depending on its kind, a click or a hold uses it. |
 
 ## See Also {#see-also}

@@ -49,9 +49,9 @@
         "en": "Built-in Items"
       },
       {
-        "page": "player-guide/alchemy-and-brush",
-        "zh": "炼丹与符笔",
-        "en": "Alchemy and the Brush"
+        "page": "player-guide/brush-and-pigment",
+        "zh": "符笔与颜料",
+        "en": "Brush and Pigment"
       },
       {
         "page": "player-guide/lifespan",
@@ -334,13 +334,7 @@
         "page": "tutorial/inscribe-a-talisman",
         "zh": "定义符箓",
         "en": "Define a Talisman",
-        "items": [
-          {
-            "page": "tutorial/author-a-talisman-drawing",
-            "zh": "编写画符配方",
-            "en": "Write a Drawing Recipe"
-          }
-        ]
+        "items": []
       },
       {
         "page": "tutorial/bring-down-a-tribulation",
@@ -351,16 +345,6 @@
         "page": "tutorial/define-a-curse",
         "zh": "定义诅咒",
         "en": "Define a Curse"
-      },
-      {
-        "page": "tutorial/forge-a-treasure",
-        "zh": "锻造法器",
-        "en": "Forge a Treasure"
-      },
-      {
-        "page": "tutorial/refine-a-pill",
-        "zh": "炼制丹药",
-        "en": "Refine a Pill"
       },
       {
         "page": "tutorial/contract-a-beast",
@@ -544,19 +528,9 @@
             },
             "items": [
               {
-                "page": "datapack/json/alchemy_recipe",
-                "zh": "alchemy_recipe（炼丹配方）",
-                "en": "alchemy_recipe"
-              },
-              {
                 "page": "datapack/json/spirit_crafting",
                 "zh": "spirit_crafting（灵气合成）",
                 "en": "spirit_crafting"
-              },
-              {
-                "page": "datapack/json/talisman_drawing",
-                "zh": "talisman_drawing（画符配方）",
-                "en": "Talisman Drawing (talisman_drawing)"
               }
             ]
           },
@@ -581,16 +555,6 @@
                 "en": "Mount Renderers (mount_render_type)"
               }
             ]
-          },
-          {
-            "page": "datapack/json/alchemy_furnace",
-            "zh": "alchemy_furnace（炉型）",
-            "en": "alchemy_furnace"
-          },
-          {
-            "page": "datapack/json/alchemy_wall_material",
-            "zh": "alchemy_wall_material（炉壁材料）",
-            "en": "alchemy_wall_material"
           },
           {
             "page": "datapack/json/artifact",
@@ -618,11 +582,6 @@
             "page": "datapack/json/block_aura",
             "zh": "block_aura（方块灵气）",
             "en": "block_aura"
-          },
-          {
-            "page": "datapack/json/blueprint_binding",
-            "zh": "blueprint_binding（图纸绑定）",
-            "en": "blueprint_binding"
           },
           {
             "page": "datapack/json/contract_type",
@@ -670,16 +629,6 @@
             "page": "datapack/json/element_reaction",
             "zh": "element_reaction（元素反应）",
             "en": "Element Reactions"
-          },
-          {
-            "page": "datapack/json/forging_blueprint",
-            "zh": "forging_blueprint（锻造图纸）",
-            "en": "forging_blueprint"
-          },
-          {
-            "page": "datapack/json/forging_method",
-            "zh": "forging_method（锻造手法）",
-            "en": "forging_method"
           },
           {
             "page": "datapack/json/formation",
@@ -813,11 +762,6 @@
             "page": "datapack/json/technique_binding",
             "zh": "technique_binding（功法绑定）",
             "en": "technique_binding"
-          },
-          {
-            "page": "datapack/json/tool_binding",
-            "zh": "tool_binding（工具绑定）",
-            "en": "tool_binding"
           },
           {
             "page": "datapack/json/tribulation",
@@ -1113,11 +1057,6 @@
                 "page": "java/interfaces/alchemy/alchemy-heat-source",
                 "zh": "AlchemyHeatSource",
                 "en": "AlchemyHeatSource"
-              },
-              {
-                "page": "java/interfaces/alchemy/alchemy-workstation",
-                "zh": "AlchemyWorkstation",
-                "en": "AlchemyWorkstation"
               }
             ]
           },
@@ -1218,11 +1157,162 @@
         "page": "technical/cost",
         "zh": "消耗",
         "en": "Cost"
+      }
+    ]
+  },
+  {
+    "page": "addons/alchemy/index",
+    "zh": "炼丹工作站附属",
+    "en": "Alchemy Workstations Addon",
+    "items": [
+      {
+        "page": "addons/alchemy/usage",
+        "zh": "使用说明",
+        "en": "Usage"
       },
       {
-        "page": "technical/talisman-scoring",
+        "page": "addons/alchemy/config",
+        "zh": "服务端配置",
+        "en": "Server Configuration"
+      },
+      {
+        "page": "addons/alchemy/datapack/alchemy_furnace",
+        "zh": "alchemy_furnace（炉型）",
+        "en": "alchemy_furnace"
+      },
+      {
+        "page": "addons/alchemy/datapack/alchemy_wall_material",
+        "zh": "alchemy_wall_material（炉壁材料）",
+        "en": "alchemy_wall_material"
+      },
+      {
+        "page": "addons/alchemy/datapack/alchemy_recipe",
+        "zh": "alchemy_recipe（炼丹配方）",
+        "en": "alchemy_recipe"
+      },
+      {
+        "page": "addons/alchemy/tutorial/refine-a-pill",
+        "zh": "炼制丹药",
+        "en": "Refine a Pill"
+      },
+      {
+        "page": "addons/alchemy/java/alchemy-workstation",
+        "zh": "AlchemyWorkstation",
+        "en": "AlchemyWorkstation"
+      },
+      {
+        "page": "addons/alchemy/components",
+        "zh": "物品组件",
+        "en": "Item Components"
+      },
+      {
+        "page": "addons/alchemy/java/api",
+        "zh": "Java API",
+        "en": "Java API"
+      },
+      {
+        "page": "addons/alchemy/java/screens",
+        "zh": "界面",
+        "en": "Screens"
+      },
+      {
+        "page": "addons/alchemy/kubejs",
+        "zh": "KubeJS",
+        "en": "KubeJS"
+      }
+    ]
+  },
+  {
+    "page": "addons/forging/index",
+    "zh": "锻器工作站附属",
+    "en": "Forging Workstations Addon",
+    "items": [
+      {
+        "page": "addons/forging/usage",
+        "zh": "使用说明",
+        "en": "Usage"
+      },
+      {
+        "page": "addons/forging/config",
+        "zh": "服务端配置",
+        "en": "Server Configuration"
+      },
+      {
+        "page": "addons/forging/datapack/forging_blueprint",
+        "zh": "forging_blueprint（锻造图纸）",
+        "en": "forging_blueprint"
+      },
+      {
+        "page": "addons/forging/datapack/forging_method",
+        "zh": "forging_method（锻造手法）",
+        "en": "forging_method"
+      },
+      {
+        "page": "addons/forging/datapack/tool_binding",
+        "zh": "tool_binding（工具绑定）",
+        "en": "tool_binding"
+      },
+      {
+        "page": "addons/forging/datapack/blueprint_binding",
+        "zh": "blueprint_binding（图纸绑定）",
+        "en": "blueprint_binding"
+      },
+      {
+        "page": "addons/forging/tutorial/forge-a-treasure",
+        "zh": "锻造法器",
+        "en": "Forge a Treasure"
+      },
+      {
+        "page": "addons/forging/components",
+        "zh": "物品组件",
+        "en": "Item Components"
+      },
+      {
+        "page": "addons/forging/kubejs",
+        "zh": "KubeJS",
+        "en": "KubeJS"
+      },
+      {
+        "page": "addons/forging/java",
+        "zh": "Java 与网络",
+        "en": "Java and Networking"
+      }
+    ]
+  },
+  {
+    "page": "addons/talisman/index",
+    "zh": "画符工作站附属",
+    "en": "Talisman Workstations Addon",
+    "items": [
+      {
+        "page": "addons/talisman/usage",
+        "zh": "使用说明",
+        "en": "Usage"
+      },
+      {
+        "page": "addons/talisman/datapack/talisman_drawing",
+        "zh": "talisman_drawing（画符配方）",
+        "en": "Talisman Drawing (talisman_drawing)"
+      },
+      {
+        "page": "addons/talisman/tutorial/author-a-talisman-drawing",
+        "zh": "编写画符配方",
+        "en": "Write a Drawing Recipe"
+      },
+      {
+        "page": "addons/talisman/technical/talisman-scoring",
         "zh": "画符判分",
         "en": "Talisman Scoring"
+      },
+      {
+        "page": "addons/talisman/tools/talisman-strokes",
+        "zh": "符箓笔画编辑器",
+        "en": "Talisman Stroke Editor"
+      },
+      {
+        "page": "addons/talisman/config",
+        "zh": "服务端配置",
+        "en": "Server Configuration"
       }
     ]
   },
@@ -1241,11 +1331,6 @@
         "page": "tools/formation-figure",
         "zh": "阵法图形编辑器",
         "en": "Formation Figure Editor"
-      },
-      {
-        "page": "tools/talisman-strokes",
-        "zh": "符箓笔画编辑器",
-        "en": "Talisman Stroke Editor"
       }
     ]
   }

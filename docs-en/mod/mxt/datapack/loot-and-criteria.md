@@ -18,13 +18,12 @@ Besides the datapack registries, MiXianTu registers a small set of vanilla types
 
 ## Advancement Criteria {#advancement-criteria}
 
-All four criteria share one shape: an optional `definition` filter plus the standard vanilla player predicate. A criterion goes in the `trigger` of a `criteria` entry, and `conditions` is the two fields below.
+The following criteria share one shape: an optional `definition` filter plus the standard vanilla player predicate. A criterion goes in the `trigger` of a `criteria` entry, and `conditions` is the two fields below.
 
 | Criterion | Fires when | What `definition` holds |
 | --- | --- | --- |
 | `mxt:breakthrough` | A breakthrough succeeds | The realm stage that was reached |
 | `saturn:ability` | A cast is committed | That ability |
-| `mxt:alchemy` | An alchemy batch completes | That recipe |
 | `mxt:tribulation` | A tribulation completes successfully | That tribulation |
 
 | Field | Type | Default | Description |
@@ -47,6 +46,8 @@ All four criteria share one shape: an optional `definition` filter plus the stan
   "requirements": [["foundation"]]
 }
 ```
+
+For the alchemy completion criterion, see [Alchemy Workstations](../addons/alchemy/datapack/alchemy_recipe.md#advancement).
 
 ## Loot Conditions {#loot-conditions}
 

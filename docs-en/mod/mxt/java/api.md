@@ -35,32 +35,24 @@ Three things up front:
 | Ask "will a formation stop this" | [`FormationProtection`](#formationprotection) | `runtime.formation` |
 | Ask "does it count as one of mine" | [`FriendService`](#friendservice) | `runtime.friend` |
 | Compute an item's currency value | [`CurrencyValueService`](#currencyvalueservice) | `runtime.economy` |
-| Preview a batch, light a furnace, abort a batch | [`AlchemyWorkstationService`](#alchemyworkstationservice) | `runtime.alchemy` |
 | Add a runtime item-use gesture | [`ItemUseCycle` / `ItemUseCycles`](#itemusecycles) | `api` / `runtime.hold` |
 
 ## Reading data definitions {#definitions}
 
 ### `MxtDatapackRegistries` {#mxtdatapackregistries}
 
-Package `com.iafenvoy.mxt.registry`. The declarations of the 40 native datapack registries and their uniform read entry point; `/reload` rebuilding and client synchronisation are both left to the vanilla registry system, and this class **holds no snapshot**.
+Package `com.iafenvoy.mxt.registry`. The declarations of the core's 34 native datapack registries and their shared read entry point; the 2 alchemy and 4 forging process registries use the same registration entry point; `/reload` rebuilding and client synchronisation are both left to the vanilla registry system, and this class **holds no snapshot**.
 
-The nine item/block tables (`item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding`, `tool_binding`, `blueprint_binding`, `block_aura`, `heat_source`) are here too: they are ordinary datapack registries, the item keyed ones claim their entries through `items` (`currency` through `item`) and the block keyed ones through `blocks`, and they are read exactly like everything below. To ask "which definition applies to this stack", use `ItemMatcher.find(...)`. Fields and file locations are in [Registry Overview](../datapack/json/index.md).
+The item/block binding tables (`item_aura`, `currency`, `default_quality`, `item_binding`, `weapon_binding`, `tool_binding`, `blueprint_binding`, `block_aura`, `heat_source`) use the same reading entry point; `tool_binding` and `blueprint_binding` belong to Forging Workstations, and `heat_source` belongs to the core: they are ordinary datapack registries, the item keyed ones claim their entries through `items` (`currency` through `item`) and the block keyed ones through `blocks`, and they are read exactly like everything below. To ask "which definition applies to this stack", use `ItemMatcher.find(...)`. Fields and file locations are in [Registry Overview](../datapack/json/index.md).
 
-Reading a value by id / holder (it reads the **server** registry):
+Every read explicitly receives a registry provider; server and client code use the same signatures:
 
-| Method | Purpose | Notes |
-|     |     |     |
-| `get(ResourceKey<? extends Registry<T>> key, Identifier id)` | Gets the definition value by id | A missing entry gives `Optional.empty()` |
-| `holder(key, Identifier id)` | Gets a holder by id | Reads the **server** registry |
-| `holders(key)` | Iterates every holder of the whole registry | |
-
-Explicitly passing a registry accessor (**use these on the client**):
-
-| Method | Purpose | Notes |
-|     |     |     |
-| `holder(HolderLookup.Provider access, key, Identifier id)` | The **only correct entry point** for getting a holder by id on the client | Does not touch `ServerLifecycleHooks` |
-| `holders(Provider access, key)` / `holders(RegistryAccess access, key)` | Iterates the whole registry | |
-| `get(Provider access, key, Identifier id)` | Gets a value | Same as above |
+| Method | Purpose |
+| --- | --- |
+| `get(HolderLookup.Provider access, key, Identifier id)` | Reads a definition by id, returning `Optional.empty()` if absent |
+| `holder(Provider access, key, Identifier id)` | Reads a Holder by id |
+| `holders(Provider access, key)` | Iterates all Holders in the registry |
+| `register(NewRegistry event, key, codec)` | Lets addons register and synchronize a registry during the datapack registry event, including it in `/mxt registries` |
 
 **This layer filters nothing.** Whether an entry is in the registry is the whole answer, and switching a definition off is load time work (`neoforge:conditions`, see [Disabling a Definition](../datapack/conventions.md#disabling a definition)): an entry a condition blocks is simply not in the registry. So a holder you read is a holder you may act on, and there is no such state as "I read a definition that was switched off".
 
@@ -532,28 +524,6 @@ Key points:
   **`empty` and `0L` are two different conclusions**: `empty` = not currency / no server / overflow / no definition found; `0L` = it is currency, but the stack is empty or it is currently unavailable; on the exchange side "no quotes" shows up as an **empty list**.
   **A query without a holder treats any definition that writes `unavailable_when` as unavailable** (internally it requires that list to be empty); pass a holder to judge by conditions.
   The quality multiplier is the **only** place where "item currency value meets quality": it multiplies the `value_multiplier` of the quality the priced stack resolves for itself; when the product is below 1, past the long ceiling, or no longer finite, the **declared denomination is kept** rather than clamped.
-
-## Alchemy {#alchemy}
-
-### `AlchemyWorkstationService` {#alchemyworkstationservice}
-
-Package `com.iafenvoy.mxt.runtime.alchemy`. The furnace's **one intake point**: previewing, lighting, aborting and the per tick advance all live here, and the block entity only answers state (see [AlchemyWorkstation](interfaces/alchemy/alchemy workstation.md)).
-
-| Method | Purpose | Notes |
-|     |     |     |
-| `start(ServerPlayer player, AlchemyWorkstation station)` | Lights the furnace | Returns `StartResult(started, failure, qualityFailure)`. The materials are consumed only once the whole judgement chain has passed: structure, furnace spec, quality, where the inputs sit and how many there are, whether the temperature can be reached, the ambient aura, and whether the output bin can take the result; a cancellation from `alchemyCraft`'s `Pre`, or a listener that moved the real inventory, gives `CANCELLED` and **does not restore the inventory**. |
-| `preview(ServerPlayer player, AlchemyWorkstation station)` | Previews the same judgement and **takes no chosen recipe** | Returns `AlchemyPreview(mixture, candidates, resolvedRecipe, blocker, parameters, qualityFailure, successOutputs, failureOutputs)`; lighting uses that same `parameters`, so a preview and a real run never give two different answers. |
-| `abort(ServerLevel level, BlockPos pos, AlchemyWorkstation station)` / `abort(..., AlchemyFailure reason)` | Aborts the active batch | Settles it as a failure once, and the materials already consumed are not returned; a batch that is already `READY`, or already settled, is not settled a second time. |
-| `furnaceDefinition(Provider access, ItemStack stack)` | Resolves a furnace spec from a furnace item | An empty stack, no component, an empty id inside the component, or a definition that is not in the registry all give empty. |
-| `tick(ServerLevel level, BlockPos pos, AlchemyWorkstation station)` | Advances one tick | Called by the core block entity's own server tick; the temperature advance, the phase changes, the pending output and the settlement all happen here. |
-
-Result types: `StartResult`, `AlchemyPreview`, `Parameters` (the recipe vector evaluated once at lighting and frozen into the batch), and `enum AlchemyFailure {FURNACE_QUALITY, QUALITY_CONDITIONS, BINDING_CONDITIONS, UNBOUND, MAX_USES, COOLDOWN, NO_FURNACE, STRUCTURE, ACTIVE, CAPACITY, SLOTS, ZERO_POWER, NOT_HERB, INSUFFICIENT, CONFLICT, IMBALANCE, AMBIGUOUS, TEMPERATURE, ENVIRONMENT, INVALID_FORMULA, OUTPUT_CAPACITY, CANCELLED, DISABLED}` (23 values).
-
-Key points:
-
-  **The temperature and the outputs are not written in from outside**: `Parameters` is evaluated once at the moment of lighting and frozen, the active batch reads that frozen copy, and only a batch started after a `/reload` reads a new recipe.
-  **`start` and `preview` share one judgement**: temperature and output capacity only take part in accepting or rejecting the entry that has already been chosen, and never make the judgement pick a weaker recipe.
-  **A heat block answers only two numbers**, see [AlchemyHeatSource](interfaces/alchemy/alchemy heat source.md).
 
 ## Runtime item use {#itemusecycles}
 

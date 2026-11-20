@@ -14,7 +14,7 @@ description: 源码级说明：数据包注册表怎么分成内容层与绑定�
 | 类 | 职责 |
 | --- | --- |
 | `registry.MxtResourceKeys` | 每张表的 `ResourceKey`，与注册表实例、注册事件分开，好让 codec 与运行时服务不必依赖注册类。 |
-| `registry.MxtDatapackRegistries` | 43 张数据包注册表的登记与统一读取入口，其中九张按物品键（`items`，`currency` 用 `item`）或方块键（`blocks`）认领条目。**不持有任何快照**，重载与同步都交给原版注册表系统。 |
+| `registry.MxtDatapackRegistries` | 本体 34 张数据包注册表及已安装工作站附属的统一登记/读取入口，其中部分表按物品键（`items`，`currency` 用 `item`）或方块键（`blocks`）认领条目。**不持有任何快照**，重载与同步都交给原版注册表系统。 |
 | `registry.MxtRegistries` | 固有注册表的 `DeferredRegister`：`type` 那一层的分派（行为、条件、消耗、技能类型……）。 |
 | `registry.MxtDataComponents` | 物品数据组件的登记：每个组件同时声明持久化 codec 与网络 codec。 |
 | `runtime.ServerCache` | 世界加载与 `/reload` 之后的唯一重建点：跨条目索引 + 校验报告。 |
@@ -26,16 +26,16 @@ description: 源码级说明：数据包注册表怎么分成内容层与绑定�
 
 ## 两层：内容层与绑定层 {#两层-内容层与绑定层}
 
-注册表按**它回答什么问题**分成两层；另有九张按条目认领物品与方块的注册表，它们不定义东西，只给已经存在的物品、方块接上规则或值，也列在下面。
+注册表按**它回答什么问题**分成两层；另有按条目认领物品与方块的注册表，它们不定义东西，只给已经存在的物品、方块接上规则或值，也列在下面。
 
 | 层 | 表 | 回答什么 |
 | --- | --- | --- |
 | 内容层 | `artifact`、`spirit_herb` | "这件物品**是**什么"。定义自己就是那个东西（注册表 id 就是它的名字），并认领一批物品当自己的载体。 |
 | 内容层 | `resource`、`aura`、`realm_stage`、`element`、`spirit_root`、`physique`、`ability`、`technique`、`quality`、`formation`、`talisman`、`pill` 等其余各表 | 别的定义按 id 引用它们；它们不认领物品。 |
-| 绑定层 | `item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`、`pill_binding`、`technique_binding` | "这件**已经有**的物品，在本模组里还算什么"，以及要往上接哪些规则。 |
+| 绑定层 | `item_binding`、`weapon_binding`、`pill_binding`、`technique_binding` | "这件**已经有**的物品，在本模组里还算什么"，以及要往上接哪些规则。 |
 | 绑定层 | `item_aura`、`currency`、`default_quality`（物品键）、`block_aura`、`heat_source`（方块键） | "**这一个**条目带什么值"：物品或方块自己带着的那份值。 |
 
-绑定层这些表写法一致：一份文件一条定义，文件在 `data/<命名空间>/mxt/<表>/<条目>.json`，条目按物品键（`items`，`currency` 用 `item`）或方块键（`blocks`）认领物品与方块，`priority` 决定多条同时命中时谁赢——数值大者胜，同分回落注册表顺序（`block_aura` 没有这个字段：多条命中同一个方块时全部生效、相加）。它们都**从不定义物品本身**：物理物品由原版、模组或 KubeJS 注册，绑定层只往上接规则——`ItemStack` 里**从来不存一份逻辑物品定义**，只存组件。
+绑定层这些表写法一致：一份文件一条定义，文件在 `data/<命名空间>/<注册表命名空间>/<表>/<条目>.json`，条目按物品键（`items`，`currency` 用 `item`）或方块键（`blocks`）认领物品与方块，`priority` 决定多条同时命中时谁赢——数值大者胜，同分回落注册表顺序（`block_aura` 没有这个字段：多条命中同一个方块时全部生效、相加）。它们都**从不定义物品本身**：物理物品由原版、模组或 KubeJS 注册，绑定层只往上接规则——`ItemStack` 里**从来不存一份逻辑物品定义**，只存组件。
 
 内容层与绑定层的区别不是"读不读物品"（内容层那两张表也按匹配器认领物品），而是**定义的是东西还是规则**：`artifact` 说"这几件物品是法器、它有这些能力"，`weapon_binding` 说"这件物品挥出去时多跑一段行为"。所以同一个物品可以同时被一个 `artifact` 认领、被一个 `weapon_binding` 接上武器规则、再被一个 `item_binding` 接上一段使用后行为。
 
@@ -47,8 +47,6 @@ description: 源码级说明：数据包注册表怎么分成内容层与绑定�
 | `weapon_binding` | 攻击 / 右键 / 每 tick 的行为、`attributes`（写进堆的 `ATTRIBUTE_MODIFIERS`） | 攻击、右键、每 tick 刷新 |
 | `pill_binding` | 这一族物品是哪一份丹药，以及它自己的服用次数上限与冷却 | 服丹时（闸门与计次） |
 | `technique_binding` | 这件物品算哪门功法的手册，以及学习前的条件 | 读功法 |
-| `tool_binding` | 这件工具解锁哪些锻打方式 | 锻造 |
-| `blueprint_binding` | 这件图纸提供哪些锻造蓝图 | 锻造 |
 
 ## 一份 JSON 的旅程 {#一份-json-的旅程}
 
@@ -68,7 +66,7 @@ flowchart TD
 
 **登记。** 数据包注册表在 `NewRegistry` 事件上登记，存档 codec 与同步 codec 传的是同一个对象，所以每个定义只写一份 codec。定义里引用另一条定义时用的是 **Holder codec**（`X.CODEC`，`RegistryFixedCodec`），它解出来的 holder **不看注册表**。
 
-**文件与解码。** 文件在 `data/<命名空间>/mxt/<注册表路径>/<条目路径>.json`，条目 id 就是命名空间加路径——上面那九张按条目认领物品与方块的注册表也走同一条路，一条定义一个文件、每个条目有自己的 id。解码由该表自己的 codec 负责，四种结果要分清：
+**文件与解码。** 文件在 `data/<命名空间>/<注册表命名空间>/<注册表路径>/<条目路径>.json`，条目 id 就是命名空间加路径——上面这些按条目认领物品与方块的注册表也走同一条路，一条定义一个文件、每个条目有自己的 id。解码由该表自己的 codec 负责，四种结果要分清：
 
 - **未知键静默丢弃**：`RecordCodecBuilder` 不认识没写的字段，一份写着旧字段的文件照常加载，只是那个键不再生效。改字段名时不会有人替你报错。
 - **空表、空列表、非法值拒收**：这一类走 `.validate(...)`，加载报错。
@@ -91,7 +89,7 @@ flowchart TD
 - `trigger` 没写 action（默认是 `mxt:no_op`）——照设计读得通，但几乎一定是漏了字段。
 - 一门功法进了一个进度等级、却配不全它后面必须走的每一级。
 
-每条问题都带 `data/<命名空间>/mxt/<表>/<条目>` 这样的路径，收集齐了一次性打日志，**不中断加载**：有问题的条目不进索引，它周围的定义照常可用。单条目自己的问题（字段值非法、空表）在解码期就拒了，不会留到这一步。
+每条问题都带 `data/<命名空间>/<注册表命名空间>/<表>/<条目>` 这样的路径，收集齐了一次性打日志，**不中断加载**：有问题的条目不进索引，它周围的定义照常可用。单条目自己的问题（字段值非法、空表）在解码期就拒了，不会留到这一步。
 
 **附件不在重载范围内。** 实体、区块与世界的附件只在**世界加载**时解码一次，`/reload` 不重解。所以"身体里存着一份当前包已经不提供的 holder"是正常状态：要问"现在还在不在"就按 id 回查注册表，别拿手里那枚 holder 当它还存在的证据。附件有哪些、各挂在什么上见[附件](./attachments.md)。
 
@@ -118,7 +116,7 @@ flowchart TD
 2. **这一堆携带的定义**自己声明的档（可选字段 `quality`）——定义类型实现 `QualityProvider`、再登记它的载体组件，`QualityService.carry` 是唯一的登记入口，载体只凭这一堆就答得出，取出的引用在当前包没有对应条目时这一层同样答空。声明它的九个定义是 `technique` / `alchemy_furnace` / `alchemy_wall_material` / `spirit_root` / `physique` / `pill` / `formation` / `secret_realm` / `contract_type`；
 3. 注册表 `mxt:default_quality`——堆上没有定义可问时的答案：裸的创造 / `/give` 物品，以及不携带物品身份的 `artifact` / `spirit_herb`（后者由它的果实命中物品）。
 
-`artifact` 与 `spirit_herb` 没有 `quality` 是有意的：它们不携带物品身份，堆上没有装定义身份的组件。`talisman` 也没有：它的载体装的是一列符的 id，没有单份定义可问，档由画符配方写组件、写不上才兜底到第 3 层。模块自己的定档逻辑另外接：锻造按蓝图 `quality_by_extra_steps` 曲线、画符按完成度 `grades[].quality`、灵植按 `quality_by_age` 与药龄，都是定完把档写进第 1 层那个组件。`mxt:forging_result` 只记锻造记录（蓝图 id 与步数），**不含档位**；所以 `/quality clear` 会把锻造/铭刻写的那一档一起清掉，退回第 2 层、再退回第 3 层。
+`artifact` 与 `spirit_herb` 没有 `quality` 是有意的：它们不携带物品身份，堆上没有装定义身份的组件。`talisman` 也没有：它的载体装的是一列符的 id，没有单份定义可问，档由画符配方写组件、写不上才兜底到第 3 层。模块自己的定档逻辑另外接：锻造按蓝图 `quality_by_extra_steps` 曲线、画符按完成度 `grades[].quality`、灵植按 `quality_by_age` 与药龄，都是定完把档写进第 1 层那个组件。`mxt_forging:forging_result` 只记锻造记录（蓝图 id 与步数），**不含档位**；所以 `/quality clear` 会把锻造/铭刻写的那一档一起清掉，退回第 2 层、再退回第 3 层。
 
 `hasOverride(stack)` 问的是"组件在不在"，与"解析出没解析出档位"是两个问题：一件靠携带的定义或这张注册表兜底的物品也照样显示品质（组件不在）。
 

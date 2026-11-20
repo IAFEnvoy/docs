@@ -35,32 +35,24 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | 问"这一下会不会被阵法拦下" | [`FormationProtection`](#formationprotection) | `runtime.formation` |
 | 问"它算不算我的人" | [`FriendService`](#friendservice) | `runtime.friend` |
 | 算一件物品的货币价值 | [`CurrencyValueService`](#currencyvalueservice) | `runtime.economy` |
-| 预览一炉、开一炉、终止一炉 | [`AlchemyWorkstationService`](#alchemyworkstationservice) | `runtime.alchemy` |
 | 添加一种运行期长按用途 | [`ItemUseCycle` / `ItemUseCycles`](#itemusecycles) | `api` / `runtime.hold` |
 
 ## 数据定义怎么读 {#definitions}
 
 ### `MxtDatapackRegistries` {#mxtdatapackregistries}
 
-包 `com.iafenvoy.mxt.registry`。40 张原生数据包注册表的声明与统一读取入口，`/reload` 重建与客户端同步都交给原版注册表系统，这个类**不持有任何快照**。
+包 `com.iafenvoy.mxt.registry`。本体 34 张原生数据包注册表的声明与统一读取入口；炼丹附属的 2 张与锻器附属的 4 张工艺表也通过此入口登记，`/reload` 重建与客户端同步都交给原版注册表系统，这个类**不持有任何快照**。
 
-九张物品/方块表（`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`、`block_aura`、`heat_source`）也在这里：它们就是普通的数据包注册表，物品键的按 `items` 认领条目（`currency` 用 `item`）、方块键的按 `blocks` 认领条目，读法与下面完全一样，没有第二套入口。要按物品堆查"哪条定义适用于它"用 `ItemMatcher.find(...)`。字段与文件位置见[注册表总览](../datapack/json/index.md)。
+物品/方块绑定表（`item_aura`、`currency`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`、`block_aura`、`heat_source`）使用同一读取入口；其中 `tool_binding`、`blueprint_binding` 由锻器附属提供，`heat_source` 由本体统一提供：它们就是普通的数据包注册表，物品键的按 `items` 认领条目（`currency` 用 `item`）、方块键的按 `blocks` 认领条目，读法与下面完全一样，没有第二套入口。要按物品堆查"哪条定义适用于它"用 `ItemMatcher.find(...)`。字段与文件位置见[注册表总览](../datapack/json/index.md)。
 
-按 id / holder 取值（读服务端注册表）：
+所有读取方法都显式接收注册表访问器，服务端与客户端使用同一套签名：
 
-| 方法 | 作用 | 备注 |
-| --- | --- | --- |
-| `get(ResourceKey<? extends Registry<T>> key, Identifier id)` | 按 id 取定义值 | 条目不存在给 `Optional.empty()` |
-| `holder(key, Identifier id)` | 按 id 取 holder | 读的是**服务端**注册表 |
-| `holders(key)` | 遍历整表的全部 holder | |
-
-显式传入注册表访问器（**客户端用这几个**）：
-
-| 方法 | 作用 | 备注 |
-| --- | --- | --- |
-| `holder(HolderLookup.Provider access, key, Identifier id)` | 客户端按 id 取 holder 的**唯一正确入口** | 不碰 `ServerLifecycleHooks` |
-| `holders(Provider access, key)` / `holders(RegistryAccess access, key)` | 遍历整表 | |
-| `get(Provider access, key, Identifier id)` | 取值 | 同上 |
+| 方法 | 作用 |
+| --- | --- |
+| `get(HolderLookup.Provider access, key, Identifier id)` | 按 id 读取定义值，缺失时返回 `Optional.empty()` |
+| `holder(Provider access, key, Identifier id)` | 按 id 读取 Holder |
+| `holders(Provider access, key)` | 遍历该表的全部 Holder |
+| `register(NewRegistry event, key, codec)` | 附属在数据包注册事件中登记并同步自己的表，自动纳入 `/mxt registries` 列表 |
 
 **这一层不过滤任何东西**：条目在不在注册表里就是全部答案，而"停用一条定义"是加载期的事（`neoforge:conditions`，见[停用一条定义](../datapack/conventions.md#停用一条定义)），被条件挡掉的条目根本不在表里。所以读了 holder 就能直接动用，没有"读到了一条被关掉的定义"这种状态。
 
@@ -532,28 +524,6 @@ public interface QualityProvider {
 - **`empty` 与 `0L` 是两种结论**：`empty` = 不是货币 / 没有服务端 / 溢出 / 找不到定义；`0L` = 是货币，但空堆或当前不可用；兑换那边"没有报价"表现为**空列表**。
 - **不带持有者的查询会把任何写了 `unavailable_when` 的定义当成不可用**（内部要求那份列表为空）；要按条件判定就传 holder。
 - 品质倍率是"物品货币价值遇见品质"的**唯一**地方：乘的是被定价那一堆自己解出的品质的 `value_multiplier`；乘积小于 1、越过 long 上界或不再有限时**保留声明面额**，而不是夹取。
-
-## 炼丹 {#alchemy}
-
-### `AlchemyWorkstationService` {#alchemyworkstationservice}
-
-包 `com.iafenvoy.mxt.runtime.alchemy`。丹炉的**唯一受理点**：预览、开炉、终止与每刻推进都在这里，方块实体只回答状态（见 [AlchemyWorkstation](./interfaces/alchemy/alchemy-workstation.md)）。
-
-| 方法 | 作用 | 备注 |
-| --- | --- | --- |
-| `start(ServerPlayer player, AlchemyWorkstation station)` | 开一炉 | 返回 `StartResult(started, failure, qualityFailure)`。整条判定链跑完才扣料：结构、炉型、品质、投料摆放与容量、温度够不够得到、环境灵气、产物仓装不装得下；被 `alchemyCraft` 的 `Pre` 取消、或监听器改动了真实库存，都给 `CANCELLED` 且**不还原库存**。 |
-| `preview(ServerPlayer player, AlchemyWorkstation station)` | 预览同一套判定，**不接收所选配方** | 返回 `AlchemyPreview(mixture, candidates, resolvedRecipe, blocker, parameters, qualityFailure, successOutputs, failureOutputs)`；开炉走的就是同一份 `parameters`，所以预览与实跑不会给出两个答案。 |
-| `abort(ServerLevel level, BlockPos pos, AlchemyWorkstation station)` / `abort(..., AlchemyFailure reason)` | 终止活动批次 | 按失败结算一次，已投入的材料不返还；已经 `READY` 或已经结算过的批次不再结算第二次。 |
-| `furnaceDefinition(Provider access, ItemStack stack)` | 由一件炉体解析炉型规格 | 堆是空的、没有组件、组件里的 id 为空、或那条定义不在注册表里，都给空。 |
-| `tick(ServerLevel level, BlockPos pos, AlchemyWorkstation station)` | 每刻推进一次 | 由核心方块实体自己的服务端 tick 调；推炉温、进出阶段、生成待产出与结算都在这里。 |
-
-结果类型：`StartResult`、`AlchemyPreview`、`Parameters`（开炉时求值一次、冻结进批次的配方向量），以及 `enum AlchemyFailure {FURNACE_QUALITY, QUALITY_CONDITIONS, BINDING_CONDITIONS, UNBOUND, MAX_USES, COOLDOWN, NO_FURNACE, STRUCTURE, ACTIVE, CAPACITY, SLOTS, ZERO_POWER, NOT_HERB, INSUFFICIENT, CONFLICT, IMBALANCE, AMBIGUOUS, TEMPERATURE, ENVIRONMENT, INVALID_FORMULA, OUTPUT_CAPACITY, CANCELLED, DISABLED}`（23 个）。
-
-要点：
-
-- **温度与产物不是外部写进去的**：`Parameters` 在开炉那一刻求值一次并冻结，活动批次读的是这份冻结值，`/reload` 之后新批次才读新配方。
-- **`start` 与 `preview` 共用同一条判定**：温度与产物容量只在"接受还是拒绝已经选出的那一条"这一步参与，不会让判定改选一条更弱的配方。
-- **供热方块回答两个数**，见 [AlchemyHeatSource](./interfaces/alchemy/alchemy-heat-source.md)。
 
 ## 运行期物品使用 {#itemusecycles}
 

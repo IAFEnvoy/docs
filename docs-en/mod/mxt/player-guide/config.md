@@ -11,30 +11,21 @@ This page collects the **server configuration** entries: they are grouped into t
 
 For Client Config → World Effects → Scene Depth Enhancement, see [Light Beam](./light-beam.md#scene-depth-enhancement).
 
-## Talisman {#talisman}
+MiXianTu owns the settings on this page. Each workstation addon has its own Jupiter configuration entry: [Alchemy Workstations](../addons/alchemy/config.md), [Forging Workstations](../addons/forging/config.md) and [Talisman Workstations](../addons/talisman/config.md). The core's toxicity, herb and shared talisman-item settings also apply without the addons installed.
 
-The ten entries the talisman workstation uses, plus the cooldown that governs firing one by hand. The clock is always **the game tick when the server receives a packet**; a timestamp or an amount a client reports is never read.
+## Talisman {#talisman}
 
 | Entry | Default | What it governs |
 | --- | --- | --- |
-| **Server Config → Talisman → Minimum Stroke Interval** | `300` (ms) | The least time between two strokes, and between "the drawing opened" and the first stroke; `0` disables it. A stroke below it is **refused**. It stops hundreds of strokes arriving at once, but **not** a script that traces at a human pace. |
-| **Server Config → Talisman → Rejected Strokes Allowed** | `3` | Reject more strokes than this in one drawing and the session fails, consuming the materials. Only "too fast" and "not enough pigment" count; "the brush is no longer on the cursor" does not. |
-| **Server Config → Talisman → Points Per Stroke** | `512` | The point cap of one stroke; a stroke over it is refused. |
-| **Server Config → Talisman → Points Per Drawing** | `4096` | The accumulated point cap of one drawing; a submission over it is refused whole with a warning. |
-| **Server Config → Talisman → Strokes Per Drawing** | `64` | The stroke cap of one drawing, same as above. |
 | **Server Config → Talisman → Brush Capacity** | `4000` | How much pigment one brush holds, in pixels of stroke length. A 90×210 talisman usually sums to 400–1200 pixels, so the default traces about 3–5 of them. |
 | **Server Config → Talisman → Pigment Per Portion** | `1000` | How much pigment one item from the `#mxt:brush_pigment` tag (cinnabar by default) feeds into a brush. |
-| **Server Config → Talisman → Pigment Rate** | `1.0` | Pigment per pixel of stroke length. |
-| **Server Config → Talisman → Pigment Per Stroke Floor** | `1` | The least one stroke costs, so a tap is never free. |
-| **Server Config → Talisman → Pigment Per Stroke Cap** | `0` | The most one stroke may take; `0` means no cap. |
 | **Server Config → Talisman → Use Cooldown** | `20` (ticks) | The item cooldown after firing a talisman by hand; `0` disables it. It is counted per item and covers every talisman the player holds, and a hand pour is refused while it runs. |
-
-**The scoring parameters are not settings**: `pattern.tolerance` and `judgement` are written with the talisman recipe in its JSON, see [Talisman Scoring](../technical/talisman-scoring.md) and [talisman_drawing (the talisman recipe)](../datapack/json/talisman_drawing.md).
 
 ## Alchemy {#alchemy}
 
 | Entry | Default | What it governs |
 | --- | --- | --- |
+| **Server Config → Alchemy → Herb catch-up limit (ticks)** | `24000` | Maximum game ticks processed in one herb-growth catch-up calculation, range `20`–`2147483647`; independent of lifespan display conversion. |
 | **Server Config → Alchemy → Natural toxicity decay per second** | `0` | How much toxicity a body that already has some loses per second, a finite non-negative number. `0` means it never fades on its own; a positive value subtracts once per 20 accumulated active entity ticks. Nothing decays while offline, and a body that never took a pill gains no attachment. |
 
 ## Souls {#souls}

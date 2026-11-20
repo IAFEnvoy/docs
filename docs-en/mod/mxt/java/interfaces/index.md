@@ -17,7 +17,7 @@ Six groups by purpose, one page per interface:
 | Creature contracts | [Contractable](./creature/contractable.md), [ContractOperations](./creature/contract-operations.md), [CaptureListener](./creature/capture-listener.md), [Perchable](./creature/perchable.md) | `com.iafenvoy.mxt.api` |
 | Wheel and keys | [WheelMenuEntry](./wheel/wheel-menu-entry.md), [WheelSource](./wheel/wheel-source.md), [WheelEntryKind](./wheel/wheel-entry-kind.md), [Togglable](./wheel/togglable.md) | the first three in `api`, `Togglable` in `data/ability` |
 | Definitions and costs | [Cost](./definition/cost.md), [TooltipAppender](./definition/tooltip-appender.md) | `api`, `data/cost`, NeoForge |
-| Alchemy | [AlchemyHeatSource](./alchemy/alchemy-heat-source.md), [AlchemyWorkstation](./alchemy/alchemy-workstation.md) | `com.iafenvoy.mxt.api` |
+| Shared heat | [AlchemyHeatSource](./alchemy/alchemy-heat-source.md) | `com.iafenvoy.mxt.api` |
 | Mounts | [MountVehicle](./mount/vehicle.md), [MountRenderer](./mount/renderer.md) | `com.iafenvoy.mxt.api`, `MountRenderer` client side |
 
 `com.iafenvoy.mxt.api` **holds nothing but interfaces and a package note**: implementations stay in their own modules, and gathering the contracts in one package is what keeps depending on the framework's extension points from meaning depending on its internals. Where a package sits says nothing about whether you may use it: `Cost` is in `data/cost` and `Togglable` in `data/ability`, and both are shapes a content mod implements.

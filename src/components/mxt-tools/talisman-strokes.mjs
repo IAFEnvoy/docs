@@ -1,7 +1,7 @@
 import {applyLabels} from './labels.mjs'
 import {en, zh} from './messages/talisman-strokes.mjs'
 
-// The stroke editor for the pattern.strokes of an mxt:talisman_drawing recipe.
+// The stroke editor for the pattern.strokes of an mxt_talisman:talisman_drawing recipe.
 export const TEMPLATE = `<div class="mxt-tool-grid">
     <div class="mxt-tool-board">
         <canvas id="board" width="270" height="630"></canvas>

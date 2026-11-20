@@ -18,7 +18,7 @@ description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless
 类型写在文件里：`"type": "mxt:spirit_shaped"` 或 `"type": "mxt:spirit_shapeless"`。
 
 :::warning 灵气合成与炼丹是两条线
-工作台只认上面两个类型。`mxt:alchemy` 的配方不会在这里跑，工作台里的东西也不会进炼丹流程——两者之间没有任何转换。
+工作台只认上面两个类型。`mxt_alchemy:alchemy` 的配方不会在这里跑，工作台里的东西也不会进炼丹流程——两者之间没有任何转换。
 :::
 
 ## 配方类型 {#配方类型}

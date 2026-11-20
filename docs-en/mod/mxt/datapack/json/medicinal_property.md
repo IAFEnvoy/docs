@@ -34,7 +34,7 @@ The file is an empty object: the name and description are both generated from th
 
 | Where It Is Used | Field | Meaning |
 | --- | --- | --- |
-| Alchemy recipes (recipe type `mxt:alchemy`) | `main_requirements` / `auxiliary_requirements` | A map from properties to potency thresholds: which main and auxiliary properties this recipe asks for, and how much of each. |
+| Alchemy recipes (recipe type `mxt_alchemy:alchemy`) | `main_requirements` / `auxiliary_requirements` | A map from properties to potency thresholds: which main and auxiliary properties this recipe asks for, and how much of each. |
 | Spirit herbs (`spirit_herb`) | `main_effects` / `auxiliary_effects` | How much of that property each item contributes in the main or auxiliary role. |
 
-One property can carry different thresholds in different recipes, and one herb can give different potency in its main and auxiliary roles: the property only says *which* effect it is, and every number lives at the place that references it. How recipes compare potency and how herbs declare it is on [alchemy_recipe](./alchemy_recipe.md) and [spirit_herb](./spirit_herb.md).
+One property can carry different thresholds in different recipes, and one herb can give different potency in its main and auxiliary roles: the property only says *which* effect it is, and every number lives at the place that references it. How recipes compare potency and how herbs declare it is on [alchemy_recipe](../../addons/alchemy/datapack/alchemy_recipe.md) and [spirit_herb](./spirit_herb.md).
