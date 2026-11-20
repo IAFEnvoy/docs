@@ -11,7 +11,7 @@ A formation is something the player **builds**: they lay out the blocks you desc
 
 This tutorial adds two formations to the example pack: a spirit-gathering array (an aura zone plus a buff for the people inside) and a ward (protection that keeps outsiders from breaking in).
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -190,7 +190,7 @@ A useful opener: a sound on the way in and on the way out.
 ]
 ```
 
-The per-entity half fires only for entities **actually inside the sphere** and only for loaded entities; an unloaded chunk produces a spurious leave-and-enter pair, so the arriving half should be **idempotent** — replaying a sound is fine, handing out a reward again is not.
+The per-entity half fires only for entities **inside the sphere** and only for loaded entities; an unloaded chunk produces a spurious leave-and-enter pair, so the arriving half should be **idempotent** — replaying a sound is fine, handing out a reward again is not.
 
 ## Verify {#verify}
 
@@ -226,5 +226,5 @@ The per-entity half fires only for entities **actually inside the sphere** and o
 
 - [formation](../datapack/json/formation.md) — the full field list, structure templates, aura overrides and diagnostics.
 - [Foe Identification](../technical/identification.md) — the judgement behind `spare_friends` and `target: allies`.
-- [Aura Calculation](../technical/aura.md) — how aura zones and a formation drawing the environment actually work.
+- [Aura Calculation](../technical/aura.md) — how aura zones and a formation drawing the environment work.
 - [Commands](../player-guide/commands/formation.md) — every `/formation` subcommand and the plate's behaviour.

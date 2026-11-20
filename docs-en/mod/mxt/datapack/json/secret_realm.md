@@ -13,7 +13,7 @@ File location: `data/<namespace>/mxt/secret_realm/<path>.json`
 
 A secret realm definition is **a template**, not one fixed dimension: every entry opens an **instance dimension** from it, and that dimension key is what an instance is. The key is always `<definition namespace>:secret_realm/<definition path>/<index>`, counting from `0` — **the index is there even when a definition can only ever open one instance** (`example:secret_realm/trial_realm/0`). Each instance therefore keeps its terrain under `dimensions/<namespace>/secret_realm/<path>/<index>/`, and an aura zone can hit it by that id directly (see [Aura Integration](#aura-integration) below).
 
-`mxt:existing` creates no dimension; its instance identity is simply the dimension id it names.
+`mxt:existing` creates no dimension; its instance identity is the dimension id it names.
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -35,7 +35,7 @@ A secret realm definition is **a template**, not one fixed dimension: every entr
 | `enter_action` | `EntityAction` | `mxt:no_op` | The entry behaviour, run on the entering entity after the teleport has landed. |
 | `exit_action` | `EntityAction` | `mxt:no_op` | The exit behaviour, run on the leaving entity before the teleport back to the origin. |
 
-`quality` is optional: every realm shares the one token item `mxt:secret_realm_token`, so the item itself cannot say which tier it is — only the definition the stack carries can: a token into this realm starts on that tier. An `mxt:quality` component on the stack wins; with no `quality` here this layer answers nothing and resolution continues to the [default_quality](./default_quality.md) registry.
+`quality` is optional: every realm shares the one token item `mxt:secret_realm_token`, so the item itself cannot say which tier it is — only the definition the stack carries can: a token into this realm starts on that tier. An `mxt:quality` component on the stack wins; with no `quality` here this layer provides no result and resolution continues to the [default_quality](./default_quality.md) registry.
 
 `exit_condition` **looks at neither** an expiry nor a forced return, otherwise a datapack could lock a player inside a secret realm forever.
 

@@ -53,7 +53,7 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 
 ## 元条件 {#元条件}
 
-元条件不检查物品堆本身，它们决定别的条件怎么算。字段就一个 `conditions` 数组或一个 `condition`。
+元条件不检查物品堆本身，它们决定别的条件如何算。字段就一个 `conditions` 数组或一个 `condition`。
 
 | 类型 | 字段 | 说明 |
 | --- | --- | --- |
@@ -115,7 +115,7 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 { "type": "mxt:spirit_storage_not_full" }
 ```
 
-容量按这件物品堆当前解析出的那份定义算。解析不出储灵能力的物品堆不通过。
+容量按这件物品堆当前解析出的该定义算。解析不出储灵能力的物品堆不通过。
 
 ### `mxt:item_element` {#mxt-item-element}
 
@@ -129,7 +129,7 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 { "type": "mxt:item_element", "elements": ["example:fire", "#example:hot"] }
 ```
 
-读的是"物品的元素"：堆上的 `mxt:element` 组件，加上 `weapon_binding` / `item_binding` / `artifact` 声明的 `element`（全部取并集），一个都没声明时才回落到物品携带的灵气的 `aura_type`。元素与元素标签都接受，空列表在加载期被拒。见 [weapon_binding](../../json/weapon_binding.md)。
+读的是"物品的元素"：物品堆上的 `mxt:element` 组件，加上 `weapon_binding` / `item_binding` / `artifact` 声明的 `element`（全部取并集），一个都没声明时才回落到物品携带的灵气的 `aura_type`。元素与元素标签都接受，空列表在加载期被拒。见 [weapon_binding](../../json/weapon_binding.md)。
 
 ### `mxt:curse_container` {#mxt-curse-container}
 
@@ -146,7 +146,7 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 
 `stacks` 比较的是该条目**将会施加**的层数，它的公式用当前上下文求值；非有限的边界让这一项不通过。物品堆没有这个组件时不通过。
 
-它问的是**物品封着什么**，与实体条件 `mxt:has_curse`（问持有者身上已有）是两件事，所以未装备的护甲照样答得出。
+它检查的是**物品封着什么**，与实体条件 `mxt:has_curse`（问持有者身上已有）是两件事，所以未装备的护甲照样答得出。
 
 ### `mxt:item_quality` {#mxt-item-quality}
 
@@ -154,8 +154,8 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `quality` | 品质 id、`#标签` 或它们的数组 | — | 成员判定：解析出的那一档在不在里面。 |
-| `min_quality` | 品质 id | — | **至少到这一档**：按这一档所在的链比位置，跨链答否；只写它时没有档的物品答否。 |
+| `quality` | 品质 id、`#标签` 或它们的数组 | — | 成员判定：解析出的对应档位在不在里面。 |
+| `min_quality` | 品质 id | — | **至少到该档位**：按该档位所在的链比位置，跨链时返回 `false`；只写它时没有档的物品返回 `false`。 |
 
 ```json
 { "type": "mxt:item_quality", "quality": ["example:fine", "#example:high_tier"] }
@@ -165,9 +165,9 @@ description: 模组注册的所有内置物品条件类型，以及每种类型�
 { "type": "mxt:item_quality", "min_quality": "example:tier_3" }
 ```
 
-走的是与品质闸门、tooltip 相同的解析顺序（**三层**，先命中的赢：堆上的 `mxt:quality` 组件 → 这一堆携带的定义自己声明的 `quality` → 注册表 `default_quality`），所以这一层给的那一档也算数。**这是条件，不是组件**：组件叫 `mxt:quality`（写整份品质对象），两者名字不同。两个字段至少写一个，都不写在加载期被拒（空条件会静默恒真）；解析不出任何一档的物品答否，而不是回落到最低档。
+品质条件采用与品质显示相同的解析顺序：物品堆 `mxt:quality` 组件 → 所携定义声明的 `quality` → 注册表 `default_quality`，取首个有效结果。条件不同于保存完整品质对象的 `mxt:quality` 组件。两个条件字段至少提供一个，否则加载失败；无法解析品质时返回 `false`，不回退至最低档。
 
-`min_quality` 按**这一档所在的那条链**比位置（与升级、`/quality chain` 同一份实现）——不同链的序号没有可比性，所以**跨链一律答否**。要"至少某档"就用它，不必再维护一条把高档位列进去的品质标签。同一份要求还挂在另外两个口子上（匹配器条目 `mxt:quality`、自定义材料 `mxt:quality`——后者也是锻造蓝图 `input` 里"材料至少某档"的写法），见[品质 · 按档位筛物品](../../json/quality.md#gating)。
+`min_quality` 按**该档位所在的该链**比位置（与升级、`/quality chain` 同一份实现）——不同链的序号没有可比性，所以**跨链一律返回 `false`**。要"至少某档"就用它，不必再维护一条把高档位列进去的品质标签。同一份要求还挂在另外两个口子上（匹配器条目 `mxt:quality`、自定义材料 `mxt:quality`——后者也是锻造蓝图 `input` 里"材料至少某档"的写法），见[品质 · 按档位筛物品](../../json/quality.md#gating)。
 
 ### `mxt:item_abilities` {#mxt-item-abilities}
 

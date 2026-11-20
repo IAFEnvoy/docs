@@ -23,7 +23,7 @@ description: Cast an ability, and grant, revoke or query the abilities an entity
 
 Abilities and curses are granted through the same source ledger: **it exists while at least one source holds it**, and the last source letting go is what removes it. A source must be a namespaced identifier such as `example:quest_reward`, and anything else throws. Granting, revoking and querying all only take effect on the server, where a client call answers `false` or an empty list and changes nothing.
 
-The result record of `use`: `committed()` means it completed immediately, `casting()` means the cast has started, `failure()` is the failure enum, `failedResource()` is the ID of the insufficient resource, and `amounts()` are the resources actually paid.
+The result record of `use`: `committed()` means it completed immediately, `casting()` means the cast has started, `failure()` is the failure enum, `failedResource()` is the ID of the insufficient resource, and `amounts()` are the resources paid.
 
 ```js
 const result = MxtAbilities.use(player, 'example:fireball')

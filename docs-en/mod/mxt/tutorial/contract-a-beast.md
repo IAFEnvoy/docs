@@ -13,7 +13,7 @@ A contract type is the rule set for one beast's contract: who may sign, what sig
 
 A data pack gets three levers: write the rules, narrow the list, charge a price.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -103,7 +103,7 @@ To let this contract sign only certain kinds of creature, use a **vanilla entity
 
 The file goes in `data/<namespace>/tags/entity_type/contract/<path>.json`. For `example:spirit_familiar` the tag is `#example:contract/spirit_familiar` and the file is `data/example/tags/entity_type/contract/spirit_familiar.json`.
 
-**A tag that does not exist, or one written empty, places no restriction.** And a list is just a list: putting a creature in the tag does not give it contract eligibility, which is still answered by its own code - a vanilla pig in the tag still cannot sign.
+**A tag that does not exist, or one written empty, places no restriction.** And a list is a list: putting a creature in the tag does not give it contract eligibility, which is still answered by its own code - a vanilla pig in the tag still cannot sign.
 
 ## Step 5 — Bind It, Then Give Orders {#step-5-—-bind-it-then-give-orders}
 
@@ -130,9 +130,9 @@ The player's way in is the Beast Taming Bell (`mxt:beast_taming_bell`): hold it 
 
 ## Step 6 — Recall and the Spirit Beast Bag {#step-6-—-recall-and-the-spirit-beast-bag}
 
-A recall does not move the beast on the spot: it sets a latch that the beast consumes **on its next tick**, and the default implementation simply teleports it.
+A recall does not move the beast on the spot: it sets a latch that the beast consumes **on its next tick**, and the default implementation teleports it.
 
-A recall only happens when all of these hold: it is bound, the beast takes that order, and the owner is **online and in the same dimension**. In another dimension the beast simply does not move. A recall on cooldown is refused out loud.
+A recall only happens when all of these hold: it is bound, the beast takes that order, and the owner is **online and in the same dimension**. In another dimension the beast does not move. A recall on cooldown is refused out loud.
 
 The Spirit Beast Bag (`mxt:spirit_beast_bag`) holds one beast at a time, and only when **it is yours, it is contracted, and the bag was empty**. What it stores is the beast's whole save, so **the contract travels with the beast** and is still there when you let it out. The name, contract type and owner on the bag are a tooltip snapshot, not the truth.
 
@@ -185,7 +185,7 @@ Ending the contract clears the chain's record (both releasing it and the beast d
 
 Some problems have no feedback at all - no message, no log:
 
-- Not bound yet, the contract type cannot be read, the beast does not take that order, or the owner is offline or in another dimension: the beast simply does not move.
+- Not bound yet, the contract type cannot be read, the beast does not take that order, or the owner is offline or in another dimension: the beast does not move.
 - Right-clicking air with the bell opens the screen **on the client**; the server side does nothing because of it.
 - Picking the wheel while the bell is not aimed at any beast: one line saying nothing is selected, and no screen.
 - Right-clicking a block or air with an empty bag: nothing is consumed and nothing happens.

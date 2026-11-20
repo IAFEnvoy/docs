@@ -57,7 +57,7 @@ The [Datapack Visual Editor](https://datapack.mcdev.tech/) lists a type's fields
 
 ## Block Conditions {#block-conditions}
 
-This group actually looks at the block or the environment at that position.
+This group looks at the block or the environment at that position.
 
 ### mxt:aura_range {#mxt-aura-range}
 

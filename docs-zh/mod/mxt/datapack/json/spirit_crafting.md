@@ -1,6 +1,6 @@
 ---
 title: spirit_crafting（灵气合成）
-description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless 两种类型，它们除材料外还要消耗灵气，只在灵气工作台里跑。
+description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless 两种类型，它们除材料外还要消耗灵气，只在灵气工作台中执行。
 ---
 
 # spirit_crafting（灵气合成）
@@ -18,7 +18,7 @@ description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless
 类型写在文件里：`"type": "mxt:spirit_shaped"` 或 `"type": "mxt:spirit_shapeless"`。
 
 :::warning 灵气合成与炼丹是两条线
-工作台只认上面两个类型。`mxt_alchemy:alchemy` 的配方不会在这里跑，工作台里的东西也不会进炼丹流程——两者之间没有任何转换。
+工作台只认上面两个类型。`mxt_alchemy:alchemy` 的配方不会在这中执行，工作台里的东西也不会进炼丹流程——两者之间没有任何转换。
 :::
 
 ## 配方类型 {#配方类型}
@@ -87,7 +87,7 @@ description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless
 
 ## 按组件筛材料 {#按组件筛材料}
 
-`key` 与 `ingredients` 收的是原版材料（`Ingredient`）：直接写物品 id 或 `#物品标签` 时只比物品本身，**不看堆上的任何数据**。要按组件筛，用 NeoForge 在材料上加的那一层自定义材料——`neoforge:ingredient_type` 选类型，`neoforge:components` 按「物品 + 组件」匹配：
+`key` 与 `ingredients` 收的是原版材料（`Ingredient`）：直接写物品 id 或 `#物品标签` 时只比物品本身，**不看物品堆上的任何数据**。要按组件筛，用 NeoForge 在材料上加的该层自定义材料——`neoforge:ingredient_type` 选类型，`neoforge:components` 按「物品 + 组件」匹配：
 
 ```json
 {
@@ -127,7 +127,7 @@ description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless
 }
 ```
 
-它判的是这一堆[解析出来的档](./quality.md#resolution)（组件 → 携带的定义 → `default_quality` 注册表），不是组件精确相等；`min_quality` 跨链答否、只写它时没有档的物品答否。`neoforge:compound` 的字段是 `children`（别名 `ingredients` 也认），另有 `neoforge:difference`（`base` / `subtracted`）与 `neoforge:intersection`（`children`）。按档位筛物品的各个口子见[品质 · 按档位筛物品](./quality.md#gating)。
+它判的是该物品堆[解析出来的档](./quality.md#resolution)（组件 → 携带的定义 → `default_quality` 注册表），不是组件精确相等；`min_quality` 跨链时返回 `false`、只写它时没有档的物品返回 `false`。`neoforge:compound` 的字段是 `children`（别名 `ingredients` 也认），另有 `neoforge:difference`（`base` / `subtracted`）与 `neoforge:intersection`（`children`）。按档位筛物品的各个口子见[品质 · 按档位筛物品](./quality.md#gating)。
 
 ## `aura` 字段 {#aura-字段}
 

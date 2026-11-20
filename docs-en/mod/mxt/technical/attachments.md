@@ -7,9 +7,9 @@ description: Every attachment the mod registers - whether it hangs on an entity,
 
 <span id="attachments" />
 
-Every piece of state in this mod that **travels with an entity, chunk or level** goes through a NeoForge attachment (`AttachmentType`). There is no "mod-specific key stuffed into entity NBT" anywhere. All 30 are registered in one place, `registry.MxtAttachments`.
+Entity, chunk and level state is stored through NeoForge attachments (`AttachmentType`) rather than custom root fields in entity NBT. All 30 attachments are registered in `registry.MxtAttachments`.
 
-Attachments and [data components](./data-components.md) are the same idea on two hosts: a **component hangs on an item stack** and says what that stack is like; an **attachment hangs on an entity, chunk or level** and says what that body or that patch of ground is like right now. Both carry a persistent codec and a network codec, so both save with the world and can sync to the client - but **whether a given attachment syncs is decided per attachment**, as below.
+Attachments and [data components](./data-components.md) store state on different hosts: components belong to item stacks, while attachments belong to entities, chunks or levels. Persistence and client synchronization are configured separately, as listed below.
 
 ## Three Sync Tiers {#three-sync-tiers}
 
@@ -101,7 +101,7 @@ The rule for splitting attachments: **one attachment per module**. The criterion
 
 So `resource_holder` is read by two dozen modules and is still **not** split - what it holds is one thing, this body's resource account. Conversely, the old single `spirit_stats` held lifespan, minor stage records, soul numbers and techniques/roots/physiques at once: four modules with four independent reincarnation switches, so it became `lifespan` / `minor_stages` / `soul_stats` / `technique` / `spirit_identity`.
 
-**The concrete payoff shows up in reincarnation.** `LifeSpanService.reincarnate` resets state through a set of server config switches, and after the split **one switch can only reach its own module's attachment**; before it, any switch could clear another module's state. The switches are `resetCultivation`, `clearMinorStages`, `cancelTribulation`, `clearResources`, `keepSpiritRoots`, `keepTechniques` and `keepSoul`, defaulting to on, on, on, off, keep, keep and keep.
+Separating attachments by module limits each reincarnation setting to the corresponding state. The switches used by `LifeSpanService.reincarnate` are `resetCultivation`, `clearMinorStages`, `cancelTribulation`, `clearResources`, `keepSpiritRoots`, `keepTechniques` and `keepSoul`, with defaults of enabled, enabled, enabled, disabled, preserved, preserved and preserved, respectively.
 
 **Fields that belong to one thing stay together**, even when another module reads them: `technique` keeps "which ones were learned" and "how far each has climbed" in one attachment, because giving up a technique and dropping its levels have to be the same write - split them and you eventually get an orphan record nothing can read.
 

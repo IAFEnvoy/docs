@@ -15,7 +15,7 @@ File location: `data/<namespace>/mxt_forging/forging_blueprint/<path>.json`
 
 **Purpose**: Forging targets and quality settlement.
 
-A blueprint describes one complete forge run: what materials it needs, which striking methods are allowed, which range the current value has to land in, what pattern the final strike has to make, what quality a good run yields and what is left when you ruin it. How a blueprint reaches the player is covered by [Blueprint Binding](./blueprint_binding.md), and how a single strike is written is in [Forging Method](./forging_method.md).
+A blueprint describes one complete forge run: what materials it needs, which striking methods are allowed, which range the current value has to land in, what pattern the final strike has to make, what quality a good run yields and what is left when you ruin it. How a blueprint reaches the player is covered by [Blueprint Binding](./blueprint_binding.md), and how one forging operation is written is in [Forging Method](./forging_method.md).
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -33,7 +33,7 @@ A blueprint describes one complete forge run: what materials it needs, which str
 
 ## `input` {#input}
 
-**Order does not matter**: the Forge Table only requires that its 15 input slots together hold the declared count of every entry (**summed across slots**, not `SizedIngredient#test`'s "one stack holds it all"), and which slots the materials come from does not affect the check; what a session locks is **the stacks actually taken**, so a material carrying components no longer degrades into a bare item at settlement time.
+**Order does not matter**: the Forge Table only requires that its 15 input slots together hold the declared count of every entry (**summed across slots**, not `SizedIngredient#test`'s "one stack holds it all"), and which slots the materials come from does not affect the check; what a session locks is **the stacks taken**, so a material carrying components no longer degrades into a bare item at settlement time.
 
 Loading refuses an empty list, more than 15 entries and a literally repeated entry; **"the same item twice" is no longer decidable**, because a material is an `Ingredient` and two materials may legitimately overlap.
 

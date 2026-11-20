@@ -6,7 +6,7 @@ title: MountRenderer
 
 <span id="mountrenderer" />
 
-**Let another mod decide how a mount is drawn.** A `mxt:mount` is itself the declaration that the artifact is a flying mount, and how it is drawn is only the half it answers along the way; one entity type can only have one renderer, so the mount entity itself only fixes the direction it faces and then picks a renderer, and what gets drawn is decided by the `render` block of the datapack's `mxt:mount`. **A renderer type is simply a `type` registered in the dispatch table `mxt:mount_render_type`**: the data side hands over the `MapCodec` of its own implementation, the client side hands over the object that draws, and a datapack can then write `{"type": "<your id>", ...your own fields}`.
+**Let another mod decide how a mount is drawn.** A `mxt:mount` is itself the declaration that the artifact is a flying mount, and how it is drawn is only the half it answers along the way; one entity type can only have one renderer, so the mount entity itself only fixes the direction it faces and then picks a renderer, and what gets drawn is decided by the `render` block of the datapack's `mxt:mount`. **A renderer type is a `type` registered in the dispatch table `mxt:mount_render_type`**: the data side hands over the `MapCodec` of its own implementation, the client side hands over the object that draws, and a datapack can then write `{"type": "<your id>", ...your own fields}`.
 
 ## Two registrations {#two-registrations}
 

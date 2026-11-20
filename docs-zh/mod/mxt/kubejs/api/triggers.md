@@ -72,7 +72,7 @@ function publishPillTaken(player, toxicity) {
 }
 ```
 
-## 回调收到什么 {#回调收到什么}
+## 回调参数 {#回调收到什么}
 
 回调收到一个 `TriggerSignal`，其访问器为 `type()`（信号 ID）、`gameTime()`、`context()` 与 `source()`（可空的来源 ID）。上下文提供 `actor()`、`target()`、`level()`、`position()`、`item()`、`block()`、`damageSource()`、`formula()`，以及读取发布值的 `get(key)`（返回 `Optional`）与 `data()`（原始扩展表）。请把上下文当作只读对象：它会被同一信号的多个订阅者共享。
 

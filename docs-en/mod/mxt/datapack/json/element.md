@@ -85,7 +85,7 @@ A damage type listed in the `mxt:no_bonus` tag is the exception: that strike rea
 
 All of the above is about **a strike**. What an **item** is is a second reading: the `mxt:element` component on the stack, plus whichever of `weapon_binding` / `item_binding` / `artifact` claims that stack and whether it wrote an `element` (all of them unioned), and only when none of them declares anything does it fall back to the `aura_type` of the aura the item carries. That is what the item condition `mxt:item_element` reads; the full explanation is on [weapon_binding](./weapon_binding.md).
 
-A damage type is a declaration by the element, so **the declared element and the damage type have to agree**: writing `element` on `mxt:damage` / `mxt:damage_target` lets `damage_type` be omitted (the pipeline takes the first type that element claims); when both are written, the first time that strike is actually used checks whether the element really claims that type, and a mismatch logs one line **for each side**. It is deliberately not a load failure: values that cross registries are not necessarily bound yet while the pack loads, so the same pack passes or fails depending on the parallel load order, which is why the check is deferred to first use. That is what makes "a fire-root cultivator casting a water art" expressible while the second layer still reads back the same answer.
+A damage type is a declaration by the element, so **the declared element and the damage type have to agree**: writing `element` on `mxt:damage` / `mxt:damage_target` lets `damage_type` be omitted (the pipeline takes the first type that element claims); when both are written, the first time that strike is used checks whether the element really claims that type, and a mismatch logs one line **for each side**. It is deliberately not a load failure: values that cross registries are not necessarily bound yet while the pack loads, so the same pack passes or fails depending on the parallel load order, which is why the check is deferred to first use. That is what makes "a fire-root cultivator casting a water art" expressible while the second layer still reads back the same answer.
 
 ```json
 // data/example/mxt/element/fire.json
@@ -97,7 +97,7 @@ A damage type is a declaration by the element, so **the declared element and the
 }
 ```
 
-The damage condition `mxt:element` reads the **same** resolution (the type tables are on the [Damage Condition](../types/condition/damage_condition_types.md) page), so the element a condition names and the element the pipeline actually multiplies can never disagree.
+The damage condition `mxt:element` reads the **same** resolution (the type tables are on the [Damage Condition](../types/condition/damage_condition_types.md) page), so the element a condition names and the element the pipeline multiplies can never disagree.
 
 ### A Claimed Type Is a Group: Giving Each Type Its Own Buildup {#a-claimed-type-is-a-group-giving-each-type-its-own-buildup}
 

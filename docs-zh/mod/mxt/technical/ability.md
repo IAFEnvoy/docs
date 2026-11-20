@@ -1,6 +1,6 @@
 ---
 title: 技能施放
-description: 一次施放要过哪些闸门、按键型与直接施放的区别、技能状态（冷却、充能、开关、计时、锁目标）怎么存、怎么写、怎么读。
+description: 一次施放要过哪些校验、按键型与直接施放的区别、技能状态（冷却、充能、开关、计时、锁目标）如何存、如何写、如何读。
 ---
 
 # 技能施放
@@ -9,30 +9,30 @@ description: 一次施放要过哪些闸门、按键型与直接施放的区别�
 
 数据包侧只写字段，这一页讲这些字段**什么时候被读**，以及技能运行期留下的状态存在哪里、内容能碰哪些。
 
-## 一次施放的闸门顺序 {#一次施放的闸门顺序}
+## 一次施放的校验顺序 {#一次施放的闸门顺序}
 
-不管从哪条路来，一次施放都按同一个顺序过闸门：
+不管从哪条路来，一次施放都按同一个顺序过校验：
 
-| 顺序 | 闸门 | 不通过时 |
+| 顺序 | 校验 | 不通过时 |
 | --- | --- | --- |
 | 1 | 授予 | `NOT_GRANTED` |
 | 2 | 冷却 | 冷却中，拒付 |
 | 3 | `condition` | 条件不成立，拒付 |
 | 4 | 元素亲和（见 [ability_affinity](../datapack/json/ability_affinity.md)） | 没有匹配灵根，按权限不足拒绝 |
 | 5 | 充能 | 剩余不足 1，`NO_CHARGES` |
-| 6 | `costs` | 付不出，整份拒付并还原已写入的部分 |
+| 6 | `costs` | 无法支付，整份拒付并还原已写入的部分 |
 | 7 | 执行动作字段 | —— |
 | 8 | 落账：写冷却、扣一次充能 | —— |
 
-`cast_time > 0` 时，第 6 步之后不立刻执行，而是记下一个到点时刻，到那一 tick 才跑第 7 步。
+`cast_time > 0` 时，第 6 步之后不立刻执行，而是记下一个到点时刻，到那一 tick 才执行第 7 步。
 
-条件、代价、冷却、充能这几道闸门只有**会付款的类型**有。`mxt:interval`、`mxt:modifier`、`mxt:mount`、`mxt:upkeep`、`mxt:empty` 不付款，也没有冷却与充能。
+条件、代价、冷却、充能这几道校验只有**会付款的类型**有。`mxt:interval`、`mxt:modifier`、`mxt:mount`、`mxt:upkeep`、`mxt:empty` 不付款，也没有冷却与充能。
 
 ## 两条路 {#两条路}
 
-**按键**：轮盘上的一格，按一下发动。只有五个类型会被放进轮盘：`mxt:active`、`mxt:channelled`、`mxt:targeted`、`mxt:storage`、`mxt:flight_control`。其中 `mxt:storage` 与 `mxt:flight_control` 走的是**短路径**——只查冷却、条件与代价，不扣充能、不跑动作字段（它们本来也没有）。
+**按键**：轮盘上的一格，按一下发动。只有五个类型会被放进轮盘：`mxt:active`、`mxt:channelled`、`mxt:targeted`、`mxt:storage`、`mxt:flight_control`。其中 `mxt:storage` 与 `mxt:flight_control` 走的是**短路径**——只查冷却、条件与代价，不扣充能、不执行动作字段（它们本来也没有）。
 
-**直接施放**：命令 `/saturn ability cast`、KubeJS、物品承载的技能，对**任何类型**都直接施放，不看它是不是按键型。这条路照常过完整套闸门。
+**直接施放**：命令 `/saturn ability cast`、KubeJS、物品承载的技能，对**任何类型**都直接施放，不看它是不是按键型。这条路照常过完整套校验。
 
 轮盘上已保存的格子也算第二条路：布局是落盘的，里面可能点名一条不可按键的技能，服务端仍然受理。
 
@@ -42,7 +42,7 @@ description: 一次施放要过哪些闸门、按键型与直接施放的区别�
 
 附件里每条记录按两个维度寻址：**技能自己的 id** 加 **状态种类**。不同技能 id 互不影响，同一个技能在两个人身上也互不影响。
 
-数据包侧的地址只写一个字段：`id` 就是技能自己的 id。这套存储是**技能专用**的。
+数据包侧的地址只写一个字段：`id` 就是技能自己的 id。该存储是**技能专用**的。
 
 一对地址只有一条记录，写入是替换。同一技能 id 加同一种类写两次，第二条换掉第一条。
 
@@ -77,7 +77,7 @@ description: 一次施放要过哪些闸门、按键型与直接施放的区别�
 
 `charges` 是技能定义上唯一的状态参数：`{"maximum": ..., "recharge_ticks": ...}`，两个都必填。
 
-**只有走完整闸门的付款扣它**：剩余不足 1 就 `NO_CHARGES` 拒付，落账后扣 1。走短路径的两个按键（`mxt:storage` / `mxt:flight_control`）不扣充能。
+**只有走完整校验的付款扣它**：剩余不足 1 就 `NO_CHARGES` 拒付，落账后扣 1。走短路径的两个按键（`mxt:storage` / `mxt:flight_control`）不扣充能。
 
 充能自己会回复：有 `remaining`、还没到 `maximum`、而 `recharge_ticks` 求值有限且大于 `0` 时，距 `last_change` 超过 `recharge_ticks`（至少 1 刻）就 `+1`。每次最多补一点，加到 `maximum` 就停。`recharge_ticks` 求值不可用时不回复，不会退化成每 tick 补满。
 
@@ -108,13 +108,13 @@ description: 一次施放要过哪些闸门、按键型与直接施放的区别�
 | 条件 | 字段 | 说明 |
 | --- | --- | --- |
 | `mxt:ability_storage_toggle` | `expected`（默认 `true`） | 读 `state`，没写过时读作 `default` |
-| `mxt:ability_storage_timer` | `remaining`（`{min?, max?}` 窗口）、`ended` | 没有 `ends_at` 的计时没在跑，剩余按 `0`、`ended` 为真 |
-| `mxt:ability_storage_resource` | `amount`（窗口） | 不给窗口就只问存没存过 |
+| `mxt:ability_storage_timer` | `remaining`（`{min?, max?}` 窗口）、`ended` | 没有 `ends_at` 的计时未运行，剩余按 `0`、`ended` 为真 |
+| `mxt:ability_storage_resource` | `amount`（窗口） | 不给窗口就仅检查存没存过 |
 | `mxt:ability_storage_target` | `locked`（默认 `true`）、`max_distance` | `max_distance` 额外要求那个 UUID 还能在施动者所在维度里找到、且在距离内 |
 | `mxt:ability_storage_charges` | `remaining`（窗口） | 从没花过就读作满，也就是声明的 `maximum` |
 | `mxt:ability_storage_cooldown` | `remaining`（窗口）、`ready` | 长度读 `duration`、起点读 `started_at`；从没写过就是没在冷却，剩余 `0`、`ready` 为真 |
 
-除 `mxt:ability_storage_cooldown` 之外，其余五个只认宿主**声明过**的种类，写入也照这条规则。`mxt:ability_storage_cooldown` 不要求宿主声明 `mxt:cooldown`：每次付款都会写这个值，所以凡是走付款闸门的技能都能被它读出来。
+除 `mxt:ability_storage_cooldown` 之外，其余五个只认宿主**声明过**的种类，写入也照这条规则。`mxt:ability_storage_cooldown` 不要求宿主声明 `mxt:cooldown`：每次付款都会写这个值，所以凡是走付款校验的技能都能被它读出来。
 
 物品宿主上的 `mxt:container` 不在这六个条件的寻址范围里。
 
@@ -122,4 +122,4 @@ description: 一次施放要过哪些闸门、按键型与直接施放的区别�
 
 - **附件是同步的**，所以技能状态会跟着实体同步给客户端。条件在客户端也会被求值（例如物品提示框），那时没有服务端注册表，一律读作不成立。
 - **清状态时 `mxt:cooldown` 单独留下**：撤销最后一个授予来源会清掉它名下的状态，只有冷却不跟着走——它继续按时走完，否则"把物品换下去再换回来"就等于免冷却再放一次。其余种类（充能、引导游标、开关…）仍然一起清掉。
-- **`mxt:cooldown` 是唯一能被内容直接写成拦截的闸门**：写一个 `duration` 就等于给那条技能上锁，长度由写入方说了算。
+- **`mxt:cooldown` 是唯一能被内容直接写成拦截的校验**：写一个 `duration` 就等于给那条技能上锁，长度由写入方决定。

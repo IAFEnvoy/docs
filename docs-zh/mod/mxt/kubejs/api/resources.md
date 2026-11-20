@@ -7,7 +7,7 @@ description: 统一模拟 Cost 数组，再按顺序实扣；模拟失败整笔�
 
 <span id="mxtresources-整份消耗" />
 
-`MxtResources` 只有一个方法，但它管的是**多项目一起付**这件事：整份 `Cost` 数组先按顺序统一模拟，全部通过后再逐条实扣。实扣失败只输出 WARN，后续费用与业务继续，不回滚、不取消。单个 `Cost` 用 [MxtCosts](./costs.md)。
+`MxtResources` 用于处理完整 `Cost` 数组：按顺序模拟全部条目，通过后再逐条实际扣除。实际扣除失败时仅记录 WARN，后续费用与业务继续，不回滚或取消。单个 `Cost` 的操作见 [MxtCosts](./costs.md)。
 
 ## 方法 {#方法}
 
@@ -15,7 +15,7 @@ description: 统一模拟 Cost 数组，再按顺序实扣；模拟失败整笔�
 | --- | --- | --- | --- |
 | `consume(entity, costs)` | 活着的实体、`Cost[]` | `Result<Map<Identifier, Double>>` | 重复目标诊断后按数组原序模拟和实扣，不合并、不重排。模拟失败不扣，实扣失败只 WARN 并继续。 |
 
-`costs` 就是统一的 `Cost` 数组：五种写法都能直接写，旧的 `{"id": ..., "amount": ...}` 简写仍然有效（读作 `saturn:resource`）。付款者必须是**活着的实体**（不需要是玩家，但需要玩家背包的 `mxt:item` 与需要玩家的 `mxt:js` 对非玩家付款者就是付不出）。无法解码的条目使本次调用失败，不会被静默丢掉。
+`costs` 使用统一的 `Cost` 数组，支持五种写法；`{"id": ..., "amount": ...}` 简写解析为 `saturn:resource`。付款者必须是存活的实体；`mxt:item` 需要玩家背包，`mxt:js` 需要玩家，因此这两种类型对非玩家付款者返回无法支付。任一条目无法解码时，本次调用失败，不忽略该条目。
 
 ```js
 const result = MxtResources.consume(player, [

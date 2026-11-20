@@ -7,9 +7,9 @@ description: "A cultivation method that only yields while somebody is beside you
 
 <span id="write-a-dual-cultivation-method" />
 
-This page follows [Define Aura and Realms](./define-aura-and-realms.md): that one built the single-body cultivation loop, this one adds a method to the same pack that **only yields results while somebody is nearby**. The framework grants dual cultivation no bonus of its own — it is just a test, and how much faster, how much it costs and what it gives are yours to write.
+This page follows [Define Aura and Realms](./define-aura-and-realms.md): that one built the single-body cultivation loop, this one adds a method to the same pack that **only yields results while somebody is nearby**. The framework grants dual cultivation no bonus of its own — it is a test, and how much faster, how much it costs and what it gives are yours to write.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 - One `cultivation` whose "does this tick yield anything" asks "is there a friend beside me holding a technique manual".
 - That test, assembled from three pieces that already exist: `mxt:partner` (scans the bodies around), `mxt:target_condition` (asks the question about the other body), `mxt:main_hand_item` (asks what that body holds in its main hand).
@@ -114,7 +114,7 @@ To pin it to "the manual of that one technique", give the technique a [technique
 Two ready-made outlets, both in the same definition:
 
 - **Rate**: write `absorb_amount` higher (the one above is `3 + realm_rank * 0.15` against the solo method's `1.5`).
-- **Extra gains**: add mastery or a resource in `cultivate_action`. It runs **only on a settlement that actually happened** — that is, on the ticks where `cultivate_condition` held — so it needs no condition of its own (use `tick_action` for something that should happen on every tick):
+- **Extra gains**: add mastery or a resource in `cultivate_action`. It runs **only on a settlement that happened** — that is, on the ticks where `cultivate_condition` held — so it needs no condition of its own (use `tick_action` for something that should happen on every tick):
 
 ```json
 "cultivate_action": { "type": "mxt:add_resource", "resource": "example:qi_mastery", "amount": "2" }
@@ -133,7 +133,7 @@ Two ready-made outlets, both in the same definition:
 | Symptom | Cause |
 | --- | --- |
 | Neither body can get in, and the actionbar says no method is available | "My partner is cultivating" was written into `start_condition` or `cultivate_condition`. It can only live in `tick_condition`. |
-| A manual is held but the test still fails | `mxt:main_hand_item` only reads the main hand; also, a manual's identity is the `mxt:technique` component on the stack, and a technique book without it is just a book. |
+| A manual is held but the test still fails | `mxt:main_hand_item` only reads the main hand; also, a manual's identity is the `mxt:technique` component on the stack, and a technique book without it is a book. |
 | Results keep coming after walking away | The test was written into `tick_condition` only, which decides whether to stop rather than whether to yield; or `range` is far too large. |
 | The other body is not cultivating, yet the pair still matches | The test asks what the other body holds, not whether it is cultivating. Add `mxt:cultivating` to `tick_condition` to require both to be seated. |
 | Standing together but the method is never picked | `range` is a sphere around the asking body and is capped at `32`; and with `count`'s `max` at `1`, one extra body beside you already fails it. |

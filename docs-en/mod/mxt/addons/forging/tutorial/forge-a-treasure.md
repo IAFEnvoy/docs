@@ -12,11 +12,11 @@ This page requires **Forging Workstations** (`mxt_forging`). Shared items and ge
 
 The Forge Table does not craft an item, it **hammers** one: you feed it materials, it hands the player a target from a blueprint, and the player pushes a numeric meter into a range with one method at a time. The quality of the piece is then decided by **how many spare strikes** it took. The same blueprint can produce a plain item or a flawless one, and the only difference is the process.
 
-The data splits into four places: `forging_method` is a single strike, `tool_binding` is a **registry keyed by tool item** that lists the methods it unlocks, `forging_blueprint` says *what materials* and *what shape the meter has to end in*, and `blueprint_binding` is a **registry keyed by blueprint item** that lists the blueprints it offers. Both binding registries claim items from the definition through `items` (a single id, a `#item tag` or an array), and the item needs **no component at all** — a stack only carries a list component when you want that particular stack to bring one extra method or blueprint.
+The data splits into four places: `forging_method` is one forging operation, `tool_binding` is a **registry keyed by tool item** that lists the methods it unlocks, `forging_blueprint` says *what materials* and *what shape the meter has to end in*, and `blueprint_binding` is a **registry keyed by blueprint item** that lists the blueprints it offers. Both binding registries claim items from the definition through `items` (a single id, a `#item tag` or an array), and the item needs **no component at all** — a stack only carries a list component when you want that particular stack to bring one extra method or blueprint.
 
 This tutorial adds an iron-sword line to the example pack: four methods, one smith's hammer, one blueprint item and three quality tiers.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -60,12 +60,12 @@ A method is "what pressing the button does": which way the meter moves, what it 
 | `condition` | `EntityCondition` | `mxt:always` | When the method may be used. It is tested against the **player** (see [Entity Conditions](../../../datapack/types/condition/entity_condition_types.md)). |
 | `icon` | icon reference | none | What the list draws, and **what the method is called in that list**. |
 | `cooldown` | Integer | `0` | Cooldown in ticks, range `0..72000`. |
-| `sound` | SoundEvent ID | `minecraft:block.anvil.place` | Played at the table, to everyone nearby, **after** a strike that actually happened. |
+| `sound` | SoundEvent ID | `minecraft:block.anvil.place` | Played at the table, to everyone nearby, **after** a strike that happened. |
 
 Three things that are easy to get wrong:
 
 - **`icon` is not decoration.** The method's name in the selector list is its icon item's own name; with no `icon`, or with a texture icon, the list shows the registry id instead. Give it an icon if you want the list to be readable.
-- **An out-of-bounds strike is simply refused.** Before every strike the game checks whether the value would still be inside the meter afterwards; if not, the strike does not happen. A heavy strike can never be used to shove the value back into the range from outside.
+- **An out-of-bounds strike is rejected.** Before every strike the game checks whether the value would still be inside the meter afterwards; if not, the strike does not happen. A heavy strike can never be used to shove the value back into the range from outside.
 - **The cooldown is recorded before the cost and the condition are checked.** A strike refused for lack of aura or for a failed condition still burns that cooldown.
 
 The sound is resolved by name at load time, so a typo rejects **the whole method entry** instead of playing nothing; write `minecraft:intentionally_empty` to be deliberately silent.
@@ -114,7 +114,7 @@ In the common case this section needs nothing at all: a definition in the regist
 
 :::tip Both routes point at the same definitions
 
-`items` names **items** (`example:smith_hammer`), while a stack's component names **registry entries** (`example:heavy_strike` belongs to the `forging_method` registry). A definition's `methods` / `blueprints` and a stack's list are **unioned**, so the tool slot simply asks whether the stack resolves to at least one method; mistype either id and that entry does not resolve.
+`items` names **items** (`example:smith_hammer`), while a stack's component names **registry entries** (`example:heavy_strike` belongs to the `forging_method` registry). A definition's `methods` / `blueprints` and a stack's list are **unioned**, so the tool slot asks whether the stack resolves to at least one method; mistype either id and that entry does not resolve.
 
 :::
 
@@ -147,7 +147,7 @@ In the common case this section needs nothing at all: a definition in the regist
 | `target_min` / `target_max` | Integer | **required** | The target range, inside the meter bounds. |
 | `result` | Identifier | **required** | What a success produces. |
 
-`input` is **order-independent**: the twelve input slots only have to hold at least the declared amount of every entry (**summed across slots**), and which slot it comes from changes nothing. It is also a **strict** list — an empty list, more than 15 entries, or the same `ingredient` (with the same `count`) written twice all make the whole definition fail to load. Every entry needs its `ingredient`: leave it out and the whole definition is refused at load time. `count` is a positive integer (at least `1`) and defaults to `1`. "The same item twice" cannot be decided — a material is a vanilla `Ingredient`, and two materials may legitimately overlap. Cost lists decode just as strictly: a malformed cost entry fails the load instead of being dropped silently.
+`input` is **order-independent**: the twelve input slots only have to hold at least the declared amount of every entry (**summed across slots**), and which slot it comes from changes nothing. It is also a **strict** list — an empty list, more than 15 entries, or the same `ingredient` (with the same `count`) written twice all make the whole definition fail to load. Every entry needs its `ingredient`: leave it out and the whole definition is refused at load time. `count` is a positive integer (at least `1`) and defaults to `1`. "The same item twice" cannot be decided — a material is a vanilla `Ingredient`, and two materials may legitimately overlap. Cost lists use the same strict decoding rules: a malformed cost entry fails the load instead of being dropped silently.
 
 `ingredient` is a **vanilla material**, so it can match by item or by stack: an item id or a `#item tag` looks at the item only, while **gating a material on its tier** is written with this mod's `mxt:quality` ingredient — the one place "this material must be at least tier three" is expressible:
 
@@ -164,7 +164,7 @@ In the common case this section needs nothing at all: a definition in the regist
 ]
 ```
 
-What a session locks is **the stacks actually taken**, so the quality the settlement reads (Step 4) is the real one rather than a flattened same-named item.
+What a session locks is **the stacks taken**, so the quality the settlement reads (Step 4) is the real one rather than a flattened same-named item.
 
 :::warning The meter and target constraints work both ways
 
@@ -213,7 +213,7 @@ Add the finish pattern and the quality ladder to the same blueprint:
 - The quality is the first entry with `extra steps ≤ max_extra_steps`, so the list must be **ascending** and must end with `2147483647`.
 - A tier's colour is written on the **quality definition's** own `color` (optional): with one, the item name in a tooltip, the quality line in that tooltip, the entry names in the picker's quality category and the tier table in a blueprint's tooltip are all tinted; without one they keep their usual styling (it is not a default white). That tier table is visible in the Forge Table's blueprint tooltip, and once a piece is finished the readout shows the tier it came out as.
 - **A material's quality divides those extra steps.** When `forging_modifier` on an `quality` is above `1`, the same extra steps are read as fewer and buy a better tier. Among several materials the **lowest** tier wins (a piece is only as good as its worst material), materials that resolve no quality are skipped, and a missing or unusable modifier behaves as `1`.
-- What is read is **the material stacks this session locked** — the ones actually taken at settlement — and not the tool or blueprint slots: those two are never consumed and stay editable during a session, so their quality at settlement would describe the table as it is now. An `mxt:quality` component on a material stack therefore counts, and so does the fallback tier that item is given in [default_quality](../../../datapack/json/default_quality.md). A ladder plays no part here: its name is written on the `quality` tier itself, and a binding declares no ladder.
+- What is read is **the material stacks this session locked** — the ones taken at settlement — and not the tool or blueprint slots: those two are never consumed and stay editable during a session, so their quality at settlement would describe the table as it is now. An `mxt:quality` component on a material stack therefore counts, and so does the fallback tier that item is given in [default_quality](../../../datapack/json/default_quality.md). A ladder plays no part here: its name is written on the `quality` tier itself, and a binding declares no ladder.
 
 :::tip Completion is automatic
 

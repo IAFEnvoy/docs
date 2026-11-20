@@ -13,7 +13,7 @@ The mod only provides the framework, generic items, slots, HUD and commands; it 
 
 ## What Dependencies Are Required? {#what-dependencies-are-required}
 
-Jupiter and ApricityUI are required dependencies, and every other required dependency is bundled inside the mod. KubeJS is only needed if you want to register content from scripts. JEI and Jade are optional compatibility mods, and the game works fine without them. See [Installation](./installation.md) for the exact versions.
+Jupiter and ApricityUI are required dependencies, and every other required dependency is bundled inside the mod. KubeJS is only needed if you want to register content from scripts. JEI and Jade are optional compatibility mods, and they are not required to run the game. See [Installation](./installation.md) for the exact versions.
 
 ## How Do I Switch a Piece of Content Off Temporarily? {#how-do-i-switch-a-piece-of-content-off-temporarily}
 

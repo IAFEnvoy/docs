@@ -28,6 +28,6 @@ title: /talisman
 
 单独打出 `/talisman` 就是一个空白载体。
 
-定义声明了 `durability` 时，耐久上限**当场写进载体**——拿到手就有耐久条，而且这时 `count` 给的是**多份单张**（带耐久的载体不叠放），见[符箓定义](../../datapack/json/talisman.md)。
+定义声明了 `durability` 时，耐久上限**立即写进载体**——获取手就有耐久条，而且这时 `count` 给的是**多份单张**（带耐久的载体不叠放），见[符箓定义](../../datapack/json/talisman.md)。
 
-`give` 一次只收**一个**符箓 ID：一张载体只铭刻一条定义，再刻一条会顶掉前一条。要自己写物品组件，字段是单个 `talisman`——`give @s mxt:talisman[mxt:talisman={talisman:"mxt_test:flame_sigil"}]`，字段见[符箓定义](../../datapack/json/talisman.md)。
+`give` 每次接受一个符箓 ID，一张载体仅铭刻一个定义，再次铭刻会替换原定义。手写组件使用单个 `talisman` 字段，例如 `give @s mxt:talisman[mxt:talisman={talisman:"mxt_test:flame_sigil"}]`。字段说明见[符箓定义](../../datapack/json/talisman.md)。

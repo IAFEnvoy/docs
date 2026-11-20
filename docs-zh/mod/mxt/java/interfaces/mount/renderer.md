@@ -6,7 +6,7 @@ title: MountRenderer
 
 <span id="mountrenderer" />
 
-**让别的模组决定载具怎么画。** `mxt:mount` 本身是"这件法器是飞行法器"的声明，怎么画只是它顺带回答的一半；一个实体类型只能有一个渲染器，所以载具实体自己只负责摆好朝向、再挑一个渲染器，画什么由数据包 `mxt:mount` 的 `render` 决定。**渲染器类型就是一个注册进固有分派表 `mxt:mount_render_type` 的 `type`**：数据侧交出自己 `MountRender` 实现的 `MapCodec`，客户端交出那个画东西的对象，数据包随后就能写 `{"type": "<你的 id>", ...你自己的字段}`。
+**让别的模组决定载具如何画。** `mxt:mount` 本身是"这件法器是飞行法器"的声明，如何画只是它顺带回答的一半；一个实体类型只能有一个渲染器，所以载具实体自己只负责摆好朝向、再挑一个渲染器，画什么由数据包 `mxt:mount` 的 `render` 决定。**渲染器类型就是一个注册进固有分派表 `mxt:mount_render_type` 的 `type`**：数据侧交出自己 `MountRender` 实现的 `MapCodec`，客户端交出那个画东西的对象，数据包随后可以写 `{"type": "<你的 id>", ...你自己的字段}`。
 
 ## 两处注册 {#两处注册}
 
@@ -26,9 +26,9 @@ public static final DeferredHolder<MapCodec<? extends MountRender>, MapCodec<MyR
 MountRenderers.register(MyRender.CODEC, new MyVehicleRenderer());
 ```
 
-## 渲染器拿到什么 {#渲染器拿到什么}
+## 渲染器获取什么 {#渲染器拿到什么}
 
-`MountRenderer` 有三个方法：`createState()` 造一份**每辆车每帧一份**的草稿状态（别指望它跨帧），`extract(definition, context, state)` 在这一帧提取，`submit(definition, context, state, poseStack, collector, camera)` 真正画。`submit` 拿到的还是**同一份 context** 与你自己造的那份状态。
+`MountRenderer` 提供三个阶段：`createState()` 为每辆载具的当前帧创建状态；`extract(definition, context, state)` 提取该帧数据；`submit(definition, context, state, poseStack, collector, camera)` 提交绘制。状态不跨帧保留。`submit` 接收与提取阶段相同的 context，以及由实现创建的状态。
 
 `MountRenderContext` 是只读的，一帧快照一次：
 
@@ -45,6 +45,6 @@ MountRenderers.register(MyRender.CODEC, new MyVehicleRenderer());
 
 - **姿态栈交给你时已经站在载具原点、已经转过 yaw，`pitch` 没有转。** 声明过的 `display` 是在"已转 yaw、未俯仰"的坐标系里写的，所以俯仰要你自己接（内置两个渲染器的顺序都是 `translation → pitch → rotation → scale`）。
 - **服务端永远不解析渲染器**：类型注册在 common、渲染器注册在 client，中间靠 codec 对上。所以**这台机器没有对应渲染器时回落成 `mxt:item` 并记一条警告**（不是报错）——同一份数据包要在装了与没装 GeckoLib 的两台机器上都能进。
-- **没注册的 `type` 才是加载期错误**：那个模组不在时，数据包写它的 `type` 会报"未知注册表键"，这是有意的响亮失败，不是静默回落。
+- **未注册的 `type` 导致加载失败**：提供该类型的模组未安装时，数据包会报告「未知注册表键」，不会采用其他类型替代。
 
-`states` 怎么写、七个姿态怎么判、`display` 的默认值见 [载具渲染器类型](../../../datapack/types/other/mount-render.md)。
+`states` 如何写、七个姿态如何判、`display` 的默认值见 [载具渲染器类型](../../../datapack/types/other/mount-render.md)。

@@ -179,7 +179,7 @@ These numbers are **initial values**: the parameters were derived geometrically 
 
 ## Tuning it as an author {#tuning-it-as-an-author}
 
-| What you want | What to turn |
+| Setting | Adjustment |
 | --- | --- |
 | Everything harder or looser | `judgement.sigma` is the master knob, scaling the penalties of all four terms at once. At `sigma = 1.0` a `D_total` of `1` maps to `0.37`, between the 15° row (`0.545`) and the 90° row (`0.239`) in the table. |
 | Tightening only "how accurately it is drawn" | `pattern.tolerance`: it is the divisor of the per-point error as well as the basis of the RDP threshold (`0.5 ×`) and the closed-stroke test (`2 ×`). Lower it and only a line traced right on top counts. |

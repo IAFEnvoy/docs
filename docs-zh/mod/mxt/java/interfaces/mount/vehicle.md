@@ -40,8 +40,8 @@ event.registerEntityRenderer(MY_SKIFF.get(), MySkiffRenderer::new);
 
 ## 其余都是实体自己的事 {#其余都是实体自己的事}
 
-- **移动与落剑判据**：框架只读 `horizontalCollision` / `verticalCollision`；船怎么走、什么时候算撞上，实体自己写。
-- **座位与上座**：坐几个、谁能坐、怎么上，都在实体身上。
+- **移动与落剑判据**：框架只读 `horizontalCollision` / `verticalCollision`；船如何走、什么时候算撞上，实体自己写。
+- **座位与上座**：坐几个、谁能坐、如何上，都在实体身上。
 - **尺寸与坐姿**：碰撞箱、座位落点、`sit` 给的姿势，实体自己摆。
 - **尾迹、存档与同步**：粒子、落盘、发给客户端的东西也都是它的。
 - **定义里的字段**（`width` / `height` / `seat_offsets` / `sit` / `step_height` / `render` / `display`）**要它自己去读**，不读就等于那些字段对它无效。
@@ -54,4 +54,4 @@ event.registerEntityRenderer(MY_SKIFF.get(), MySkiffRenderer::new);
 - **类型存在但没实现契约＝起剑被拒**：玩家看到的仍是"骑不上去"，日志点名是哪个类型、每个类型只记一次。**加载期判不了这件事**——"实不实现接口"只有运行期知道。
 - **生成只发生在服务端**：客户端不生成，画什么由那个实体类型自己的渲染器决定。
 
-`entity_type` 怎么写见[技能类型 · `mxt:mount`](../../../datapack/types/other/ability.md#mxt-mount)；渲染那一半见 [MountRenderer](./renderer.md)。
+`entity_type` 如何写见[技能类型 · `mxt:mount`](../../../datapack/types/other/ability.md#mxt-mount)；渲染那一半见 [MountRenderer](./renderer.md)。

@@ -49,7 +49,7 @@ Anywhere a bi-entity action is expected, an array is accepted too. An array is s
 ]
 ```
 
-An optional action field that is left out is `mxt:no_op`. Loading does not complain about it - that entry simply does nothing.
+An optional action field that is left out is `mxt:no_op`. Loading does not complain about it - that entry does nothing.
 
 :::info Field Types Are Shared
 Fields that take a number generally accept a [number provider](../../../../../library/saturn/types/number.md) instead of a fixed number, so formulas and random values work anywhere a plain number does.

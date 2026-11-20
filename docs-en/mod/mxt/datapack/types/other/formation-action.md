@@ -119,7 +119,7 @@ Replaces the aura resolved at the formation's own position and raises its ceilin
 
 `aura_zone` outranks the biome / dimension / artificial regions, and the override is only in force while the formation is registered; for the full rules see "Aura overrides" on the [formation](../../json/formation.md) page.
 
-`max_bonus` is only applied together with the override: with no override there is nowhere to add it, and an aura the zone does not provide cannot be raised either (it does not conjure aura out of nothing). When several bonuses land on the same aura, the highest wins.
+`max_bonus` is only applied together with the override: with no override there is nowhere to add it, and an aura the zone does not provide cannot be raised either (it does not conjure aura out of nothing). When several bonuses land on the same aura, the highest priority takes precedence.
 
 `upkeep_weight` applies when a formation **competes with players for the same chunk aura**: it asks for the block emitters inside its radius, chunk by chunk, and splits each of those chunks with whoever is cultivating there under that zone's `distribution`; this is its weight in that split. What it is granted pays the maintenance bill, and only the rest is covered by the formation's store and then its owner. Under `realm_weighted` it is compared against the players' weights directly. With several `mxt:aura` modules the largest weight wins.
 
@@ -167,7 +167,7 @@ There is only one question: **if the actor, or the block / entity being acted on
 
 #### Handing it to a claim plugin (`delegate_to_claims`) {#handing-it-to-a-claim-plugin-delegate-to-claims}
 
-When it is true **and a claim protection really is in force**, **not one of the nine switches above is enforced**: what actually stops people is the claim plugin's own rules. With FTB Chunks, for instance, it already protects its claims on its own, so "handing it over" needs no API call — the formation merely stops adding its own layer.
+When it is true **and a claim protection really is in force**, **not one of the nine switches above is enforced**: what stops people is the claim plugin's own rules. With FTB Chunks, for instance, it already protects its claims on its own, so "handing it over" needs no API call — the formation merely stops adding its own layer.
 
 The "is a claim protection in force" test looks at FTB Chunks: **it is installed, and its global `disable_protection` has not been turned off**. It **cannot see team-level** settings — when a team sets all four privacy modes of its claim to public, this still counts as "protected" (recomputing that layer would mean copying the claim plugin's decision a second time, which is exactly what handing it over is meant to avoid).
 
@@ -211,7 +211,7 @@ Server setting "Compat → Raising Needs Permission" (**on by default**, indepen
 
 Everything else is refused, including an **actor that cannot be resolved** (the console, a command source): nobody can agree on the landowner's behalf.
 
-A protecting formation is a claim of jurisdiction, not just a building: being allowed to place blocks on someone's land is not the same as being allowed to raise a law there, and when the structure is already standing (the template matches natural terrain, or something somebody else built), block protection alone cannot stop anyone.
+A protecting formation is a claim of jurisdiction, not a building: being allowed to place blocks on someone's land is not the same as being allowed to raise a law there, and when the structure is already standing (the template matches natural terrain, or something somebody else built), block protection alone cannot stop anyone.
 
 > With no claim plugin this rule is **inert** in the same way (there is no one else's claim to judge), so it changes nothing on a pure Mxt server. The message on refusal is `item.mxt.formation_plate.failed.foreign_claim`, which says more than "the structure does not match" would.
 

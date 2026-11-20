@@ -13,7 +13,7 @@ Both sides go through **one dispatch**, so a signal a script published can drive
 
 **Prerequisite:** [Create Items and Bind Actions with KubeJS](./create-items-with-kubejs.md) is done. This page creates no definitions at all: the `example:qi`, `example:azure_mastery` and `example:azure_breath` it uses are all already in the example pack.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Job |
 | --- | --- |

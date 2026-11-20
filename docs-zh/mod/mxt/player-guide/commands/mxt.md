@@ -58,7 +58,7 @@ title: /mxt
 
   - `... lifespan ...`
 
-    读与改写寿元账本，并让目标当场转世。见 [`/lifespan`](./lifespan.md)。
+    读与改写寿元账本，并让目标立即转世。见 [`/lifespan`](./lifespan.md)。
 
   - `... contract ...`
 
@@ -90,7 +90,7 @@ title: /mxt
 
     - `... publish <signal> [<entity>]`
 
-      手动发布一个信号（需要 gamemaster 权限），不必等待真实事件就能检查规则或订阅；既没有订阅也没有规则监听时会明确提示。
+      手动发布一个信号（需要 gamemaster 权限），不必等待真实事件可以检查规则或订阅；既没有订阅也没有规则监听时会明确提示。
 
   - `... rift ...`
 

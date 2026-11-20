@@ -64,7 +64,7 @@ public static final DeferredRegister<MapCodec<? extends Cost>> REGISTRY =
 | `prefixes()` | 这个变量提供的前缀，每个都含自己的分隔符，例如 `caster_`。以某个前缀开头的名字交给那个变量，并把前缀去掉。 |
 | `value(key, suffix, context)` | 这个名字的值。`key` 是命中的名字或前缀，`suffix` 是它后面的部分，所以 `caster_mxt_common` 到达时是 `caster_` 加后缀 `mxt_common`。返回 `Double.NaN` 表示不认这个名字，于是下一个占用它的变量会被问；解析器对"答不出来"与非有限值各报一次，然后按 `0` 继续。 |
 
-用 `DeferredRegister.create(MxtRegistries.FORMULA_VARIABLE, MODID)` 注册。查不到的名字与非有限值都走 `FormulaDiagnostics`：开发环境打完整错误，生产环境按不同消息各留一行警告，所以附属模组不用自己定错误策略；codec 在解析期就能看出的问题按解码错误报。`FormulaNames` 把注册表 id 摊成公式标识符，并维护资源名与属性名的索引。
+用 `DeferredRegister.create(MxtRegistries.FORMULA_VARIABLE, MODID)` 注册。查不到的名字与非有限值都走 `FormulaDiagnostics`：开发环境打完整错误，生产环境按不同消息各留一行警告，所以附属模组不用自己定错误策略；codec 在解析期可以看出的问题按解码错误报。`FormulaNames` 把注册表 id 摊成公式标识符，并维护资源名与属性名的索引。
 
 一个名字拆给哪些变量只做一次、而且按表达式做：`Expression` 把绑定存在编译好的 exp4j 表达式旁边，所以每 tick 求值的公式每个名字只解析一次，之后只重读数值。名字本身列在[公式变量](../datapack/types/formula_variables.md)。
 
@@ -86,7 +86,7 @@ public static final DeferredRegister<MapCodec<? extends Cost>> REGISTRY =
 | `get(access, key, id)` | 从客户端同步的 lookup 里读一个值。 |
 | `holderOrEmpty(key, id)` | 与 `holder(key, id)` 相同，但没有服务端在跑时给空而不是抛异常。 |
 | `isTagged(key, id, tagId)` / `isTagged(key, holder, tagId)` | 查一条条目上的原版数据包标签。 |
-| `size(key)` / `registry(key)` | 拿到底层 `Registry`；只在服务端运行时可用。 |
+| `size(key)` / `registry(key)` | 获取底层 `Registry`；只在服务端运行时可用。 |
 
 :::info
 
@@ -98,4 +98,4 @@ public static final DeferredRegister<MapCodec<? extends Cost>> REGISTRY =
 
 一个定义类暴露两个 codec。`CODEC` 读写 `Holder<Definition>` 引用，字段或另一份 JSON 指向一条定义时用它；`DIRECT_CODEC` 读写整个对象，注册表拿它读条目本身。要一条定义的字段值就读 `DIRECT_CODEC`，例如 `Resource.DIRECT_CODEC` 或 `ItemQuality.DIRECT_CODEC`。
 
-注册表怎么分成内容层与绑定层、一份定义从文件到一次结算经过什么、组件与声明谁压过谁，见[数据加载](../technical/data-loading.md)。
+注册表如何分成内容层与绑定层、一份定义从文件到一次结算经过什么、组件与声明谁压过谁，见[数据加载](../technical/data-loading.md)。

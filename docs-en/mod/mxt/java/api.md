@@ -7,7 +7,7 @@ description: "The runtime entry points another mod can call directly: reading da
 
 <span id="public-api" />
 
-This page lists the **entry points another mod can call directly**. What a datapack can express (definitions, conditions, actions, costs) needs no Java; the things here are only for when you want to ask in code "how much aura is at this position", "cast this ability on its behalf" or "does this item count as this definition".
+This page lists runtime entry points for other mods, including registry access, aura queries, ability execution and item-definition resolution. Definitions, conditions, actions and costs that can be expressed in datapacks do not require Java.
 
 Three things up front:
 
@@ -15,9 +15,9 @@ Three things up front:
   **The server is authoritative**: costs, cultivation, abilities, damage and formation settlement all happen on the server only; the client only renders and sends requests. Which entry points go dead on the client are collected in [The Server and Client Boundary](#boundary).
   To learn **why** a given line looks the way it does (rather than "which methods exist"), see the technical pages: [Aura Calculation](../technical/aura.md), [Damage System](../technical/damage.md), [Foe Identification](../technical/identification.md).
 
-## Finding an entry point by what you want to do {#pick}
+## Entry Points by Task {#pick}
 
-| What you want to do | Entry point | Where |
+| Task | Entry point | Package |
 |     |     |     |
 | Read a definition out of a datapack registry | [`MxtDatapackRegistries`](#mxtdatapackregistries) | `registry` |
 | Turn a definition into a display name | [`DefinitionText`](#definitiontext) | `util` |
@@ -54,7 +54,7 @@ Every read explicitly receives a registry provider; server and client code use t
 | `holders(Provider access, key)` | Iterates all Holders in the registry |
 | `register(NewRegistry event, key, codec)` | Lets addons register and synchronize a registry during the datapack registry event, including it in `/mxt registries` |
 
-**This layer filters nothing.** Whether an entry is in the registry is the whole answer, and switching a definition off is load time work (`neoforge:conditions`, see [Disabling a Definition](../datapack/conventions.md#disabling a definition)): an entry a condition blocks is simply not in the registry. So a holder you read is a holder you may act on, and there is no such state as "I read a definition that was switched off".
+**This layer filters nothing.** Whether an entry is in the registry is the whole answer, and switching a definition off is load time work (`neoforge:conditions`, see [Disabling a Definition](../datapack/conventions.md#disabling a definition)): an entry a condition blocks is not in the registry. So a holder you read is a holder you may act on, and there is no such state as "I read a definition that was switched off".
 
 Tags:
 
@@ -138,14 +138,14 @@ Package `com.iafenvoy.mxt.util.matcher`. The matcher behind "which definition ap
 | `findAll(...)` (registry and stream forms) | Every match | Sorted by `priority` **descending** |
 | `ENTRIES_CODEC` | The codec for the entry list | Accepts both a single object and an array |
 
-`ItemMatcher.Entry` members: `matches(ItemStack)`, `default boolean itemLevel()`, `codec()`, plus the two codec constants `SHORTCUT_CODEC` (the shorthand: a bare item id → `item`, an item tag → `tag`) and `CODEC` (tries the shorthand first, then an object with `type`). **An Entry carries no priority**: who wins is decided by the definition's own `priority`.
+`ItemMatcher.Entry` members: `matches(ItemStack)`, `default boolean itemLevel()`, `codec()`, plus the two codec constants `SHORTCUT_CODEC` (the shorthand: a bare item id → `item`, an item tag → `tag`) and `CODEC` (tries the shorthand first, then an object with `type`). **An Entry carries no priority**: precedence is determined by the definition's own `priority`.
 
 Entry kinds (`saturn:item_matcher_entry_type`, default `item`): `item`, `tag`, `wildcard`, `regex`; runtime modules additionally register `spirit_storage`, `herb_tag`, `technique`.
 
 Key points:
 
   The "first" in `find` is the definition with the **largest `priority` number** — not registration order, and not the "most specific" match; it is the same direction as `aura_zone` and `element_reaction`. Only equal `priority` values depend on the order of the stream passed in.
-  `priority` is **a field of the claim tables themselves** (`artifact`, the `item`/`weapon`/`pill`/`tool`/`blueprint`/`technique` bindings, `spirit_herb`, `item_aura`, `currency` and `default_quality`; default `0`, with no range validation at load time), so when a general definition and one that names items both exist the pack writes down which wins; naming an item **does not** move it up. `ArtifactHold` reads the field of the artifact it wraps; the `mxt:item` cost, the three item conditions and the two framework owned hold declarations (technique reading and pouring) have no such field and always answer `DEFAULT_PRIORITY`.
+  `priority` is **a field of the claim tables themselves** (`artifact`, the `item`/`weapon`/`pill`/`tool`/`blueprint`/`technique` bindings, `spirit_herb`, `item_aura`, `currency` and `default_quality`; default `0`, with no range validation at load time), so when a general definition and one that names items both exist the pack writes down which takes precedence; naming an item **does not** move it up. `ArtifactHold` reads the field of the artifact it wraps; the `mxt:item` cost, the three item conditions and the two framework owned hold declarations (technique reading and pouring) have no such field and always answer `DEFAULT_PRIORITY`.
   **`itemLevel()` is the cache safety dividing line**: returning `true` means "whether it matches depends only on the item itself", and a caller caching per item **may only** cache such entries; an entry that reads components / NBT on the stack — or whose answer comes from another definition, like `mxt:herb_tag`, which asks which `spirit_herb` claims the item — has to be asked once per stack.
   The shorthand covers only `item` and `tag`; another implementation encoded through the shorthand throws `IllegalArgumentException`.
 
@@ -159,7 +159,7 @@ Where the rows come from is decided by that registry's own provider - an item sh
 
 Among matcher entries **only an item and a tag name their items outright**; every other entry is asked of **each registered item** instead (wildcards, regexes, a whole ingredient and capabilities such as `mxt:spirit_storage` all produce rows that way), and only the entries that read stack data (a `mxt:quality` tier, the `mxt:technique` component, a spirit herb filtered by its properties) answer no for a bare stack and therefore add no row.
 
-For a creative tab, use `PickerContents.stacksOf` / `stacksOfMod`: they drop duplicates by **vanilla's own creative tab rule** (`ItemStackLinkedSet`, where the same item with the same components is one entry) and **every stack is a copy**. The de-duplication is not decoration: every `mxt:aura` row is the same spirit stone standing in for a definition, and handing those rows to a tab as they are makes vanilla's `accept` throw "this stack already exists in the tab". The row view (`itemsOf*`) keeps one row per definition and does not de-duplicate; vanilla's `accept` also requires `count == 1`, which every row the mod itself registers is. Every query takes the registry access from you (`HolderLookup.Provider`; `BuildCreativeModeTabContentsEvent.getParameters().holders()` is one), so the client reads the tables it has synced and the server reads its own.
+Use `PickerContents.stacksOf` or `stacksOfMod` for creative tabs. They return copies and deduplicate identical items and components using vanilla `ItemStackLinkedSet` rules, preventing duplicate insertion errors when definitions share display items. The `itemsOf*` row views retain one row per definition without deduplication. Vanilla requires `count == 1`, which the built-in rows satisfy. Pass the appropriate `HolderLookup.Provider`, such as `BuildCreativeModeTabContentsEvent.getParameters().holders()`, to query the registries for the current side.
 
 ```java
 // Your own creative tab: everything this mod contributed (plus its own items)
@@ -195,11 +195,11 @@ public interface QualityProvider {
 
 Key points:
 
-  **There is one registration order**: this mod's own carriers are registered in `QualityService`'s static block at class load, so an addon's carriers come after them. A lookup walks the whole list in registration order and the first one to answer wins.
+  **There is one registration order**: this mod's own carriers are registered in `QualityService`'s static block at class load, so an addon's carriers come after them. A lookup walks the whole list in registration order and the first matching result is used.
   **It is a registration, not a scan of whatever components a stack happens to carry**: when two providers sit on one stack, only the registration order can decide who is asked first   component iteration order has no contract at all.
   **A carrier has to answer from the stack alone**: neither overload is handed a registry, because the gate that decides whether an item may be used (`QualityService.check`) only has the quality registry in hand. A design that wants to look another registry up by id will not work here.
   **An unbound reference answers nothing**: when the holder a carrier pulls out is unbound (the current pack deleted that definition) this layer answers empty and resolution falls through, rather than producing a dead tier.
-  **The definition type is only the thing being asked**: what actually gets read is the definition's own `defaultQuality()`, so once a type implements the interface and registers a carrier, every one of its definitions joins the second layer automatically.
+  **The definition type is only the thing being asked**: what gets read is the definition's own `defaultQuality()`, so once a type implements the interface and registers a carrier, every one of its definitions joins the second layer automatically.
 
 The rest of `QualityService`'s public surface:
 
@@ -217,7 +217,7 @@ Use `set` to store a single stack override rather than writing the component you
 
 ## Aura and resources {#aura}
 
-These two are covered together because they are the easiest to confuse: **aura (`aura`) is identity, a resource (`resource`) is a number**. How the fields are written is in [aura](../datapack/json/aura.md) and [resource](../../../library/saturn/data/resource.md); how "the aura at a position" is actually computed is in [Aura Calculation](../technical/aura.md).
+**Aura (`aura`) represents identity; a resource (`resource`) represents a numeric account.** See [aura](../datapack/json/aura.md) and [resource](../../../library/saturn/data/resource.md) for fields, and [Aura Calculation](../technical/aura.md) for position queries.
 
 ### `AuraService` {#auraservice}
 
@@ -243,10 +243,10 @@ Result types: `AuraResult` (a table of `Holder<Aura>` → `AuraPool(amount, maxi
 Key points:
 
   **"The final aura at a position" and "the environment concentration" are two entry points**: the former includes the chunk stock, the latter does not. Both pools are **separated by `Holder<Aura>`**, and `aura` and `resource` are one to one, so **there is no "give me the pool of a certain `resource`" entry point**.
-  **The account you can actually spend is the chunk stock**, and only `consume` / `change` can change it; `getPositionAura` gives a composite view (with the block contributions mixed in).
+  **The account you can spend is the chunk stock**, and only `consume` / `change` can change it; `getPositionAura` gives a composite view (with the block contributions mixed in).
   **A query is a snapshot of the current tick**: results are memoised by `(position, game tick)` and the whole table is dropped at the end of every tick (`AuraQueryCache`), so a `consume` / `change` is **not** visible to a query made in the same tick (a newly activated formation is the same story, visible only from the next tick) — if you need the new value right away, keep your own bookkeeping from the call's result. See [Aura Calculation](../technical/aura.md).
   `supplied` separately records "how much of this amount comes from the block emitters underfoot", because a consumer allowed to spend the terrain underfoot (a formation that draws on the environment, say) has to deduct its own share first, or it would double count.
-  **The later layer wins**: biome < dimension < custom region < formation override. A dimension binding **replaces** the biome rather than being overridden by it — reading the order of that English comment directly is easy to get backwards.
+  **Later layers take precedence**: biome < dimension < custom region < formation override. A dimension binding **replaces** the biome rather than being overridden by it — reading the order of that English comment directly is easy to get backwards.
   A formation override only posts `AuraZoneEvent.Override` when there is a region holder and it is the server; if it is cancelled the lower priority layer is kept; an override without a holder passes through silently.
   Both client queries can be called, but **dimension tag matching may differ from the server** (a dimension stem is a registry not synchronised to the client), so do not treat a client result as authoritative.
 
@@ -288,7 +288,7 @@ Package `com.iafenvoy.mxt.runtime.cultivation`. A pure static utility class; all
 
 | Method | Purpose | Notes |
 |     |     |     |
-| `addProgress(LivingEntity, Holder<Aura>, double amount, FormulaContext)` | Adds cultivation progress | Returns the **amount actually accepted**; an invalid amount or no next realm gives `0.0` |
+| `addProgress(LivingEntity, Holder<Aura>, double amount, FormulaContext)` | Adds cultivation progress | Returns the **amount accepted**; an invalid amount or no next realm gives `0.0` |
 | `addProgressForChain(...)` | Same as above, taking an entity or a `CultivationAttachment` | Two overloads |
 | `remainingProgressForChain(CultivationAttachment, Holder<Aura>, FormulaContext)` | How much is still missing to the next realm | |
 | `minorStage(Holder<Aura>, CultivationAttachment, FormulaContext)` / `minorStage(RealmStage, double progress, FormulaContext)` | The current minor stage (**0 based**) | The piecewise arithmetic exists only here and has a reentrancy guard; no `minor_stages` or an invalid value gives `NaN` |
@@ -299,7 +299,7 @@ Package `com.iafenvoy.mxt.runtime.cultivation`. A pure static utility class; all
 |     |     |     |
 | `breakthroughStatusForChain(LivingEntity, Holder<Aura>, FormulaContext)` | Breakthrough status (reached or not, conditions met or not, automatic or not, the progress interval) | The automatic breakthrough tick and the information panel share one answer |
 | `pendingConditionsForChain(LivingEntity, Holder<Aura>)` | Which conditions are still missing | |
-| `setRealm(CultivationAttachment spirit, Identifier target)` | Sets the realm directly (for administrators) | Returns whether it actually changed; **it has no entity parameter and therefore no server check** |
+| `setRealm(CultivationAttachment spirit, Identifier target)` | Sets the realm directly (for administrators) | Returns whether it changed; **it has no entity parameter and therefore no server check** |
 
 Result types: `BreakthroughResult(advanced, failure, failedResource, costs)`, `BreakthroughStatus(reached, conditionsMet, automatic, minimumExperience, maximumExperience)`, `enum Failure {DISABLED, WRONG_AURA, NO_NEXT_REALM, INSUFFICIENT_PROGRESS, CONDITIONS, INSUFFICIENT_RESOURCE, INVALID_FORMULA, CANCELLED, SERVER_ONLY}`.
 
@@ -377,7 +377,7 @@ Package `com.iafenvoy.mxt.runtime.damage`. **The one settlement pipeline for a s
 
 | Method | Purpose | Notes |
 |     |     |     |
-| `deal(@Nullable Entity attacker, Entity target, double amount, Optional<Holder<DamageType>> damageType, @Nullable FormulaContext context)` | **The only method to call** when this mod deals damage itself: it builds the `DamageSource`, checks the `mxt:no_bonus` pass through, runs layer one, and then hands it to vanilla `hurtServer` | The client (target not in a `ServerLevel`) and any non finite / non positive amount return `0.0D`; the `damageType` parameter may not be `null`, pass `Optional.empty()` when there is no type; what it returns is the **shaped value**, before vanilla mitigation (armour, invulnerability frames), not "how much health was actually lost" |
+| `deal(@Nullable Entity attacker, Entity target, double amount, Optional<Holder<DamageType>> damageType, @Nullable FormulaContext context)` | **The only method to call** when this mod deals damage itself: it builds the `DamageSource`, checks the `mxt:no_bonus` pass through, runs layer one, and then passes it to vanilla `hurtServer` | The client (target not in a `ServerLevel`) and any non finite / non positive amount return `0.0D`; the `damageType` parameter may not be `null`, pass `Optional.empty()` when there is no type; what it returns is the **shaped value**, before vanilla mitigation (armour, invulnerability frames), not "how much health was lost" |
 
 **Layer one: attacker side shaping (pure computation, dealing no damage)**:
 
@@ -481,7 +481,7 @@ Key points:
 
 ### `FriendEvent` {#friendevent}
 
-Package `com.iafenvoy.mxt.event`. The identification hook of the friend system, **posted on `NeoForge.EVENT_BUS`** (not the mod bus), and what is actually posted is the nested `FriendEvent.Relation` — a subscriber has to name that.
+Package `com.iafenvoy.mxt.event`. The identification hook of the friend system, **posted on `NeoForge.EVENT_BUS`** (not the mod bus), and what is posted is the nested `FriendEvent.Relation` — a subscriber has to name that.
 
 | Member | Purpose | Notes |
 |     |     |     |
@@ -527,7 +527,7 @@ Key points:
 
 ## Runtime item use {#itemusecycles}
 
-`com.iafenvoy.mxt.api.ItemUseCycle` describes one hold or consumption gesture. Listen to `ResolveItemUseCycleEvent` on the NeoForge game event bus, inspect `getHolder()` / `getStack()`, and call `claim(cycle)`. The first claim wins. Built-in holds use HIGH priority; the pill fallback uses NORMAL.
+`com.iafenvoy.mxt.api.ItemUseCycle` describes one hold or consumption gesture. Listen to `ResolveItemUseCycleEvent` on the NeoForge game event bus, inspect `getHolder()` / `getStack()`, and call `claim(cycle)`. The first accepted claim takes precedence. Built-in holds use HIGH priority; the pill fallback uses NORMAL.
 
 | Method | Contract |
 | --- | --- |

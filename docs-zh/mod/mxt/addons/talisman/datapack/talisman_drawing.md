@@ -1,6 +1,6 @@
 ---
 title: talisman_drawing（画符配方）
-description: 画符配方只在画符工作站里按玩家画出来的笔迹判定：它声明画什么符形、怎么判分、每一档给什么产物，以及附带的消耗。
+description: 画符工作站配方的符形、判分参数、分档产物与额外消耗。
 ---
 
 :::info 所属附属
@@ -11,7 +11,7 @@ description: 画符配方只在画符工作站里按玩家画出来的笔迹判�
 
 <span id="talisman-drawing-画符配方" />
 
-画符配方是原版配方类型 **`mxt_talisman:talisman_drawing`**，只在**画符工作站**里跑：玩家照着参考层誊写符形，判分器按笔迹给一个完成度，再由配方自己的档位决定产物。它**不进配方书**，也**不会在原版配方格里匹配**。
+画符配方是原版配方类型 **`mxt_talisman:talisman_drawing`**，只在**画符工作站**中执行：玩家照着参考层誊写符形，判分器按笔迹给一个完成度，再由配方自己的档位决定产物。它**不进配方书**，也**不会在原版配方格里匹配**。
 
 这是本模组注册的**原版配方类型**，不是数据包注册表。
 
@@ -23,7 +23,7 @@ description: 画符配方只在画符工作站里按玩家画出来的笔迹判�
 
 ## 各块答一件事 {#各块答一件事}
 
-一份符方分几块：`talisman` 出什么、`paper` 画在什么纸上、`costs` 额外花什么、`pattern` 画什么、`judgement` 怎么判、`result` 判完给什么；另有两个只改纸面观感的颜色字段（`background_color` 纸底、`foreground_color` 笔画）。**最小配方只需要 `talisman`、`pattern.strokes` 和 `result.grades` 的一档**，其余全有默认值。
+一份符方分几块：`talisman` 出什么、`paper` 画在什么纸上、`costs` 额外花什么、`pattern` 画什么、`judgement` 如何判、`result` 判完给什么；另有两个只改纸面观感的颜色字段（`background_color` 纸底、`foreground_color` 笔画）。**最小配方只需要 `talisman`、`pattern.strokes` 和 `result.grades` 的一档**，其余全有默认值。
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
@@ -34,9 +34,9 @@ description: 画符配方只在画符工作站里按玩家画出来的笔迹判�
 | `costs` | 数组，条目见 [`Cost`](../../../datapack/types/shared_data_types.md#cost) | `[]` | **只写额外消耗**：这个配方类型自己永远从界面那一格取走 1 × `paper`，写不写 `costs` 都存在。那一格是菜单自己的临时格（照原版工作台，关界面把格里剩下的还给玩家），`mxt:item` 条目从那一格扣，其余类型由玩家付。符纸是标签 `mxt:talisman_paper`（本体只放 `mxt:blank_talisman` 进去，内容可以往标签里加自己的纸）。 |
 | `pattern` | 对象 | **必填** | 画什么，见下。 |
 | `background_color` | `RGBColor` | `#FFFE85` | 纸面的底色（浅黄）。 |
-| `foreground_color` | `RGBColor` | `#FF0000` | **玩家画出来的那条线**的颜色（纯红）。**参考层（`pattern.guide` 描红那一层）不吃它**——参考层一直是那身淡褐，否则与笔画分不开。 |
+| `foreground_color` | `RGBColor` | `#FF0000` | **玩家画出来的那条线**的颜色（纯红）。**参考层（`pattern.guide` 描红该层）不吃它**——参考层一直是那身淡褐，否则与笔画分不开。 |
 | `judgement` | 对象 | 见下 | 判分参数，整块可选。**这一块没有一个字段影响产物**，改它只动完成度。 |
-| `result` | 对象 | **必填** | 判档、写产物、跑动作，见下。 |
+| `result` | 对象 | **必填** | 判档、写产物、执行动作，见下。 |
 
 ### `pattern` {#pattern}
 
@@ -57,24 +57,24 @@ description: 画符配方只在画符工作站里按玩家画出来的笔迹判�
 | `min_stroke_length` | double | `0.02` | 短笔门槛，不小于 `0`，口径同样是画布高度的比例；短于它的整笔在计分前被丢掉。 |
 | `preview` | Boolean | `true` | `false` 时客户端不算本地完成度预览。 |
 
-这一块一个字段都改不动产物，改它只动完成度；完成度本身是怎么算出来的、每一项的份量落在哪里，见[画符判分](../technical/talisman-scoring.md)。
+这些字段仅影响完成度，不直接修改产物。计算流程与权重见[画符判分](../technical/talisman-scoring.md)。
 
 ### `result` {#result}
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `grades` | 对象数组 | **必填**，非空 | `1`–`64` 档。`min_completion` 必须**唯一且升序**，重复或乱序在加载期被拒。最低档就是整份符方的及格线，写一档 `min_completion: 0` 就是必然成功。 |
-| `grades[].min_completion` | double | **必填** | 这一档的及格线，落在 `[0,1]`。 |
-| `grades[].quality` | 品质 id | 无 | 命中这一档时写给产物的档位（写进 `mxt:quality` 组件）；不写就不写组件，产物的档落到解析顺序的最后一层，也就是注册表 [default_quality](../../../datapack/json/default_quality.md)。 |
+| `grades[].min_completion` | double | **必填** | 该档位的及格线，落在 `[0,1]`。 |
+| `grades[].quality` | 品质 id | 无 | 命中该档位时写给产物的档位（写进 `mxt:quality` 组件）；不写就不写组件，产物的档落到解析顺序的最后一层，也就是注册表 [default_quality](../../../datapack/json/default_quality.md)。 |
 | `grades[].max_damage` | [数值提供器](../../../../../library/saturn/types/number.md) | 无 | 覆盖载体耐久上限，形状与符箓定义那一套相同。 |
 | `grades[].charge_ratio` | [数值提供器](../../../../../library/saturn/types/number.md) | `0` | 产出时按比例灌注灵气，默认 `0` 就是不灌；求值不大于 `0` 就一项都不灌。 |
-| `grades[].outputs` | `ItemStackTemplate[]` | `[]` | 这一档的额外产物。 |
-| `failure_outputs` | `ItemStackTemplate[]` | `[]` | 失败时给的东西；默认空就是只烧掉材料。 |
+| `grades[].outputs` | `ItemStackTemplate[]` | `[]` | 该档位的额外产物。 |
+| `failure_outputs` | `ItemStackTemplate[]` | `[]` | 失败时给的东西；默认为空，表示只消耗材料。 |
 | `success_action` / `failure_action` | [实体行为](../../../datapack/types/action/entity_action_types.md) | `mxt:no_op` | 成功与失败各跑一次。 |
 
-`result` 里的公式多两个变量：`percentage` 是本次完成度（0 到 1），`paper_rank` 是**实际取走的那张纸上写的档在它自己那条链上的位置**（从入口档数起，`0` 是入口档，也是"这张纸没有档 / 档不在链上"时唯一能给的数——公式分不出这两种）。`max_damage`、`charge_ratio` 与两个动作里的数值提供器都能读它们，写法就是普通公式（`"0.5 + 0.5 * percentage"`、`"percentage * percentage + paper_rank * 50"`）。变量名必须是 `percentage` / `paper_rank` 或注册表提供的公式变量，**两边都不是的名字在加载期被拒**，不会静默取 0。`paper_rank` 读的是开局时**实际取走的那一份**，所以"好纸画好符"直接写在这条公式里。`outputs` 读不到它们——`ItemStackTemplate` 的数量是写死的，要按完成度给不同数量就分档写。
+`result` 里的公式多两个变量：`percentage` 是本次完成度（0 到 1），`paper_rank` 是**实际取走的那张纸上写的档在所属品质链中的位置**（从入口档数起，`0` 是入口档，也是"这张纸没有档 / 档不在链上"时唯一能给的数——公式分不出这两种）。`max_damage`、`charge_ratio` 与两个动作里的数值提供器都能读它们，写法就是普通公式（`"0.5 + 0.5 * percentage"`、`"percentage * percentage + paper_rank * 50"`）。变量名必须是 `percentage` / `paper_rank` 或注册表提供的公式变量，**两边都不是的名字在加载期被拒**，不会静默取 0。`paper_rank` 读的是开局时**实际取走的那一份**，所以"好纸画好符"直接写在这条公式里。`outputs` 读不到它们——`ItemStackTemplate` 的数量是写死的，要按完成度给不同数量就分档写。
 
-符方不声明名字也不声明描述：符方列表里的条目名与产物 tooltip 里那条符箓名，一律取自顶层 `talisman` 点名的那份定义**按注册 id 生成的名字键**（`talisman.mxt.<定义命名空间>.<路径>`，翻译它才有词）。
+符方不声明名字也不声明描述：符方列表里的条目名与产物 tooltip 里那条符箓名，一律取自顶层 `talisman` 点名的该定义**按注册 id 生成的名字键**（`talisman.mxt.<定义命名空间>.<路径>`，显示文本由该语言键提供）。
 
 ## 加载期校验 {#加载期校验}
 
@@ -86,7 +86,7 @@ description: 画符配方只在画符工作站里按玩家画出来的笔迹判�
 
 界面那一格只接受符纸（标签 `mxt:talisman_paper`，本体往里面放的是 `mxt:blank_talisman`；内容可以加自己的纸），而这一格收下之后**由配方的 `paper` 决定这份符方收不收、取走哪一份**：不写 `paper` 就是标签里任意一张，写成带档位要求的材料就只收够档的那种（不够档时这份符方在列表里永远是"选不了"的状态）。这一张由配方类型自己扣，删不掉。所以 `costs` 里额外写的 `mxt:item` 实际上只有"再多一张纸"能成立。其余条目（`saturn:resource` / `mxt:aura` / `mxt:js`）照普通消耗的规则由玩家付。**画到一半关掉界面 = 这次画符判失败**（符纸不退、配方的 `failure_action` 照跑）；一笔都没画就关则整格退回背包。
 
-**颜料不进 `costs`**：画符按每一笔的长度从**符笔自己的存量**里扣，那口存量是物品组件 `mxt:brush_pigment`。加料照原版储物袋那套点击：**光标提着符笔对着颜料物品点一下**，一次一份（点几下就蘸几份）——背包、箱子、工作站都行，与槽位无关（工作站里没有颜料槽），哪些物品算颜料由物品标签 `#mxt:brush_pigment` 说了算（本体只有朱砂 `mxt:cinnabar`）。一份多少由服务端配置「符箓 → 一份颜料的点数」说了算，一支笔还剩多少由服务端配置「符箓 → 符笔容量」封顶。
+**颜料不计入 `costs`**：每笔按长度扣除符笔组件 `mxt:brush_pigment` 中的存量。蘸料方式、颜料标签和本体配置见[符笔与颜料](../../../player-guide/brush-and-pigment.md)；工作站没有专用颜料槽。
 
 ## 示例 {#示例}
 
@@ -126,4 +126,4 @@ description: 画符配方只在画符工作站里按玩家画出来的笔迹判�
 }
 ```
 
-这份符方画的是 `example:fire_talisman`，名字与描述也取自那份定义：只收**至少 `example:common` 档的纸**（标签里没有档的纸开不了局——`min_quality` 对没有档的物品答否）；完成度不低于 `0.35` 给 `example:inferior`、不低于 `0.65` 给 `example:common`、不低于 `0.88` 换成 `example:perfect` 并按 `0.5 + 0.5 × 完成度` 灌注灵气、耐久上限按纸的档位加成（`100 + paper_rank × 50`）、额外再给一份 `mxt:cinnabar`；低于 `0.35` 走失败，`failure_outputs` 为空，所以只烧掉材料。三笔的 `[u, v]` 都落在 `[0,1]²` 里，按 90 × 210 换算成像素就是一竖两横。
+这份符方画的是 `example:fire_talisman`，名字与描述也取自该定义：只收**至少 `example:common` 档的纸**（标签里没有档的纸开不了局——`min_quality` 对没有档的物品返回 `false`）；完成度不低于 `0.35` 给 `example:inferior`、不低于 `0.65` 给 `example:common`、不低于 `0.88` 换成 `example:perfect` 并按 `0.5 + 0.5 × 完成度` 灌注灵气、耐久上限按纸的档位加成（`100 + paper_rank × 50`）、额外再给一份 `mxt:cinnabar`；低于 `0.35` 走失败，`failure_outputs` 为空，所以只消耗材料。三笔的 `[u, v]` 都落在 `[0,1]²` 里，按 90 × 210 换算成像素就是一竖两横。

@@ -13,7 +13,7 @@ title: 炼丹扩展 API
 | `start(ServerPlayer player, AlchemyWorkstation station)` | 开一炉 | 返回 `StartResult(started, failure, qualityFailure)`。整条判定链跑完才扣料：结构、炉型、品质、投料摆放与容量、温度够不够得到、环境灵气、产物仓装不装得下；被 `alchemyCraft` 的 `Pre` 取消、或监听器改动了真实库存，都给 `CANCELLED` 且**不还原库存**。 |
 | `preview(ServerPlayer player, AlchemyWorkstation station)` | 预览同一套判定，**不接收所选配方** | 返回 `AlchemyPreview(mixture, candidates, resolvedRecipe, blocker, parameters, qualityFailure, successOutputs, failureOutputs)`；开炉走的就是同一份 `parameters`，所以预览与实跑不会给出两个答案。 |
 | `abort(ServerLevel level, BlockPos pos, AlchemyWorkstation station)` / `abort(..., AlchemyFailure reason)` | 终止活动批次 | 按失败结算一次，已投入的材料不返还；已经 `READY` 或已经结算过的批次不再结算第二次。 |
-| `furnaceDefinition(Provider access, ItemStack stack)` | 由一件炉体解析炉型规格 | 堆是空的、没有组件、组件里的 id 为空、或那条定义不在注册表里，都给空。 |
+| `furnaceDefinition(Provider access, ItemStack stack)` | 由一件炉体解析炉型规格 | 物品堆为空、没有组件、组件里的 id 为空、或该定义不在注册表里，均返回空值。 |
 | `tick(ServerLevel level, BlockPos pos, AlchemyWorkstation station)` | 每刻推进一次 | 由核心方块实体自己的服务端 tick 调；推炉温、进出阶段、生成待产出与结算都在这里。 |
 
 结果类型：`StartResult`、`AlchemyPreview`、`Parameters`（开炉时求值一次、冻结进批次的配方向量），以及 `enum AlchemyFailure {FURNACE_QUALITY, QUALITY_CONDITIONS, BINDING_CONDITIONS, UNBOUND, MAX_USES, COOLDOWN, NO_FURNACE, STRUCTURE, ACTIVE, CAPACITY, SLOTS, ZERO_POWER, NOT_HERB, INSUFFICIENT, CONFLICT, IMBALANCE, AMBIGUOUS, TEMPERATURE, ENVIRONMENT, INVALID_FORMULA, OUTPUT_CAPACITY, CANCELLED, DISABLED}`（23 个）。

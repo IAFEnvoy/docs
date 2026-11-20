@@ -84,7 +84,7 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 {"type": "mxt:has_curse", "stacks": {"min": 2}, "remaining_ticks": {"min": 1}}
 ```
 
-`stacks` 与 `remaining_ticks` 都是 `{min?, max?}` 窗口，闭区间。永不过期的诅咒按无限计，因此它能回答 `min`，却永远不会满足 `max`。完全不写筛选条件时，问的是是否持有任意诅咒。
+`stacks` 与 `remaining_ticks` 都是 `{min?, max?}` 窗口，闭区间。永不过期的诅咒按无限计，因此它能回答 `min`，却永远不会满足 `max`。完全不写筛选条件时，检查的是是否持有任意诅咒。
 
 ### `mxt:has_spirit_root` {#mxt-has-spirit-root}
 
@@ -110,21 +110,21 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 
 ### `mxt:realm` {#mxt-realm}
 
-把实体的[境界阶段](../../json/realm_stage.md)与 `realm` 比较。**只问 `realm` 自己所属的那条境界链**：同一链上的两个阶段按链内序号比，别的灵气的境界一律不成立。
+把实体的[境界阶段](../../json/realm_stage.md)与 `realm` 比较。**仅检查 `realm` 自己所属的那条境界链**：同一链上的两个阶段按链内序号比，别的灵气的境界一律不成立。
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `realm` | 境界阶段 | **必填** | 比较的基准境界，同时指出问的是哪条链。 |
-| `comparison?` | `==` / `!=` / `<` / `<=` / `>` / `>=` | `==` | 怎么比，按链内序号。 |
+| `realm` | 境界阶段 | **必填** | 比较的基准境界，同时指出检查的是哪条链。 |
+| `comparison?` | `==` / `!=` / `<` / `<=` / `>` / `>=` | `==` | 如何比，按链内序号。 |
 | `min_minor_stage?` | Integer | 不限 | 要求在该境界上达到过的最高层数不小于它，`0` 起。 |
 
 ```json
 {"type": "mxt:realm", "realm": "example:foundation", "comparison": ">="}
 ```
 
-**还没进入这条链的身体算站在它的首境界上**（也就是凡人）：所以点名首境界时凡人也成立，`>=` 之类的下界同样成立；一旦身体进入了链，比的才真正是当下所在的那一档。
+**还没进入该链的身体算站在它的首境界上**（也就是凡人）：所以点名首境界时凡人也成立，`>=` 之类的下界同样成立；一旦身体进入了链，比的才真正是当下所在的对应档位。
 
-`min_minor_stage` 与公式变量 `minor_stage` 是同一套编号。它读的是**只增不减的层数记录**，所以"炼气期层数达到过 500"这类门槛在突破离开之后仍然成立；想表达"此刻就在这一层的窗口里"就配 `comparison: "=="`。
+`min_minor_stage` 与公式变量 `minor_stage` 是同一套编号。它读的是**只增不减的层数记录**，所以"炼气期层数达到过 500"这类门槛在突破离开之后仍然成立；想表达"此刻就在该层的窗口里"就配 `comparison: "=="`。
 
 ### `mxt:has_realm` {#mxt-has-realm}
 
@@ -155,7 +155,7 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `action?` | 法门 id | 不限定 | 点名一条 `cultivation`，只有正在跑它的实体才通过。 |
+| `action?` | 法门 id | 不限定 | 点名一条 `cultivation`，只有正在运行它的实体才通过。 |
 
 ```json
 {"type": "mxt:cultivating"}
@@ -171,14 +171,14 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `level` | 进度等级 id | **必填** | 点名一级。 |
-| `comparison?` | `==` / `!=` / `<` / `<=` / `>` / `>=` | `==` | 怎么比，比较走缓存索引出来的链内序号。 |
+| `comparison?` | `==` / `!=` / `<` / `<=` / `>` / `>=` | `==` | 如何比，比较走缓存索引出来的链内序号。 |
 | `owner?` | 所有者定义 id，可写数组 | 这个身体持有的每一种进度 | 把问题限定到某些所有者。 |
 
 ```json
 {"type": "mxt:progression", "level": "example:stage_three", "comparison": ">=", "owner": "example:azure_sword"}
 ```
 
-不写 `owner` 就问这个身体持有的每一种进度，任一命中即成立。它只收所有者定义的 id（单个或数组），不收 `#标签`。读的是**身体到达过的那一级**，没有晋升过就是所有者的 `default_level`；没有 `default_level`、或缓存没能索引出这条链的所有者永远答否。
+不写 `owner` 就问这个身体持有的每一种进度，任一命中即成立。它只收所有者定义的 id（单个或数组），不收 `#标签`。读的是**身体到达过的对应等级**，没有晋升过就是所有者的 `default_level`；没有 `default_level`、或缓存没能索引出该链的所有者永远返回 `false`。
 
 ### `mxt:contract` {#mxt-contract}
 
@@ -194,7 +194,7 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 {"type": "mxt:contract"}
 ```
 
-没有记录的生物对 `bound: true` 答否、对 `bound: false` 答是。`bound: false` 与 `type` 或 `behavior` 同时写会在**加载期**被拒——"没契约"与"它是哪一种契约、听谁的命令"互相矛盾。典型用法是「只有灵宠能长」：把等级那一级的 `condition` 写成 `{"type": "mxt:contract"}`。
+没有记录的生物对 `bound: true` 返回 `false`、对 `bound: false` 返回 `true`。`bound: false` 与 `type` 或 `behavior` 同时写会在**加载期**被拒——"没契约"与"它是哪一种契约、听谁的命令"互相矛盾。典型用法是「只有灵宠能长」：把等级对应等级的 `condition` 写成 `{"type": "mxt:contract"}`。
 
 ### `mxt:has_element` {#mxt-has-element}
 
@@ -308,7 +308,7 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 {"type": "mxt:pill_toxicity", "comparison": ">=", "compare_to": 100}
 ```
 
-形状与 `mxt:health` 相同。从未服过丹药的实体读 `0`，也不会因此多出一份空记录。丹毒怎么涨、阈值在哪、过量后剩多少写在 [pill](../../json/pill.md)；要直接改写这个数用 `mxt:modify_pill_toxicity`。
+形状与 `mxt:health` 相同。从未服过丹药的实体读 `0`，也不会因此多出一份空记录。丹毒如何涨、阈值在哪、过量后剩多少写在 [pill](../../json/pill.md)；要直接改写这个数用 `mxt:modify_pill_toxicity`。
 
 ### `mxt:has_equipped_item` {#mxt-has-equipped-item}
 

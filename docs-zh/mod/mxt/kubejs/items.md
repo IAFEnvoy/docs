@@ -20,7 +20,7 @@ StartupEvents.registry('item', event => {
 })
 ```
 
-一段脚本可以顺手把食物与工具一起注册：
+同一脚本可同时注册食物与工具：
 
 ```js
 // kubejs/startup_scripts/mxt_items.js
@@ -52,7 +52,7 @@ MiXianTu 负责行为、条件、灵气、货币与 Tooltip，这些表则把一
 | 物品绑定 | `mxt/item_binding/<条目>.json` | 任意物品的有序实体行为与 Tooltip 条件。 |
 | 武器绑定 | `mxt/weapon_binding/<条目>.json` | 原版属性修正（攻击力与攻速也写在这里）、武器行为。 |
 | 丹药绑定 | `mxt/pill_binding/<条目>.json` | 把这一族已注册物品认成同一份丹药，并给出服用次数与冷却；作用写在 [丹药](../datapack/json/pill.md) 里。 |
-| 功法绑定 | `mxt/technique_binding/<条目>.json` | 一门功法的**手册是哪几件物品**、本体为它生成的载体物品，以及学习前的条件。手册的身份是堆上的 `mxt:technique` 组件，`items` 是可选的第二条路。 |
+| 功法绑定 | `mxt/technique_binding/<条目>.json` | 一门功法的**手册是哪几件物品**、本体为它生成的载体物品，以及学习前的条件。手册的身份是物品堆上的 `mxt:technique` 组件，`items` 是可选的第二条路。 |
 
 给一颗授予灵根的丹药做绑定：
 
@@ -113,7 +113,7 @@ MiXianTu 负责行为、条件、灵气、货币与 Tooltip，这些表则把一
 }
 ```
 
-四张表都是**注册表**，条目按 `items` 认领物品：`items` 里写物品 id、`#物品标签`，或带 `type` 的匹配条目，所以一条定义能覆盖一整族物品。`technique_binding` 的声明按**功法 id** 匹配，而它的 `items` 是可选的第二条路：一叠物品之所以是某门功法的手册，**首先看它自己身上的 `mxt:technique` 组件**，没有组件时才看哪条声明的 `items` 认领了它——所以上面那件物品可以靠 `/picker mxt:technique` 给出的带组件载体，也可以直接把 id 写进声明的 `items`。这些表都**不声明品质链**：链名写在 `quality` 条目自己身上（那一档的 `quality`），物品解析出的档位属于哪条链，它就落在哪条链上，见 [quality](../datapack/json/quality.md)。这几张表的 `items` 里写了一个**不存在的物品 ID** 会让数据包加载失败，因此不会留下解析不出来的物品规则。各表的完整字段见 [物品绑定](../datapack/json/item_binding.md)、[武器绑定](../datapack/json/weapon_binding.md)、[丹药](../datapack/json/pill.md)、[丹药绑定](../datapack/json/pill_binding.md) 与 [功法绑定](../datapack/json/technique_binding.md)。
+四张表都是**注册表**，条目按 `items` 认领物品：`items` 里写物品 id、`#物品标签`，或带 `type` 的匹配条目，所以一条定义能覆盖一整族物品。`technique_binding` 的声明按**功法 id** 匹配，而它的 `items` 是可选的第二条路：一叠物品之所以是某门功法的手册，**首先看它自己身上的 `mxt:technique` 组件**，没有组件时才看哪条声明的 `items` 认领了它——所以上面那件物品可以靠 `/picker mxt:technique` 给出的带组件载体，也可以直接把 id 写进声明的 `items`。这些表都**不声明品质链**：链名写在 `quality` 条目自己身上（对应档位的 `quality`），物品解析出的档位属于哪条链，它就落在哪条链上，见 [quality](../datapack/json/quality.md)。这几张表的 `items` 里写了一个**不存在的物品 ID** 会让数据包加载失败，因此不会留下解析不出来的物品规则。各表的完整字段见 [物品绑定](../datapack/json/item_binding.md)、[武器绑定](../datapack/json/weapon_binding.md)、[丹药](../datapack/json/pill.md)、[丹药绑定](../datapack/json/pill_binding.md) 与 [功法绑定](../datapack/json/technique_binding.md)。
 
 锻造工具与图纸的绑定由[锻器工作站附属](../addons/forging/kubejs.md)提供。
 
@@ -130,7 +130,7 @@ ServerEvents.loaded(event => {
 
 ## 相关 {#相关}
 
-- [KubeJS 总览](./index.md) —— 这个桥接整体怎么用。
+- [KubeJS 总览](./index.md) —— 这个桥接整体如何用。
 - [KubeJS API 参考](./api-reference.md) —— 脚本对象、方法与事件。
 - [综合示例](./examples.md) —— 完整脚本。
 - [KubeJS 创建物品并绑定行为](../tutorial/create-items-with-kubejs.md) —— 同样的材料，走一遍分步教程。

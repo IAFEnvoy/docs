@@ -1,6 +1,6 @@
 ---
 title: Talisman Stroke Editor
-description: Draw a mxt_talisman:talisman_drawing's pattern.strokes on the paper's own canvas, and see the shapes the loader would refuse.
+description: Edit pattern.strokes and validate load-time geometry constraints.
 hide_table_of_contents: true
 ---
 
@@ -10,29 +10,29 @@ import MxtToolFrame from '@site/src/components/MxtToolFrame';
 
 <span id="talisman-stroke-editor" />
 
-A recipe's `pattern.strokes` is a list of strokes, each one a list of points normalised to `[0,1]²` against the fixed `90 × 210` canvas. That is what this editor draws: the board uses that ratio, paper `#FFFE85` and ink `#FF0000` — the two colours the recipe type defaults to — so it looks like the workstation's paper.
+`pattern.strokes` is a list of strokes, each containing points normalised to `[0,1]²` on the fixed `90 × 210` canvas. The editor uses the same ratio and default paper and stroke colours, `#FFFE85` and `#FF0000`, as the workstation.
 
 <div className="mxt-tool-open"><a href="/en/docs/mod/mxt/addons/talisman/tools/talisman-strokes-full" target="_blank" rel="noopener">Open the editor in a new window</a></div>
 
 <MxtToolFrame tool="talisman-strokes" host="mxt-tool-talisman" />
 
-## How to draw {#how-to-draw}
+## Drawing Controls {#how-to-draw}
 
-- **Polyline**: click the vertices, then `Enter`, a right click or a double click ends the stroke and `Esc` drops it.
-- **Freehand**: drag. On release the stroke is simplified with Ramer-Douglas-Peucker at the toolbar's ε — the scorer throws those points away anyway, and keeping them only makes the recipe harder to read.
-- `Ctrl+Z` / `Ctrl+Y` undo and redo, the list removes one stroke, `Clear` empties the board.
-- `Snap to whole pixels` lands on whole canvas pixels, `Grid` draws the grid, and `Stroke order` shows each stroke's start and number — which is what `pattern.show_order: true` asks the game to draw.
-- `Load from JSON` takes either a bare strokes array or a whole `pattern` block.
-- `Zoom` is display only (the canvas stays `90 × 210`) and `Decimals` is how many decimals the written coordinates keep.
+- **Polyline**: click to add vertices. Press `Enter`, right-click or double-click to finish a stroke; press `Esc` to cancel it.
+- **Freehand**: hold and drag to draw. On release, Ramer-Douglas-Peucker simplification uses the toolbar ε to remove redundant points.
+- `Ctrl+Z` / `Ctrl+Y` undo or redo. The list supports deleting individual strokes, and `Clear` empties the canvas.
+- `Snap to whole pixels` aligns coordinates with whole pixels; `Grid` displays grid lines; `Stroke order` displays stroke starts and numbers, matching `pattern.show_order: true` in game.
+- `Load from JSON` accepts a stroke array or a complete `pattern` object.
+- `Zoom` changes only the display scale; the canvas remains `90 × 210`. `Decimals` specifies the decimal places in exported coordinates.
 
-## What it reports {#what-it-reports}
+## Validation and Readouts {#what-it-reports}
 
-- **Stroke order and ink**: the pixel length of each stroke in the list is about what the brush is charged, since paint is spent per pixel of drawn length.
-- **Load-time problems**: a stroke with fewer than two points, more than `256` strokes, more than `4096` points in one stroke, and a point cloud with no spread at all are the shapes the loader rejects. The tool reports them before you have to find out in game.
+- **Stroke order and pigment**: the list reports each stroke's pixel length, approximately one pigment unit per pixel under the default settings.
+- **Geometry validation**: the loader rejects strokes with fewer than 2 points, more than `256` strokes, more than `4096` points per stroke, or entirely coincident points. The editor reports these constraints before export.
 
-Scoring normalises translation and scale away but **not rotation** — where a stroke sits and how big it is do not matter, while a turned one does. It resamples every `2` pixels and simplifies at `0.5 × tolerance` (`6.3` pixels at the default `0.06`), so anything finer than that does not survive.
+Scoring normalises translation and scale but preserves rotation. Overall position and size therefore do not affect the score, while orientation does. Resampling uses a `2`-pixel step, and simplification uses `0.5 × tolerance` (`6.3` pixels at the default `0.06`), removing finer detail.
 
-## What it writes {#what-it-writes}
+## Export Format {#what-it-writes}
 
 ```json
 [
@@ -41,7 +41,7 @@ Scoring normalises translation and scale away but **not rotation** — where a s
 ]
 ```
 
-That list is the value of `pattern.strokes`. The editor writes the shape only: `pattern.tolerance`, `pattern.guide` and `pattern.show_order` are the recipe's own fields, and so are `talisman`, `result` and the grades.
+Use the exported array as `pattern.strokes`. The editor generates geometry only; configure `pattern.tolerance`, `pattern.guide`, `pattern.show_order`, `talisman`, `result` and grade thresholds in the recipe.
 
 ## Next {#next}
 

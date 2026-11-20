@@ -47,7 +47,7 @@ description: 多个注册表共用的复杂值：Cost、AuraGain、AttributeEntr
 | `{"type": "mxt:item", ...}` | `items`、`amount` | 消耗物品；`items` 是物品/标签匹配列表（物品 id、`#标签`，或带 `type` 的匹配条目，见下面的 [`ItemMatcher`](#itemmatcher)）。 |
 | `{"type": "saturn:js", ...}` | `id`、`params` | 交给服务端脚本；`id` 是 `MxtCosts.register` 注册的回调 id，`params` 可省略。 |
 
-`amount` 一律是数值提供器，使用时必须求值为**有限正数**，否则这一项付不出。`saturn:resource` 与 `mxt:aura` 问的是两件不同的事：前者点的是一个**数值**，后者点的是一门**灵气身份**。
+`amount` 一律是数值提供器，使用时必须求值为**有限正数**，否则这一项无法支付。`saturn:resource` 与 `mxt:aura` 检查的是两件不同的事：前者点的是一个**数值**，后者点的是一门**灵气身份**。
 
 ```json
 "costs": [
@@ -76,14 +76,19 @@ description: 多个注册表共用的复杂值：Cost、AuraGain、AttributeEntr
 | --- | --- |
 | `saturn:resource` | 付款者自己的数值账户。 |
 | `mxt:aura` | 扣该灵气所度量的那个数值：付款者自己支付时从数值账户出；由场地从**共享灵气池**支付时（修炼 `costs` 里的灵气条目），先按同区块多人修炼的池子分配份额缩放，再由池子全有或全无地扣；从**方块实体的自有存量**支付时（灵气合成配方的 `aura`），扣这门灵气本身、保留小数。 |
-| `mxt:item` | 需要玩家背包。付款者不是玩家（或阵法没有阵主）就是**付不出**，不是定义有问题。 |
+| `mxt:item` | 需要玩家背包。付款者不是玩家（或阵法没有阵主）就是**无法支付**，不是定义有问题。 |
 | `mxt:js` | 需要玩家，并且在其它通道全部付完之后**最后**运行。脚本消耗不做暂存，所以脚本必须自己对它保持幂等。 |
 
-缺少某个通道只会被报成「付不出」，永远不会被报成定义坏了。**解不出来的条目会让整份定义加载失败**（未知 `type`、缺必填字段都会）：`costs` 数组不套用容错列表的口径，不存在「打一条警告然后把这一项丢掉」。
+缺少某个通道只会被报成「无法支付」，永远不会被报成定义坏了。**解不出来的条目会让整份定义加载失败**（未知 `type`、缺必填字段都会）：`costs` 数组不套用容错列表的口径，不存在「打一条警告然后把这一项丢掉」。
 
 用这个数组的字段共 11 个：`ability.costs`（**所有技能类型共用**，所以 `mxt:mount` 的每 tick 燃料与 `mxt:upkeep` 的每周期费用也写在这里）、`mxt:channelled` 的 `upkeep_costs`、`realm_stage.costs`、`cultivation.costs`（灵气条目由场地付、其余由修炼者付）、`formation.activation_costs` 与 `formation.maintenance_costs`、`forging_method.costs`、`contract_type.costs`（签订契约的代价，由主人支付）、`talisman.costs`（`mxt:aura` 条目从载体自己的存量扣，其余向持有者收）、`quality.upgrade_costs`，以及灵气合成配方（`mxt:spirit_shaped` / `mxt:spirit_shapeless`）的 `aura`。其中灵气合成配方的 `aura` **只收 `mxt:aura` 条目**（写其它类型是加载错误），它也接受 `{"<灵气 id>": 数值提供器}` 的映射写法。
 
-**下面这些故意不是 `Cost`**，别去「修」它们：`talisman.capacity` 是个 **倍率**（double ≥ 1），它说的是「载体装得下几次发动的灵气」而不是「要扣什么」——容量的灵气身份来自同一条符 `costs` 里的灵气条目；`alchemy` 配方的 `minimum_aura` 与 `creature_profile.minimum_aura` 是要求，从不被消耗。**画符扣的颜料是符笔自己的存量**（组件 `mxt:brush_pigment`，加料照原版储物袋那套点击）：付款者是那支笔而不是玩家，写进 `costs` 就得凭空造一个付款者，所以它按每一笔的长度从那口存量里直接扣。货币系统与这套形状无关：`currency` 的 `exchanges[].cost` 是「一次兑换要几个货币物品」的整数价格（`1..99`），`quality.value_multiplier` 是价值修正，两者都不是 `Cost`。
+以下字段不使用 `Cost`：
+
+- `talisman.capacity` 是容量倍率（double，≥ 1），表示载体可储存多少次发动所需的灵气；灵气种类由该符箓 `costs` 中的灵气条目决定。
+- 炼丹配方的 `minimum_aura` 与 `creature_profile.minimum_aura` 是环境要求，不消耗灵气。
+- 画符颜料按每笔长度从符笔组件 `mxt:brush_pigment` 中扣除，不从玩家账户支付。补充方式见[符笔与颜料](../../player-guide/brush-and-pigment.md)。
+- `currency.exchanges[].cost` 是每次兑换所需的货币物品数量（整数，`1..99`）；`quality.value_multiplier` 是价值修正倍率。
 
 ## `AuraGain` {#auragain}
 
@@ -136,7 +141,7 @@ description: 多个注册表共用的复杂值：Cost、AuraGain、AttributeEntr
 
 ### SpriteIcon {#spriteicon}
 
-**资源条的贴图是另一种图标**（`SpriteIcon`）：`mxt:boss_bar` 的 `sprite_location` 与 `mxt:textured_bar` 的 `background_sprite` / `fill_sprite` 用它，因为一整套资源条不能只画 16x16。它**不是**上面那种图标引用（`ability.icon` / `resource.icon` 是一张 16x16 贴图或一个物品，只画一格、没有 `region` / `width` / `height`，也不认 `{"sprite": ...}`），反过来它也写不成物品。两者名字像、用途不同，别混。两种写法：
+**资源条贴图使用 `SpriteIcon`**，适用于 `mxt:boss_bar.sprite_location` 和 `mxt:textured_bar` 的 `background_sprite` / `fill_sprite`。它支持贴图区域与尺寸，不支持物品图标。`ability.icon` / `resource.icon` 则使用前述 16×16 图标格式，不支持 `region` / `width` / `height` 或 `{"sprite": ...}`。`SpriteIcon` 有以下两种写法：
 
 | 写法 | 类型 | 说明 |
 | --- | --- | --- |
@@ -173,7 +178,7 @@ description: 多个注册表共用的复杂值：Cost、AuraGain、AttributeEntr
 }
 ```
 
-数组里每一项保留为条目或标签；重复值不会自动改变语义。**列表是有容错的**：容错列表里的坏条目会被丢掉并打一条 `Ignoring invalid list element` 警告，同一个列表里其余的条目照常生效；某个字段用不用这套口径，字段表会写明。
+数组里每一项保留为条目或标签；重复值不会自动改变语义。**列表是有容错的**：容错列表里的无效条目会被丢掉并打一条 `Ignoring invalid list element` 警告，同一个列表里其余的条目照常生效；某个字段用不用这套口径，字段表会写明。
 
 ### `ItemMatcher` {#itemmatcher}
 
@@ -191,6 +196,6 @@ description: 多个注册表共用的复杂值：Cost、AuraGain、AttributeEntr
 "items": ["minecraft:apple", "#minecraft:logs", "othermod:token"]
 ```
 
-匹配器只引用已经注册的物品。多个定义同时命中同一个目标时，按各自声明的 `priority` **从高到低**选择（字段默认 `0`；上面那十张按物品认领的注册表都接受它，按方块认领的 `heat_source` 与 `spirit_herb` 也接受）。同分回落到注册表顺序。「谁赢」由定义自己写死、与文件名无关（与 `aura_zone`、`element_reaction` 的 `priority` 同一个方向）。**这与匹配条目是哪一种无关**：一条定义只要命中就按它自己声明的那个数参与排序，点名物品并不会让它更靠前。`block_aura` 没有 `priority`，命中同一个方块的多条定义都生效、相加。
+匹配器只引用已经注册的物品。多个定义同时命中同一个目标时，按各自声明的 `priority` **从高到低**选择（字段默认 `0`；上面那十张按物品认领的注册表都接受它，按方块认领的 `heat_source` 与 `spirit_herb` 也接受）。同分回落到注册表顺序。「匹配优先级」由定义自己写死、与文件名无关（与 `aura_zone`、`element_reaction` 的 `priority` 同一个方向）。**这与匹配条目是哪一种无关**：一条定义只要命中就按它自己声明的那个数参与排序，点名物品并不会让它更靠前。`block_aura` 没有 `priority`，命中同一个方块的多条定义都生效、相加。
 
 数组里的每一项也可以写成带 `type` 的对象，类型由固有注册表 `item_matcher_entry_type` 分派；每一种 `type` 的字段、默认值与匹配规则见[物品匹配器类型](./other/item-matcher.md)。

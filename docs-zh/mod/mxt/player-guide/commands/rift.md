@@ -50,7 +50,7 @@ title: /rift
 
   - `... copy <id> <origin>`
 
-    把这一扇门复制到 `origin`，副本拿到新的 UUID。
+    把这一扇门复制到 `origin`，副本获取新的 UUID。
 
   - `... transform <id> move <offset>`
 
@@ -92,7 +92,7 @@ title: /rift
 
 与编辑器里那三种目的地是同一套规则，传送判定、冷却、`nearby` 搜索与泥土平台见[裂隙](../rift.md#目的地与传送)。
 
-## info 打什么 {#info-打什么}
+## info 输出内容 {#info-打什么}
 
 每扇门一行：UUID、修订号、顶点数、目的地类型、剩余刻数与是否启用。`info` 不带 `<id>` 时列当前维度的全部门。
 

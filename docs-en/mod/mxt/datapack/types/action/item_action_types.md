@@ -40,7 +40,7 @@ Anywhere an item action is expected, an array is also accepted. The array is sho
 ]
 ```
 
-Almost every action field is optional, and its default is `mxt:no_op`: a miss such as writing `condition` but forgetting `action` is not reported at load, that entry simply does nothing.
+Almost every action field is optional, and its default is `mxt:no_op`: a miss such as writing `condition` but forgetting `action` is not reported at load, that entry does nothing.
 
 :::info Where Item Actions Run
 An item action needs a stack to act on, so it is normally reached through a table that already supplies one — for example the [entity action](./entity_action_types.md) `mxt:equipped_item_action`, which also supplies the equipment slot. Without a stack the action does not run. [Item conditions](../condition/item_condition_types.md) are the matching predicate family.
@@ -82,7 +82,7 @@ Adds to one named aura's stored amount on an artifact stack.
 }
 ```
 
-The ceiling is taken first from the `spirit_capacity` the `artifact` matching this stack declares for that aura; when the definition declares one but it evaluates to something non-finite or `0` or less, it falls back to `capacity`, and when `capacity` is equally invalid the ceiling is `0`, nothing fits and nothing happens silently. The effective ceiling is the declared ceiling times the nurture bonus `1 + 0.5 × nurture`, **rounded down** after evaluation, so filling can exceed the declared value by up to 1.5 times. The amount actually taken is the smaller of `amount` and "ceiling minus stored", the stored amount only ever grows, and any part of a single take that goes past the ceiling is discarded — it never spills into another aura.
+The ceiling is taken first from the `spirit_capacity` the `artifact` matching this stack declares for that aura; when the definition declares one but it evaluates to something non-finite or `0` or less, it falls back to `capacity`, and when `capacity` is equally invalid the ceiling is `0`, nothing fits and nothing happens silently. The effective ceiling is the declared ceiling times the nurture bonus `1 + 0.5 × nurture`, **rounded down** after evaluation, so filling can exceed the declared value by up to 1.5 times. The amount taken is the smaller of `amount` and "ceiling minus stored", the stored amount only ever grows, and any part of a single take that goes past the ceiling is discarded — it never spills into another aura.
 
 This action needs a server and a holder, and returns immediately without a holder. For every point really taken, nurture rises by "the amount taken ÷ this time's effective ceiling", and it only ever goes up.
 

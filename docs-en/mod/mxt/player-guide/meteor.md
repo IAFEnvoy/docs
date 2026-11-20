@@ -47,6 +47,6 @@ This example creates a larger blue flame with `CC` opacity, about 80%:
 /summon mxt:meteor ~ ~2 ~4 {color:-864495105,radius:0.8f,tail_length:4.0f,scale:1.5f,lifetime:1200}
 ```
 
-Without `collide_action`, the meteor passes through blocks until its lifetime expires. `collide_action` and `caster` follow the same rules as [sword aura impacts](../tutorial/launch-a-sword-aura.md): solid blocks are checked only when an impact action is present, and an impact removes the meteor. The action is attributed to `caster`; if the caster cannot be resolved, the meteor simply disappears. Entity collisions and fluids are not checked.
+Without `collide_action`, the meteor passes through blocks until its lifetime expires. `collide_action` and `caster` follow the same rules as [sword aura impacts](../tutorial/launch-a-sword-aura.md): solid blocks are checked only when an impact action is present, and an impact removes the meteor. The action is attributed to `caster`; if the caster cannot be resolved, the meteor disappears. Entity collisions and fluids are not checked.
 
 Inspect stationary and moving flames from the side, head-on, and close to the core. Also check occlusion behind walls and the appearance through glass or water. Animation should stop while the game is paused. Meteors are visual entities; summoning one does not automatically ignite nearby blocks.

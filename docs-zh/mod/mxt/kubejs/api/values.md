@@ -15,7 +15,7 @@ title: MxtValues：脚本数值
 
 ### `FormulaContext` {#formulacontext}
 
-所有拿到公式上下文的回调用的都是同一个对象：`MxtValues.number`、`MxtValues.resourceValue`，以及 Action、Condition 的 `mxt:js` 回调。它提供：
+所有获取公式上下文的回调用的都是同一个对象：`MxtValues.number`、`MxtValues.resourceValue`，以及 Action、Condition 的 `mxt:js` 回调。它提供：
 
 | 方法 | 说明 |
 | --- | --- |
@@ -52,7 +52,7 @@ const actualAura = MxtValues.evaluateResource(player, 'mxt:spirit_power', {
 
 ## 相关 {#相关}
 
-- 拿到 `FormulaContext` 的另外两处：[MxtActions](./actions.md)、[MxtConditions](./conditions.md)。
+- 获取 `FormulaContext` 的另外两处：[MxtActions](./actions.md)、[MxtConditions](./conditions.md)。
 - 用数值当代价：[MxtCosts](./costs.md)、[MxtResources](./resources.md)。
 - 数据包侧：[数值提供器类型](../../../../library/saturn/types/number.md)、[常见公式变量](../../datapack/types/formula_variables.md)、[基础类型](../../datapack/types/shared_data_types.md)。
 - [KubeJS API 参考](../api-reference.md)。

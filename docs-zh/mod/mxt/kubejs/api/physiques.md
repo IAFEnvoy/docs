@@ -1,13 +1,13 @@
 ---
 title: MxtPhysiques：体质
-description: 查询、授予、移除与开关体质；体质是修炼身份中与元素无关的那一半。
+description: 查询、授予、移除与启停体质；体质定义不依赖元素的修炼身份。
 ---
 
 # `MxtPhysiques`：体质
 
 <span id="mxtphysiques-体质" />
 
-体质是同一身份的**元素无关那一半**：它授予原版属性与能力、缩放持有者打出与受到的伤害，并通过互斥标签排除其他体质。与元素绑定的那一半是 [MxtSpiritRoots](./spirit_roots.md)。授予时 `holder_condition` 与 `exclusive_tags` 按**当前**实体判定。
+体质提供不依赖元素的修炼身份，可授予原版属性与技能、修正造成和受到的伤害，并通过互斥标签限制共存。与元素关联的灵根操作见 [MxtSpiritRoots](./spirit_roots.md)。授予时根据当前实体检查 `holder_condition` 与 `exclusive_tags`。
 
 ## 方法 {#方法}
 

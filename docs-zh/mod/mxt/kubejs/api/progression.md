@@ -7,7 +7,7 @@ description: 按所有者读写实体持有的进度等级，功法与灵宠共�
 
 <span id="mxtprogression" />
 
-灵宠的等级与功法用的是同一套账，区别只在**所有者**——所有者的 id 就是等级记录的键：功法写功法 id，灵宠写它自己那份 [生物档案](../../datapack/json/creature_profile.md) 的 id。读方法两侧都能用，`setLevel` 是服务端操作。
+灵宠与功法共用等级记录机制，以所有者 ID 为键：功法使用功法 ID，灵宠使用其[生物档案](../../datapack/json/creature_profile.md) ID。查询方法支持双端，`setLevel` 仅支持服务端。
 
 | 方法 | 参数 | 返回值 | 说明 |
 | --- | --- | --- | --- |
@@ -17,7 +17,7 @@ description: 按所有者读写实体持有的进度等级，功法与灵宠共�
 | `mastery(entity, owner)` | `Entity`、所有者 ID | `{have, required, resource}` 或 `null` | 离下一级还差多少：`mastery_resource` 的当前值、该级要求的数值与资源 ID。没有下一级、所有者没写 `mastery_resource`、或公式算不出来时为 `null`。 |
 | `setLevel(entity, owner, level)` | `LivingEntity`、所有者 ID、等级 ID | `{changed, failure}` | 走与 `/contract level` 同一个服务：校验该级在它的链上、写记录、重建它授予的能力，并发一次 `mxt:progression_level` 信号。**不看**该级自己的 `mastery` 与 `condition`。 |
 
-`failure` 词表：`UNKNOWN_OWNER`（这具身体不持有这个所有者，或那份定义没有链）、`FOREIGN_LEVEL`（这一级不在它的链上）、`SAME_LEVEL`（它已经在这一级了）、`UNKNOWN_LEVEL`（注册表里没有这个 id）、`SERVER_ONLY`（在客户端调用）。
+`failure` 词表：`UNKNOWN_OWNER`（这具身体不持有这个所有者，或该定义没有链）、`FOREIGN_LEVEL`（该等级不在它的链上）、`SAME_LEVEL`（它已经在该等级了）、`UNKNOWN_LEVEL`（注册表里没有这个 id）、`SERVER_ONLY`（在客户端调用）。
 
 ```js
 // kubejs/server_scripts/mxt_progression.js

@@ -35,8 +35,8 @@ Java 扩展应优先复用现有数据定义、Action、Condition、Cost 和运�
 - [注册表与 Codec](./registries.md) —— 固有类型注册表、数据包注册表清单与 codec 命名约定。
 - [网络协议与服务端权威](./network.md) —— 每个 C2S / S2C payload，以及唯一承载物品内容的那个通道。
 - [信息面板](./information-panel.md) —— 在人物信息面板里注册自己的行。
-- [客户端轮盘](./wheel.md) —— 怎么往客户端轮盘加一个条目。
-- [客户端界面](./screens.md) —— 界面在哪，以及本模组的定义怎么变成物品选择器里的一行。
+- [客户端轮盘](./wheel.md) —— 如何往客户端轮盘加一个条目。
+- [客户端界面](./screens.md) —— 界面在哪，以及本模组的定义如何变成物品选择器里的一行。
 - [类型参考](../datapack/types/index.md) —— 每个内置行为与条件类型。
 - [JSON 数据格式](../datapack/json/index.md) —— 每条定义的每个字段。
 - [数据包开发总览](../datapack/overview.md) —— 数据包目录结构与改动何时生效。

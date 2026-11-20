@@ -6,7 +6,7 @@ title: ContractOperations
 
 <span id="contractoperations" />
 
-契约之后"这只灵兽自己怎么做"的接口。**每个默认实现就是框架从前写死的那一段**（传送、跟随、寻路），所以实现了接口却什么都不覆写的灵兽，行为与从前完全一致。**不实现它等于不要这套通用行为**：这只生物仍然能被契约，但框架不替它跟随、不替它召回落地、也不上报协战，`follow_action` 与 `combat_action` 因此不跑——它们本来就是给这两个时刻配色的。入参 `ContractContext` 带着生物本身、主人 UUID、在线的主人（离线为空）与契约类型。
+契约之后"这只灵兽自己如何做"的接口。**每个默认实现就是框架从前写死的那一段**（传送、跟随、寻路），所以实现了接口却什么都不覆写的灵兽，行为与从前完全一致。**不实现它等于不要这套通用行为**：这只生物仍然能被契约，但框架不替它跟随、不替它召回落地、也不上报协战，`follow_action` 与 `combat_action` 因此不执行——它们本来就是给这两个时刻配色的。入参 `ContractContext` 带着生物本身、主人 UUID、在线的主人（离线为空）与契约类型。
 
 | 成员 | 说明 |
 | --- | --- |
@@ -15,8 +15,8 @@ title: ContractOperations
 | `void tick(ContractContext context, ContractBehavior behavior)` | 每 tick 的驱动，默认分派到 `follow` / `wander` / `stay`，不认识的命令什么都不做。 |
 | `void recall(ContractContext context)` | 主人摇了铃，落地动作交给它；默认传送到主人。这次调用会消耗召回闩。 |
 | `void follow(ContractContext context)` | 每 tick 跟随（主人必须在线且同维度）：默认超过 32 格传送、超过 4 格寻路。 |
-| `void wander(ContractContext context)` | 默认在主人 32 格外先传送过去（免得游荡的兽被丢下），否则每约两秒、且寻路空闲时在主人周围 3–8 格挑一个新点走过去。**框架不往实体里塞 goal**，生物自己的游荡目标照旧，要改就自己覆写。 |
-| `void stay(ContractContext context)` | 默认停寻路并清攻击目标——"停下来"而不是"冻住"；自己的 goal 会把它走开的话，想要真正不动就覆写。 |
+| `void wander(ContractContext context)` | 默认在距主人超过 32 格时先传送至主人附近；否则约每两秒在寻路空闲时，选择主人周围 3–8 格内的目标点。框架不注入 goal，生物原有游荡逻辑仍生效；可覆写以调整行为。 |
+| `void stay(ContractContext context)` | 默认停止寻路并清除攻击目标，不冻结实体。若原有 goal 仍会移动实体，需要覆写以实现持续驻守。 |
 | `void onDealtDamage(ContractContext context, LivingEntity target, double damage)` | 自己打出伤害、结算之后；这一击本身不在这里改。 |
 
 **命令本身是类，不是枚举**：`ContractBehavior`（`id` + `momentary` + `name()`，`equals` 只认 id）配 `ContractBehaviors` 这个装载类，`new` 一个再 `register(...)` 就多一条（"停手""回窝"都行），**内容方不用改框架的清单**；`momentary` 区分常驻与"只此一次"（召回的闩与冷却归框架，所以它走 `ContractService.requestRecall`，不写记录）。

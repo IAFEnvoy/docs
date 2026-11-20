@@ -100,7 +100,7 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 { "type": "mxt:grant_spirit_root", "spirit_root": "example:azure_root" }
 ```
 
-非生物目标不跑。
+非生物目标不执行。
 
 ### `mxt:grant_physique` {#mxt-grant-physique}
 
@@ -114,7 +114,7 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 { "type": "mxt:grant_physique", "physique": "example:flame_body" }
 ```
 
-非生物目标不跑。任何一项检查不过就不授予。
+非生物目标不执行。任何一项检查不过就不授予。
 
 ### `mxt:remove_spirit_root` {#mxt-remove-spirit-root}
 
@@ -128,7 +128,7 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 { "type": "mxt:remove_spirit_root", "spirit_root": "example:azure_root" }
 ```
 
-非生物目标不跑。
+非生物目标不执行。
 
 ### `mxt:remove_physique` {#mxt-remove-physique}
 
@@ -142,7 +142,7 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 { "type": "mxt:remove_physique", "physique": "example:flame_body" }
 ```
 
-非生物目标不跑。
+非生物目标不执行。
 
 ### `mxt:apply_curse` {#mxt-apply-curse}
 
@@ -410,7 +410,7 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 { "type": "mxt:cultivate", "action": "example:azure_meditation" }
 ```
 
-与玩家自己按修炼键是**同一条开始路径**：点名的那条也要过自己的 `start_condition` 与 `cultivate_condition`（"这一拍能不能拿到成果"；`tick_condition` 答的是"还继续不继续修炼"，开始前不参与挑选），一条都不适用就什么都不发生。
+与玩家自己按修炼键是**同一条开始路径**：点名的那条也要过自己的 `start_condition` 与 `cultivate_condition`（"这一拍能不能获取成果"；`tick_condition` 答的是"还继续不继续修炼"，开始前不参与挑选），一条都不适用就什么都不发生。
 
 **没有返回值，失败一律静默**：已经在修炼、或在冷却、或条件不成立都只是"没开始"。要提示就在数据包里用 `mxt:if_else` 配 [`mxt:cultivating`](../condition/entity_condition_types.md) 自己发消息。
 

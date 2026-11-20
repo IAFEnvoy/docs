@@ -12,7 +12,7 @@ title: /quality
 
 - `/quality ...`
 
-  看自己**主手**物品的品质：现在解析出来的那一档，以及它所属的链条。
+  看自己**主手**物品的品质：现在解析出来的对应档位，以及它所属的链条。
 
   - `... get [<target>]`
 
@@ -24,7 +24,7 @@ title: /quality
 
   - `... clear <targets>`
 
-    摘掉主手物品上的覆盖组件（需要 gamemaster 权限）。
+    移除主手物品上的覆盖组件（需要 gamemaster 权限）。
 
   - `... upgrade <targets>`
 
@@ -32,34 +32,34 @@ title: /quality
 
   - `... chain <quality>`
 
-    打印这一档所在的**整条品质链**。
+    打印该档位所在的**整条品质链**。
 
 </div>
 
 ## set 与 clear {#set-与-clear}
 
-`set` 写的组件压过这一堆携带的定义与注册表那一层，`/quality clear` 摘掉它；这一档能不能用仍由它自己的 `condition` 与所属链条决定。
+`set` 写入的品质组件优先于物品携带的定义与默认品质注册表。`/quality clear` 移除该覆盖值。物品是否可用仍由品质的 `condition` 与所属链决定。
 
-`clear` 摘掉的是 `/quality set`、**锻造结算**与**画符铭刻**都写在同一个组件里的那份覆盖，摘下之后物品退回这一堆携带的定义声明的档位、再退回注册表 `mxt:default_quality` 给的那一档。本来就没有覆盖时逐个目标报失败。
+`clear` 移除 `/quality set`、锻造结算或画符铭刻写入的同一品质组件，之后按物品携带定义、`mxt:default_quality` 的顺序继续解析。目标没有覆盖组件时，逐项报告失败。
 
 ## upgrade {#upgrade}
 
-先过**下一档**自己写的 `upgrade_condition`，代价就是它的 `upgrade_costs`（`plan` → `commit` **整组原子**，付不出就一点不动、也不写档）。已经在顶端、或解析出的档不在链上时都会逐个目标报出原因。
+先过**下一档**自己写的 `upgrade_condition`，代价就是它的 `upgrade_costs`（`plan` → `commit` **整组原子**，无法支付就一点不动、也不写档）。已经在顶端、或解析出的档不在链上时都会逐个目标报出原因。
 
 ## chain {#chain}
 
-链上在它之前的是灰色、它自己是绿色、之后的是白色。一档只属于一条链（运行时沿 `next` 走出来的那一条）；不在任何链上或链条没走通时报「没有品质链包含它」，当前包不提供这一档时同样会被拒绝。链名写在入口档上，入口档没有名字时这一行开头的链名显示成 `null`。
+链上在它之前的是灰色、它自己是绿色、之后的是白色。一档只属于一条链（运行时沿 `next` 走出来的那一条）；不在任何链上或链条没走通时报「没有品质链包含它」，当前包不提供该档位时同样会被拒绝。链名写在入口档上，入口档没有名字时这一行开头的链名显示成 `null`。
 
-## 品质是哪一档 {#品质是哪一档}
+## 品质解析 {#品质是哪一档}
 
-一条物品堆的品质按固定顺序取**第一个能拿到的**：
+一条物品堆的品质按固定顺序取**第一个能获取的**：
 
-1. 堆上的 `mxt:quality` **组件**（整份品质对象）——`/quality set`、一次成功的升级、锻造台结算与画符铭刻写的都是它；组件里那个 id 在当前包里没有对应条目时，这一层等于没答；
-2. **这一堆携带的定义**自己声明的档，读的是那件物品上装着定义身份的那份组件。声明 `quality` 的九个定义是 `technique`、`alchemy_furnace`、`alchemy_wall_material`、`spirit_root`、`physique`、`pill`、`formation`、`secret_realm`、`contract_type`；
+1. 物品堆上的 `mxt:quality` **组件**（整份品质对象）——`/quality set`、一次成功的升级、锻造台结算与画符铭刻写的都是它；组件里那个 id 在当前包里没有对应条目时，跳过该层；
+2. **该物品堆所携带的定义**声明的档，读的是那件物品上装着定义身份的那份组件。声明 `quality` 的九个定义是 `technique`、`alchemy_furnace`、`alchemy_wall_material`、`spirit_root`、`physique`、`pill`、`formation`、`secret_realm`、`contract_type`；
 3. 注册表 [default_quality](../../datapack/json/default_quality.md)：物品在表里写了哪一档。
 
 ## 升级只升一档 {#升级只升一档}
 
-`upgrade` 只推**一档**，付的就是**下一档**自己写的 `upgrade_costs`；想爬两级就执行两次，每次各付各的代价。写了 `next` 却没写代价的那一步是空代价，等于白升；想让某一档当顶端就不写它的 `next`。完整规则见[品质](../../datapack/json/quality.md)。
+`upgrade` 每次提升一档，并支付目标档位的 `upgrade_costs`。连续提升需要分别执行和支付；未配置消耗时可免费升级。省略当前档位的 `next` 可将其设为链顶端。完整规则见[品质](../../datapack/json/quality.md)。
 
 顶层别名 `/quality` 由服务端配置的**「命令别名」标签页**控制（条目名 `quality`，默认开启）；关闭后 `/mxt quality` 照旧可用。

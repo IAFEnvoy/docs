@@ -56,9 +56,9 @@ A definition is a template; an instance is an actual dimension. Instance dimensi
 
 ## Diagnosing Failed Travel {#diagnosing-failed-travel}
 
-Use `list` to find the instance bound to the entrance portal, then run `check`. The output includes the planned coordinates, the position actually found, the safety verdict and the inspection made before loading. An unloaded chunk before preparation followed by a safe result means preparation succeeded. When the nearby search fails, the reported reason describes the planned position.
+Use `list` to find the instance bound to the entrance portal, then run `check`. The output includes the planned coordinates, the position found, the safety verdict and the inspection made before loading. An unloaded chunk before preparation followed by a safe result means preparation succeeded. When the nearby search fails, the reported reason describes the planned position.
 
-Landing checks distinguish missing support, collisions, fluids, hazardous blocks, world bounds, unloaded chunks and oversized entities. The nearby search looks at offsets up to 4 blocks along each axis. `check` and `anchor` neither create a landing platform nor clear terrain. Actual travel tries to build a dirt platform in empty space when no existing safe position is found; see [Rifts](../rift.md#destinations-and-travel). Flying or gravity-free entities follow different support rules from walking players, so check with the state of the player who actually had the problem.
+Landing checks distinguish missing support, collisions, fluids, hazardous blocks, world bounds, unloaded chunks and oversized entities. The nearby search looks at offsets up to 4 blocks along each axis. `check` and `anchor` neither create a landing platform nor clear terrain. Actual travel tries to build a dirt platform in empty space when no existing safe position is found; see [Rifts](../rift.md#destinations-and-travel). Flying or gravity-free entities follow different support rules from walking players, so check with the state of the player who had the problem.
 
 Both `enter` and `join` enforce the entry conditions, the member limit, the membership state and landing safety; `join` bypasses none of those rules. If the safety checks pass and the teleport still fails, a developer has to look at the server log for a platform refusal or another mod refusing the teleport.
 

@@ -15,8 +15,8 @@ description: 定义一次运功法门：法门间的先后、开始与维持条�
 | --- | --- | --- | --- |
 | `priority` | Int | `0` | 多条法门并存时的先后：数值大者先，相同则按注册表顺序。它只在**此刻适用的**法门里排序。 |
 | `start_condition` | `EntityCondition` | `mxt:always` | 开始修炼条件：能不能坐下。 |
-| `cultivate_condition` | `EntityCondition` | `mxt:always` | **这一拍能不能拿到成果**；不成立时照常修炼、**不中止**，只是这一拍空过（不扣钱、不给收获、不算结算），条件一恢复立刻出成果。**基本只用于双修判定**。 |
-| `cultivate_action` | EntityAction | `mxt:no_op` | **结算成功那一拍**跑的行为：`cultivate_condition` 成立、`tick_interval` 已到、费用付清之后才跑。 |
+| `cultivate_condition` | `EntityCondition` | `mxt:always` | **这一拍能不能获取成果**；不成立时照常修炼、**不中止**，只是这一拍空过（不扣钱、不给收获、不算结算），条件一恢复立刻出成果。**基本只用于双修判定**。 |
+| `cultivate_action` | EntityAction | `mxt:no_op` | **结算成功那一拍**跑的行为：`cultivate_condition` 成立、`tick_interval` 已到、费用付清之后才执行。 |
 | `tick_condition` | `EntityCondition` | `mxt:always` | 还继续不继续修炼；不成立会**中止**本次运功。 |
 | `tick_interval` | Integer | `20` | 吸收结算间隔。 |
 | `costs` | `Cost` 数组 | `[]` | 每次修炼消耗：`mxt:aura` 条目从修炼者所在位置的**共享灵气池**扣，其余从修炼的实体自己账上扣。 |
@@ -26,11 +26,11 @@ description: 定义一次运功法门：法门间的先后、开始与维持条�
 | `tick_action` | EntityAction | `mxt:no_op` | **每一个 tick** 都跑的行为（`tick_condition` 通过之后），与这一拍有没有成果无关。 |
 | `abort_reason` | Text Component | 无 | 给"因为 `tick_condition` 不成立而中止"起的名字：写了就用它替代通用的「不满足修炼条件」，环境不允许、灵气不足、配置无效这些中止原因不受它影响。 |
 
-**多条法门并存时怎么挑**：先在整张表里筛出**此刻适用的**法门——`start_condition` 与 `cultivate_condition` **都要成立**，再加上灵气侧那道门禁（每条有首境界的 `aura` 自己的 `start_cultivate_conditions`）——再在筛出来的里面取 `priority` 最大的一条，同分按注册表顺序。一条都不适用就报「没有一门当下能修的法门」。
+**多条法门并存时如何挑**：先在整张表里筛出**此刻适用的**法门——`start_condition` 与 `cultivate_condition` **都要成立**，再加上灵气侧那道门禁（每条有首境界的 `aura` 自己的 `start_cultivate_conditions`）——再在筛出来的里面取 `priority` 最大的一条，同分按注册表顺序。一条都不适用就报「没有一门当下能修的法门」。
 
 所以**适用性是筛子、`priority` 才是排序**：`priority` 决定"两条都能用时用哪条"，"此刻能修哪条"由条件自己回答。`tick_condition` **不参与**这一步：它答的是"已经在修炼的身体还要不要继续"，坐下之前根本不成立。
 
-**点名一条法门不走 `priority`**：`/mxt cultivate select <action>` 之类的手动点名把点的那条立刻开起来（正在修另一条就先停掉），但同样要过上面那把筛子，不适用就被拒绝、正在跑的那条不受影响；它只管这一次，不会改变下次按键时的挑选顺序。
+**点名一条法门不走 `priority`**：`/mxt cultivate select <action>` 之类的手动点名把点的那条立刻开起来（正在修另一条就先停掉），但同样要过上面那把筛子，不适用就被拒绝、正在运行的那条不受影响；它只管这一次，不会改变下次按键时的挑选顺序。
 
 `tick_interval` 的范围是 `1..72000`，`cooldown` 的范围是 `0..72000`。
 
@@ -48,9 +48,9 @@ description: 定义一次运功法门：法门间的先后、开始与维持条�
 
 `tick_action` 在**每一个** tick 都跑（`tick_condition` 通过之后）；`cultivate_action` 只在**真正结算的那一拍**跑——`cultivate_condition` 成立、`tick_interval` 已到、费用付清之后。
 
-`costs` 里 `mxt:aura` 条目的付款方式是这套字段里最绕的一处。多人同区块修炼时，每一项先按池子能给它的份额独立缩放（这一项拿得到的量 ÷ 这一项要的量，夹在 `0..1`），本次结算的倍率取这些份额的平均；缩放后的金额才是真正提交给池子的数，提交时池子**全有或全无**地扣。所以一项不足只压低这一项自己的贡献与整体倍率，并不会直接拒付；真的付不出（或缩放后倍率为 `0`、而服务器配置要求必须有可用灵气）才以灵气不足中止。公式求值出非有限数会让这一次修炼以 `INVALID_FORMULA` 中止。
+`costs` 里 `mxt:aura` 条目的付款方式是这套字段里最绕的一处。多人同区块修炼时，每一项先按池子能给它的份额独立缩放（这一项拿得到的量 ÷ 这一项要的量，夹在 `0..1`），本次结算的倍率取这些份额的平均；缩放后的金额才是真正提交给池子的数，提交时池子**全有或全无**地扣。所以一项不足只压低这一项自己的贡献与整体倍率，并不会直接拒付；真的无法支付（或缩放后倍率为 `0`、而服务器配置要求必须有可用灵气）才以灵气不足中止。公式求值出非有限数会让这一次修炼以 `INVALID_FORMULA` 中止。
 
-没有单独的"环境类型"字段：能在哪里修炼完全由三个条件表达，它们都能读环境——`mxt:aura_range` 要求某门灵气的浓度区间，`mxt:dimension` 要求维度，方块/群系类条件要求脚下的地方。注意这与 `aura_zone.cultivate_condition`、`realm_stage.cultivate_condition` 是几侧：那两个由环境 / 境界自己声明"这里能不能修炼、这条链的回复算不算数"，这三个由法门声明"我需要什么"。
+修炼位置由三个条件字段限制，无独立的环境类型字段。可使用 `mxt:aura_range` 检查灵气浓度，或使用维度、方块与群系条件检查环境。这些条件由修炼行为定义其要求；`aura_zone.cultivate_condition` 与 `realm_stage.cultivate_condition` 则分别由环境和境界声明修炼资格及回复生效条件。
 
 ```json
 // data/example/mxt/cultivation/seated.json
@@ -72,7 +72,7 @@ description: 定义一次运功法门：法门间的先后、开始与维持条�
 
 灵气身份与修炼行为都不在这个文件里：它们在 [aura](./aura.md) 定义上，一个数值最多一条（一对一，只引用一个 `resource`）。境界入口 `first_realm`、开始修炼的条件 `start_cultivate_conditions`、自然恢复 `regen`、灵气标记 `aura_type`、灵力爆发的每发数值 `burst_amount`、修为与数值之间的两个换算方向、`use_condition` 与 `show_cultivation_info` 全都写在 `aura` 上；`resource` 只负责存储数值与资源条。逐字段见 [aura](./aura.md)。
 
-境界链也属于 `aura` 定义：每条 `realm_stage` 用 `aura` 指回定义，定义再用 `first_realm` 指链上的第一个境界，阶段之间由 `next_realm` 串成一条只能向前的线性链；一个定义一条链，玩家可以同时持有多条链。**从上一个境界突破到当前境界的条件全写在当前境界这一档上**：本档的 `breakthrough_exp`、`max_experience`、`breakthrough` 与 `costs` 描述的就是这一步，可选的 `auto_breakthrough` 决定修炼时是否自动尝试这一步（默认关）。凡人没有上一个境界，读的同样是目标首境界那一份，`first_realm` 只决定首次突破的目标境界；`start_cultivate_conditions` 在开始修炼与首次突破前各检查一次。`use_condition` 只决定资源条显不显示、能不能主动消耗，**不挡修炼、环境吸收、自然恢复与突破**。功法没有启用开关，学过的就全部生效。
+境界链也属于 `aura` 定义：每条 `realm_stage` 用 `aura` 指回定义，定义再用 `first_realm` 指链上的第一个境界，阶段之间由 `next_realm` 串成一条只能向前的线性链；一个定义一条链，玩家可以同时持有多条链。**从上一个境界突破到当前境界的条件全写在当前境界该档位上**：本档的 `breakthrough_exp`、`max_experience`、`breakthrough` 与 `costs` 描述的就是这一步，可选的 `auto_breakthrough` 决定修炼时是否自动尝试这一步（默认关）。凡人没有上一个境界，读的同样是目标首境界那一份，`first_realm` 只决定首次突破的目标境界；`start_cultivate_conditions` 在开始修炼与首次突破前各检查一次。`use_condition` 只决定资源条显不显示、能不能主动消耗，**不挡修炼、环境吸收、自然恢复与突破**。功法没有启用开关，学过的就全部生效。
 
 `regen` 是还没被修炼行为接管时的每 tick 自然恢复；修炼吸收默认只回复**当前境界**对应的那个数值，本境界的 `cultivate_condition` 还能再限制一次"这里能不能修炼"，与法门自己的 `start_condition` / `tick_condition` 是两侧。
 

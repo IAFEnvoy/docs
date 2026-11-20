@@ -11,7 +11,7 @@ A **spirit root** (`spirit_root`) and a **physique** (`physique`) are two differ
 
 This tutorial writes one of each, and then spells out **held** versus **in effect**: the state a body carries is two separate records, and every effect reads only the one that is in effect.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Registry | Purpose |
 | --- | --- | --- |
@@ -158,7 +158,7 @@ The test pack ships a probe, `/mxt_test identity`, which asserts held / in effec
 | --- | --- |
 | The world will not load and a table is one entry short | `elements` is not an array, is missing, is empty, names an element that does not exist, carries a weight at or below `0`, or lists the same element twice — **the whole definition fails to decode**, and a broken definition blocks world loading. |
 | A load-time "must be a finite non-negative number" | The value of a numeric multiplier field is illegal, for example a negative multiplier. |
-| Element fields on a physique do nothing at all | A physique has only the keys in its field table. `element`, `cultivation_multiplier`, `damage_types` and the like are **silently ignored — no error, and almost nothing in the log**. A mistyped field name is never caught; that one entry simply has no effect. |
+| Element fields on a physique do nothing at all | A physique has only the keys in its field table. `element`, `cultivation_multiplier`, `damage_types` and the like are **silently ignored — no error, and almost nothing in the log**. A mistyped field name is never caught; that one entry has no effect. |
 | One ability or element vanished from an array | A bad entry inside an array such as `granted_abilities` / `conflicting_elements` is dropped with one `Ignoring invalid list element` line and the rest of the file loads normally; a **single bad id** (not an array) fails the whole definition instead. |
 | One action fails to parse | The `spirit_root` / `physique` field of the action names an id the current pack does not provide. After a definition is deleted, commands and scripts **can still remove it by the reference recorded on the body**, because the body stores the reference itself. |
 | `/mxt registries validate` reports nothing | It does not check these two tables (it covers realm chains, trigger rules, progression chains, quality ladders and artifact ownership). |

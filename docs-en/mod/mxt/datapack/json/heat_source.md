@@ -58,11 +58,11 @@ Only the block in that one cell can supply heat, read through this registry: whe
 
 A heat block's item tooltip prints the two numbers this registry gives it — a "Maximum furnace temperature" line and a "Heating: … per tick" line — while a block that implements the heat interface prints no numbers and only says the heat it gives depends on the block's own state.
 
-A heat block is not consumed. Breaking the core does not drop it - it is a separate cell in the world and stays where it is. Removing it or swapping it for another block while a batch is running does not abort that batch: the temperature simply stops climbing and falls back at the furnace specification's `cooling_per_tick`.
+A heat block is not consumed. Breaking the core does not drop it - it is a separate cell in the world and stays where it is. Removing it or swapping it for another block while a batch is running does not abort that batch: the temperature stops climbing and falls back at the furnace specification's `cooling_per_tick`.
 
 ## The Temperature Ceiling {#the-temperature-ceiling}
 
-What a player may actually set is the lowest of three: **the highest temperature this block gives**, the lowest rating among the 18 casings, and the [furnace specification](../../addons/alchemy/datapack/alchemy_furnace.md)'s own optional `max_temperature`. The casings are described under [Wall Material](../../addons/alchemy/datapack/alchemy_wall_material.md), and the set point with the cooling rate under [Furnace Specification](../../addons/alchemy/datapack/alchemy_furnace.md).
+What a player may set is the lowest of three: **the highest temperature this block gives**, the lowest rating among the 18 casings, and the [furnace specification](../../addons/alchemy/datapack/alchemy_furnace.md)'s own optional `max_temperature`. The casings are described under [Wall Material](../../addons/alchemy/datapack/alchemy_wall_material.md), and the set point with the cooling rate under [Furnace Specification](../../addons/alchemy/datapack/alchemy_furnace.md).
 
 ## When the Block Answers for Itself {#when-the-block-answers-for-itself}
 

@@ -11,7 +11,7 @@ description: "The one cost array the whole pack reuses: the five shapes, where e
 
 This tutorial is about that array alone: what it looks like, where each of the four types charges, how several payments inside one action become one boundary, and what happens when it cannot be paid. **When a particular module pays its own `costs` field, and whether its cooldown or condition comes first, belongs to that module's page** — this page does not go into it and only lists where to read on under `## Next`.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -72,7 +72,7 @@ The four that write `type` are dispatched by the built-in `saturn:cost_type` reg
 ]
 ```
 
-**`saturn:resource` names a value; `mxt:aura` names an aura identity** — two different things. An aura is an identity and a value is a stored amount: the aura definition says which value that aura is measured in, so when the payer pays an `mxt:aura` entry out of their own pocket, what actually comes out is that value.
+**`saturn:resource` names a value; `mxt:aura` names an aura identity** — two different things. An aura is an identity and a value is a stored amount: the aura definition says which value that aura is measured in, so when the payer pays an `mxt:aura` entry out of their own pocket, what comes out is that value.
 
 An `mxt:item` entry's `items` is an [`ItemMatcher`](../datapack/types/other/item-matcher.md): a bare item id, an `#item tag`, or matching entries that write a `type`, all mixed in one array. Its `amount` is **rounded up**, so `1.5` takes 2; a rounded amount that is not positive or not finite means the entry cannot be paid, not that it takes nothing.
 
@@ -133,9 +133,9 @@ Payment happens before the action, so a refusal looks like "nothing happened, pl
 | `灵气不足` / `灵气不足，无法继续修炼` (not enough aura) | The shared aura pool or the block store is short. |
 | `该道法配置无效` / `这门技能的数值配置有误` (the numbers are wrong) | Some `amount` cannot evaluate to a finite positive number. |
 
-**The refusal happens before the action runs**, and that matters more than the wording: an ability is not put on cooldown before the money is taken, a talisman is not burned before the error, and a formation is not activated before it falls behind on its fee. `CostFailure` is an enum value, not an exception — the same definition always loads, it simply stops cleanly at the step where it ran out.
+**The refusal happens before the action runs**, and that matters more than the wording: an ability is not put on cooldown before the money is taken, a talisman is not burned before the error, and a formation is not activated before it falls behind on its fee. `CostFailure` is an enum value, not an exception — the same definition always loads, it stops cleanly at the step where it ran out.
 
-A missing channel is **only ever reported as "cannot be paid", never as "the definition is broken"**: `mxt:item` needs a player inventory, so a payer who is not a player (or a formation with no owner) simply cannot pay it, and `mxt:js` needs a player. The payer itself is **a living entity** — a player, a creature or a summon; it does not have to be a player.
+A missing channel is **only ever reported as "cannot be paid", never as "the definition is broken"**: `mxt:item` needs a player inventory, so a payer who is not a player (or a formation with no owner) cannot pay it, and `mxt:js` needs a player. The payer itself is **a living entity** — a player, a creature or a summon; it does not have to be a player.
 
 The other way round, **an entry that cannot be decoded fails the whole definition** (an unknown `type` or a missing required field will do it): the `costs` array **does not use** the tolerant-list convention, so there is no "log a warning and drop that entry".
 

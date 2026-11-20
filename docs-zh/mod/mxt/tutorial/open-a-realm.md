@@ -1,6 +1,6 @@
 ---
 title: 定义秘境
-description: 写一份秘境模板：用什么维度生成、边界怎么划、落点在哪、谁能进、谁来认领、什么时候删，以及秘境里的灵气、阵法与裂隙。
+description: 配置秘境生成、边界、落点、进入条件、归属、时限与内部环境。
 ---
 
 # 定义秘境
@@ -15,7 +15,7 @@ description: 写一份秘境模板：用什么维度生成、边界怎么划、�
 
 :::
 
-## 你要搭建什么 {#你要搭建什么}
+## 教程目标 {#你要搭建什么}
 
 | 文件 | 用途 |
 | --- | --- |
@@ -33,7 +33,7 @@ description: 写一份秘境模板：用什么维度生成、边界怎么划、�
 }
 ```
 
-`generation` 是**唯一必填**的字段，`type` 决定其余参数：五种生成方式与各自的字段见[秘境生成方式](../datapack/types/other/secret-realm-generation.md)。教程用 `mxt:flat`——预设串里 `;` 之后是群系，最省事；`mxt:void` 没有地层，落点会掉进虚空，要用就得自己放结构托住。
+`generation` 是唯一必填字段，`type` 决定其余参数；五种生成方式见[秘境生成方式](../datapack/types/other/secret-realm-generation.md)。本教程使用 `mxt:flat`，预设串中 `;` 后指定群系。`mxt:void` 不生成地层，应另行配置承载落点的结构。
 
 秘境的维度 id 由定义与序号生成：`<定义的命名空间>:secret_realm/<定义的路径>/<序号>`，序号从 0 开始——所以同一份模板可以开出很多份互不干扰的世界。
 
@@ -96,7 +96,7 @@ description: 写一份秘境模板：用什么维度生成、边界怎么划、�
 | 字段 | 默认 | 说明 |
 | --- | --- | --- |
 | `owned` | `false` | 为真时**第一个进入者成为主人**，实例从此保留地形、只卸载不删除；为假时最后一人离开就删掉整份实例与地形。 |
-| `max_instances` | `1`（`1..256`） | 这份定义**所有实例合计**的上限（休眠的认领实例也算），满了报 `NO_FREE_INSTANCE`。 |
+| `max_instances` | `1`（`1..256`） | 该定义**所有实例合计**的上限（休眠的认领实例也算），满了报 `NO_FREE_INSTANCE`。 |
 | `max_members` | 不限 | **每一份实例**能同时容纳多少人。 |
 | `duration_ticks` | `0`（不过期） | 实例存活时长；到期把在线成员送出去并收尾。 |
 
@@ -158,7 +158,7 @@ description: 写一份秘境模板：用什么维度生成、边界怎么划、�
 | --- | --- |
 | 进不去，报 `NO_FREE_INSTANCE` | `max_instances` 满了（含休眠的认领实例）；先 `destroy` 掉不用的，或把它调大。 |
 | 进不去，报 `MISSING_STRUCTURE` | `structures[].nbt` 指向的结构文件不存在或路径不对。 |
-| 进不去，报 `CONDITION_NOT_MET` | 选中的落点 `enter_condition` 不成立；写了 `enter_denied_message` 就会显示那句话。 |
+| 进不去，报 `CONDITION_NOT_MET` | 选中的落点 `enter_condition` 不成立；写了 `enter_denied_message` 会显示那句话。 |
 | 进不去，报 `DISABLED` | 那个 id 不在当前注册表里（含被 `neoforge:conditions` 挡掉的定义）。 |
 | 进不去，报 `ALREADY_TRAVELLING` | 这个玩家已经处在一次进出流程里。 |
 | 一进去就往下掉 | 用了 `mxt:void` 又没放结构：空列的地表高度就是世界底部。 |

@@ -53,7 +53,7 @@ The role comes from the slot, not from the recipe: two main-input slots, two aux
 
 Thermal bias is `Σ(count × power per item in that role × thermal bias) / Σ(count × power per item in that role)`. For the main and auxiliary roles the power per item is the sum of the matching property values, and for the catalyst it is `catalyst_power`; the denominator must be greater than `0`. The batch only counts as balanced when `abs(bias) <= balance_tolerance`.
 
-## Which Recipe Wins {#which-recipe-wins}
+## Recipe Selection {#which-recipe-wins}
 
 Among the full matches, only a single demand vector is kept, and it must **strictly dominate** every other one: the same set of property keys, every value greater than or equal to the other's (the catalyst requirement included), and at least one value strictly greater. Quality names, ladder positions, total power, temperature, duration, recipe ID and load order are not compared.
 
@@ -99,7 +99,7 @@ When the reachable temperature ceiling and the recipe's required range do not ov
 }
 ```
 
-`guide` is only an example and takes no part in the decision: the property rules themselves are the recipe. Putting materials in does not start a batch on its own; once the player starts one at the core, the output is decided from the properties actually sitting in the slots at that moment.
+`guide` is only an example and takes no part in the decision: the property rules themselves are the recipe. Putting materials in does not start a batch on its own; once the player starts one at the core, the output is decided from the properties sitting in the slots at that moment.
 
 ## Related Systems {#related-systems}
 

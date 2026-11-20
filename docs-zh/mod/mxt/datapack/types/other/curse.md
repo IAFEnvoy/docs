@@ -9,18 +9,18 @@ description: 诅咒类型族 curse_type 的四种生命周期策略、字段与�
 
 ## `curse_type` {#curse-type}
 
-[诅咒定义](../../json/curse.md)顶层的 `type` 从这一族里选一个 ID：`type` 只决定这份定义怎么走完一生，持续多久由定义自己的 `duration_ticks` 决定。四种类型由模组注册，数据包只能选用，不能新增。
+[诅咒定义](../../json/curse.md)顶层的 `type` 从这一族里选一个 ID：`type` 只决定该定义如何走完一生，持续多久由定义自己的 `duration_ticks` 决定。四种类型由模组注册，数据包只能选用，不能新增。
 
 定义在世界加载时解码一次：`type` 与它自己的字段（`mxt:triggered` 的 `triggers`）都在那时读出来，常量时长也在加载期校验。公式时长要等实际施加时才求值，所以那种写法只会在那一次施加时被拒。
 
-`duration_ticks` 与 `tick_interval` 是诅咒定义自己的字段，写在[诅咒定义](../../json/curse.md)那一页；下面只讲各类型怎么读它们。
+`duration_ticks` 与 `tick_interval` 是诅咒定义自己的字段，写在[诅咒定义](../../json/curse.md)那一页；下面只讲各类型如何读它们。
 
 | `type` | 到期 | 周期行为 |
 | --- | --- | --- |
 | `mxt:timed` | `duration_ticks` 之后 | 按 `tick_interval` 驱动 |
 | `mxt:permanent` | 永不到期，`duration_ticks` 不参与 | 按 `tick_interval` 驱动 |
 | `mxt:triggered` | 写了正的 `duration_ticks` 就按时到期，非正或不写就永不到期 | 由 `triggers` 的信号驱动，`tick_interval` 不参与 |
-| `mxt:empty` | 永不到期，`duration_ticks` 不参与 | 不跑任何行为 |
+| `mxt:empty` | 永不到期，`duration_ticks` 不参与 | 不执行任何行为 |
 
 ### `mxt:timed` {#mxt-timed}
 

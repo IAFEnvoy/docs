@@ -68,7 +68,7 @@ An item carrying `mxt:curse_container` also lists the curses it carries in its t
 
 When a whole definition leaves the data pack (its file was deleted, or a `neoforge:conditions` block keeps it out), the instances already held **stay exactly where they are**: they no longer tick, trigger or expire, and they refuse to be cleansed — an effect must not be quietly "purified" into a default one. The character information panel keeps listing them, unless `display_condition` says otherwise.
 
-The only way off is an **explicit removal**: `/mxt curse remove`, KubeJS `remove`, or unequipping the item that carries it (reason `explicit`). **`mxt:remove_curse` and an antidote cannot take it off** — they go through `cleansed`, and a frozen instance simply does not answer them. Once the definition is back the instance recovers on its own, because reconciliation is scheduled again on `/reload`.
+The only way off is an **explicit removal**: `/mxt curse remove`, KubeJS `remove`, or unequipping the item that carries it (reason `explicit`). **`mxt:remove_curse` and an antidote cannot take it off** — they go through `cleansed`, and a frozen instance does not answer them. Once the definition is back the instance recovers on its own, because reconciliation is scheduled again on `/reload`.
 
 ## Only Two Moments Run Behaviour {#only-two-moments-run-behaviour}
 

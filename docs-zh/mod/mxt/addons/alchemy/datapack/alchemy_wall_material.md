@@ -1,6 +1,6 @@
 ---
 title: alchemy_wall_material（炉壁材料）
-description: 炉壁材料的耐温定义：一块炉壁能承受多热，以及整座炉子为什么取最低值。
+description: 炉壁材料耐温与整炉温度上限的计算规则。
 ---
 
 :::info 所属附属
@@ -13,7 +13,7 @@ description: 炉壁材料的耐温定义：一块炉壁能承受多热，以及�
 
 一份 `alchemy_wall_material` 只描述**一块炉壁**：一个有限的耐温上限，以及可选的档位。槽位、容量与回落速度属于[炉型规格](./alchemy_furnace.md)，不写在这里。
 
-整炉耐温是 18 块炉壁里**最低**的那个 `max_temperature`。混用材料时薄弱处说了算，高耐温的炉壁不能把低耐温的拉平。它只是炉温上限的**三个来源之一**：另外两个是[炉型规格](./alchemy_furnace.md)自己可选的 `max_temperature` 与供热方块给出的最高温，上限取三者最低。
+整炉耐温取 18 块炉壁中最低的 `max_temperature`。最终炉温上限取炉壁耐温、[炉型规格](./alchemy_furnace.md)可选的 `max_temperature` 与热源最高温度三者的最小值。
 
 ## 文件位置 {#文件位置}
 
@@ -38,10 +38,10 @@ description: 炉壁材料的耐温定义：一块炉壁能承受多热，以及�
 
 这份材料没有文本字段：名字与描述按条目 id 现算，`example:bronze` 的名字键是 `mxt_alchemy.alchemy_wall_material.example.bronze`，描述键再加 `.description`。`max_temperature` 的数值由内容包自己定，本体不内置铜、铁或灵材的温度表。
 
-`quality` 是可选的：炉壁方块是所有炉壁材料共用的一种方块，方块本身说不清是哪一档，只有堆上携带的这份材料报得出——由这种材料砌起来的炉壁方块起始就在这一档。堆上写了自己的 `mxt:quality` 组件时以组件为准；这份材料没写 `quality` 时这一层不作答，继续落到注册表 [default_quality](../../../datapack/json/default_quality.md)。
+`quality` 是可选的：炉壁方块是所有炉壁材料共用的一种方块，方块本身说不清是哪一档，只有堆上携带的这份材料报得出——由这种材料砌起来的炉壁方块起始就在该档位。堆上写了自己的 `mxt:quality` 组件时以组件为准；这份材料没写 `quality` 时该层不作答，继续落到注册表 [default_quality](../../../datapack/json/default_quality.md)。
 
 ## 承载与成型 {#承载与成型}
 
-炉壁物品用组件 `mxt_alchemy:alchemy_wall_material` 携带材料身份：放置、存档、同步、创造模式取样与正常拆回都保留它。定义不在注册表中时不能成型，本体不会拿一个硬编码数值兜底。
+炉壁物品通过组件 `mxt_alchemy:alchemy_wall_material` 保存材料身份，放置、存档、同步、创造模式取样与正常拆除均保留该信息。定义不在注册表中时，丹炉无法成型，也不采用硬编码的回退数值。
 
 核心、三个仓与 18 块炉壁都就位时整座炉子才成型，实际可设的炉温上限是炉型规格的 `max_temperature`、整炉耐温与供热方块给出的最高温三者里最低的那个，见 [alchemy_furnace](./alchemy_furnace.md)。代表性材料只放在测试数据包里，生产内容由内容包提供。

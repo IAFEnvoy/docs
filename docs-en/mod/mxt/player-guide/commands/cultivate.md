@@ -28,7 +28,7 @@ title: /cultivate
 
 One line: the method running (or "none"), the **cultivation progress**, and the next settlement tick. Progress is stored **per aura**, so there is one item per chain being climbed, written as `aura=value` — with two auras cultivated by the same body at once, this shows at a glance who has accumulated what.
 
-What it reads is the record of the session that is actually running, not "which method `priority` would pick" — picking happens at the moment you sit down, see [Cultivation](../../datapack/json/cultivation.md). To see what was picked, sit down and read this line.
+What it reads is the record of the session that is running, not "which method `priority` would pick" — picking happens at the moment you sit down, see [Cultivation](../../datapack/json/cultivation.md). To see what was picked, sit down and read this line.
 
 ## select {#select}
 

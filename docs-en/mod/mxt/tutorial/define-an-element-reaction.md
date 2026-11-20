@@ -11,7 +11,7 @@ An element has two abilities you can turn on separately. The first is **claiming
 
 This tutorial joins the two halves: it adds a second element, gives it damage types to claim, and writes a reaction that fires once enough has built up. **How the relations between elements (`overcomes` / `adapted_to`) change damage belongs to the damage system**; this page mentions them only where the element definition needs them to be complete and loadable, and does not go into them.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Registry | Purpose |
 | --- | --- | --- |
@@ -167,6 +167,6 @@ Every step of the reaction can be watched on its own:
 ## Next {#next}
 
 - [Element Reaction](../datapack/json/element_reaction.md) — the full field lists for `amounts` / `consume` / `condition` / `action` / `priority`, and where the accumulation lives.
-- [Element](../datapack/json/element.md) — the claimed damage types, each kind of hit's own attachment, buildup and decay, and how `overcomes` / `adapted_to` take part in damage.
+- [Element](../datapack/json/element.md) — the claimed damage types, each kind of hit is own attachment, buildup and decay, and how `overcomes` / `adapted_to` take part in damage.
 - [Define Spirit Roots and Physiques](./define-spirit-roots-and-physiques.md) — a body holding elements of its own, and the difference between held and in effect.
 - [The Damage System](../technical/damage.md) — the full path from a strike being dealt to a target losing health, and which layer the element relations sit on.

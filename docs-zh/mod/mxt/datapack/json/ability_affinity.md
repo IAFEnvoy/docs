@@ -1,6 +1,6 @@
 ---
 title: ability_affinity（技能元素亲和）
-description: mxt:ability_affinity 的字段与判定：哪条技能属于哪些元素、多条灵根匹配时怎么合并，以及它在施放门槛与伤害倍率上的作用。
+description: mxt:ability_affinity 的字段与判定：哪条技能属于哪些元素、多条灵根匹配时如何合并，以及它在施放门槛与伤害倍率上的作用。
 ---
 
 # ability_affinity（技能元素亲和）
@@ -12,7 +12,7 @@ description: mxt:ability_affinity 的字段与判定：哪条技能属于哪些�
 ## 文件与 id {#文件与-id}
 
 - 注册表 id 是 `mxt:ability_affinity`，文件放在 `data/<命名空间>/mxt/ability_affinity/<路径>.json`。
-- 一份文件就是一条定义，条目 id 是 `<命名空间>:<路径>`；这个 id **不会**被别处引用，所以怎么命名都行。
+- 一份文件就是一条定义，条目 id 是 `<命名空间>:<路径>`；这个 id **不会**被别处引用，所以如何命名都行。
 
 ```json
 // data/example/mxt/ability_affinity/qi_bolt.json
@@ -29,11 +29,11 @@ description: mxt:ability_affinity 的字段与判定：哪条技能属于哪些�
 | --- | --- | --- | --- |
 | `abilities` | 技能 id 或 `#技能标签` 的列表 | **必填** | 这条亲和覆盖哪些技能，非空。 |
 | `elements` | 元素 id 或 `#元素标签` 的列表 | **必填** | 技能偏向哪些元素；空列表等价于"这条技能不绑元素"。 |
-| `mode` | `average` / `max` | `average` | 多条灵根都匹配时怎么合并：`average` 取平均，`max` 取最好的那条。 |
+| `mode` | `average` / `max` | `average` | 多条灵根都匹配时如何合并：`average` 取平均，`max` 取最好的那条。 |
 
-**先匹配先答。** 一条技能可以被多条定义命中（另一份包也点名了它，或一条写具体 id、另一条写标签），按注册表顺序取第一条命中的，后面的不再看——所以"具体 id 覆盖标签"要靠把你更想要的那条排在前面，而不是靠优先级字段。
+**采用首个匹配定义。** 同一技能匹配多个定义时，使用注册表顺序中的第一项，不提供独立优先级字段。需要让具体 ID 的规则覆盖标签规则时，应将前者排在前面。
 
-## 它做什么 {#它做什么}
+## 生效规则 {#它做什么}
 
 一条技能在这张表里被点名、且 `elements` 非空时，它会得到两件事：
 

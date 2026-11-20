@@ -17,11 +17,11 @@ description: 给已注册物品一个面值和一组单向兑换，由 mxt:curre
 data/<namespace>/mxt/currency/<条目>.json
 ```
 
-条目 id 是 `<namespace>:<路径>`——`data/example/mxt/currency/copper_coin.json` 就是 `example:copper_coin`。模组自带的条目在 `data/mxt/mxt/currency/`；内容包写自己的命名空间，不要塞进 `mxt`。
+条目 id 是 `<namespace>:<路径>`——`data/example/mxt/currency/copper_coin.json` 就是 `example:copper_coin`。模组自带的条目在 `data/mxt/mxt/currency/`；内容包写自己的命名空间，不要写入 `mxt`。
 
-顶层直接写下面字段表里的键。**没有 `values` 包一层**，一份文件只描述一条定义；要在别的包里盖过同一件物品，靠 `priority` 分先后，没有 `replace` 这类开关。文件级 `neoforge:conditions` 是生效的：条件不成立时这条定义根本不进注册表。
+顶层直接写下面字段表里的键。**没有 `values` 包一层**，一份文件只描述一条定义；要在别的包里盖过同一件物品，靠 `priority` 分先后，没有 `replace` 这类开关。文件级 `neoforge:conditions` 是生效的：条件不成立时该定义根本不进注册表。
 
-这张注册表和别的数据包注册表一样在**世界加载时**读取，`/reload` 不会重读。`/mxt registries list` 与 `/mxt registries validate` 都包含它；`/picker mxt:currency` 列出这些定义认领的物品。
+该注册表和别的数据包注册表一样在**世界加载时**读取，`/reload` 不会重读。`/mxt registries list` 与 `/mxt registries validate` 都包含它；`/picker mxt:currency` 列出这些定义认领的物品。
 
 **用途**：物品货币面值和兑换。
 
@@ -29,15 +29,15 @@ data/<namespace>/mxt/currency/<条目>.json
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `item` | 物品条目 | 无 | 这条定义认领哪些物品：单个物品 id、`#物品标签`，或它们的数组；数组里还可以是带 `type` 的匹配器条目，写法见 [`ItemMatcher`](../types/shared_data_types.md#itemmatcher)。 |
+| `item` | 物品条目 | 无 | 该定义认领哪些物品：单个物品 id、`#物品标签`，或它们的数组；数组里还可以是带 `type` 的匹配器条目，写法见 [`ItemMatcher`](../types/shared_data_types.md#itemmatcher)。 |
 | `value` | Long | **必填** | 单件面值，必须大于 `0`。 |
-| `unavailable_when` | `ItemCondition` 数组 | `[]` | 每条把一件物品条件和一个原因绑在一起；条件成立时这一栈的货币价值读作 `0`，并显示对应原因。 |
+| `unavailable_when` | `ItemCondition` 数组 | `[]` | 每条把一件物品条件和一个原因绑在一起；条件成立时该物品堆的货币价值读作 `0`，并显示对应原因。 |
 | `exchanges` | 兑换项数组 | **必填** | 单向兑换选项，可以写成空数组。 |
 | `priority` | Int | `0` | 同一件物品被多条定义命中时的先后：数值大者先；**同分回落到注册表顺序**。 |
 
-`item` 必须写：没写、或者 `value` 不是正数，这条定义在加载期被拒绝。
+`item` 必须写：没写、或者 `value` 不是正数，该定义在加载期被拒绝。
 
-同一件物品被多条定义命中时只有 `priority` 最大的那条生效，字段默认 `0`；只有 `priority` 相同的两条才回落到注册表顺序：`value` 与 `exchanges` 都按它读，输的那条既不算价值，也不提供兑换。**这与 `item` 里写的是物品还是标签无关**。
+同一件物品被多条定义命中时只有 `priority` 最大的那条生效，字段默认 `0`；只有 `priority` 相同的两条才回落到注册表顺序：`value` 与 `exchanges` 都按它读，未选中的定义既不算价值，也不提供兑换。**这与 `item` 里写的是物品还是标签无关**。
 
 ### `unavailable_when` {#unavailable-when}
 
@@ -156,7 +156,7 @@ data/<namespace>/mxt/currency/<条目>.json
 
 ## 停用一条定义 {#停用一条定义}
 
-条件写在**文件顶层**（一份文件就是一条定义）。条件不成立时这条定义根本不进注册表：
+条件写在**文件顶层**（一份文件就是一条定义）。条件不成立时该定义根本不进注册表：
 
 ```json
 {
@@ -169,13 +169,13 @@ data/<namespace>/mxt/currency/<条目>.json
 }
 ```
 
-条件不成立的那条定义等同于不存在：那件物品不是货币，不参与兑换、支票与结算。可用条件见[数据包开发总览](../conventions.md#停用一条定义)。
+条件不成立的该定义等同于不存在：那件物品不是货币，不参与兑换、支票与结算。可用条件见[数据包开发总览](../conventions.md#停用一条定义)。
 
 ## 校验与加载 {#校验与加载}
 
 - `item` 里只能写已经注册的物品 id 与 `#物品标签`；带 `type` 的匹配器条目按 [`ItemMatcher`](../types/shared_data_types.md#itemmatcher) 的形状写。
-- `item` 必须写，`value` 必须大于 `0`，否则这条定义加载失败。
-- `unavailable_when` 中任一条件成立时，这一栈不参与货币结算，价值读作 `0`。
+- `item` 必须写，`value` 必须大于 `0`，否则该定义加载失败。
+- `unavailable_when` 中任一条件成立时，该物品堆不参与货币结算，价值读作 `0`。
 - `exchanges` 必须存在；没有兑换时写 `[]`。
 - 同一件物品被多条定义命中时只有 `priority` 最大的那条生效，同分回落到注册表顺序：`value` 与 `exchanges` 都按它读。
 - 每条 `cost` 必须落在 `1..99`。

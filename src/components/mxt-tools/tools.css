@@ -65,11 +65,21 @@ html.dir-mod-mxt .mxt-tool .group {
   background: var(--surface);
   border: 1px solid var(--edge);
   border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 2px var(--paper-rim), inset 0 0 0 3px var(--edge-light);
 }
 
 html.dir-mod-mxt .mxt-tool .group .title {
-  color: var(--ink-muted);
+  color: var(--gold-ink);
   font-size: 12px;
+}
+
+html.dir-mod-mxt .mxt-tool :is(input, select, textarea) {
+  accent-color: var(--green);
+}
+
+html.dir-mod-mxt .mxt-tool :is(input, select, textarea, button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
 html.dir-mod-mxt .mxt-tool label {
@@ -109,23 +119,25 @@ html.dir-mod-mxt .mxt-tool button {
   padding: 4px 10px;
   border: 1px solid var(--edge);
   border-radius: 2px;
-  background: var(--surface);
-  color: var(--ink);
+  background: var(--wood);
+  color: var(--wood-ink);
   font: inherit;
   font-size: 12px;
   cursor: pointer;
   transition: background var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
 }
 
-html.dir-mod-mxt .mxt-tool button:hover {
+html.dir-mod-mxt .mxt-tool button:not(:disabled):hover {
   border-color: var(--edge-hover);
-  background: var(--surface-soft);
-  color: var(--green);
+  background: var(--wood-hover);
+  box-shadow: inset 0 0 0 1px var(--gold-trim);
 }
 
 html.dir-mod-mxt .mxt-tool button:disabled {
-  opacity: 0.45;
-  cursor: default;
+  background: var(--disabled-background);
+  border-color: var(--disabled-border);
+  color: var(--disabled-foreground);
+  cursor: not-allowed;
 }
 
 html.dir-mod-mxt .mxt-tool .readout {
@@ -193,8 +205,9 @@ html.dir-mod-mxt .mxt-tool #list li:hover {
 }
 
 html.dir-mod-mxt .mxt-tool #list li.picked {
-  background: var(--tint-green);
-  color: var(--green);
+  background: var(--selection);
+  color: var(--red);
+  box-shadow: inset 2px 0 0 var(--red);
 }
 
 html.dir-mod-mxt .mxt-tool #list li span {

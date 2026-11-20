@@ -54,7 +54,7 @@ The tiers below it are grey, the tier itself is green and the tiers above it are
 
 A stack's quality is the **first** of these that answers:
 
-1. A `mxt:quality` **component** on the stack (a whole quality object) — what `/quality set`, a successful upgrade, a Forge Table settlement and a talisman inscription write; when the id on it names no entry in the current pack, this layer answers nothing;
+1. A `mxt:quality` **component** on the stack (a whole quality object) — what `/quality set`, a successful upgrade, a Forge Table settlement and a talisman inscription write; when the id on it names no entry in the current pack, this layer provides no result;
 2. the tier **the definition the stack itself carries** declares, read from whichever component on that item names a definition identity. The nine definitions declaring `quality` are `technique`, `alchemy_furnace`, `alchemy_wall_material`, `spirit_root`, `physique`, `pill`, `formation`, `secret_realm` and `contract_type`;
 3. the [default_quality](../../datapack/json/default_quality.md) registry: whichever tier the item is given there.
 

@@ -323,7 +323,7 @@ Passes when a stack the entity wears or holds satisfies an [item condition](./it
 {"type": "mxt:has_equipped_item", "item_condition": {"type": "mxt:item_tag", "tag": "#example:swords"}}
 ```
 
-This is the natural way to bind a passive `mxt:modifier` to gear. `slots` takes vanilla equipment slot names (`mainhand`, `offhand`, `head`, `chest`, `legs`, `feet`, `body`) or Curios slots with a `curios:` prefix (`curios:back_weapon`); leave it out and every vanilla slot and every Curios slot is asked. A name that matches nothing simply never passes.
+This is the natural way to bind a passive `mxt:modifier` to gear. `slots` takes vanilla equipment slot names (`mainhand`, `offhand`, `head`, `chest`, `legs`, `feet`, `body`) or Curios slots with a `curios:` prefix (`curios:back_weapon`); leave it out and every vanilla slot and every Curios slot is asked. A name that matches nothing never passes.
 
 ## Reincarnation Lifespan {#reincarnation-lifespan}
 

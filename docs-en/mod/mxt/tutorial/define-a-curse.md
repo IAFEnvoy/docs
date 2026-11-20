@@ -11,7 +11,7 @@ A curse is a lasting state carried by an entity. The definition decides how long
 
 This tutorial adds one curse to the example pack: `example:qi_backlash`, a backlash of qi. It expires on a timer, fires every 100 ticks, stacks up to three times, and refreshes its remaining time whenever it stacks.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |

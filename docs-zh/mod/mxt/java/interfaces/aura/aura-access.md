@@ -16,7 +16,7 @@ title: AuraAccess
 | `double extract(@Nullable LivingEntity entity, Provider registries, Holder<Aura> aura, double amount, boolean exact, boolean simulate)` | 取出，返回未移动量。 |
 | `static double requireNonNegative(double amount)` | 拒绝负数、NaN 与无穷；非法 Java 调用抛出 `IllegalArgumentException`。 |
 
-`exact=true` 要求全额或零写入；`exact=false` 移动能接受的部分。`simulate=true` 只检查，不能写组件、创建附件、触发回调或顺便规范化存量。请求为零时不写入。正常浮点运算误差可以收敛，但不能把空库存中的小额请求当成成功，也不能在正数请求没有造成可表示变化时报告已移动。
+`exact=true` 要求全额或零写入；`exact=false` 移动能接受的部分。`simulate=true` 只检查，不能写组件、创建附件、触发回调或同时规范化存量。请求为零时不写入。正常浮点运算误差可以收敛，但不能把空库存中的小额请求当成成功，也不能在正数请求没有造成可表示变化时报告已移动。
 
 返回值 `0.0` 表示全额可移动，原请求量表示完全未移动。一次只处理一种灵气，多种灵气由调用者逐项处理。容量不等于当前库存；查询可抽取量要模拟 `extract`。
 

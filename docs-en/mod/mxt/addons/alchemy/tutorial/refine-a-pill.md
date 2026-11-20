@@ -11,7 +11,7 @@ Alchemy is not "place one block and start brewing". A furnace is a **fixed 3x3x3
 
 This page adds one minimal production line to the example pack: two medicinal properties, three herbs (all bound to existing items), one furnace spec, one wall material, one recipe and one pill with toxicity.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -117,7 +117,7 @@ A furnace spec is a **specification**, not a block in the world: the core item c
 - `capacity` caps how many material items one batch may hold, and the item's own stack size still applies.
 - `cooling_per_tick` is how much the heat falls back per tick once it is above the set point or the heat stops. With an empty heat cell the heat cools to `0`.
 - **The temperature ceiling is the lowest of three.** The furnace specification's own optional `max_temperature`, the lowest rating among the 18 casings when they are all valid, and the highest temperature the heat block gives; mixing in a heat-resistant casing does not average the weak spot away. Writing a large `max_temperature` on the specification raises the ceiling, but never past the walls and the heat block. The set temperature must land between `0` and that ceiling.
-- A `heat_source` gives one family of blocks two numbers: the highest temperature it supplies and how many degrees it adds per tick. It claims blocks through `blocks` (a single block id, a `#`-prefixed block tag, or an array of either), and `max_temperature` and `heating_per_tick` are both required and finite positive. When several definitions hit one block, `priority` decides (the highest wins, a tie falls back to registry order, `0` by default). The file lives at `data/example/mxt/heat_source/<name>.json`. This one makes **magma blocks** a heat block; the fields and the tie-break rule are under [heat_source](../../../datapack/json/heat_source.md).
+- A `heat_source` gives one family of blocks two numbers: the highest temperature it supplies and how many degrees it adds per tick. It claims blocks through `blocks` (a single block id, a `#`-prefixed block tag, or an array of either), and `max_temperature` and `heating_per_tick` are both required and finite positive. When several definitions hit one block, `priority` decides (the highest priority takes precedence, a tie falls back to registry order, `0` by default). The file lives at `data/example/mxt/heat_source/<name>.json`. This one makes **magma blocks** a heat block; the fields and the tie-break rule are under [heat_source](../../../datapack/json/heat_source.md).
 - Quality only decides the display name, the use condition and the **tiers** a formula may require (the core's `furnace_quality` and the per-slot `input_quality`). It never derives slots, capacity, cooling or the temperature ceiling.
 
 ## Step 4 — Build the Furnace, Load the Heat Block, Load the Herbs {#step-4-—-build-the-furnace-load-the-heat-block-load-the-herbs}
@@ -188,7 +188,7 @@ A recipe uses the vanilla recipe type `mxt_alchemy:alchemy` and lives at `data/<
 - `balance_tolerance: 0` demands a perfect balance, judged as the absolute value of `Σ(amount × power per item × thermal bias) / Σ(amount × power per item)` staying inside the tolerance. For this recipe `2 × herb_a + 2 × herb_c + 1 × herb_d` at age zero lands exactly on `0`.
 - When several recipes match at once, only the one that **uniquely dominates** every other survives: same set of property keys, every entry no smaller, and at least one entry strictly larger. The player never picks a recipe, and no unique result means a recipe conflict that consumes nothing either.
 - `target_temperature` and `temperature_tolerance` are the heat window. **The set temperature of the first batch must fall inside it**, so this recipe asks you to set the heat to `95..105`.
-- `minimum_aura` checks the **environment aura**; it is neither a cost nor heat. Name an aura your world actually has, or let the zone override the requirement with `alchemy_env_bonus` (that flag only replaces the threshold, it never provides heat).
+- `minimum_aura` checks the **environment aura**; it is neither a cost nor heat. Name an aura your world has, or let the zone override the requirement with `alchemy_env_bonus` (that flag only replaces the threshold, it never provides heat).
 - `duration` is shortened by the brewing modifiers, computed once when the batch starts and frozen into it: the **material side** takes the lowest tier among the materials' `alchemy_modifier`, the **core side** the furnace core tier's own `alchemy_modifier` (counting as `1.0` when the core has no tier), and `effective duration = max(1, round(declared duration ÷ (material side × core side)))`. So giving a high furnace tier `alchemy_modifier: 2` makes that furnace brew any recipe faster.
 - The failure outputs are declared by the recipe; the server never stuffs dregs in on its own, and leaving `failure_outputs` out means a failed batch produces nothing.
 - `guide` is optional example metadata. The furnace neither reads nor shows it, so drop it if you do not want to maintain it.
@@ -227,7 +227,7 @@ give @s mxt:pill[mxt:pill={pill:"example:warming_pill"}]
 ```
 
 - The use cap counts per **binding**, not per item ID, so carrying the effect on another item does not get around it. Uses and cooldown are recorded on the body: death, a dimension change and logging back in all leave them alone.
-- **The identity only comes from a binding's `items` match**: a stack that writes only effect keys, or one whose component names a pill while no binding claims the item, counts no uses and has no cooldown. That is why the binding above names the built-in pill carrier `mxt:pill`. The component's `pill` wins over the definition the binding names, and the five effect keys are then laid over it field by field.
+- **The identity only comes from a binding's `items` match**: a stack that writes only effect keys, or one whose component names a pill while no binding claims the item, counts no uses and has no cooldown. That is why the binding above names the built-in pill carrier `mxt:pill`. The component's `pill` takes precedence over the definition the binding names, and the five effect keys are then laid over it field by field.
 - Toxicity is a per-body ledger too: `toxicity_gain` is added by each dose, `on_overdose` only fires once the total reaches `toxicity_threshold`, and `toxicity_after_overdose` is what is left afterwards. The threshold means "reaching it fires", not "no more pills allowed".
 - Clear toxicity with a negative `add` on the entity action `mxt:modify_pill_toxicity`, which does not touch the use count; read it with the entity condition `mxt:pill_toxicity` or the formula variable `pill_toxicity`.
 - Toxicity does not fade on its own by default. With **Server Config → Alchemy → Natural toxicity decay per second** set to a positive number, an active entity that already has toxicity loses some once every 20 ticks, nothing happens offline, and an entity that has never taken a pill does not gain an empty ledger.
@@ -249,7 +249,7 @@ give @s mxt:pill[mxt:pill={pill:"example:warming_pill"}]
 
 :::warning This page does not promise that a batch brews correctly
 
-How a batch **settles once it has started** has not been checked item by item in game yet, so this page promises no particular result for a recipe. Points 4 and 5 above list what you can watch with your own eyes — the structure forming, the four screens opening, the batch starting, the heat moving and the result entering the store. The verdict itself is what the core's page reports as its state and failure reason.
+Batch outcomes still require in-game verification for each recipe; this tutorial does not guarantee a specific output. Steps 4 and 5 cover structure formation, screen access, batch start, temperature changes and output storage. Use the monitor screen to inspect the result and failure reason.
 
 :::
 

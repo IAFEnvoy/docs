@@ -15,7 +15,7 @@ description: 'Simulate a Cost array, then deduct in order; simulation refusals s
 | --- | --- | --- | --- |
 | `consume(entity, costs)` | a living entity, `Cost[]` | `Result<Map<Identifier, Double>>` | Diagnoses duplicate targets, then simulates and deducts in array order without merging or reordering. Simulation refusals deduct nothing; real failures only warn and continue. |
 
-`costs` is the **unified `Cost` array**: all five shapes can be written directly, and the older `{"id": ..., "amount": ...}` shorthand still works (it is read as `saturn:resource`). The payer has to be a **living entity** — it does not have to be a player, but `mxt:item` (which needs a player's inventory) and `mxt:js` (which needs a player) are simply unpayable for a non-player payer. An entry that cannot be decoded fails the call rather than being dropped silently.
+`costs` is the **unified `Cost` array**: all five shapes can be written directly, and the older `{"id": ..., "amount": ...}` shorthand still works (it is read as `saturn:resource`). The payer has to be a **living entity** — it does not have to be a player, but `mxt:item` (which needs a player's inventory) and `mxt:js` (which needs a player) are unpayable for a non-player payer. An entry that cannot be decoded fails the call rather than being dropped silently.
 
 ```js
 const result = MxtResources.consume(player, [

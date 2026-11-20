@@ -85,7 +85,7 @@ description: 模组注册的全部内置双实体条件类型，以及每种类�
 {"type": "mxt:element_overcomes"}
 ```
 
-它只问这条克制关系是否存在，不问它值多少——这条克制关系的倍率属于[伤害系统](../../../technical/damage.md)，因此只需要这层配对关系的内容写 `1.0`。
+它仅检查这条克制关系是否存在，不问它值多少——这条克制关系的倍率属于[伤害系统](../../../technical/damage.md)，因此只需要这层配对关系的内容写 `1.0`。
 
 ### `mxt:element_adapted_to` {#mxt-element-adapted-to}
 
@@ -99,4 +99,4 @@ description: 模组注册的全部内置双实体条件类型，以及每种类�
 {"type": "mxt:element_adapted_to"}
 ```
 
-它是 `mxt:element_overcomes` 的防御镜像，回答的是"我抗不抗你"；同样只问关系是否存在，倍率仍属于[伤害系统](../../../technical/damage.md)。
+它是 `mxt:element_overcomes` 的防御镜像，回答的是"我抗不抗你"；同样仅检查关系是否存在，倍率仍属于[伤害系统](../../../technical/damage.md)。

@@ -17,9 +17,9 @@ ForgingWorkstationsEvents.process(event => {
 
 ## Two Extra Conventions for `forging` {#two-extra-conventions-for-forging}
 
-**The session is read-only.** `getSession()` returns a `ForgingSessionView`, which can read `value()`, `steps()`, `optimalSteps()`, `history()` (an immutable list) and `canComplete()`, but **cannot** modify the session — the native `ForgingSession` is a mutable object and is no longer handed to listeners, so a call such as `event.getEvent().getSession().strike(...)` does not exist. The table itself is not handed to listeners either, only its position `getPos()`; to read a slot, use `player.level().getBlockEntity(pos)`.
+**The session is a read-only view.** `getSession()` returns `ForgingSessionView`, exposing `value()`, `steps()`, `optimalSteps()`, `history()` (an immutable list) and `canComplete()`. Listeners cannot modify the session and do not receive the mutable `ForgingSession` or workstation object. Use `getPos()` for the position and `player.level().getBlockEntity(pos)` when slot access is required.
 
-**A listener must not throw, and a throw does not break the operation.** The four decision events (`Start`, `StrikePre`, `CompletePre`, `Cancel`) are dispatched in the middle of the transaction, so when a listener throws, the server turns it into a rejection on the spot: the log records `LISTENER_ERROR` (distinct from `CANCELLED` when a script calls `cancel()` deliberately), the operation does not happen, materials are not consumed, and the session stays as it was. The three notification events (`Started`, `StrikePost`, `CompletePost`) are dispatched after the operation has already taken effect, so a throw is only logged and ignored.
+**Exception handling depends on the event phase.** Decision events (`Start`, `StrikePre`, `CompletePre`, `Cancel`) run within the transaction. A listener exception rejects the operation, preserves materials and session state, and records `LISTENER_ERROR`, distinct from `CANCELLED` produced by an explicit `cancel()`. Notification events (`Started`, `StrikePost`, `CompletePost`) run after the operation takes effect. Their exceptions are logged without affecting the completed operation.
 
 ## Items and Bindings
 

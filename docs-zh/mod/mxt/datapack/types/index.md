@@ -65,7 +65,7 @@ MiXianTu 是 [Saturn](../../../../library/saturn/index.md) 的扩展：行为、
 | `type` | 数值提供器 `saturn:number_provider_type` | [数值提供器](../../../../library/saturn/types/number.md) |
 | 名字（不是字段） | 公式变量 `saturn:formula_variable` | [公式变量](./formula_variables.md) |
 
-行为和条件的**数组是简写**，表示按顺序全跑一遍：
+行为数组与条件数组均支持简写：前者按顺序执行全部行为，后者要求全部条件成立：
 
 ```json
 "entity_action": [
@@ -93,11 +93,11 @@ MiXianTu 是 [Saturn](../../../../library/saturn/index.md) 的扩展：行为、
 | 技能目标选择器 | `id`、`params` | `MxtAbilities.selector` |
 | 原版战利品条件 / 函数 | `id`、`params` | `MxtLoot.condition` / `MxtLoot.function` |
 
-`mxt:js` 的触发器要多写一个 `signal`：运行时要按信号分层派发。回调都在服务端跑。回调缺失或抛异常时各自退化成安全值（行为什么也不做、条件为假、数值为 `0`、消耗付不出、触发器不匹配、选择器选不出实体），并记一条警告。
+`mxt:js` 的触发器要多写一个 `signal`：运行时要按信号分层派发。回调都在服务端跑。回调缺失或抛异常时各自退化成安全值（行为什么也不做、条件为假、数值为 `0`、消耗无法支付、触发器不匹配、选择器选不出实体），并记一条警告。
 
-`Trigger` 之所以要 `signal`，是因为运行时按「信号 → 所有者 → 订阅」分层索引派发。除 `Cost` 之外，回调都能拿到本次派发的公式上下文；`Cost` 只用玩家求值，所以它的上下文仅由该玩家构建、不含事件载荷。战利品条件与函数写在原版战利品表里（`condition` / `function` 两个分派键），同样只在服务端生成战利品时执行。
+`Trigger` 之所以要 `signal`，是因为运行时按「信号 → 所有者 → 订阅」分层索引派发。除 `Cost` 之外，回调都能获取本次派发的公式上下文；`Cost` 只用玩家求值，所以它的上下文仅由该玩家构建、不含事件载荷。战利品条件与函数写在原版战利品表里（`condition` / `function` 两个分派键），同样只在服务端生成战利品时执行。
 
 ## 相关 {#相关}
 
 - [技能定义](../../../../library/saturn/data/ability.md) —— 技能类型写在哪、通用字段有哪些
-- [数组与简写](../overview.md) —— 行为、条件数组怎么合并
+- [数组与简写](../overview.md) —— 行为、条件数组如何合并

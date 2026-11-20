@@ -30,15 +30,15 @@ description: 定义契约的双方条件、灵宠侧与主人侧各自的行为�
 | `max_owned` | int | `0` | 每个主人同时能持有的本类型契约数，`0` = 不限。 |
 | `recall_cooldown` | int | `0` | 召回冷却（tick），`0` = 不限。 |
 
-`quality` 是可选的：契约卷轴是所有契约共用的一件物品，物品本身说不清是哪一档，只有堆上携带的这份定义报得出——这份契约的卷轴起始就在这一档。堆上写了自己的 `mxt:quality` 组件时以组件为准；这份定义没写 `quality` 时这一层不作答，继续落到注册表 [default_quality](./default_quality.md)。
+`quality` 是可选的：契约卷轴是所有契约共用的一件物品，物品本身说不清是哪一档，只有堆上携带的该定义报得出——这份契约的卷轴起始就在该档位。堆上写了自己的 `mxt:quality` 组件时以组件为准；该定义没写 `quality` 时该层不作答，继续落到注册表 [default_quality](./default_quality.md)。
 
-`follow_action` 只对回答了命令表的实体生效，且排在该实体自己的跟随行为之后；命令换成游荡 / 驻守时这条不跑——它给的是"跟随那一刻"。
+`follow_action` 只对回答了命令表的实体生效，且排在该实体自己的跟随行为之后；命令换成游荡 / 驻守时这条不执行——它给的是"跟随那一刻"。
 
 解除与死亡是两个字段，一个动作只负责一个时刻：`release_action` 管主人主动解除或管理员强制解除，`death_action` 管灵宠死亡。
 
-**主人侧的动作与授予都只落在主人身上**：`follow_action` / `combat_action` / `release_action` / `death_action` 的宿主是灵宠，三个 `owner_*_action` 的宿主是主人。主人侧三个动作拿到的是**双实体上下文**（`caster_*` 读主人、`target_*` 读那只灵宠），灵宠侧四个动作是单实体上下文。`owner_bind_action` 跑的时候契约已经立好、`owner_abilities` 也已经生效；`owner_release_action` / `owner_death_action` 跑完之后才收回这些能力。**主人不在线时三个 `owner_*_action` 一个都不执行**（解除与死亡照常完成）；`owner_abilities` 会在主人下次登录时按手里的契约重新对一遍，所以不会残留。授予按**契约类型**记账：同一类型的第二只灵宠不重复授予，解掉其中一只也不收回，另一只还在就照旧持有；同一条能力被两种契约同时授予时，解掉一种也不会拿走另一种给的。
+**主人侧的动作与授予都只落在主人身上**：`follow_action` / `combat_action` / `release_action` / `death_action` 的宿主是灵宠，三个 `owner_*_action` 的宿主是主人。主人侧三个动作获取的是**双实体上下文**（`caster_*` 读主人、`target_*` 读那只灵宠），灵宠侧四个动作是单实体上下文。`owner_bind_action` 跑的时候契约已经立好、`owner_abilities` 也已经生效；`owner_release_action` / `owner_death_action` 跑完之后才收回这些能力。**主人不在线时三个 `owner_*_action` 一个都不执行**（解除与死亡照常完成）；`owner_abilities` 会在主人下次登录时按手里的契约重新对一遍，所以不会残留。授予按**契约类型**记账：同一类型的第二只灵宠不重复授予，解掉其中一只也不收回，另一只还在就照旧持有；同一条能力被两种契约同时授予时，解掉一种也不会拿走另一种给的。
 
-`costs` 可用主人的资源账户、背包与脚本通道，付款排在全部条件与 `Pre` 事件之后，付不出就不签、也不扣。
+`costs` 可用主人的资源账户、背包与脚本通道，付款排在全部条件与 `Pre` 事件之后，无法支付就不签、也不扣。
 
 `max_owned` 按主人索引计数，解除或死亡即腾出名额。`recall_cooldown` 的起点记在契约记录上，作用于御兽铃轮盘/命令下的那条「召回」命令。
 

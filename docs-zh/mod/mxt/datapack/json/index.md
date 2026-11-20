@@ -21,7 +21,7 @@ title: 动态注册表
 | `spirit_root` | `mxt/spirit_root` | 与一个或多个元素绑定的灵根：修炼倍率、亲和倍率、授予能力与互斥。 |
 | `physique` | `mxt/physique` | 独立于元素的体质加成：原版属性、授予能力与伤害倍率。 |
 | `ability` | `saturn/ability` | 主动、被动和触发技能；字段见 [Saturn 技能定义](../../../../library/saturn/data/ability.md)。 |
-| `ability_affinity` | `mxt/ability_affinity` | 技能的元素亲和：哪些元素、多个灵根匹配时怎么合并；不在技能定义里。 |
+| `ability_affinity` | `mxt/ability_affinity` | 技能的元素亲和：哪些元素、多个灵根匹配时如何合并；不在技能定义里。 |
 | `curse` | `mxt/curse` | 可被多个模块引用的诅咒定义与持续类型。 |
 | `technique` | `mxt/technique` | 功法定义：可学习、按进度等级授予能力与修炼修正。 |
 | `progression` | `mxt/progression` | 进度链的单级定义。 |
@@ -56,7 +56,7 @@ title: 动态注册表
 
 不少字段按 `type` 从固有注册表里选一项：技能顶层、诅咒的持续方式、四类行为、五类条件、资源条的数值来源与绘制器、天劫节拍、技能状态，等等。**完整清单、每一族的入口页与它自己的默认项见[类型参考总览](../types/index.md)**——类型表只留在那些页上。
 
-行为和条件数组是简写，表示按顺序全跑一遍：
+行为数组与条件数组均支持简写：前者按顺序执行全部行为，后者要求全部条件成立：
 
 ```json
 "entity_action": [

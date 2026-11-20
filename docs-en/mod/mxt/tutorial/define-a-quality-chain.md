@@ -27,7 +27,7 @@ Every field is optional. The three modifiers share one shape, `{"description": �
 
 `condition` is the same gate a binding uses: while it fails, the item cannot be used. The full field list is in [Quality](../datapack/json/quality.md).
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -75,7 +75,7 @@ The entry tier is **the one nothing writes as its `next`**. Of the three above, 
 
 The name is read from the entry tier alone. Move `"quality": "example:pill"` from `common` to `refined` and the entry tier `common` has no name — so **the whole ladder has no name**, and `/quality chain` prints that name as `null`. The copy on the middle tier only takes part in the "one tier receives two different names" check below. Nothing is reported: no check can tell that you meant to name the ladder.
 
-A ladder's name is just an id, and writing it once per ladder is enough. Only two things about the name are reported:
+A ladder's name is an id, and writing it once per ladder is enough. Only two things about the name are reported:
 
 - A tier whose own name differs from the one it inherits from above reports `names quality <written> inside <inherited>` at load.
 - Two entry tiers claiming one name report `starts a second ladder named <name>, which another tier already names`.
@@ -105,7 +105,7 @@ A stack takes the **first tier it can get**, in this order:
 
 Layer 2 answers for "several definitions of a type share one built-in item, so the item cannot say which tier applies": technique manuals, pills, furnace specifications, spirit-root stones and physique stones each share one built-in item, and nine definitions declare `quality` themselves. The list and the carrier component of each are on [quality](../datapack/json/quality.md).
 
-The component holds a **whole quality object**, so it decides both the tier and the ladder it belongs to: `example:common` puts that pill on `example:pill`. Binding tables declare no quality, so do not write a ladder into a binding. The forging record `mxt_forging:forging_result` keeps only the blueprint id and the step counts and **never a tier**. This pill is an ordinary KubeJS-registered item with no component on it that names a definition, so only layers 1 and 3 can answer for it. When none of the three layers answers, the pill simply **has no quality** and no ladder's entry tier is supplied for it.
+The component holds a **whole quality object**, so it decides both the tier and the ladder it belongs to: `example:common` puts that pill on `example:pill`. Binding tables declare no quality, so do not write a ladder into a binding. The forging record `mxt_forging:forging_result` keeps only the blueprint id and the step counts and **never a tier**. This pill is an ordinary KubeJS-registered item with no component on it that names a definition, so only layers 1 and 3 can answer for it. When none of the three layers answers, the pill **has no quality** and no ladder's entry tier is supplied for it.
 
 | Command | What it does |
 | --- | --- |
@@ -150,7 +150,7 @@ Quality is a data pack registry, read once when the world loads, and `/reload` d
 | `starts a second ladder named <name>, which another tier already names` | Two entry tiers claim one name. |
 | `next <id> is not a quality` | The pack never loads that far: a `next` pointing at a tier that does not exist makes the world refuse to load, so it is a failed load, not "that ladder is dropped". |
 | `follows both <A> and <B>` | One tier is written as the `next` of two tiers (a fork); reported on the tier being pointed at. **Every line running into that fork point is left out of the index whole** (the other entry's line included) — no winner is picked for you. |
-| `the chain is cyclic at <id>` | A cycle. A pure cycle whose tiers name nothing reports nothing at all — those tiers are simply on no ladder. |
+| `the chain is cyclic at <id>` | A cycle. A pure cycle whose tiers name nothing reports nothing at all — those tiers are on no ladder. |
 | `declares upgrade_costs or upgrade_condition but no next tier` | A tier has no `next` but writes `upgrade_costs` or an `upgrade_condition` other than `mxt:always`. |
 | `cannot be reached from the start of its ladder: it is cyclic, points into another, or names a quality that is already taken` | A tier names a ladder but cannot be reached from its entry. |
 | Writing a `chain` field does nothing | `chain` is not a field, so it is silently ignored as an unknown key; `quality` is the only source of a ladder's name. |

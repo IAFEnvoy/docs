@@ -7,7 +7,7 @@ description: 定义一份环境灵气模板：每种灵气的库存、匹配的�
 
 <span id="aura_zone" />
 
-一个 `aura_zone` 是环境灵气模板：这一带每种灵气的初始量、上限、恢复与颜色，它匹配哪些维度与群系，怎么随时间波动，套哪些修炼规则，以及客户端看到的雾效、粒子与 HUD 条。模板本身不存数量，可消耗的灵气记在区块附件上，所以同一个位置的所有系统读的是同一份库存。
+一个 `aura_zone` 是环境灵气模板：这一带每种灵气的初始量、上限、恢复与颜色，它匹配哪些维度与群系，如何随时间波动，套哪些修炼规则，以及客户端看到的雾效、粒子与 HUD 条。模板本身不存数量，可消耗的灵气记在区块附件上，所以同一个位置的所有系统读的是同一份库存。
 
 ## 文件位置 {#文件位置}
 
@@ -71,13 +71,13 @@ description: 定义一份环境灵气模板：每种灵气的库存、匹配的�
 | `cultivate_suppress` | Boolean | `false` | 是否禁止或中止修炼。 |
 | `tribulation_modify` | Double | `0` | 天劫难度修正，正值提高难度。 |
 | `spirit_plant_bonus` | Double | `0` | 灵植生长加成。必须有限且 ≥ `-1`。 |
-| `alchemy_env_bonus` | Boolean | `false` | 顶替丹方的环境门槛 `minimum_aura`。不替丹炉支付燃料。 |
+| `alchemy_env_bonus` | Boolean | `false` | 替换丹方的环境门槛 `minimum_aura`。不替丹炉支付燃料。 |
 
 `rules.cultivate_suppress` 会中止正在进行的修炼。`tribulation_modify` 注入公式变量 `aura_tribulation_modifier`。
 
 `spirit_plant_bonus` 乘进灵植每 `20` tick 一次的增长量：[spirit_herb](./spirit_herb.md) 的 `growth.growth_rate` 先按当前公式求值，再乘一次 `max(0, 1 + spirit_plant_bonus)`，所以公式里不要再乘它。这个值必须有限且不小于 `-1`，越界是加载错误。
 
-`alchemy_env_bonus` 开启后，位置落在该区域内的丹方**直接视为满足** `minimum_aura`——它是开关、没有可缩放的量，所以只能顶替要求，而不是把池子放大，也不替丹炉供热；关闭时仍按配方自己的最低值逐项比较。
+`alchemy_env_bonus` 开启后，位置落在该区域内的丹方**直接视为满足** `minimum_aura`——它是开关、没有可缩放的量，所以只能替换要求，而不是把池子放大，也不替丹炉供热；关闭时仍按配方自己的最低值逐项比较。
 
 ## `noise` {#noise}
 
@@ -137,7 +137,7 @@ description: 定义一份环境灵气模板：每种灵气的库存、匹配的�
 
 `stored_aura` 显示区块附件里的实际库存，`sensed_concentration` 显示当前位置的环境模板浓度。两条都用 Origins 风格的 71x8 贴图：`maximum` 是满条对应的浓度，必须大于零；`bar_index` 选择贴图行和图标；`inverted` 可选，默认 `false`。`anchor` 为 `left` 或 `right`，`order` 控制同侧灵气条从下到上的顺序，灵气条会自动排在同侧资源条上方。资源条上下文另提供 `mxt:environment_concentration` 与 `mxt:actual_concentration`，分别对应环境值和全部来源的实际值。
 
-## 环境怎么定下来 {#环境怎么定下来}
+## 环境如何定下来 {#环境怎么定下来}
 
 环境解析优先级固定为：**群系绑定 < 维度绑定 < 永久人工区域 < 活跃阵法**。后一级整份替换前一级的灵气类型、元素值、规则和显示模板。普通区块的可消耗灵气仍保存于区块附件，因此同一位置所有系统共享同一份灵气库存。
 

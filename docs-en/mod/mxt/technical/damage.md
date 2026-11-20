@@ -7,7 +7,7 @@ description: A source-level walkthrough of the damage pipeline — how one strik
 
 <span id="damage-system" />
 
-This page covers the whole thread in one place: **how to write it in a datapack** (declaring a hit's damage type and element, and which dealing paths are folded into the pipeline) and **why** it is built the way it is in the code.
+This page describes damage calculation, including damage-type and element declarations, shared settlement entry points, and the responsibilities of outgoing calculation and incoming mitigation.
 
 ## Where the code lives {#where-the-code-lives}
 
@@ -55,7 +55,7 @@ The cost is that the two must not overlap: `DamageEventBridge` therefore lives o
 
 :::info Two multipliers, one source now
 
-An ability cast **only writes damage_multiplier**: the progression multiplier and the one computed from the element affinity are already multiplied together at cast time (see [ability_affinity](../datapack/json/ability_affinity.md)), so the separate lement_modifier step in the timeline below is 1 for a cast. The pipeline still reads it - another entry point (a script, the public API) may set it - but a data pack should not rely on it.
+An ability cast **only writes damage_multiplier**: the progression multiplier and the one computed from the element affinity are already multiplied together at cast time (see [ability_affinity](../datapack/json/ability_affinity.md)), so the separate element_modifier step in the timeline below is 1 for a cast. The pipeline still reads it - another entry point (a script, the public API) may set it - but a data pack should not rely on it.
 
 :::
 
@@ -87,7 +87,7 @@ flowchart LR
     TAKEN --> DONE["The result of layer two<br/>what the hit is finally worth"]
 ```
 
-- **`damage_multiplier` belongs to the casting.** Casting an ability writes it into the formula context, and the value is read at runtime from the level the holder currently stands on: it walks every progression the holder carries, keeps the ones whose current level actually grants this ability, and takes the **largest** multiplier among them — several owners do not stack their multipliers, because only one strike is being dealt. A `progression` defaults `damage_multiplier` to `1.0`, and a negative or non-finite value is rejected while loading.
+- **`damage_multiplier` belongs to the casting.** Casting an ability writes it into the formula context, and the value is read at runtime from the level the holder currently stands on: it walks every progression the holder carries, keeps the ones whose current level grants this ability, and takes the **largest** multiplier among them — several owners do not stack their multipliers, because only one strike is being dealt. A `progression` defaults `damage_multiplier` to `1.0`, and a negative or non-finite value is rejected while loading.
 - **The spirit-root half is folded into `damage_multiplier` now.** At cast time the `element_ability_modifier` of the matching roots is combined per that entry's `mode` (average or best) in [ability_affinity](../datapack/json/ability_affinity.md), multiplied by the progression multiplier, and written into `damage_multiplier`. So a formula must **not** write any affinity multiplier, and there is no `element_modifier` to read. Damage that does not come from a casting (a formation tick, a curse, a vanilla attack) starts from `1.0`; a root that writes the multiplier as `0` means "this element of mine deals nothing".
 - **`damage_dealt_multiplier` / `damage_taken_multiplier` belong to the person.** They come from active `physique` definitions: layer one reads the attacker's "dealt" multiplier and layer two reads the target's "taken" one, and several active physiques **multiply** (each one is an independent source). They are evaluated in the **holder's own** formula context rather than the other side's — how much this body takes cannot depend on who is asking. A literal number is validated as finite and non-negative while loading, and a negative or non-finite value produced by a formula counts as "no contribution" (the same rule, for the same class of formula, as passive attributes); `0` is legal and means immunity, or that nothing can be dealt.
 - **`conflict_multiplier` belongs to the element being wielded**: when an active spirit root of the attacker lists **the element of their main-hand item** in `conflicting_elements`, that element's own `conflict_multiplier` (default `1.0`) is multiplied in. The item's element is read the way [weapon_binding](../datapack/json/weapon_binding.md) describes it — the stack's own `mxt:element` component unioned with the `element` a definition declares, falling back to the `aura_type` of the aura the stack carries only when neither exists. It is applied **once per element** however many roots conflict with it (two conflicting roots would otherwise square it), and it deliberately does **not** require the strike to be made of that element: fighting your own weapon weakens whatever you channel through it, which is the point of the rule. A pack that never writes the field is never affected by it.
@@ -135,7 +135,7 @@ An element is **read only from the damage type**, and that is the foundation of 
 
 Keeping this here rather than at every call site makes "who this hit belongs to" and "what this hit is worth" come from one place. One consequence is easy to forget: vanilla only scales `playerAttack` / `mobAttack` damage by difficulty when the **victim is a player**, so a source that must not vary with difficulty has to declare its own `damage_type`.
 
-**The return value of `deal` is "the amount handed to the target", not "the health actually lost".** When `hurtServer` returns `false` — invulnerability ticks, immunity, a cancelled event — `deal` still returns `shaped`. A caller that wants to know whether the hit landed should look at the `hurtServer` result or the events, not at this number.
+**The return value of `deal` is "the amount handed to the target", not "the health lost".** When `hurtServer` returns `false` — invulnerability ticks, immunity, a cancelled event — `deal` still returns `shaped`. A caller that wants to know whether the hit landed should look at the `hurtServer` result or the events, not at this number.
 
 ## The paths that were folded in {#the-paths-that-were-folded-in}
 
@@ -158,7 +158,7 @@ Keeping this here rather than at every call site makes "who this hit belongs to"
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
 | `damage_type` | `Holder<damage_type>` | none | The damage type of this hit. With it the source is built from it; without it an attributed hit uses the vanilla player/mob attack source (`generic` when `mxt:damage` has no attribution). |
-| `element` | `HolderOrTag<element>[]` | `[]` | The element declaration of this hit. Writing only `element` makes the damage type the first type that element claims; when it is written together with `damage_type`, the **first strike that actually uses them** checks that the element really claims that type and logs one line per distinct mismatch. |
+| `element` | `HolderOrTag<element>[]` | `[]` | The element declaration of this hit. Writing only `element` makes the damage type the first type that element claims; when it is written together with `damage_type`, the **first strike that uses them** checks that the element really claims that type and logs one line per distinct mismatch. |
 
 The element is still **only read from the damage type**, so `element` is not a second source of truth: it writes the author's intent into the definition and lets the runtime check it, so a declared element whose type nobody claims is reported the first time it is used rather than quietly computing a wrong number in combat. That check deliberately cannot live at load time — the value behind a declared element is not necessarily bound yet while another datapack registry page is decoded, so the same pack would pass or fail depending on which page finished first. The reduction layer is the reason the element has to be readable from a damage type at all: it receives nothing but a `DamageSource`.
 
@@ -198,7 +198,7 @@ A few things to know:
 - **It changes neither credit nor kill statistics** — it only keeps the hit out of the bonus arithmetic.
 
 :::tip Trying it in game
-The test module ships `/mxt_test damage`, which drives both layers against throwaway entities with known element edges and reports whether the amounts it measured are the ones it expected. It also runs two more legs: "damage with nobody credited reads no relation but keeps the casting's bonus", and "a type in `mxt:no_bonus` passes through" (the latter also asserts that the shipped default tag was actually loaded).
+The test module ships `/mxt_test damage`, which drives both layers against throwaway entities with known element edges and reports whether the amounts it measured are the ones it expected. It also runs two more legs: "damage with nobody credited reads no relation but keeps the casting's bonus", and "a type in `mxt:no_bonus` passes through" (the latter also asserts that the shipped default tag was loaded).
 :::
 
 ## Element buildup and reactions {#element-buildup-and-reactions}

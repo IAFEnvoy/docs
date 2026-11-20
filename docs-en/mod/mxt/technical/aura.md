@@ -103,7 +103,7 @@ double fluctuation = factor(zone, gameTime);
 new AuraPool(initial * fluctuation, value.max().resolve(initial), value.regenPerTick());
 ```
 
-- `amount` first goes through a `/10 - 5` shift and scale (`amount` defaults to `0`, so an undeclared aura is simply zero), then a 2D value noise is added.
+- `amount` first goes through a `/10 - 5` shift and scale (`amount` defaults to `0`, so an undeclared aura is zero), then a 2D value noise is added.
 - **Fluctuation only scales `amount`**: `maximum` resolves `max` from the **unscaled** `initial` (with the default `mxt:initial_multiplier` at a multiplier of `1`, the ceiling is the local initial value).
 - Cycles: a day cycle of `24000` ticks and a moon cycle of `192000`, `1 + amplitude * sin(...)` floored at 0; `static` or disabled reads `1.0`.
 - `AuraPool` requires finite, non-negative values with `maximum` allowed to be `+∞`, and clamps `amount` to `maximum` whenever the maximum is finite — so regeneration never crosses the ceiling while an unlimited pool has no ceiling at all.
@@ -208,7 +208,7 @@ sequenceDiagram
 
 - **Chunk load**: the whole column's block cache is rebuilt once, and its pools are built on the next tick — zone resolution deliberately does not run inside the load callback, where the chunk is not fully ready.
 - **Block changes**: break/place events apply a **single-block delta on the spot** at the lowest priority, re-evaluating only that block and never scanning a section; a cancelled event never touches the cache.
-- **Rescan**: each section has a random target interval of `600..1199` ticks (about 30–60 seconds). Each tick processes due sections in order, up to `max(8, ceil(registered sections / 600))`. A backlog delays execution; the next random interval starts when the rescan actually runs, without replaying missed cycles. This picks up `/setblock`, `/fill`, pistons and TNT, which no event reports.
+- **Rescan**: each section has a random target interval of `600..1199` ticks (about 30–60 seconds). Each tick processes due sections in order, up to `max(8, ceil(registered sections / 600))`. A backlog delays execution; the next random interval starts when the rescan runs, without replaying missed cycles. This picks up `/setblock`, `/fill`, pistons and TNT, which no event reports.
 - **Force refresh**: the command synchronously rebuilds the whole column of every loaded chunk in range and restarts those chunks' random rescan deadlines from the current tick.
 - **Regeneration**: **Server Config → Aura → Block Aura Period** sets the target interval, defaulting to 10 ticks. Each chunk has one recurring task whose first deadline uses a least-loaded phase. Each tick processes at most `max(1, ceil(registered chunks / period))` due chunks. Payment uses `amount + regenPerTick * actual elapsed ticks`; the first cycle counts only time since stock initialization, and unloaded time earns nothing. Full pools, empty pools with negative regeneration, and zero rates cause no writes; overflow remains finite.
 - **Visitor counts**: each tick compares player section positions and updates coverage boundaries only on movement, joining or leaving. Stationary players cause no coverage writes. Moving one section along one axis updates 98 entries, clipped to the level height. Counts remain in the runtime attachments of loaded chunks; newly loaded chunks are populated from the recorded player positions.
@@ -227,7 +227,7 @@ sequenceDiagram
 | `sources` (block source availability) | ≈ 7 µs |
 | total | ≈ 140 µs |
 
-The conclusion is counter-intuitive: **the bottleneck is `getBiome`, not the registry scan** — every one of the 7×7 block sources asks for its biome first. Memoisation took a repeated query from 155.6 µs to 5.8 µs (about 27×), and the few microseconds of registry selection are simply not a problem in a pack with a handful of zones — which is why **`aura_zone` has no index**; that only becomes worth doing at a hundred zones, as an "biome/dimension → candidate zones" table.
+The conclusion is counter-intuitive: **the bottleneck is `getBiome`, not the registry scan** — every one of the 7×7 block sources asks for its biome first. Memoisation took a repeated query from 155.6 µs to 5.8 µs (about 27×), and the few microseconds of registry selection are not a problem in a pack with a handful of zones — which is why **`aura_zone` has no index**; that only becomes worth doing at a hundred zones, as an "biome/dimension → candidate zones" table.
 
 The memo tables are keyed by position, or by position plus definition, hold at most 16384 entries each and are replaced wholesale when they overflow (the worst case is a recompute); **a stale value is never returned**.
 
@@ -271,9 +271,9 @@ The repository ships a single `block_aura` entry (the spirit stone block, `amoun
 
 ## Costs and limits {#costs-and-limits}
 
-- **Unloaded chunks do not count**: a query window containing unloaded chunks simply skips them, so chunk borders, other dimensions and unloaded formations all read low. The search covers 7×7×7 sections and it **never generates terrain to answer**.
+- **Unloaded chunks do not count**: a query window containing unloaded chunks skips them, so chunk borders, other dimensions and unloaded formations all read low. The search covers 7×7×7 sections and it **never generates terrain to answer**.
 - **A per-tick staleness window**: stock changes inside one tick (a formation just activated, a block changed but not yet flushed) only reach a query on the next tick; the period settings above are the size of that window.
-- **Splitting between visitors is bookkeeping**: a "visitor" is recorded for each player's 7×7×7 sections without checking whether they can actually see the section, and the table is rebuilt every 10 ticks. It guarantees that one patch of terrain aura is not taken in full by every player, but it is not a visibility test.
+- **Splitting between visitors is bookkeeping**: a "visitor" is recorded for each player's 7×7×7 sections without checking whether they can see the section, and the table is rebuilt every 10 ticks. It guarantees that one patch of terrain aura is not taken in full by every player, but it is not a visibility test.
 - **`SourceKind.CHUNK` is easy to misread**: it means "no biome, dimension or area template matched", not "came from the chunk stock".
 - **Hot and slow spots**: `getBiome` is the single largest cost; the block cache is built per section, so all-air sections and sections whose palette holds nothing of interest read no cells at all, and only the sections that pass walk 4096 cells; the cache-clearing commands rebuild every loaded chunk in a radius synchronously and will hitch. The block-to-definition index is resident and rebuilt by the datapack hook when a pack or tag changes, so the `block_aura` tags are no longer re-resolved on every block event.
 - **Diagnostics are incomplete**: the memo tables count hits and misses, but the pipeline's result table counts hits only — its miss rate cannot be read off the log.

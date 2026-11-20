@@ -36,7 +36,7 @@ MxtCosts.register('example:quest_token',
 {"type": "saturn:js", "id": "example:quest_token", "params": {"count": 3}}
 ```
 
-脚本 Cost 需要玩家，并保持它在消耗数组中的位置；check 必须只读，consume 失败不自动退款，也不取消后续费用与业务。`Cost` 只用付款者做检查，因此回调拿到的 `context` 由该付款者构建，不含事件载荷——`context.value('level')` 可用，`context.value('damage')` 不可用。
+脚本 Cost 需要玩家，并保持它在消耗数组中的位置；check 必须只读，consume 失败不自动退款，也不取消后续费用与业务。`Cost` 只用付款者做检查，因此回调获取的 `context` 由该付款者构建，不含事件载荷——`context.value('level')` 可用，`context.value('damage')` 不可用。
 
 支持完整 Cost 注册表分派。当前内置类型：
 

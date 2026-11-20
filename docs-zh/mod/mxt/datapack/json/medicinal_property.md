@@ -37,4 +37,4 @@ description: 药性的身份定义：一种药用效果的身份，不复用元�
 | 丹方（配方类型 `mxt_alchemy:alchemy`） | `main_requirements` / `auxiliary_requirements` | 药性到药力阈值的映射：这条丹方要哪些主药与辅药药性、各要多少。 |
 | 灵植（`spirit_herb`） | `main_effects` / `auxiliary_effects` | 这件材料当主药或辅药时，每件提供多少该药性的药力。 |
 
-同一份药性在不同丹方里可以有不同阈值，一株草也可以在主药与辅药里给出不同药力：药性只负责「是哪一种效果」，数值全在引用它的地方。丹方怎么比药力、灵植怎么声明药力，见 [alchemy_recipe](../../addons/alchemy/datapack/alchemy_recipe.md) 与 [spirit_herb](./spirit_herb.md)。
+同一份药性在不同丹方里可以有不同阈值，一株草也可以在主药与辅药里给出不同药力：药性只负责「是哪一种效果」，数值全在引用它的地方。丹方如何比药力、灵植如何声明药力，见 [alchemy_recipe](../../addons/alchemy/datapack/alchemy_recipe.md) 与 [spirit_herb](./spirit_herb.md)。

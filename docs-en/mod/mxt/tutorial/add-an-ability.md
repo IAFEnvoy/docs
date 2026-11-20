@@ -13,7 +13,7 @@ This tutorial adds two abilities to the example pack:
 - an active bolt cast from the wheel;
 - a triggered recovery that answers damage.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -99,7 +99,7 @@ A triggered ability fires when the world does something to its owner. The trigge
 
 - `triggers` is the list of built-in matchers; each entry names a type id and carries no fields of its own. Every entry is on [Triggers](../datapack/types/other/trigger-type.md).
 - `chance` is a number provider, `1` by default, and it is rolled once per matching trigger: a formula that throws or does not evaluate to a finite number means **not allowed**, `<= 0` is not allowed, `>= 1` always is, and anything in between rolls the entity's random once. **Do not confuse it with the `chance` of the same name in the `saturn/trigger` rule table** — there a value that cannot be computed counts as `1`.
-- The `hurt` trigger adds `damage` — the damage actually inflicted — which is why the heal can scale with the hit; variables injected by other triggers are just as readable to this ability's own action fields, and the table is on [Formula Variables](../datapack/types/formula_variables.md).
+- The `hurt` trigger adds `damage` — the damage inflicted — which is why the heal can scale with the hit; variables injected by other triggers are just as readable to this ability's own action fields, and the table is on [Formula Variables](../datapack/types/formula_variables.md).
 
 The full variable table is in [Formula Variables](../datapack/types/formula_variables.md#trigger-values).
 

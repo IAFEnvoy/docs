@@ -13,7 +13,7 @@ This page builds exactly one thing: a `mxt:active` ability that launches the aur
 
 **Prerequisite:** [Define an Ability](./add-an-ability.md) is done. This page reuses the `mxt:active` shape that page established, the pack's existing `data/example/mxt/technique/azure_breath.json`, and the `example:qi` value.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Job |
 | --- | --- |
@@ -99,7 +99,7 @@ Everything [Define an Ability](./add-an-ability.md) taught still applies: this a
 ```
 
 - `lifetime` is in ticks, `80` (four seconds) by default, range `1`–`72000`.
-- When it runs out the aura **simply disappears**: no explosion, no trace, no action runs. It is just gone.
+- When it runs out the aura **disappears**: no explosion, no trace, no action runs. It is just gone.
 - The aura **has no gravity**, and the velocity it was spawned with is all the velocity it ever has: unless something else accelerates it, it flies in a straight line.
 - With no `collide_action`, `lifetime` is the aura's only ending — it passes through blocks until the time runs out.
 

@@ -9,7 +9,7 @@ description: mxt:secret_realm_generation_type 的五个内置条目、字段、�
 
 ## `secret_realm_generation_type` {#secret-realm-generation-type}
 
-[秘境](../../json/secret_realm.md) 的 `generation` 用这一族决定实例维度怎么造出来。数据包只能选用已注册的类型，不能新增。
+[秘境](../../json/secret_realm.md) 的 `generation` 用这一族决定实例维度如何造出来。数据包只能选用已注册的类型，不能新增。
 
 `generation` 里引用的注册表项（`stem`、`dimension_type`、`biome`）都在**实例创建时**解析：数据包注册表是并行加载的，解码那一刻读到的未必已经绑定。解析失败即创建失败（`GENERATION_FAILED`）并记一条日志，不会留下半个实例。
 
@@ -82,4 +82,4 @@ description: mxt:secret_realm_generation_type 的五个内置条目、字段、�
 { "type": "mxt:existing", "dimension": "minecraft:the_end" }
 ```
 
-边界也归它：只有这一档会在写了 [`border`](../../json/secret_realm.md) 时去动那个真实维度的边框，别的档新造出来的维度一律显式设成原版默认边界。
+边界也归它：只有该档位会在写了 [`border`](../../json/secret_realm.md) 时去动那个真实维度的边框，别的档新造出来的维度一律显式设成原版默认边界。

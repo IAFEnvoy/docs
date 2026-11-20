@@ -1,13 +1,13 @@
 ---
 title: 数据包示例
-description: 可以整段照抄的数据包文件：停用定义、资源与灵气、修炼行为、物品绑定、体质。
+description: 可以整段复制的数据包文件：停用定义、资源与灵气、修炼行为、物品绑定、体质。
 ---
 
 # 数据包示例
 
 <span id="数据包示例" />
 
-下面每个代码块上方都写了它自己的完整路径，照抄时连目录一起抄。
+各代码块上方标注完整文件路径，使用示例时应同时保留目录结构。
 
 ## 目录 {#目录}
 
@@ -22,7 +22,7 @@ data/example/mxt/aura/qi.json
 
 ## 停用一条定义 {#停用一条定义}
 
-写在**这条定义自己的文件**里：`neoforge:conditions` 不成立时，条目根本不进注册表。
+写在**该定义自己的文件**里：`neoforge:conditions` 不成立时，条目根本不进注册表。
 
 ```json
 // data/example/saturn/resource/old_resource.json

@@ -1,6 +1,6 @@
 ---
 title: ability_type（技能类型）
-description: saturn:ability_type 里的十四个技能类型，各自读哪些字段、什么时候跑。
+description: saturn:ability_type 中十四种技能类型的字段与执行时机。
 ---
 
 # ability_type（技能类型）
@@ -41,11 +41,11 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 
 ## 四个动作字段 {#action-fields-by-type}
 
-`entity_action`、`target_selector`、`target_condition`、`bi_entity_action` 写在技能顶层（与 `type` 平级），默认分别是 `mxt:no_op` / `mxt:self` / `mxt:always` / `mxt:no_op`。只有会跑动作的五个类型读它们：`mxt:active`、`mxt:triggered`、`mxt:channelled`、`mxt:aura`、`mxt:interval`。
+`entity_action`、`target_selector`、`target_condition`、`bi_entity_action` 写在技能顶层（与 `type` 平级），默认分别是 `mxt:no_op` / `mxt:self` / `mxt:always` / `mxt:no_op`。只有会执行动作的五个类型读它们：`mxt:active`、`mxt:triggered`、`mxt:channelled`、`mxt:aura`、`mxt:interval`。
 
-一次执行的顺序固定：先跑 `entity_action`，再用 `target_selector` 取目标，每个目标过 `target_condition`，通过的才跑 `bi_entity_action`。某个目标失败不影响其他目标，动作抛异常也只记一条日志、不打断其余目标。
+一次执行的顺序固定：先执行 `entity_action`，再用 `target_selector` 取目标，每个目标过 `target_condition`，通过的才执行 `bi_entity_action`。某个目标失败不影响其他目标，动作抛异常也只记一条日志、不打断其余目标。
 
-会跑这套字段的五个类型各自按**自己的时机**跑：
+会执行这套字段的五个类型各自按**自己的时机**跑：
 
 | 类型 | 什么时候跑这四键 |
 | --- | --- |
@@ -55,7 +55,7 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 | `mxt:aura` | `interval` 到点的脉冲**按半径逐个找实体**，对每个实体只跑 `target_condition` + `bi_entity_action`（脉冲不读 `target_selector` 与 `entity_action`）；被一次性发动（命令 / 脚本 / 符箓）时按普通路径跑一次整套。 |
 | `mxt:interval` | 自己按 `interval` 跑整套；被命令或脚本一次性发动时按普通路径跑一次。 |
 
-其余类型**一个都不读**：`mxt:word` 自带终端载荷（它自己的 `effect` 字段）、`mxt:targeted` 只挑目标（跑的是载荷的单目标那一半），`mxt:modifier` / `mxt:mount` / `mxt:flight_control` / `mxt:storage` / `mxt:upkeep` / `mxt:empty` 也没有这一层。
+其余类型**一个都不读**：`mxt:word` 自带终端载荷（它自己的 `effect` 字段）、`mxt:targeted` 只挑目标（执行的是载荷的单目标那一半），`mxt:modifier` / `mxt:mount` / `mxt:flight_control` / `mxt:storage` / `mxt:upkeep` / `mxt:empty` 也没有该层。
 
 `mxt:targeted` 也写一个叫 `target_selector` 的键，但那是它自己"这次够得着谁"，不是上面这套的一半。
 
@@ -96,7 +96,7 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 | `sit` | bool | `false` | 乘坐姿势，全车共用 |
 | `render` | 渲染器 | `mxt:item` | 用哪套渲染器画载具 |
 | `entity_type` | 实体类型 id | `mxt:flying_sword` | 用哪个实体类型当载具，必须实现[载具契约](../../../java/interfaces/mount/vehicle.md)，写错 id 在加载期报错 |
-| `display` | `{translation, rotation, scale}` | 不写＝该渲染器自己的默认姿势 | 载具相对载具原点怎么摆 |
+| `display` | `{translation, rotation, scale}` | 不写＝该渲染器自己的默认姿势 | 载具相对载具原点如何摆 |
 | `width` | double | `0.35` | 碰撞箱宽 |
 | `height` | double | `0.12` | 碰撞箱高 |
 | `step_height` | double | `0` | 跨台阶高度 |
@@ -110,7 +110,7 @@ description: saturn:ability_type 里的十四个技能类型，各自读哪些�
 
 `render` 选**用哪套渲染器**：默认 `mxt:item`（画承载物品的物品模型）、`mxt:geckolib`（GeckoLib 的模型与动画，要求客户端装了它），以及内容模组注册的类型。`display` 可选，不写就用该渲染器自己的默认姿势（`mxt:item` 是 `[0,0,0]` / `[90,0,-45]` / `[2,2,2]`，`mxt:geckolib` 是不转、`1` 倍）；它的字段与原版物品模型的 `display` 同名同义，`translation` 以 1/16 格书写、读进来按格存，`rotation` 是角度、按 `rotationXYZ` 组合，`scale` 是倍率（负值是镜像，合法）。三个 `render.type`、GeckoLib 的资源路径与七个姿态见[载具渲染器](./mount-render.md)。改完碰撞箱会立刻生效。
 
-`seat_offsets` 写出来的最后一个给余下的座位复用。`seats` 是总人数含驾驶者，驾驶者必须是玩家，其余座位对载具按右键就能上。驾驶者用移动键操作：跳跃上升、下降键下沉、疾跑给 1.5 倍水平速度，前后左右默认沿视线方向（服务端配置「飞行 → 朝视线方向飞行」），潜行仍是原版的下坐骑。位移只在服务端算。
+`seat_offsets` 写出来的最后一个给余下的座位复用。`seats` 是总人数含驾驶者，驾驶者必须是玩家，其余座位对载具按右键可以上。驾驶者用移动键操作：跳跃上升、下降键下沉、疾跑给 1.5 倍水平速度，前后左右默认沿视线方向（服务端配置「飞行 → 朝视线方向飞行」），潜行仍是原版的下坐骑。位移只在服务端算。
 
 `mount_action` 的三个行为都跑在**驾驶者**身上：起剑那一刻、落剑那一刻（在下座之前）、每 tick（燃料已付）。
 

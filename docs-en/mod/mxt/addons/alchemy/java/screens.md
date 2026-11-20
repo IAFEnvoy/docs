@@ -2,22 +2,45 @@
 title: Furnace Screens
 ---
 
-## The Furnace's Four Screens {#the-furnace-s-four-screens}
+## The Four Furnace Screens {#the-furnace-s-four-screens}
 
-Four screens, opened by the core, the main bin, the auxiliary bin and the output bin; a wall opens nothing. The one open path is `AlchemyFurnaceMenus.open(ServerPlayer, BlockPos)`: the block hands over the position it was used at, and the call looks at the block there to pick the screen (core = monitor, main bin = main, auxiliary bin = auxiliary, output bin = output); any other block opens nothing.
+The furnace core, main input, auxiliary input and output open their respective monitor or storage screens. Casing blocks do not open a screen. The shared entry point, `AlchemyFurnaceMenus.open(ServerPlayer, BlockPos)`, selects the screen from the block at the accessed position and ignores other blocks.
 
-The layout is not in Java: each screen has an HTML page shipped with the mod plus a shared stylesheet - `monitor.html`, `main_input.html`, `auxiliary_input.html`, `output.html` and `alchemy.css`, drawn by ApricityUI and skinned by a flat translucent dark stylesheet shipped with the mod, with text drawn in the game's own font (a page that sets no `font-family` gets it). Java only takes nodes by their stable ids and then binds state and events (the slots are not its business - see the next sentence); it **draws no layout tree and has no fallback tree**. All four pages must have `panel`, `title`, `inventory_label` and `player_inventory`; the three store pages also have `machine`, and the monitor page has **no `machine`** (the heat comes from a cell in the world) but adds `temperature`, `limit`, `status`, `progress` (the bar itself is `progress_fill`), `target`, `apply`, `start` and `abort`. `machine` declares that page's machine slot count (2 on main, 3 on auxiliary, 4 on output) and `player_inventory` carries the 36 player slots. When a required node is missing, that screen drops its page bindings and draws nothing at all, leaving a single WARN in the log: `Page <name> does not match its contract: <missing piece>` (the slots are bound by ApricityUI from the menu's layout, so they stay clickable regardless) - rearranging the visuals is free, these ids and the two containers are not. The slots belong to ApricityUI: a page `<slot>` is bound to its menu slot through its ancestor `<container id>` and its group-local `slot-index`, `Slot.x/y` is written back every frame, and the items, the hover highlight, dragging and the slot tooltips are all its work; all that is left on this side is reading the panel's live rectangle, which feeds the screen's own hit tests and `hasClickedOutside`. **Do not put an `aui-mouse-events` meta on a page** - the page would then swallow clicks and its slots could no longer be clicked. To fill the viewport and center a panel yourself, use viewport units (`height: 100vh`): a percentage height on `body` does not apply in ApricityUI, and `height: 100%` leaves the panel stuck to the top. A host screen draws the vanilla translucent grey plate first in `extractBackground` (`AuiStyles.extract`, the same gradient the vanilla container screens use) and only then submits the page; **do not call `super.extractBackground`** - a plain `Screen` host answers false to `isInGameUi()`, so the super call takes the blurred menu-background branch and blurs the HUD along with the world. **The wheel menu is the one exception**: it is read while playing, so its `extractBackground` stays empty and both the world and the HUD keep their full brightness.
+ApricityUI renders `monitor.html`, `main_input.html`, `auxiliary_input.html` and `output.html` using the shared `alchemy.css` stylesheet. The pages use a translucent dark theme and the game font without declaring `font-family`. Java binds state and events to fixed node IDs and does not construct an alternative layout.
 
-The pages ship inside the mod jar at `assets/apricityui/apricity/mxt_alchemy/alchemy/`, and every open reads them straight from the resource pack. Editing a page therefore means editing it in the jar (or the resource pack): with hot reload on, saving is enough; otherwise press END in game to rescan resources and reopen the furnace screen. `<gameDir>/apricity/` is only the player's override layer - a file of the same name there wins over the jar.
+| Page | Required nodes and containers |
+| --- | --- |
+| All pages | `panel`, `title`, `inventory_label`, `player_inventory` |
+| Storage pages | An additional `machine` container, with 2 main-input, 3 auxiliary-input or 4 output slots |
+| Monitor | Additional `temperature`, `limit`, `status`, `progress`, `progress_fill`, `target`, `apply`, `start`, `abort` nodes; no `machine` container |
 
-The monitor screen paints the server-sent read-only reading (`AlchemyStateS2CPayload`, see [Network Protocol and Server Authority](#network)), so the screen never evaluates a recipe and shows neither a recipe name nor recipe buttons; the temperature field, start and abort only send those three things back to the server. The `player_inventory` and `machine` slots on the pages are real slots, and the machine slots live in the same menu as the player inventory; the monitor page has no machine slot.
+`player_inventory` represents the player's 36 inventory slots. A missing required node disables that page's bindings and rendering and produces the WARN message `Page <name> does not match its contract: <missing piece>`. ApricityUI binds slots separately, so slot interaction remains available. Layout changes must preserve these IDs and containers.
+
+Each `<slot>` binds to a menu slot through its ancestor `<container id>` and its group-local `slot-index`. ApricityUI updates `Slot.x/y` each frame and handles item rendering, hover highlights, dragging and tooltips. The host screen reads the current panel rectangle for hit testing and `hasClickedOutside`.
+
+Layout and background handling have the following constraints:
+
+- Omit the `aui-mouse-events` meta entry to prevent the page from intercepting slot clicks.
+- Use `height: 100vh` when centering a page across the viewport. ApricityUI does not support percentage heights on `body`, so `height: 100%` does not provide this layout.
+- In `extractBackground`, draw the vanilla translucent background with `AuiStyles.extract` before rendering the page. Do not call `super.extractBackground`, because the background blur of an ordinary `Screen` also affects the HUD.
+- The wheel menu leaves its background empty, preserving world and HUD brightness.
+
+Page resources are packaged under `assets/apricityui/apricity/mxt_alchemy/alchemy/` and read whenever a screen opens. With hot reload enabled, saving changes applies them immediately. Otherwise, press END to reload resources and reopen the screen. Files in `<gameDir>/apricity/` override resources with the same names in the Jar.
+
+The monitor displays read-only server state without evaluating recipes or listing recipe choices. Temperature, start and abort controls send requests to the server. Storage pages bind `machine` and `player_inventory` to real menu slots; the monitor contains only the player inventory.
 
 ## Network Protocol {#network}
 
-The client sends intentions; the server re-checks the current menu, access distance and furnace state.
+The client sends operation requests. The server revalidates the active menu, access distance and furnace state.
 
-| Payload | Purpose |
-| --- | --- |
-| `AlchemyActionC2SPayload` | The three things the furnace monitor screen does: `(containerId, action, temperature)` - `containerId` is the **furnace monitor menu's** container id (the server uses it to confirm the packet came from the furnace actually open right now, and re-checks that the access position is still in range and that the block there still has this role), `action` is one of `TEMPERATURE` / `START` / `ABORT`, and `temperature` is read only for `TEMPERATURE`. `TEMPERATURE` asks for the set temperature to become that value, and the server judges "finite, and between `0` and the settable ceiling" again before accepting (the packet never carries the furnace temperature itself, which the server advances on its own); `START` goes to `AlchemyWorkstationService.start` and `ABORT` to `AlchemyWorkstationService.abort`. A refusal changes no state in any of the three cases: `START` sends one action-bar line, whether a temperature write was accepted or refused travels back in the following state payload and is drawn on the input box and the Set button of the monitor screen, and `ABORT` gets no receipt at all. |
+`AlchemyActionC2SPayload` contains `(containerId, action, temperature)`. The server uses `containerId` to confirm that the monitor menu, accessed position and block role remain valid. The supported actions are:
 
-`AlchemyStateS2CPayload` carries `(containerId, view)`: furnace name and quality, phase and status, formation/locking/start availability, input slot counts, current/set/maximum temperature, target and tolerance, remaining/total duration and out-of-range ticks. The client displays these readings without evaluating recipes.
+| Action | Server handling | Feedback |
+| --- | --- | --- |
+| `TEMPERATURE` | Accepts `temperature` only if it is finite and between `0` and the settable maximum; the server advances the current furnace temperature independently | The following state payload reports the result through the input field and Set button |
+| `START` | Calls `AlchemyWorkstationService.start` | A rejection produces an action-bar message |
+| `ABORT` | Calls `AlchemyWorkstationService.abort` | No separate acknowledgment |
+
+Rejected requests leave state unchanged. Other actions ignore `temperature`, and requests do not contain the current furnace temperature.
+
+`AlchemyStateS2CPayload` sends `(containerId, view)`, containing furnace name and quality, phase and status, formation and locking state, start availability, input slot counts, current/set/maximum temperature, target and tolerance, remaining/total duration and out-of-range ticks. The client only displays this data.

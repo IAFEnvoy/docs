@@ -7,7 +7,7 @@ description: Design planar portals with AUI and export realm layouts.
 
 <span id="rifts" />
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 A planar portal fitted to a frame, with an exact destination in the current dimension, exported as a realm layout. Designing requires operator level 2; travel does not.
 

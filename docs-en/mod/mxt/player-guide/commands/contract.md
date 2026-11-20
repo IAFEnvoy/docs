@@ -71,7 +71,7 @@ The price is paid by the **owner** and may use the owner's resource account, inv
 
 ## Recall {#recall}
 
-`recall` only **sets the recall latch** (exactly what ringing the bell does); the actual movement happens on the beast's next tick and is landed by the operations interface the creature implements itself - the default implementation teleports it to its owner. The contract type's `recall_cooldown` is the shortest gap between two recalls, decided from the timestamp in the record; `force` is an operator's way around that wait. While the owner is offline or in another dimension the latch simply stays set until they are back.
+`recall` only **sets the recall latch** (exactly what ringing the bell does); the actual movement happens on the beast's next tick and is landed by the operations interface the creature implements itself - the default implementation teleports it to its owner. The contract type's `recall_cooldown` is the shortest gap between two recalls, decided from the timestamp in the record; `force` is an operator's way around that wait. While the owner is offline or in another dimension the latch stays set until they are back.
 
 ## Orders {#orders}
 

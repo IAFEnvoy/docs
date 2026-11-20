@@ -17,7 +17,7 @@ description: 定义一份独立于元素的体质：原版属性、授予的能�
 | `granted_abilities` | 能力 id 或 `#标签` 的数组 | `[]` | 授予的能力。 |
 | `holder_condition` | `EntityCondition` | `mxt:always` | 授予前的持有条件。 |
 | `exclusive_tags` | Identifier 数组 | `[]` | 互斥标签。 |
-| `quality` | 品质 id | 无 | 可选。这份体质自己的品阶：携带这份定义的体质石读到的就是它，信息面板与 `/mxt physique list` 写在体质名旁边的也是它。 |
+| `quality` | 品质 id | 无 | 可选。这份体质自己的品阶：携带该定义的体质石读到的就是它，信息面板与 `/mxt physique list` 写在体质名旁边的也是它。 |
 | `allow_stacking` | Boolean | `false` | 是否允许同一体质叠加。 |
 | `damage_dealt_multiplier` | `NumberProvider` | `1` | 持有者**打出**的伤害在[伤害结算](../../technical/damage.md)第一层乘上它。 |
 | `damage_taken_multiplier` | `NumberProvider` | `1` | 持有者**受到**的伤害在管线第二层乘上它。 |
@@ -26,7 +26,7 @@ description: 定义一份独立于元素的体质：原版属性、授予的能�
 
 `holder_condition` 可以组合 `mxt:has_spirit_root`、`mxt:has_physique` 表达先决灵根或先决体质。
 
-`quality` 引用 `mxt:quality` 里的一档，可以省略。信息面板里体质那一行的 tooltip 读「定义名 · 品质名」，没有 `quality` 时这一段整个不写（不会显示 `-`）；`/mxt physique list` 则在没有档位时显示 `-`。堆上写了自己的 `mxt:quality` 组件时以组件为准；这份定义没写 `quality` 时这一层不作答，继续落到注册表 [default_quality](./default_quality.md)。
+`quality` 引用 `mxt:quality` 里的一档，可以省略。信息面板里体质那一行的 tooltip 读「定义名 · 品质名」，没有 `quality` 时这一段整个不写（不会显示 `-`）；`/mxt physique list` 则在没有档位时显示 `-`。堆上写了自己的 `mxt:quality` 组件时以组件为准；该定义没写 `quality` 时该层不作答，继续落到注册表 [default_quality](./default_quality.md)。
 
 ```json
 // data/example/mxt/physique/innate_sword_bone.json
@@ -44,7 +44,7 @@ description: 定义一份独立于元素的体质：原版属性、授予的能�
 
 ## 元素字段会被忽略 {#element-fields}
 
-"体质不含元素"这条边界由上面的**字段表**划出，不是由加载期检查划出。体质只读表里列出的那些键，下面这些写进体质定义**既不报错也不生效**：
+"体质不含元素"这条边界由上面的**字段表**划出，不是由加载期检查划出。体质只读表里列出的那些键，下面这些写进体质定义**既不产生错误，也不生效**：
 
 `element`、`elements`、`element_affinity`、`element_tags`、`element_ability_modifier`、`conflicting_elements`、`relations`、`overcomes`、`adapted_to`、`damage_types`、`attachment_decay`、`damage_attachment`、`aura_type`、`cultivation_multiplier`。
 
@@ -63,8 +63,8 @@ description: 定义一份独立于元素的体质：原版属性、授予的能�
 
 授予与移除都用实体行为：`mxt:grant_physique`、`mxt:remove_physique`（灵根那一侧是 `mxt:grant_spirit_root`、`mxt:remove_spirit_root`）。持有状态用实体条件 `mxt:has_physique` 判定（灵根是 `mxt:has_spirit_root`），脚本侧是 `MxtPhysiques`（灵根是 `MxtSpiritRoots`），管理员侧是 `/mxt physique`（灵根是 `/mxt spirit_root`）。
 
-本体也提供一件**体质物品** `mxt:physique`：堆上的组件 `mxt:physique` 写明它授予哪一项体质，右键即授予——走的是和行为、命令同一道判定，所以"已持有"（只在 `allow_stacking` 为假时）、`holder_condition` 不满足与互斥标签冲突照旧被拒，属性、能力与两个伤害倍率当场重算。授予成功时消耗 1 个，**创造模式不消耗**；被拒时物品原样留在手上并说明原因，没有组件的空物品只提示它没写明是哪一种体质。取这件物品用 `/give @s mxt:physique[mxt:physique="example:sword_bone"]`，或者用 `/picker mxt:physique`——那里每个体质定义给一行**已经带好组件**的它。这是物品的使用路径，与下面那个"开 / 关"是两回事。
+本体也提供一件**体质物品** `mxt:physique`：物品堆上的组件 `mxt:physique` 写明它授予哪一项体质，右键即授予——走的是和行为、命令同一道判定，所以"已持有"（只在 `allow_stacking` 为假时）、`holder_condition` 不满足与互斥标签冲突照旧被拒，属性、能力与两个伤害倍率立即重算。授予成功时消耗 1 个，**创造模式不消耗**；被拒时物品原样留在手上并说明原因，没有组件的空物品只提示它没写明是哪一种体质。取这件物品用 `/give @s mxt:physique[mxt:physique="example:sword_bone"]`，或者用 `/picker mxt:physique`——那里每个体质定义给一行**已经带好组件**的它。这是物品的使用路径，与下面那个"开 / 关"是两回事。
 
 已持有的体质可以被**关闭**而不失去：关闭后它的属性修正、授予能力与两个伤害倍率全部不生效，但它仍然"持有"（`mxt:has_physique` 照旧为真，也能正常移除）。这份状态存在 `spirit_identity` 附件里，随存档与同步一起走。
 
-**开 / 关**这一半**没有玩家入口**（没有按键或界面）：操作用脚本的 `MxtPhysiques.setEnabled`，或管理员命令 `/mxt physique enable|disable`。它与"从数据包里拿掉这条定义"是两件事：开关只管被关的那一条、而且它仍然被持有；拿掉定义则是这条定义整个不在了（写 `neoforge:conditions`，见[停用一条定义](../conventions.md#停用一条定义)）。
+**开 / 关**这一半**没有玩家入口**（没有按键或界面）：操作用脚本的 `MxtPhysiques.setEnabled`，或管理员命令 `/mxt physique enable|disable`。它与"从数据包里拿掉该定义"是两件事：开关只管被关的那一条、而且它仍然被持有；拿掉定义则是该定义整个不在了（写 `neoforge:conditions`，见[停用一条定义](../conventions.md#停用一条定义)）。

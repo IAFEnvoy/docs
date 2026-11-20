@@ -9,7 +9,7 @@ description: 阵法图形里两种笔画的字段：mxt:circle 与 mxt:polyline�
 
 ## `formation_stroke_type` {#formation-stroke-type}
 
-[阵法图形](../../json/formation_shape.md)的 `strokes` 里每一项的 `type` 从这一族里选一个 ID：`type` 决定这一笔怎么画，几何是它自己的字段。**只有两种**——渲染器按角度走一个圆、按弧长走一条折线，没有第三种走法——所以这一族数据包不能新增。
+[阵法图形](../../json/formation_shape.md)的 `strokes` 里每一项的 `type` 从这一族里选一个 ID：`type` 决定这一笔如何画，几何是它自己的字段。**只有两种**——渲染器按角度走一个圆、按弧长走一条折线，没有第三种走法——所以这一族数据包不能新增。
 
 | `type` | 画法 | 自己的字段 |
 | --- | --- | --- |

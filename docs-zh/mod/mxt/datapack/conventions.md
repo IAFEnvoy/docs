@@ -1,20 +1,20 @@
 ---
 title: 数据包约定
-description: 所有定义共用的那部分规则——引用写法、标签、翻译键、字段解码口径、数值字段与行为条件。
+description: 定义共用的引用、标签、翻译键、字段解码、数值与行为条件规则。
 ---
 
 # 数据包约定
 
 <span id="数据包约定" />
 
-这一页是**每一份定义都按同一套走**的那部分规则：怎么引用别的条目、名字从哪来、写错的字段会怎样、数值怎么写。每张注册表各自有什么字段不在这里，看 [JSON 数据格式](./json/index.md)。
+本页说明所有定义共用的引用格式、翻译规则、解码行为与数值格式。各注册表的字段见 [JSON 数据格式](./json/index.md)。
 
 ## 引用规则 {#引用规则}
 
 - 单个条目引用写条目自己的 id；条目或标签都收的字段可以直接写 `#标签`。
-- 必填的单个条目引用指向一个当前包不提供的条目时，**整个数据包加载失败**；可选引用可以整个省略，省略时用字段表里那个默认值；容错列表与映射里解不出来的条目按下面的口径丢掉。
+- 必填的单条引用指向不存在的条目时，整个数据包加载失败。可选引用可省略，并采用字段表中的默认值；容错列表与映射中的无效条目按下述规则处理。
 - 按物品认领的注册表（`artifact`、`pill_binding`、`technique_binding`、`item_aura`、`default_quality`、`item_binding`、`weapon_binding`、`tool_binding`、`blueprint_binding`）都用 `items` 字段收 `ItemMatcher`：ID、标签、通配符、正则和混合数组都收，三种写法与七种条目类型见 [`ItemMatcher`](./types/shared_data_types.md#itemmatcher)；`currency` 是例外，字段叫 `item`。按方块认领的 `block_aura`、`heat_source` 与 `spirit_herb` 同形，字段叫 `blocks`。
-- 多个定义同时匹配一件物品时，按各自声明的 `priority` **从高到低**选择（字段默认 `0`），同分回落到注册表顺序。`block_aura` **没有** `priority`，多条定义命中同一个方块时都生效、相加。「谁赢」由定义写了什么决定、与文件名无关（与 `aura_zone`、`element_reaction` 的 `priority` 同一个方向）。**这与匹配条目是哪一种无关**：一条定义只要命中就按它自己声明的那个数参与排序，点名物品并不会让它更靠前。
+- 多个定义匹配同一物品时，按 `priority` 从高到低选择，默认值为 `0`，同优先级按注册表顺序决定。匹配器类型不影响优先级，直接指定物品 ID 不会优先于标签。`block_aura` 不提供 `priority`，所有匹配定义的贡献相加；`aura_zone` 与 `element_reaction` 的 `priority` 同样采用降序。
 - 原版标签是唯一的标签系统；不要在 JSON 里重复定义 `tags` 字段。
 
 ## 标签 {#标签}
@@ -48,11 +48,11 @@ data/mxt/tags/damage_type/no_bonus.json
 
 数据驱动定义的显示名由标识符自动生成翻译键 `<注册表命名空间>.<类别>.<定义命名空间>.<路径>`。类别就是注册表自己的 path；**注册表命名空间就是那个注册表自己的命名空间**——本体自己的注册表（`mxt:aura`、`mxt:talisman` …）键写作 `mxt:<路径>`，这些定义键以 `mxt.` 开头；寄放在前置库里的注册表用库的命名空间（`saturn:resource`、`saturn:ability`、`saturn:trigger`）键写作 `saturn:`，它们的定义键以 `saturn.` 开头。举例：`aura` 里的 `mxt:fire` 查 `mxt.aura.mxt.fire`，`resource` 里的 `example:qi` 查 `saturn.resource.example.qi`，`talisman` 里的 `mxt_test:flame_sigil` 查 `mxt.talisman.mxt_test.flame_sigil`。类别没有例外表（`example:refined` 在 `mxt:quality` 里查 `mxt.quality.example.refined`）。路径里的 `/` **原样**进入键中，不会转成 `.`（`example:foo/bar` 得到的键是 `saturn.resource.example.foo/bar`），所以按类别分子文件夹不会多出第二套翻译键规则。
 
-JSON 里**没有** `translation_key` 这类字段，下面这 24 张注册表的定义**不存任何文本**，名字与描述永远按注册 id 现算：`resource`、`aura`、`realm_stage`、`element`、`spirit_root`、`physique`、`ability`、`curse`、`technique`、`progression`、`cultivation`、`artifact`、`medicinal_property`、`spirit_herb`、`alchemy_furnace`、`alchemy_wall_material`、`pill`、`pill_binding`、`formation`、`tribulation`、`secret_realm`、`contract_type`、`talisman`、`quality`。它们里面没有 `name` / `description` 字段，给了也读不到；**包唯一能给一个定义配词的办法就是翻译上面那个生成的键**。描述键是名字键再接 `.description`。
+JSON 里**没有** `translation_key` 这类字段，下面这 24 张注册表的定义**不存任何文本**，名字与描述永远按注册 id 现算：`resource`、`aura`、`realm_stage`、`element`、`spirit_root`、`physique`、`ability`、`curse`、`technique`、`progression`、`cultivation`、`artifact`、`medicinal_property`、`spirit_herb`、`alchemy_furnace`、`alchemy_wall_material`、`pill`、`pill_binding`、`formation`、`tribulation`、`secret_realm`、`contract_type`、`talisman`、`quality`。它们里面没有 `name` / `description` 字段，不读取额外字段；**包唯一能给一个定义配词的办法就是翻译上面那个生成的键**。描述键是名字键再接 `.description`。
 
 **会把描述键画出来的是这四类定义：`quality`（品质名下面那一行）、`contract_type`（契约卷轴的提示框）、`pill`（认领丹药的物品提示框）与 `technique`（手册的提示框，以及被读时聊天栏那一行）**，而且**只在这个键被翻译时才画**：语言文件里没有这个键就整行不输出，不会把 `mxt.aura.example.fire.description` 这样的键名当正文打出去；其余注册表的描述键没有任何界面或提示框去读。
 
-名字没被翻译时，界面上不会出现键名：**必须显示点什么的地方——列表行、标题、面板条目，以及当参数嵌在别的句子里的时候——回退显示 id**（会是 `mxt:aura/example.fire` 这样的写法，仍然认得出是哪一条）；**可以空着的地方——提示框里只起标题作用的那一行（丹药定义名、药材定义名、炉壁与炉型名、符箓类型的说明行）——整行不输出**。
+缺少名称译文时，列表、标题、面板条目及句中参数回退显示定义 ID，例如 `mxt:aura/example.fire`。提示框中可省略的名称或说明行不显示，包括丹药、药材、炉壁、炉型名称与符箓类型说明。界面不直接显示语言键。
 
 `minor_stages` 不是名字列表，而是一个数量：子阶段名一律按 `<本境界名字键>.minor_stage.<下标>` 生成（同样带注册表命名空间，下标从 `0` 起）；没被翻译的那一重不显示。
 
@@ -62,9 +62,9 @@ JSON 里**没有** `translation_key` 这类字段，下面这 24 张注册表的
 
 ### 命令文案 {#命令文案}
 
-命令的每一句提示都写作 `command.mxt.<组>.<名字>`：**组是这条命令自己的那一段**（`command.mxt.quality.set`、`command.mxt.formation.bind.done`），所以查一句文案时按命令找就行。**所有子命令共用的那几句放在 `message` 组**（`command.mxt.message.requires_player`、`command.mxt.contract.failure.<小写枚举名>`），因为"哪个子命令都能用到"本身不是一条命令。
+命令的每一句提示都写作 `command.mxt.<组>.<名字>`：**组是这条命令自己的那一段**（`command.mxt.quality.set`、`command.mxt.formation.bind.done`），所以查一句文案时按命令找即可。**所有子命令共用的那几句放在 `message` 组**（`command.mxt.message.requires_player`、`command.mxt.contract.failure.<小写枚举名>`），因为"哪个子命令都能用到"本身不是一条命令。
 
-**一句话被命令与别处一起用到时，它留在别处的键上**——这类共享文案不搬进 `command.*`（`block.mxt.rift.recolored` 既在 `/mxt rift` 里也在裂隙方块的右键提示里，`tooltip.mxt.talisman.mode.*` 既在提示框里也在 `/talisman` 里），免得同一句话出现两份、改一漏一。命令只引用它们、不重命名它们。
+命令与其他界面共用的文案保留原有语言键，不重复定义到 `command.*`。例如，`block.mxt.rift.recolored` 同时用于裂隙交互和命令，`tooltip.mxt.talisman.mode.*` 同时用于提示框和 `/talisman`。命令直接引用这些键。
 
 ### 语言文件 {#语言文件}
 
@@ -74,17 +74,17 @@ JSON 里**没有** `translation_key` 这类字段，下面这 24 张注册表的
 
 一份文件就是一条定义。写进去的东西逃不出下面五种结果，先认清写错时会怎样，再谈字段。
 
-**认不出的键——静默丢弃。** 解码只看它认识的键，多写的键照常加载、不生效，也没有任何日志。改字段名或删字段时不会有人替你报错，所以数据包升级时**自己核对字段表**是唯一手段。
+**未知字段被静默忽略。** 解码器只读取已声明的字段，额外字段不生效，也不产生日志。升级数据包时，应根据字段表核对已删除或改名的字段。
 
-**认不出的 `type`——加载失败。** `type` 是分派键，写一个没注册的取值不会退化成"什么都不做"，而是让这份定义解码失败。模块的字段几乎全是可选的，静默退化会把一个拼写错误变成一件安静不动的死物，所以这里选响亮。
+**未知 `type` 导致定义加载失败。** `type` 是分派键，必须引用已注册的类型；无效取值不会被替换为空操作。
 
 **空表、空列表、非法值——拒收。** 一个恒真或恒假的条件、越界的数值、该填却不填的键都在这类里，加载直接失败。
 
-**容错集合——坏的丢掉、其余照常。** 有些列表与映射是容错的：解不出来的条目打一条 `Ignoring invalid list element` 后丢掉。所以"我在数组里写了一个不存在的 id"通常表现为那一项不存在。**消耗数组不套这套**：`costs` 一类数组里有一项解不出来，整份定义加载失败。
+**容错集合保留有效条目。** 部分列表与映射在条目解码失败时记录 `Ignoring invalid list element` 并丢弃该条目，其余内容继续加载。`costs` 等消耗数组采用严格解码：任一条目无效都会导致整份定义加载失败。
 
 **通用字段不存在。** 定义里没有 `schema_version`、`enabled` 或 `tags`；"这一条现在要不要进注册表"由下面的 `neoforge:conditions` 回答，不是写一个开关字段。
 
-解码失败的定义**不会保留上一次的快照**：世界直接无法加载，修好那份文件才能再进。多条同时失败时会一并列出来，一次修完。
+定义解码失败时，加载不会保留旧快照，世界也无法完成加载。修复所列错误后才能继续；多个解码错误会集中报告。
 
 ## 停用一条定义 {#停用一条定义}
 
@@ -98,13 +98,13 @@ JSON 里**没有** `translation_key` 这类字段，下面这 24 张注册表的
 }
 ```
 
-可用的条件都写在 `neoforge:` 命名空间下：`never` / `always`（无字段）、`mod_loaded`（`modid`）、`registered`（`registry` 默认 `minecraft:item`、`value`）、`and` / `or`（`values`）、`not`（`value`）与 `feature_flags_enabled`（`flags`）。条件可以写在**任何**注册表条目的文件里，所有数据包注册表一视同仁；一份文件就是一条定义，顶层没有 `values` 这类包装。条件成立时 `neoforge:conditions` 会在交给定义解码之前被剥掉，正常字段照常读。**按标签判断的条件（如 `tag_empty`）不能用在这里**：解码到这一层时标签还没绑定，会直接抛异常；标签判断只属于配方、战利品表那一类加载更晚的东西。
+可用的条件都写在 `neoforge:` 命名空间下：`never` / `always`（无字段）、`mod_loaded`（`modid`）、`registered`（`registry` 默认 `minecraft:item`、`value`）、`and` / `or`（`values`）、`not`（`value`）与 `feature_flags_enabled`（`flags`）。条件可以写在**任何**注册表条目的文件里，所有数据包注册表一视同仁；一份文件就是一条定义，顶层没有 `values` 这类包装。条件成立时 `neoforge:conditions` 会在交给定义解码之前被剥掉，正常字段照常读。**按标签判断的条件（如 `tag_empty`）不能用在这里**：解码到该层时标签还没绑定，会直接抛异常；标签判断只属于配方、战利品表那一类加载更晚的东西。
 
 **条件不成立不是加载错误**：加载器把该条目当作跳过处理，只留一条 DEBUG 日志 `Skipping loading registry entry … as its conditions were not met`，世界照常加载。所以「文件明明在、游戏里却没有」时，那条 DEBUG 日志是唯一的线索——默认的日志级别看不到它。
 
-代价是「不存在」就是不存在：条件不成立的条目**等同于「这条定义没写」**，指向它的条目引用会跟着解码失败，所以没有「留着这条定义但让它不生效」的中间状态。一份能直接抄的文件见[数据包示例](./examples.md)。
+被加载条件排除的条目视为不存在，引用它的定义可能因此解码失败。加载条件不提供「保留注册但停用效果」的状态。完整文件见[数据包示例](./examples.md)。
 
-> 灵根与体质另有一个**开关**（`spirit_identity` 附件里的 `disabled_spirit_roots` / `disabled_physiques`）：关闭是「仍然持有但不生效」。操作用脚本的 `MxtSpiritRoots.setEnabled` / `MxtPhysiques.setEnabled`，或管理员命令 `/mxt spirit_root enable|disable`、`/mxt physique enable|disable`；本模组不为它提供玩家界面。它管的是「身体要不要用这一条」，与「从数据包里拿掉这条定义」是两件事。品质的顺序由 `quality` 自己声明（每一档的 `quality` 与 `next`），不依赖标签顺序。
+> 灵根与体质另有一个**开关**（`spirit_identity` 附件里的 `disabled_spirit_roots` / `disabled_physiques`）：关闭是「仍然持有但不生效」。操作用脚本的 `MxtSpiritRoots.setEnabled` / `MxtPhysiques.setEnabled`，或管理员命令 `/mxt spirit_root enable|disable`、`/mxt physique enable|disable`；本模组不为它提供玩家界面。它管的是「身体要不要用这一条」，与「从数据包里拿掉该定义」是两件事。品质的顺序由 `quality` 自己声明（每一档的 `quality` 与 `next`），不依赖标签顺序。
 
 ## 数值字段 {#数值字段}
 
@@ -122,4 +122,4 @@ JSON 里**没有** `translation_key` 这类字段，下面这 24 张注册表的
 
 ## 行为与条件 {#行为与条件}
 
-行为统一称为 `action`，按目标分为 entity、item、block、bi-entity 等。需要多个步骤时使用 sequence/choice/if_else 等元行为。`condition` 用于限制技能、绑定物品、修炼、境界和配方。行为与条件的数组是简写，表示按顺序全跑一遍。
+行为统一称为 `action`，按目标分为 entity、item、block、bi-entity 等。多个步骤可通过 sequence/choice/if_else 等元行为组合。`condition` 用于限制技能、绑定物品、修炼、境界和配方。行为数组按顺序执行全部条目；条件数组要求全部条目成立。

@@ -24,7 +24,7 @@ A `formation` defines one array: its structure, radius, resource costs, and **wh
 | `actions` | Array | `[]` | **What this array does**: the list of function modules, see [Formation modules](#formation-modules). |
 | `spare_friends` | boolean | `false` | The **friend-or-foe switch**: whether the per-entity beats reach everyone inside the covered range, or go through a friend-or-foe decision first (friends, and anything it cannot identify, are then unaffected). It only picks "everyone" or "identified", and **does not mean the array is an attacking one** — that is what `actions` says, see "Friend or foe". |
 
-`quality` is optional: plates are the one item every array shares, so the item itself cannot say which tier it is — only the array the stack carries can: a plate carrying this array starts on that tier. The tier is read off **the array stored on the plate**, not off anything filtered through the plate's allow list: an array outside the plate's allow list, one whose activation would be refused, still names its tier. An `mxt:quality` component on the stack wins; with no `quality` here this layer answers nothing and resolution continues to the [default_quality](./default_quality.md) registry.
+`quality` is optional: plates are the one item every array shares, so the item itself cannot say which tier it is — only the array the stack carries can: a plate carrying this array starts on that tier. The tier is read off **the array stored on the plate**, not off anything filtered through the plate's allow list: an array outside the plate's allow list, one whose activation would be refused, still names its tier. An `mxt:quality` component on the stack wins; with no `quality` here this layer provides no result and resolution continues to the [default_quality](./default_quality.md) registry.
 
 > **Structure size is not bound by the structure block's 48×48×48 limit.** The two vanilla axis constants are only a clamp applied when the structure block reads its own NBT: that is an **editor limit**, not a format or array limit. The underlying structure template format reads `size` with no ceiling, a structure block in LOAD mode adopts the template's size as it is, and `/place template` checks no size either. So a hand selection made with the structure block cannot exceed 48³, while an `.nbt` produced by an external tool can be referenced by an array without trouble. What an array reaches is decided by `radius`, independently of the size of the structure's bounding box.
 
@@ -185,7 +185,7 @@ The rules:
 - The range is the sphere of the array's own `radius`, with no second definition.
 - **Attribution is per instance, not per chunk**: each emitter records which arrays it stands in, so an array only counts the blocks inside its own radius, and an emitter belonging to another array in the same chunk is not part of its supply; **two overlapping arrays both count a block that lies inside both** (overlap means shared, with no splitting and no distance weighting). The emitter-to-controller test is a three-dimensional distance, so stacked arrays never count each other's blocks.
 - The blocks it swallows **disappear from the environmental aura entirely** — they take no part in resolving "how much aura is here" and are not shared with any other query. So an array is a real aura black hole, and one built on a spirit vein drains that vein dry (the vein itself still recovers by `regen_per_tick`).
-- **It is offset per resource type, not in general**: aura that is all fire inside the array cannot offset a spirit-power bill. Aura that does not match is neither given to the environment nor to the array — it is simply swallowed.
+- **It is offset per resource type, not in general**: aura that is all fire inside the array cannot offset a spirit-power bill. Aura that does not match is neither given to the environment nor to the array — it is swallowed.
 - **There is no store**: the aura swallowed this period offsets this period's upkeep directly, and the surplus is not returned or carried over. To keep it, write a `storage` field on this array (see "Storage") — the only exception, and a deliberately narrow one.
 - Only an **owner** can be the payer. While the owner is offline the array is still dismantled for "being unable to pay the shortfall" — unless the shortfall is fully covered by its own aura, in which case no payer is needed at all. The `storage` stock counts as a payer in the same way: it keeps paying while the owner is away, and the array is dismantled only when it cannot.
 - **Optional: also draw the ambient aura of the ground itself.** With the server setting "Formations → Draw Ambient Aura" (**off** by default) on, the ambient aura resolved at the array's **own position** takes part in the offset too. Two things to note:
@@ -198,7 +198,7 @@ The engine requirement that goes with it: **activating or dismantling an array m
 
 ## Storage (`storage`) {#storage-storage}
 
-`storage` is a **generic field**: every array has that property, it is simply **off by default** — writing nothing means storing nothing.
+`storage` is a **generic field**: every array has that property, it is **off by default** — writing nothing means storing nothing.
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |

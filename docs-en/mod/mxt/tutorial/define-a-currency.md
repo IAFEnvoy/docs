@@ -19,7 +19,7 @@ A currency definition is one file at `data/<namespace>/mxt/currency/<path>.json`
 
 `item` has to be written, `value` has to be positive and `exchanges` has to exist (write `[]` when there are none), or the definition is refused at load. The full field list is in [Currency](../datapack/json/currency.md).
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -106,7 +106,7 @@ A tier multiplies the denomination: the quality's own `value_multiplier` is appl
 
 Three semantics to remember:
 
-- **A holding condition means "worth 0", not "the definition is gone"**: the item is still currency, this stack is simply not worth anything right now. The Exchange Station also puts its options away (step 6).
+- **A holding condition means "worth 0", not "the definition is gone"**: the item is still currency, this stack is not worth anything right now. The Exchange Station also puts its options away (step 6).
 - **A place with a player at hand evaluates the condition with that player**: the tooltip with the one looking at the item, the station with the one operating it. A **pure server-side query with no entity context does not guess**; it counts the entry as not holding, since it cannot judge one without a player.
 - **The reason is a piece of text, not a required one**: written, it adds a red line under the value line; left out, the mod supplies a generic one (`tooltip.mxt.currency_invalid`).
 

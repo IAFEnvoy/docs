@@ -22,7 +22,7 @@ title: Cost
 | --- | --- |
 | `CostTarget target()` | 这一项从哪个存储出，以及通道种类。同一次付款里两项指向同一个目标，就是同一个存储。 |
 | `double amount()` | 固定数量，单位是那个存储自己的单位：实数数值、整数物品、实数银行灵气、一次脚本调用。 |
-| `Result<List<Debit>> execute(boolean simulate)` | 两遍都走这一个方法：传 `true` 只问、什么都不写；传 `false` 真扣自己那条通道，并返回实际扣走的凭据。第一次实扣的结果就是终态，同一项不会被扣第二次。失败的结果不带凭据。 |
+| `Result<List<Debit>> execute(boolean simulate)` | 两遍都走这一个方法：传 `true` 仅检查、什么都不写；传 `false` 真扣自己那条通道，并返回实际扣走的凭据。第一次实扣的结果就是终态，同一项不会被扣第二次。失败的结果不带凭据。 |
 | `Transaction withAmount(double amount)` | 同一个绑定换个固定数量。付款改价就是这么改的，不会重跑原来的公式；`0` 由付款直接去掉，不执行一个空事务。 |
 
 四种固有类型登记在 `saturn:cost_type`：`saturn:resource`、`mxt:aura`、`mxt:item`、`mxt:js`。新增一种 = 写一个实现再在 `MxtRegistries.COST_TYPE` 里登记，字段形状不跟着变——所有消耗字段都是这个数组，写法见[共享数据类型](../../../datapack/types/shared_data_types.md#cost)。
@@ -39,7 +39,7 @@ title: Cost
 
 灵气来源由 `AuraCostSource.bind(CostContext, Holder<Aura>, double)` 绑定固定事务。`CostContext` 包含 `payer`、`formula`、`origin`、`account`、`auraSource`、`itemTarget`，通过 `of` / `account` / `pool` / `bank` 工厂选择来源，也可用 `withAuraSource` 接入扩展。来源只解析目标，不查库存、不扣款；`execute(simulate)` 才负责模拟和真实扣除。账户灵气复用资源通道，环境池与银行共用 `AuraAccess` 存取。银行不再向上取整，数量与凭据均为 double；Java 实现需要按新签名重新编译。
 
-`origin` 是只用于日志诊断的 `String`，不决定价格、权限或付款通道。内置标签由 `com.iafenvoy.mxt.data.cost.context.CostSources` 提供为共享字符串常量；扩展可直接传入自己的标签，无需注册。
+`origin` 是只用于日志诊断的 `String`，不决定消耗量、权限或付款通道。内置标签由 `com.iafenvoy.mxt.data.cost.context.CostSources` 提供为共享字符串常量；扩展可直接传入自己的标签，无需注册。
 
 ```java
 CostContext.of(payer, CostSources.ABILITY);

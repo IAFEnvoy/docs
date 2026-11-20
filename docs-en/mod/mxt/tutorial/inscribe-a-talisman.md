@@ -19,7 +19,7 @@ So this tutorial covers the chain that genuinely runs today: **define → hand o
 
 :::
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -128,7 +128,7 @@ The stand path follows **different rules** from the hand:
 | Actor | The holder | **Whoever filled it** (they pay, are recorded and answer for the abilities) |
 | Position | The actor | **The display stand's centre** |
 
-A talisman that declares a `durability` turns both paths into **wear** instead (the cap lands in the vanilla components — `minecraft:max_damage` with `minecraft:max_stack_size: 1` and `minecraft:damage: 0`, which is what gives the carrier its bar and keeps vanilla repair working, plus the `mxt:durability` / `mxt:damage_item` building blocks): each invocation takes `consume` off, and the invocation that reaches or passes the cap destroys the carrier (that invocation's aura is **still taken**; only **what it did not spend** goes back to the actor at the pour's own price). The numbers are **summed over everything written onto one carrier** — a 10-point entry costing 1 and a 5-point entry costing 1 written together make 15 points costing 2 — and an entry declaring no durability rides along without paying. The framework writes the cap when it hands a carrier over (`/talisman give`, which then hands out single carriers because a worn carrier cannot be stacked), a carrier a pack builds itself gets it on its first invocation, and a `max_damage` the pack wrote onto the stack wins over the summed definitions — though it only moves the number, so whether anything is spent at all is still up to the definitions. The creative exception still holds (no wear in hand, always wear on a stand).
+A talisman that declares a `durability` turns both paths into **wear** instead (the cap lands in the vanilla components — `minecraft:max_damage` with `minecraft:max_stack_size: 1` and `minecraft:damage: 0`, which is what gives the carrier its bar and keeps vanilla repair working, plus the `mxt:durability` / `mxt:damage_item` building blocks): each invocation takes `consume` off, and the invocation that reaches or passes the cap destroys the carrier (that invocation's aura is **still taken**; only **what it did not spend** goes back to the actor at the pour's own price). The numbers are **summed over everything written onto one carrier** — a 10-point entry costing 1 and a 5-point entry costing 1 written together make 15 points costing 2 — and an entry declaring no durability rides along without paying. The framework writes the cap when it hands a carrier over (`/talisman give`, which then hands out single carriers because a worn carrier cannot be stacked), a carrier a pack builds itself gets it on its first invocation, and a `max_damage` the pack wrote onto the stack takes precedence over the summed definitions — though it only moves the number, so whether anything is spent at all is still up to the definitions. The creative exception still holds (no wear in hand, always wear on a stand).
 
 The position enters the formula context as `block_x`/`block_y`/`block_z` and is handed to position-driven behaviours as this invocation's **origin** (`spawn_projectile`, `spawn_particles`, `explode`, the centre of an `mxt:area` box…); projectiles still travel along the **actor's** facing — the position is where it comes from, the facing is who is aiming. Aura put into a stand **cannot be taken back** (extracting from it is a no-op); to recover the item, right-click it empty-handed or break the block.
 
@@ -159,7 +159,7 @@ Datapack registries are read while the **world loads**, so reopen the world firs
 | The ability is reported as disabled | The ability definition that was inscribed is not in the current pack (its file was deleted, or a `neoforge:conditions` block keeps it out); a talisman does not bypass that. |
 | The element affinity is reported as a mismatch | The elements the ability names in [ability_affinity](../datapack/json/ability_affinity.md) do not match the caster's spirit roots — a talisman does not bypass it. |
 | It says the ability needs a cast or a channel | An ability with `cast_time > 0` or `mxt:channelled` cannot be carried. |
-| Pouring never finishes / nothing happens | An aura entry in `costs` resolves to `0` in the empty context (a `realm_rank` formula, say) and takes no part in the pour; or you simply do not have enough aura (reported as such). |
+| Pouring never finishes / nothing happens | An aura entry in `costs` resolves to `0` in the empty context (a `realm_rank` formula, say) and takes no part in the pour; or you do not have enough aura (reported as such). |
 | The component syntax is refused | `talisman` takes a concrete id only; only `abilities` accepts `#tags`. |
 | It fired but the aura is gone | That invocation's share was taken; when the capacity only covers one shot the component empties with it, and when it covers several the rest stays. |
 | It only fires a couple of times before running dry | No `capacity` was written (it defaults to one invocation), or the carrier has no wear, which counts as one invocation. Write a bigger multiplier and pair it with `durability` / `consume` to fire several times from one pour. |

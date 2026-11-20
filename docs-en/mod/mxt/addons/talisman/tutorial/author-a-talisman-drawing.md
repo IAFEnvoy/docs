@@ -20,7 +20,7 @@ A drawing recipe is one file under `data/<namespace>/recipe/`, its recipe type i
 
 :::
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -180,7 +180,7 @@ Four semantics to remember:
 - **The grade depends on the completion alone**: walk the grades downwards and take the **last threshold that is not above the completion**. The lowest grade is therefore the recipe's pass mark, so `0.35` means anything below it fails and `0` means it cannot fail.
 - **`min_completion` has to be unique and ascending**, with 1 to 64 grades; a duplicate or an out-of-order entry is refused at load rather than one of them being picked.
 - **Completion decides success; the grade hit decides tier and output**: whether that grade writes a `quality`, pours aura or yields extra items is that grade's own business. `failure_outputs` only pays out on a failure that **reached the settlement**.
-- **Formulas inside `result` get two extra variables**: `percentage` is this attempt's completion (0 to 1), and `paper_rank` is where the tier written on the sheet actually taken sits on its own ladder (counted from the entry tier, so `0` is the entry tier and also the only number "this sheet has no tier / its tier is on no ladder" can give — a formula cannot tell those apart). A name that is neither of those nor a formula variable the registry provides is refused **at load**; `outputs` cannot read them, because an `ItemStackTemplate` count is fixed, so different counts per completion means different grades.
+- **Formulas inside `result` get two extra variables**: `percentage` is this attempt's completion (0 to 1), and `paper_rank` is where the tier written on the sheet taken sits on its own ladder (counted from the entry tier, so `0` is the entry tier and also the only number "this sheet has no tier / its tier is on no ladder" can give — a formula cannot tell those apart). A name that is neither of those nor a formula variable the registry provides is refused **at load**; `outputs` cannot read them, because an `ItemStackTemplate` count is fixed, so different counts per completion means different grades.
 
 **What comes out**: the grade produces the `mxt:talisman` carrier, inscribed with the definition the top-level `talisman` names (mode `fire`), with the tier written into its `mxt:quality` component, `max_damage` written into the vanilla wear components, `charge_ratio` poured into the carrier's capacity, and `outputs` handed over on top. "A better trace makes a better talisman" is written exactly here.
 
@@ -227,26 +227,26 @@ Four semantics to remember:
 }
 ```
 
-**Paper is two questions, so do not mix them up.**
+Paper validation has two layers:
 
-| The question | What answers it |
+| Layer | Rule |
 | --- | --- |
-| May this stack sit in the screen's slot at all | The item tag `#mxt:talisman_paper` (the mod fills it with `mxt:blank_talisman`, and a pack may add its own paper). **The slot reads only that tag**, because the client has to be able to answer "is this paper at all". |
-| Does this recipe take it, and which sheet does it take | The recipe's own `paper` field (a vanilla `Ingredient`), which **defaults to that tag**. |
+| Workstation slot | Accepts only items in `#mxt:talisman_paper`. The base mod supplies `mxt:blank_talisman`; content packs may extend the tag. The client also uses this tag for validation. |
+| Recipe ingredient | Defined by the recipe's `paper` field (a vanilla `Ingredient`), which defaults to the tag above. |
 
-So `paper` narrows within the tag: paper outside the tag can never start a drawing. The `"mxt:blank_talisman"` above is that one sheet in the tag; to gate on tiers, write the custom ingredient `{"neoforge:ingredient_type": "mxt:quality", "items": "#mxt:talisman_paper", "min_quality": "example:common"}`, and a sheet with no tier can never start the recipe. That sheet is taken out of the screen's slot by the recipe type itself and cannot be removed, so an extra `mxt:item` in `costs` can only ever mean "one more sheet".
+`paper` can only narrow the items accepted by the slot tag. The example's `"mxt:blank_talisman"` selects blank talisman paper. To require a quality tier, use `{"neoforge:ingredient_type": "mxt:quality", "items": "#mxt:talisman_paper", "min_quality": "example:common"}`; paper without a resolved quality is rejected. The recipe always consumes paper from the workstation slot. An `mxt:item` entry in `costs` represents an additional item cost and cannot replace that ingredient.
 
-**Pigment is not part of `costs`.** Drawing takes it by **the length of every stroke** from **the brush's own store**, which is the item component `mxt:brush_pigment` (1 unit = 1 pixel of arc length), and how a brush is refilled, what a portion is worth and how much one holds are none of them in the data pack:
+**Pigment is excluded from `costs`.** Each stroke deducts pigment from the brush's `mxt:brush_pigment` component according to its length (one unit per pixel of arc length). The relevant tag and settings are:
 
-| What answers it | Default | What it governs |
+| Source | Default | Purpose |
 | --- | --- | --- |
-| The item tag `#mxt:brush_pigment` | cinnabar `mxt:cinnabar` only, in the base pack | Which items count as pigment. Refilling is the vanilla bundle's click: **with the brush on the cursor, click a stack of pigment** for one portion per click — inventory, chest or station, since the screen has no pigment slot. |
-| **Server Config → Talisman → Brush Capacity** | `4000` | How much pigment one brush holds. |
-| **Server Config → Talisman → Pigment Per Portion** | `1000` | What one portion of pigment feeds in. |
-| **Server Config → Talisman → Pigment Rate** | `1.0` | Pigment per pixel of stroke length. |
-| **Server Config → Talisman → Pigment Per Stroke Floor** / **Cap** | `1` / `0` | The least and the most one stroke takes (`0` means no cap). |
+| Item tag `#mxt:brush_pigment` | Cinnabar `mxt:cinnabar` | Items that can refill pigment. |
+| **Server Config → Talisman → Brush Capacity** | `4000` | Pigment capacity per brush. |
+| **Server Config → Talisman → Pigment Per Portion** | `1000` | Pigment added per item. |
+| **Server Config → Talisman → Pigment Rate** | `1.0` | Pigment consumed per pixel of arc length. |
+| **Server Config → Talisman → Pigment Per Stroke Floor** / **Cap** | `1` / `0` | Minimum and maximum consumption per stroke; `0` disables the cap. |
 
-The strokes of a 90 × 210 talisman usually sum to 400–1200 pixels, so one default brush traces about three to five of them. **A stroke with too little pigment is refused**, and once the refusals pass **Server Config → Talisman → Rejected Strokes Allowed** (default `3`) that drawing fails and the materials are gone; "the brush is no longer on the cursor" is not counted. The full brush-and-pigment rules are in [Brushes and Pigment](../../../player-guide/brush-and-pigment.md#brushes-and-pigment).
+A figure on the 90 × 210 canvas typically contains 400–1200 pixels of strokes, so the default capacity supports approximately 3–5 talismans. Insufficient pigment rejects a stroke. Exceeding **Server Config → Talisman → Rejected Strokes Allowed** (default `3`) fails the drawing without returning materials. An absent cursor brush does not count toward this limit. See [Brush and Pigment](../../../player-guide/brush-and-pigment.md#brushes-and-pigment) for refilling.
 
 ## Step 5 — Tracing It at the Workstation {#step-5-—-tracing-it-at-the-workstation}
 

@@ -1,13 +1,13 @@
 ---
 title: element_reaction（元素反应）
-description: 元素附着攒够要求时触发的反应：要求多少、扣掉多少、跑什么行为。
+description: 元素反应的附着阈值、消耗量、触发条件与行为。
 ---
 
 # element_reaction（元素反应）
 
 <span id="element_reaction" />
 
-一条元素反应声明「身上某种元素攒到多少之后发生什么」。攒了多少住在实体附件 `mxt:element_attachment` 里，往里加的是 [element](./element.md) 的 `damage_attachment` 与实体行为 `mxt:attach_element`，往外扣的是元素自己的 `attachment_decay`；这条定义只管攒够之后的那一下。
+一条元素反应声明「身上某种元素攒到多少之后发生什么」。攒了多少住在实体附件 `mxt:element_attachment` 里，往里加的是 [element](./element.md) 的 `damage_attachment` 与实体行为 `mxt:attach_element`，往外扣的是元素自己的 `attachment_decay`；该定义只管攒够之后的那一下。
 
 ## 文件位置 {#文件位置}
 
@@ -29,7 +29,7 @@ description: 元素附着攒够要求时触发的反应：要求多少、扣掉�
 
 `amounts` 是**要求**，不是数量。一次反应就是「攒够了就答话」：元素攒够后管线按优先级找**第一条**要求与条件都成立的，执行它的 `action` 并扣掉 `consume`，然后**继续找**——所以一条反应可以引出另一条。
 
-链条有上限（一次应用最多 `8` 条），因为「消耗自己又重新施加自己」是合法写法。这个上限是**整条链**的上限而不是每层一份：反应的行为里再次施加元素（或打出带属性的伤害、又在受击处积累附着）时，那次施加不会另开一条链，只把量加上去，由正在跑的那条链在下一轮读到并结算——所以「火一直烧到有人扑灭」写得出来，也不会自己喂自己喂到停不下来。自然衰减不会触发反应：衰减只会让总量变少，够不着的仍然够不着。
+链条有上限（一次应用最多 `8` 条），因为「消耗自己又重新施加自己」是合法写法。这个上限是**整条链**的上限而不是每层一份：反应的行为里再次施加元素（或打出带属性的伤害、又在受击处积累附着）时，那次施加不会另开一条链，只把量加上去，由正在运行的该链在下一轮读到并结算——所以「火一直烧到有人扑灭」写得出来，也不会自己喂自己喂到停不下来。自然衰减不会触发反应：衰减只会让总量变少，够不着的仍然够不着。
 
 ```json
 // data/example/mxt/element_reaction/fire_burst.json
@@ -42,6 +42,6 @@ description: 元素附着攒够要求时触发的反应：要求多少、扣掉�
 
 ## 附着存在哪 {#附着存在哪}
 
-附着量本身住在实体附件 `mxt:element_attachment` 里：按元素分键、随存档与同步一起走、归零即删键，所以「攒了多少」与「攒够之后做什么」是分开的两件事。攒附着的两条路是 `element.damage_attachment`（被打）与实体行为 `mxt:attach_element`（其它来源，比如泡在岩浆里、服丹、诅咒）；清附着同样用 `mxt:attach_element` 写负数，或让元素自己 `attachment_decay` 每 tick 扣。实体条件 `mxt:element_attachment` 可以只读当前量（同样的 `{min?, max}` 窗口），用来写「攒得越多越糟」这类效果而不需要任何反应成立；写空表会在加载期被拒绝而不是当成「恒真」。
+附着量本身住在实体附件 `mxt:element_attachment` 里：按元素分键、随存档与同步一起走、归零即删键，所以「攒了多少」与「攒够之后做什么」是分开的两件事。攒附着的两条路是 `element.damage_attachment`（被打）与实体行为 `mxt:attach_element`（其它来源，例如泡在岩浆里、服丹、诅咒）；清附着同样用 `mxt:attach_element` 写负数，或让元素自己 `attachment_decay` 每 tick 扣。实体条件 `mxt:element_attachment` 可以只读当前量（同样的 `{min?, max}` 窗口），用来写「攒得越多越糟」这类效果而不需要任何反应成立；写空表会在加载期被拒绝而不是当成「恒真」。
 
 反应**没有自己的事件回调**，要观测就在 `action` 里写行为；玩家侧也没有任何入口——附着与反应完全由内容驱动（伤害类型认领与行为），本模组不提供命令、按键或界面去加附着或手动触发。元素定义侧的 `damage_types`、`damage_attachment` 与 `attachment_decay` 见 [element](./element.md)。

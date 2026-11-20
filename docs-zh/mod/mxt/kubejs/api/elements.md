@@ -1,6 +1,6 @@
 ---
 title: MxtElements：元素与附着
-description: 读取实体当前生效的元素与已攒下的元素附着，并按与打击相同的管线施加附着。
+description: 查询生效元素与元素附着，并通过统一反应管线施加附着。
 ---
 
 # `MxtElements`：元素与附着

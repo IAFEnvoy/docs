@@ -26,7 +26,7 @@ The management entry point for spirit roots. The definitions themselves are a da
 
   - `... enable <targets> <root>` / `... disable <targets> <root>`
 
-    "Switch off without losing": a switched-off root is still held and simply provides nothing any more.
+    "Switch off without losing": a switched-off root is still held and provides nothing any more.
 
 </div>
 

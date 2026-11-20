@@ -61,10 +61,10 @@ Matches the hit by its **elements**.
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
-| `elements` | Element id, `#` tag, or an array of them | **required** | Passes when one of the listed elements is among the hit's elements; at least one entry. |
+| `elements` | Element id, `#` tag, or an array of them | **required** | Passes when one of the listed elements is among the hit is elements; at least one entry. |
 
 ```json
 { "type": "mxt:element", "elements": ["#example:fire", "example:metal"] }
 ```
 
-The hit's elements are the ones the damage pipeline reads: the damage type's claimants, falling back to the attacker's spirit roots only when nobody claims it. So the elements a condition names always agree with the multiplier the target actually takes, and once an element claims `minecraft:lava`, lava damage answers this condition too. `elements` needs at least one entry: an empty array is refused at load rather than turning into a condition that never passes.
+The hit is elements are the ones the damage pipeline reads: the damage type's claimants, falling back to the attacker's spirit roots only when nobody claims it. So the elements a condition names always agree with the multiplier the target takes, and once an element claims `minecraft:lava`, lava damage answers this condition too. `elements` needs at least one entry: an empty array is refused at load rather than turning into a condition that never passes.

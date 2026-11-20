@@ -7,7 +7,7 @@ description: "Build the core cultivation loop from JSON: an aura, an element, a 
 
 <span id="define-aura-and-realms" />
 
-This tutorial builds the smallest cultivation loop MiXianTu can run: a stored **resource** the player fills, an **aura** definition that turns that number into an aura with a realm chain, a **cultivation action** that moves aura into it, and a tiny **aura zone** so the world actually contains aura. When you are done, a player can press the cultivate key, watch a bar fill, and break through to their first realm.
+This tutorial builds the smallest cultivation loop MiXianTu can run: a stored **resource** the player fills, an **aura** definition that turns that number into an aura with a realm chain, a **cultivation action** that moves aura into it, and a tiny **aura zone** so the world contains aura. When you are done, a player can press the cultivate key, watch a bar fill, and break through to their first realm.
 
 Nothing here is specific to a setting: the numbers below are placeholders you are expected to replace.
 
@@ -33,7 +33,7 @@ realm_stage chain             progress + conditions + costs → next realm
 
 A player who has not entered a chain yet is **Mortal**. The Mortal state has no definition of its own and no threshold of its own: it reads the stage `first_realm` names, using that stage's `breakthrough_exp` / `max_experience` as its own gate and cap.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Registry | Purpose |
 | --- | --- | --- |
@@ -124,7 +124,7 @@ Any numeric field accepts a plain number, a formula string, or a typed provider 
 
 ## Step 3 — The Realm Chain {#step-3-—-the-realm-chain}
 
-Each `realm_stage` file is one stage. A stage names exactly one aura, and `next_realm` points at a single stage, so a chain is a straight line: an aura has one chain, and it only moves forward. The value the aura stores is what actually fills up.
+Each `realm_stage` file is one stage. A stage names exactly one aura, and `next_realm` points at a single stage, so a chain is a straight line: an aura has one chain, and it only moves forward. The value the aura stores is what fills up.
 
 ```json
 // data/example/mxt/realm_stage/qi_condensation.json
@@ -192,7 +192,7 @@ Reading the three files together — every line below is the copy read for the s
 - The optional `minor_stages` is only a **count**: an integer N means "N layers" (`0` by default, range `0..1024`), and there is **no way to write the names** — each layer's name is always generated from this stage's name key as `realm_stage.mxt.<namespace>.<path>.minor_stage.<index>`, counting from `0`. Write it as an integer; an array of names fails the whole definition's decode. It is read in three places: the information panel prints the current one after the realm name, formulas gain a 0-based `minor_stage`, and `minor_stage_abilities` uses that index to unlock abilities by layer (cumulative, and an unlock is permanent). The count comes from the stage **you stand on**, while the even split uses the `breakthrough_exp` of the stage **being climbed towards**; it changes no threshold, cost or settlement.
 - `auto_breakthrough` defaults to `false`: the player reaches the threshold and waits. Set it to `true` if you want cultivation mode to attempt the breakthrough on its own. `true` on `foundation` means "breaking through to foundation may happen automatically".
 - `passive_modifiers` are vanilla attribute modifiers granted while the stage is held. `value` is an optional formula, and an entry that declares it is recalculated every tick.
-- The last stage simply has no `next_realm`, so the chain ends there.
+- The last stage has no `next_realm`, so the chain ends there.
 
 :::warning Realm conditions are not `caster_level`
 
@@ -271,9 +271,9 @@ Display names are always generated from the definition ID, and you have **nowher
 }
 ```
 
-The pattern is always `<registry namespace>.<category>.<namespace>.<path>`, where the category is the registry's own path and the registry namespace is that registry's own namespace: the mod's own registries start with `mxt.`, while the ones hosted by the library (`saturn:resource` / `saturn:ability` / `saturn:trigger`) start with `saturn.`, so `example:qi` in `resource` is `saturn.resource.example.qi` and the same id in `aura` is `mxt.aura.example.qi`. A path containing `/` keeps the slash: `example:realm/qi` is `mxt.realm_stage.example.realm/qi`. A definition without a key still works; the game simply shows the raw key.
+The pattern is always `<registry namespace>.<category>.<namespace>.<path>`, where the category is the registry's own path and the registry namespace is that registry's own namespace: the mod's own registries start with `mxt.`, while the ones hosted by the library (`saturn:resource` / `saturn:ability` / `saturn:trigger`) start with `saturn.`, so `example:qi` in `resource` is `saturn.resource.example.qi` and the same id in `aura` is `mxt.aura.example.qi`. A path containing `/` keeps the slash: `example:realm/qi` is `mxt.realm_stage.example.realm/qi`. A definition without a key still works; the game shows the raw key.
 
-A description uses the **name key with `.description` appended**: `mxt_test:poor` in `quality` has the name key `mxt.quality.mxt_test.poor` and the description key `mxt.quality.mxt_test.poor.description`; a `realm_stage`'s minor stage name key is `realm_stage.mxt.<namespace>.<path>.minor_stage.<index>`. **The places that draw a description are `quality` (the line under the quality name), `contract_type` (a contract scroll's tooltip), `pill` (the tooltip of an item the pill claims) and `technique` (a manual's tooltip, and the chat line a read prints)** — and only when that key is actually translated; every other registry's description key is generated but drawn by no screen or tooltip.
+A description uses the **name key with `.description` appended**: `mxt_test:poor` in `quality` has the name key `mxt.quality.mxt_test.poor` and the description key `mxt.quality.mxt_test.poor.description`; a `realm_stage`'s minor stage name key is `realm_stage.mxt.<namespace>.<path>.minor_stage.<index>`. **The places that draw a description are `quality` (the line under the quality name), `contract_type` (a contract scroll's tooltip), `pill` (the tooltip of an item the pill claims) and `technique` (a manual's tooltip, and the chat line a read prints)** — and only when that key is translated; every other registry's description key is generated but drawn by no screen or tooltip.
 
 ## Verify {#verify}
 

@@ -19,7 +19,7 @@ description: 触发器匹配器 saturn:trigger_type 的全部内置条目、字�
 {"type": "mxt:triggered", "triggers": [{"type": "mxt:item_use"}]}
 ```
 
-除 `mxt:js` 外，这些匹配器都不带字段，整个条目就是 `{"type": ...}` 这一层。
+除 `mxt:js` 外，这些匹配器都不带字段，整个条目就是 `{"type": ...}` 该层。
 
 ### `mxt:breakthrough` {#mxt-breakthrough}
 

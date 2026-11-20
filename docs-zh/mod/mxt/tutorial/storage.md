@@ -1,6 +1,6 @@
 ---
 title: 储物
-description: "给一件物品挂一条储物技能：格数怎么算、箱子存在哪、组件怎么预填，以及怎么在游戏里验证。"
+description: "给一件物品挂一条储物技能：格数如何算、箱子存在哪、组件如何预填，以及如何在游戏里验证。"
 ---
 
 # 储物
@@ -11,7 +11,7 @@ description: "给一件物品挂一条储物技能：格数怎么算、箱子存
 
 灵力容器与飞行都不在这一篇里：前者见父页，后者见那篇子教程。
 
-## 你要搭建什么 {#你要搭建什么}
+## 教程目标 {#你要搭建什么}
 
 | 文件 | 用途 |
 | --- | --- |
@@ -67,7 +67,7 @@ description: "给一件物品挂一条储物技能：格数怎么算、箱子存
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `items` | 物品 id、`#标签` 或数组 | **必填** | 这份定义认领哪些物品。 |
+| `items` | 物品 id、`#标签` 或数组 | **必填** | 该定义认领哪些物品。 |
 | `abilities` | 技能 id 或 `#技能标签` 的数组 | `[]` | 给持有者哪些技能。 |
 | `require_owner` | bool | `false` | 为真时只有主人能开。 |
 | `curios_equipable` | bool | `false` | 允许这类法器放进 Curios 槽位。 |
@@ -81,7 +81,7 @@ description: "给一件物品挂一条储物技能：格数怎么算、箱子存
 
 想让玩家稳稳按到储物，就把 `curios_equipable` 写成 `true`，并让物品待在 Curios 槽里。`charm` 的四个格收 `curios:charm` 标签里的物品，加上声明了 `curios_equipable: true` 的法器，这是最省事的位置。
 
-轮盘怎么选、怎么用，见[按键与轮盘](../player-guide/keys-and-wheel.md)。
+轮盘如何选、如何用，见[按键与轮盘](../player-guide/keys-and-wheel.md)。
 
 ## 第 3 步 —— 按下之后 {#第-3-步-——-按下之后}
 
@@ -125,13 +125,13 @@ description: "给一件物品挂一条储物技能：格数怎么算、箱子存
 /give @s minecraft:diamond_sword[mxt:storage=[{"id":"example:blade_storage","value":{"type":"mxt:container","contents":[{"id":"minecraft:stone","count":3}]}}]]
 ```
 
-配方产物、战利品函数也能这么写。**没有任何数据包行为或条件能把这只箱子读回来**：放进取出只能在打开的窗口里点。这套系统就是这样分工的——数据包负责预填，玩家在窗口里收发。
+配方产物、战利品函数也能这么写。**没有任何数据包行为或条件能把这只箱子读回来**：放进取出只能在打开的窗口里点。该系统就是这样分工的——数据包负责预填，玩家在窗口里收发。
 
 ## 在游戏里验证 {#在游戏里验证}
 
 技能与法器都是数据包注册表里的定义，重新加载世界后才生效。
 
-1. 发一件被这份定义认领的物品（`minecraft:diamond_sword`），放进 `charm` 槽位。
+1. 发一件被该定义认领的物品（`minecraft:diamond_sword`），放进 `charm` 槽位。
 2. 打开轮盘配置界面，看右边池子里有没有这条储物技能——它应该和「学到的技能」排在一起。
 3. 把它放进轮盘的一格，按「轮盘使用」：箱子的界面打开了。放几件东西进去，关掉，再按一次，东西还在。
 4. 把物品从 Curios 槽里拿出来，再按一次：技能已经不在名册上，这一次被拒绝。
@@ -158,5 +158,5 @@ description: "给一件物品挂一条储物技能：格数怎么算、箱子存
 - [技能类型](../datapack/types/other/ability.md) —— `mxt:storage` 自己的字段与按下时的失败原因。
 - [artifact（法器）](../datapack/json/artifact.md) —— `items` / `abilities` / `require_owner` / `curios_equipable` 的完整字段表与提示框口径。
 - [Curios 槽位](../player-guide/curios-slots.md) —— 哪几个槽位收 `curios_equipable` 的法器。
-- [按键与轮盘](../player-guide/keys-and-wheel.md) —— 主盘与从盘怎么读装备给的技能。
+- [按键与轮盘](../player-guide/keys-and-wheel.md) —— 主盘与从盘如何读装备给的技能。
 - [实体行为类型](../datapack/types/action/entity_action_types.md) —— `mxt:modify_ability_storage` 写的是哪一份存储。

@@ -143,6 +143,6 @@ The table keeps aura for the recipe it currently matches, and nothing else: **ch
 
 Shaped recipes are checked before shapeless ones, so a shapeless recipe is only used when no shaped recipe matches.
 
-The matched recipe's craft conditions are checked once per tick: enough aura, and the result slot empty or holding the same result with room for more. When they hold, one craft happens that tick. When they do not, nothing happens — the inputs and the stored aura stay where they are — and it simply waits for the next tick. On a successful craft every non-empty input slot loses `1` item, the aura comes out of the table's own store, and the result lands in the result slot; **the input items are not cleared all at once**.
+The matched recipe's craft conditions are checked once per tick: enough aura, and the result slot empty or holding the same result with room for more. When they hold, one craft happens that tick. When they do not, nothing happens — the inputs and the stored aura stay where they are — and it waits for the next tick. On a successful craft every non-empty input slot loses `1` item, the aura comes out of the table's own store, and the result lands in the result slot; **the input items are not cleared all at once**.
 
 Recipes are vanilla recipe files rather than registry entries, so they do reload with `/reload`.

@@ -42,7 +42,7 @@ The callback receives the `TriggerSignal` and the signal's formula context, so i
 
 ## Subscriptions {#subscriptions}
 
-A key identifies one subscription per entity, so give each signal its own key: subscribing the same key again replaces the previous subscription, whichever signal it watched. A key is scoped to one entity, so the same key on another entity is a different subscription; `/saturn triggers list [<entity>]` shows what a running server actually has armed.
+A key identifies one subscription per entity, so give each signal its own key: subscribing the same key again replaces the previous subscription, whichever signal it watched. A key is scoped to one entity, so the same key on another entity is a different subscription; `/saturn triggers list [<entity>]` shows what a running server has armed.
 
 ```js
 // kubejs/server_scripts/mxt_triggers.js

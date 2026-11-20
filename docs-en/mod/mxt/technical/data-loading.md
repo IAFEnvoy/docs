@@ -7,7 +7,7 @@ description: A source-level explanation of how the datapack registries split int
 
 <span id="data-loading" />
 
-This page follows **one JSON file from disk to the object a settlement reads**: when it is read, where the answer is kept afterwards, at which step "which declaration applies to this stack" is decided, and when a reload throws the old answers away.
+This page follows a JSON definition from loading to runtime settlement, covering storage, item-binding resolution and cache invalidation during reloads.
 
 ## Where the code lives {#where-the-code-lives}
 
@@ -35,7 +35,7 @@ The registries are split by **the question they answer** into two layers; nine m
 | Binding | `item_binding`, `weapon_binding`, `pill_binding`, `technique_binding` | "What this **already existing** item also counts as here", and which rules it picks up. |
 | Binding | `item_aura`, `currency`, `default_quality` (item-keyed), `block_aura`, `heat_source` (block-keyed) | "What value **this one** entry carries": the value the item or block itself holds. |
 
-The binding-layer tables share one shape: one file is one definition, files live at `data/<namespace>/<registry_namespace>/<table>/<entry>.json`, an entry claims its items and blocks through the item key (`items`, or `item` on `currency`) or the block key (`blocks`), and `priority` decides who wins when several hit at once - the larger number wins, and a tie falls back to registry order (`block_aura` has no such field: several definitions hitting one block all apply and add up). None of them **ever defines the item itself**: the physical item was registered by vanilla, a mod or KubeJS, and the binding layer only attaches rules to it - an `ItemStack` **never stores a logical item definition**, only components.
+The binding-layer tables share one shape: one file is one definition, files live at `data/<namespace>/<registry_namespace>/<table>/<entry>.json`, an entry claims its items and blocks through the item key (`items`, or `item` on `currency`) or the block key (`blocks`), and `priority` decides which definition takes precedence when several hit at once - the larger number wins, and a tie falls back to registry order (`block_aura` has no such field: several definitions hitting one block all apply and add up). None of them **ever defines the item itself**: the physical item was registered by vanilla, a mod or KubeJS, and the binding layer only attaches rules to it - an `ItemStack` **never stores a logical item definition**, only components.
 
 The difference between the content and binding layers is not "does it read an item" (the two content tables claim items through the same matcher), it is **whether it defines a thing or a rule**: an `artifact` says "these items are artifacts and here is what they do", while a `weapon_binding` says "when this item swings, run this behaviour too". So one item may be claimed by an `artifact`, carry a `weapon_binding` and pick up an `item_binding` after-use behaviour at the same time.
 
@@ -68,7 +68,7 @@ flowchart TD
 
 **Files and decoding.** Files live at `data/<namespace>/<registry_namespace>/<registry path>/<entry path>.json`, and the entry id is the namespace plus the path - the nine registries claiming entries by item or block go the same way: one file is one definition, and every entry has an id of its own. Decoding is the table's own codec's job, and four outcomes are worth telling apart:
 
-- **Unknown keys are dropped silently**: `RecordCodecBuilder` does not know a field nobody wrote, so a file still carrying an old field loads fine and that key simply stops working. Nothing will report a renamed field for you.
+- **Unknown keys are dropped silently**: `RecordCodecBuilder` does not know a field nobody wrote, so a file still carrying an old field loads fine and that key stops working. Nothing will report a renamed field for you.
 - **Empty tables, empty lists and illegal values are refused**: those go through `.validate(...)` and fail the load.
 - **Collections are tolerant**: a collection codec such as `CollectionCodecs` logs `Ignoring invalid list element` for a bad entry and drops it, and the rest still arrive.
 - **An entry stopped by `neoforge:conditions` is never in the table**: the runtime therefore needs no "is this one disabled" check, and a holder it reads can always be used.
@@ -89,7 +89,7 @@ flowchart TD
 - A `trigger` with no action (the default is `mxt:no_op`) is readable by design, but is almost always a forgotten field.
 - A technique entering a progression level while not configuring every level it must walk through afterwards.
 
-Every problem carries a path like `data/<namespace>/<registry_namespace>/<table>/<entry>`, they are collected and logged in one go, and **loading is not aborted**: a problematic entry is simply not indexed while the definitions around it keep working. Problems a single entry has with itself (an illegal value, an empty list) were already refused while decoding and never reach this step.
+Every problem carries a path like `data/<namespace>/<registry_namespace>/<table>/<entry>`, they are collected and logged in one go, and **loading is not aborted**: a problematic entry is not indexed while the definitions around it keep working. Problems a single entry has with itself (an illegal value, an empty list) were already refused while decoding and never reach this step.
 
 **Attachments are outside the reload.** Entity, chunk and level attachments are decoded once, at **world load**; `/reload` does not decode them again. So "the body holds a holder the current pack no longer provides" is a normal state: to ask whether it still exists, look the id up in the registry rather than treating the holder in hand as proof. For which attachments exist and what each hangs on, see [Attachments](./attachments.md).
 

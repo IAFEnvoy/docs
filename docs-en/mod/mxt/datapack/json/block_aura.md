@@ -19,7 +19,7 @@ data/<namespace>/mxt/block_aura/<entry>.json
 
 The entry id is `<namespace>:<path>` — `data/example/mxt/block_aura/aura_emitters.json` is `example:aura_emitters`. The mod's own entries live under `data/mxt/mxt/block_aura/`; a content pack uses its own namespace instead of `mxt`.
 
-The fields of the table below go at the top level. There is **no `values` wrapper** — one file describes exactly one definition — and to add another contribution from your own pack you simply write another definition; every definition hitting a block **applies**, and there is no `replace` switch. A **file-level** `neoforge:conditions` works: when it does not hold, the definition never enters the registry at all.
+The fields of the table below go at the top level. There is **no `values` wrapper** — one file describes exactly one definition — and to add another contribution from your own pack you write another definition; every definition hitting a block **applies**, and there is no `replace` switch. A **file-level** `neoforge:conditions` works: when it does not hold, the definition never enters the registry at all.
 
 Like every other datapack registry it is read **while the world loads**, and `/reload` does not read it again. `/mxt registries list` and `/mxt registries validate` both cover it, and `/picker mxt:block_aura` lists the blocks these definitions claim.
 
@@ -43,7 +43,7 @@ The keys of the map are `mxt:aura` registry entries, not `saturn:resource` ones:
 
 `amount` must be finite and non-negative, and `regen_per_tick` must be finite, otherwise the definition is rejected at load time. With `aura` omitted or empty the definition contributes no aura at all; it only claims a few blocks.
 
-There is no "aura kind" field: the auras a definition makes a block emit are exactly the key set of that map, so a block cannot claim an aura it does not actually supply.
+There is no "aura kind" field: the auras a definition makes a block emit are exactly the key set of that map, so a block cannot claim an aura it does not supply.
 
 **When several definitions hit the same block they all apply and are added together** (block aura is an additive quantity): this registry has **no `priority` field**, never picks one winner, and nothing overrides anything else.
 

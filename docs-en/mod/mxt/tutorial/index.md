@@ -87,33 +87,33 @@ data/example/
 
 ## The Tutorials {#the-tutorials}
 
-| Tutorial | You build | Read it when |
-| --- | --- | --- |
-| [Development Mode](./dev-mode.md) | A debugging environment and the module profiler GUI: recording, sorting, scrolling and inspecting the last 240 ticks. | You are starting a content pack or need to reproduce and locate a problem. |
-| [Define Aura and Realms](./define-aura-and-realms.md) | An element, an aura resource, a linear realm chain, a cultivation action and a minimal aura zone — the core cultivation loop. | You need a player to be able to cultivate and break through. |
-| [Write a Dual Cultivation Method](./dual-cultivation.md) | A cultivation method that only yields while somebody is beside you: how the test is assembled, how both bodies get in, and what happens when one walks away. | The basic loop works and you want "two bodies cultivating together" to be a rule. |
-| [Define an Element Reaction](./define-an-element-reaction.md) | How a second element claims damage types, and what two attachments do once they add up. | The basic loop works and you want two elements to actually do something when they meet. |
-| [Define the Aura Environment](./aura-environment.md) | Layered aura zones, block aura, item fuel, noise, fluctuation, fog and HUD bars. | The basic loop works and you want the world to matter. |
-| [Define Spirit Roots and Physiques](./define-spirit-roots-and-physiques.md) | A spirit root with element shares, a physique that only lands on a body holding one, and the difference between held and in effect. | You want the body itself to decide cultivation and damage multipliers. |
-| [Create Items and Bind Actions with KubeJS](./create-items-with-kubejs.md) | Real items registered by a script, plus the four binding tables and recipes that give them gameplay. | You need pills, weapons or manuals of your own. |
-| [Bind Actions with KubeJS](./bind-actions.md) | The hooks of the four binding tables: when they run, what they refuse, and how conditions and ordering work. | The items already work and you want to control exactly when they do what. |
-| [Publish a Trigger Signal](./publish-a-trigger-signal.md) | A custom trigger signal: a script publishes it, and a data pack rule or another script consumes it. | You want "something happened in game" to become a signal of your own. |
-| [Define a Quality Chain](./define-a-quality-chain.md) | A three-tier quality ladder: where the name goes, where the price goes, and how an item gets a tier. | You want one item to have tiers. |
-| [Write a Cost](./write-a-cost.md) | What each of the four entry types takes, what the `{ "id": …, "amount": … }` shorthand expands to, and when several payments in one action are rolled back whole. | You have already written a `costs` array and want to know exactly how it is charged, and what happens when it cannot be. |
-| [Define an Ability](./add-an-ability.md) | An active ability, a triggered ability, and the ways to grant them. | You want something for the player to spend aura on. |
-| [Launch a Sword Aura](./launch-a-sword-aura.md) | An ability that throws a flying sword aura with `mxt:spawn_sword_aura`: colours, size, lifetime, and what it does on impact. | You want an ability to put a visible flying object in the air. |
-| [Define a Technique and Its Levels](./define-a-technique.md) | A three-level progression chain, the value that measures mastery, and the routes that make it grow. | Abilities can already be granted and you want a technique to climb as it is used. |
-| [Define a Formation](./define-a-formation.md) | An array that activates on a structure and pays upkeep every period: buff, aura-zone, attack and protection modules, plus the plate. | You want the player to build something that keeps running. |
-| [Define a Secret Realm](./open-a-realm.md) | A pocket-world template that opens separate instance dimensions: generation, border, landing points, claiming and lifetime. | You want a throwaway or claimable little world. |
-| [Define a Talisman](./inscribe-a-talisman.md) | Carrying abilities on an item, pouring aura into it, firing it, and the two rule sets for the hand and a display stand. | You want magic the player can carry around. |
-| [Define a Tribulation](./bring-down-a-tribulation.md) | A tribulation timeline a breakthrough starts: wind-up, beats, coloured lightning, and what success and failure do. | You want a breakthrough to be dangerous. |
-| [Define a Curse](./define-a-curse.md) | A curse that fires on a timer or a signal, stacks, and can be cleansed. | You want a state that keeps coming back on the player. |
-| [Contract a Beast](./contract-a-beast.md) | A contract type: who may sign, what it costs, the two caps, the orders, recall and the bag. | You want to take another mod's beasts as your own. |
-| [Define a Currency](./define-a-currency.md) | Turning an item into money: its value, when a stack is not worth anything, and the exchange entries the station uses. | You want items to really work as money. |
-| [Storage and Spirit Vessels](./storage-and-spirit-vessels.md) | The shape and the limits of the spirit vessel, plus the two sub-tutorials hanging under it. | You want an item to hold things, or to fly. |
-| [Storage](./storage.md) | A storage ability hung on an item: how the slot count settles, where the box lives, how to pre-fill it. | You want an item to hold things. |
-| [Flying Mounts](./flying-mount.md) | An item that flies: the mount definition, the flying skill, take-off and landing, and the two aura fuel bills. | You want the player to ride a flying sword. |
-| [Rifts](./rifts.md) | Rifts raised with a block and commands: target dimension, colour, links and landing. | You want a road of your own between dimensions. |
+| Tutorial | Topics |
+| --- | --- |
+| [Development Mode](./dev-mode.md) | Debugging, recording and module timings over the last 240 ticks. |
+| [Define Aura and Realms](./define-aura-and-realms.md) | Elements, aura resources, realm chains, cultivation and aura zones. |
+| [Write a Dual Cultivation Method](./dual-cultivation.md) | Nearby-entity conditions, participant requirements and interruption rules. |
+| [Define an Element Reaction](./define-an-element-reaction.md) | Damage-type associations, element attachment and reaction triggers. |
+| [Define the Aura Environment](./aura-environment.md) | Aura zones, block contributions, fuel, noise, fluctuation, fog and HUD. |
+| [Define Spirit Roots and Physiques](./define-spirit-roots-and-physiques.md) | Spirit-root element shares, physique requirements and held versus active states. |
+| [Create Items and Bind Actions with KubeJS](./create-items-with-kubejs.md) | Item registration, four binding categories and recipes. |
+| [Bind Actions with KubeJS](./bind-actions.md) | Execution timing, conditions, restrictions and ordering of binding hooks. |
+| [Publish a Trigger Signal](./publish-a-trigger-signal.md) | Custom signal publication and subscriptions from data packs or scripts. |
+| [Define a Quality Chain](./define-a-quality-chain.md) | A three-tier quality chain, chain names, item quality and upgrade costs. |
+| [Write a Cost](./write-a-cost.md) | Cost types, shorthand syntax, payment order and failure handling. |
+| [Define an Ability](./add-an-ability.md) | Active abilities, triggered abilities and grant sources. |
+| [Launch a Sword Aura](./launch-a-sword-aura.md) | Sword-aura spawning, colour, size, lifetime and collision actions. |
+| [Define a Technique and Its Levels](./define-a-technique.md) | Technique progression, mastery sources and advancement requirements. |
+| [Define a Formation](./define-a-formation.md) | Structure activation, upkeep costs, modules and formation plates. |
+| [Define a Secret Realm](./open-a-realm.md) | Realm instances, generation, borders, landing points, claiming and lifetime. |
+| [Define a Talisman](./inscribe-a-talisman.md) | Talisman inscription, charging, activation and display-stand use. |
+| [Define a Tribulation](./bring-down-a-tribulation.md) | Tribulation timelines, beats, lightning and outcome actions. |
+| [Define a Curse](./define-a-curse.md) | Timer and signal triggers, stacking and removal. |
+| [Contract a Beast](./contract-a-beast.md) | Contract requirements, costs, capacity, commands, recall and beast bags. |
+| [Define a Currency](./define-a-currency.md) | Currency values, validity conditions, exchange entries and stations. |
+| [Storage and Spirit Vessels](./storage-and-spirit-vessels.md) | Spirit vessels and links to storage and flying-mount tutorials. |
+| [Storage](./storage.md) | Storage abilities, slot counts, persistence and initial contents. |
+| [Flying Mounts](./flying-mount.md) | Mount definitions, flight control, take-off, landing and aura payment. |
+| [Rifts](./rifts.md) | Rift creation, destination dimensions, colour, links and landing points. |
 
 Workstation tutorials live under [Alchemy Workstations](../addons/alchemy/tutorial/refine-a-pill.md), [Forging Workstations](../addons/forging/tutorial/forge-a-treasure.md) and [Talisman Workstations](../addons/talisman/tutorial/author-a-talisman-drawing.md), and require their respective addons.
 
@@ -124,7 +124,7 @@ Workstation tutorials live under [Alchemy Workstations](../addons/alchemy/tutori
 - **Applying changes.** MiXianTu's 43 data pack registries are read by Minecraft **while the world loads**, so `/reload` does not re-read them. After editing a data pack file, leave to the title screen and open the world again (or restart the server). `/reload` only refreshes recipes, loot tables, advancements, functions and the KubeJS server scripts. Registering new items or blocks with KubeJS also needs a game restart.
 - **Broken files block the world.** There is no previous snapshot to fall back on: if a definition fails to decode, the world will not load until the file is fixed. The log names the file and the codec error, so keep the last working copy of a file you are editing.
 - **Verifying.** `/mxt registries validate` reports the registry count, the total entry count and whether validation passed, and `/mxt registries list` prints each registry id with its entry count — the nine tables that claim items or blocks are in there too. The other commands are listed in [Commands](../player-guide/commands.md).
-- **Version.** These pages follow the mod's **current development version** (no version number is pinned in the documentation — the jar you installed is the authority). The mod is still in development and its data pack format is not frozen; when a field changes, the reference page changes with it.
+- **Version.** These pages follow the current development version; refer to the installed Jar for its version. The data pack format is not yet frozen, and field changes are reflected in the reference documentation.
 
 ## Where to Go Next {#where-to-go-next}
 

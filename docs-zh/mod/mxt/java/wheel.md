@@ -24,7 +24,7 @@ MiXianTu 另外注册 `mxt:aura` 与 `mxt:behavior`：前者调用灵气发射�
 
 客户端 `WheelEntryProvider` 区分可选候选与可解析的已存条目；派生页通过 `WheelMenuProvider` 提供。注册示例和替换规则见 Saturn 文档。
 
-## 扇区里画什么 {#扇区里画什么}
+## 扇区显示内容 {#扇区里画什么}
 
 条目使用 `com.iafenvoy.saturn.api.wheel.WheelMenuEntry` 描述名称、图标、颜色条、tooltip、冷却和可用状态。它只提供显示数据。输入统一发送请求，条目不再自行绑定发送回调。
 

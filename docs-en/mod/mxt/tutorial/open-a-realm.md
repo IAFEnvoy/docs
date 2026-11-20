@@ -15,7 +15,7 @@ A secret realm is a pocket world that is either throwaway or claimable: **the de
 
 :::
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -113,7 +113,7 @@ The difference between the two kinds is worth stating plainly:
 - `owned: true`: when the owner logs off and everyone leaves, the world merely **goes dormant** — terrain, blocks, builds and contents stay, and the next visit reopens it under the same seed. It survives a server restart, but the member table is cleared by one (`loaded=false` in `/mxt secret_realm list` is exactly that).
 - `owned: false`: the last member leaving **deletes the whole instance directory** (including that dimension's aura zones and formations). Right for a trial you run once and walk away from.
 
-Expiry is scanned on the overworld clock only (every 20 ticks); on expiry every online member leaves — **`exit_condition` is not consulted** — and offline members are simply dropped from the table. For a claimed instance, expiry only pauses the timer and unloads it; the next visit starts the clock again.
+Expiry is scanned on the overworld clock only (every 20 ticks); on expiry every online member leaves — **`exit_condition` is not consulted** — and offline members are dropped from the table. For a claimed instance, expiry only pauses the timer and unloads it; the next visit starts the clock again.
 
 ## Step 5 — Putting Structures Inside (Optional) {#step-5-—-putting-structures-inside-optional}
 
@@ -134,7 +134,7 @@ Expiry is scanned on the overworld clock only (every 20 ticks); on expiry every 
 
 Structure files are vanilla structures: `data/<namespace>/structure/<path>.nbt`. `pos` is the structure origin; `rotation` and `mirror` set the orientation; `integrity` is how complete it is (`0..1`); `chance` is rolled once per instance; `relative_to_entry` measures the position from the landing point instead. **With a `border`, absolute structure positions must fall inside it** (only x/z is checked), or the whole definition fails to load.
 
-A missing structure is not a load error: it returns `MISSING_STRUCTURE` on the way **in**, so after editing structures, actually walk in once.
+A missing structure is not a load error: it returns `MISSING_STRUCTURE` on the way **in**, so after editing structures, walk in once.
 
 ## Step 6 — Aura, Formations and Rifts Inside {#step-6-—-aura-formations-and-rifts-inside}
 

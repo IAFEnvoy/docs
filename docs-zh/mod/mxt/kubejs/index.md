@@ -1,6 +1,6 @@
 ---
 title: KubeJS 开发
-description: "MiXianTu 可选 KubeJS 桥接的总览：按领域一个全局对象、什么时候真的需要脚本、注册物品到接上绑定的最短路径，以及重载与重启的区别。"
+description: KubeJS 桥接、适用场景、物品注册与绑定流程，以及脚本重载规则。
 ---
 
 # KubeJS 开发
@@ -9,7 +9,7 @@ description: "MiXianTu 可选 KubeJS 桥接的总览：按领域一个全局对�
 
 KubeJS 适合注册具体物品、方块、配方和内容对象；MiXianTu 负责读取这些对象，并通过绑定表赋予它们行为、条件、灵气、货币与 Tooltip。不要在脚本里直接改服务端附件，也不要绕过 Cost 校验。
 
-## 这个桥接给你什么 {#这个桥接给你什么}
+## 这个桥接提供的功能 {#这个桥接给你什么}
 
 桥接是**可选**的，它**按领域一个全局对象**，而不是一个 `Mxt` 大对象：
 
@@ -41,7 +41,7 @@ KubeJS 适合注册具体物品、方块、配方和内容对象；MiXianTu 负�
 
 寿元脚本由 Reincarnation 提供，使用 [ReincarnationLifespan 与 ReincarnationEvents](./api/lifespan.md)。
 
-## 什么时候需要 KubeJS {#什么时候需要-kubejs}
+## KubeJS 的适用场景 {#什么时候需要-kubejs}
 
 本体是框架而不是内容包：
 
@@ -89,11 +89,11 @@ MxtActions.entity('example:heal', (entity, params, context) => {
 { "type": "saturn:js", "id": "example:heal", "params": { "amount": 4 } }
 ```
 
-**四、** 按下面的表决定怎么让改动生效。
+**四、** 按下面的表决定如何让改动生效。
 
 ## 重载与重启 {#重载与重启}
 
-| 改了什么 | 怎么生效 |
+| 改了什么 | 如何生效 |
 | --- | --- |
 | 启动脚本（注册物品、方块、配方） | **重启游戏**；`/reload` 不会重跑启动脚本。 |
 | 绑定表与其它数据包定义 | **重新加载世界**；它们在世界加载时读取。 |

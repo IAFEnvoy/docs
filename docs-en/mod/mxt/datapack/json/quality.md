@@ -29,7 +29,7 @@ A `condition` that does not pass makes the item unusable: use, attack, the main-
 
 `color` does not follow those two keys: **when it is written it wins** (it even overrides a colour inside the translated text), and **when it is omitted nothing changes at all**. It is not "white by default", so a tier without a colour still draws in the vanilla rarity colour. Only four places are tinted: the item-name line of the tooltip, the `Quality: <name>` line inside it, the entries of the quality category in `/picker`, and the tier table of a forging blueprint's tooltip. A player can still turn the name line off in the client config ("Tooltip → tint the item name with its quality", on by default); the other three are unaffected. The description line is always grey.
 
-`Modifier` is three optional objects, and inside each one both `description` and `modifier` may be omitted: an omitted `modifier` means `1`, an omitted `description` means **that line is simply not drawn** (the modifier still applies). Its text is entirely the pack's own, nothing is generated:
+`Modifier` is three optional objects, and inside each one both `description` and `modifier` may be omitted: an omitted `modifier` means `1`, an omitted `description` means **that line is not drawn** (the modifier still applies). Its text is entirely the pack's own, nothing is generated:
 
 ```json
 {
@@ -76,7 +76,7 @@ Where a tier sits is not written anywhere else: each tier points at the tier abo
 - **The entry tier is automatically the one nothing points at** (here `common`). It decides the ladder's order only and **supplies no default tier to an item that has none**; a ladder therefore needs no `default`, and its lowest tier needs no `next`.
 - **The name is read from the entry tier alone.** Write `quality` on a middle tier instead and the entry tier has no name, so **the whole ladder has no name** (`/quality chain` shows `null`). This is **not an error**: the copy on the middle tier only takes part in the "one tier receives two different names" check below.
 - **A step's price and condition belong to the tier it steps into.** `common → refined` reads `refined`'s `upgrade_costs` and `upgrade_condition`. Written on the source tier they mean "step into itself", and nothing can step into the entry tier, so that price is never charged — the step is in fact free, and again **no error is reported**.
-- **To make a tier the top, leave `next` out.** A tier that writes `next` without `upgrade_costs` still has that step; its cost is simply an empty array. The other way round, a tier with no `next` that still writes `upgrade_costs` or an `upgrade_condition` other than `mxt:always` is reported, because that data could never be read.
+- **To make a tier the top, leave `next` out.** A tier that writes `next` without `upgrade_costs` still has that step; its cost is an empty array. The other way round, a tier with no `next` that still writes `upgrade_costs` or an `upgrade_condition` other than `mxt:always` is reported, because that data could never be read.
 - **A ladder is a straight line.** A tier writes one `next`, so every tier has at most one tier above it; **two tiers naming the same `next`** (a fork) is reported, naming the tier and both tiers it follows — after a fork there is no single answer to "what is below this tier", so **every line running into the fork point is left out of the index whole** (no line is picked by registry order), the same way a cycle is treated. **A `next` pointing at a tier the pack does not provide is not "the ladder is left out" but a failed data pack load** (the world refuses to load), so that path never reaches runtime. The tier above and the tier below are both looked up in the walked order, so the two directions are symmetric.
 - **One name per ladder.** A tier that receives two different names (its own plus one from the tier above it) is reported, and so is a cycle or a chain that cannot be reached from its start (`/reload` runs the check again).
 - **A tier on no ladder still works**: one tier with neither `next` nor `quality` stands alone, shows its name, and is read by a `mxt:quality` component as well as the three modifiers, but it has no order and cannot be climbed.
@@ -105,7 +105,7 @@ A stack's tier is the **first answer it can get**, in a fixed order. There are *
 | `secret_realm` | `mxt:secret_realm_token`, the definition under `realm` |
 | `contract_type` | `mxt:contract_scroll`, the definition under `contract_type` |
 
-When the current pack no longer provides that tier (the definition was deleted, or the reference is unbound) this layer answers nothing and resolution falls through.
+When the current pack no longer provides that tier (the definition was deleted, or the reference is unbound) this layer provides no result and resolution falls through.
 
 `spirit_root` and `physique` have no free-text tier field: their tier is this optional `quality` reference, and there is no `mxt.rarity.<value>` key to look a tier up by text. A tier is listed under its own name.
 
@@ -118,7 +118,7 @@ Three definitions deliberately have no `quality` field:
 
 **List-valued carriers are not registered at all**: `mxt_forging:forging_methods`, `mxt_forging:forging_blueprints`, `mxt:element` and `mxt:talisman` — a list cannot answer which tier a stack is.
 
-The ladder follows the tier the stack resolves to: a ladder is named on the tier itself, so neither a binding table nor a component has to declare one. When all three layers answer nothing, the stack simply **has no quality**; no ladder's entry tier is supplied for it.
+The ladder follows the tier the stack resolves to: a ladder is named on the tier itself, so neither a binding table nor a component has to declare one. When all three layers answer nothing, the stack **has no quality**; no ladder's entry tier is supplied for it.
 
 After `/quality clear` removes the component the stack falls back to the tier of **the definition it carries**, and only then to the registry. The effect fields on the `mxt:pill` component (`on_consume`, `toxicity_gain` and the rest) only rewrite what that stack does when it is taken and never change which tier it is: the tier comes from the `quality` of the definition inside it under `pill`.
 

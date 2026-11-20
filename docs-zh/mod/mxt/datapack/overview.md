@@ -35,7 +35,7 @@ data/example/mxt/artifact/charm/ward_jade_talisman.json
 
 数据包加载使用 NeoForge 原生可写注册表，服务器加载后同步到客户端。定义读出来就是只读的，不要在运行时改动从定义里取到的集合。
 
-共同的规则在[数据包约定](./conventions.md)：怎么写引用、标签怎么用、名字与描述从哪来、写错的字段会怎样、数值怎么写。
+共同的规则在[数据包约定](./conventions.md)：如何写引用、标签如何用、名字与描述从哪来、写错的字段会怎样、数值如何写。
 
 ## 注册表索引 {#注册表索引}
 
@@ -95,7 +95,7 @@ flowchart TD
 - 这些注册表属于原版数据包注册表，**在世界加载时读取**：JSON 解析、条目解析和字段校验都在世界加载过程中完成，`neoforge:conditions` 也在这一步判掉，条件不成立的条目连解码都不会进。`/reload` 不会重新读取它们——`/reload` 只刷新配方、战利品表、进度、函数这些原版监听器，以及 KubeJS 的服务端脚本。改完要重新加载世界（单机退回标题界面再进入，或重启服务器）。
 - 动态注册表由原版同步机制在客户端加入时发送；客户端 HUD、雾效和贴图只负责展示，不决定扣除、突破、锻造或兑换结果。
 - `/mxt aura query` 查询当前位置最终灵气；`/mxt aura vein` 查询灵石矿脉信息。
-- `/mxt registries list` 列出这些动态注册表与各自的条目数量；`/mxt registries validate` 报出上一次构建发现的所有问题，并逐条指出问题来自哪个文件（修炼、技能与功法的引用链条，以及忘了写行为的触发器规则）——没有问题时报出注册表数量、条目总数与「校验通过」。世界加载完之后跑一次这条命令，可以确认数据包产出的注册表状态是能用的。
+- `/mxt registries list` 列出这些动态注册表与各自的条目数量；`/mxt registries validate` 报出上一次构建发现的所有问题，并逐条指出问题来自哪个文件（修炼、技能与功法的引用链条，以及忘了写行为的触发器规则）——没有问题时报出注册表数量、条目总数与「校验通过」。世界加载完之后执行一次这条命令，可以确认数据包产出的注册表状态是能用的。
 - `/mxt technique repair` 清理玩家数据里**已失效的功法引用**（引用的定义已被数据包删除、或被 `neoforge:conditions` 挡掉时使用）；`dry-run` 只报告不改动；`/mxt technique drop <id>` 精确移除某一门功法。见下节。
 - `/picker [<分类 id>]` 打开物品选择器，直接查看这些定义认领的物品或方块：分类就是注册表 id（如 `/picker mxt:aura`、`/picker mxt:artifact`、`/picker mxt:currency`、`/picker mxt:item_binding`、`/picker mxt:block_aura`），不写则列出全部已注册分类。物品键的注册表列它认领的物品，`mxt:block_aura` 与 `mxt:heat_source` 列它们认领的方块。命令由内置的 Picker 模组提供，需要 gamemaster 权限，且只在创造模式下可用。
 - 测试模组数据位于 `src/test-mod/resources/data/mxt_test/mxt`，启动测试服务端可验证数据包闭环。
@@ -110,7 +110,7 @@ flowchart TD
 [WARN]: Ignoring invalid list element: Failed to get element <namespace>:<path>
 ```
 
-也就是说，失效引用**只损失它自己**：其他功法、其他字段都正常加载。看到这条 WARN 就说明确实存在失效引用；**看不到就说明不存在**，此时问题在别处，不要用修复命令去「治」它。
+即，失效引用**只损失它自己**：其他功法、其他字段都正常加载。看到这条 WARN 就说明确实存在失效引用；**看不到就说明不存在**，此时问题在别处，不要用修复命令去「治」它。
 
 | 命令 | 作用 |
 | --- | --- |

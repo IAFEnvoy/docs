@@ -15,7 +15,7 @@ MiXianTu is a **cultivation mod framework** for NeoForge. It provides the **gene
 
 The actual items, blocks and recipes are provided by datapacks, KubeJS or other content mods, and MiXianTu's registries and binding tables give them gameplay.
 
-- **Players**: installing the mod on its own only gives you framework items, Curios slots, HUD and commands; what you can actually play depends on the datapack or content pack you use.
+- **Players**: installing the mod on its own only gives you framework items, Curios slots, HUD and commands; what available gameplay depends on the datapack or content pack you use.
 - **Content and mod authors**: define your own cultivation rules, aura distribution, abilities, formations, crafts and item bindings with datapacks, KubeJS or the Java API, without changing the mod itself.
 
 :::info Workstation addons

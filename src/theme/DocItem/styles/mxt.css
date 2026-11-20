@@ -1,68 +1,74 @@
-/* Songyan palette migrated from the MiXianTu VitePress site. */
+/* Songyan parchment and wooden controls, shared with the AUI theme. */
 html.dir-mod-mxt {
   color-scheme: light;
-  --ink: #303c33;
-  --ink-muted: #73796c;
-  --ink-dark: #293a30;
-  --ink-on-accent: #fffdf5;
-  --canvas: #f5f2e9;
-  --surface: #fffdf7;
-  --surface-deep: #e9e8dc;
-  --surface-soft: #f0efe4;
-  --edge: #d7d9c9;
-  --edge-light: #e7e7db;
+  --ink: #3a322a;
+  --ink-muted: #756553;
+  --ink-dark: #30261e;
+  --ink-on-accent: #f6f1e4;
+  --canvas: #f6f1e4;
+  --surface: #f1e8d6;
+  --surface-deep: #e2d6bd;
+  --surface-soft: #e8ddca;
+  --edge: #6b5848;
+  --paper-rim: #ddcbb0;
+  --wood: #ddcbae;
+  --wood-hover: #cfb993;
+  --wood-ink: #54402f;
+  --gold-trim: #b88628;
+  --gold-ink: #89631f;
+  --edge-light: rgba(80, 60, 40, .25);
   --green: #436650;
   --green-hover: #34553f;
   --green-shadow: #284230;
   --purple: #7c6882;
   --purple-hover: #695370;
   --purple-shadow: #57445e;
-  --gold: #997232;
-  --gold-shadow: #735622;
-  --red: #ad513e;
-  --red-hover: #94402e;
-  --red-shadow: #763427;
+  --gold: #b88628;
+  --gold-shadow: #89631f;
+  --red: #9c2c2c;
+  --red-hover: #842525;
+  --red-shadow: #6d2020;
   --blue: #4c737e;
   --success: #436650;
-  --warning: #936725;
-  --danger: #ad513e;
+  --warning: #89631f;
+  --danger: #9c2c2c;
   --info: #4c737e;
-  --focus: #8a9d71;
-  --gray-10: #fcfaf3;
-  --gray-20: #efeee4;
-  --gray-30: #e1e2d6;
-  --gray-40: #cdd0c0;
-  --gray-50: #b0b6a5;
-  --gray-60: #909985;
-  --gray-70: #737e69;
-  --gray-80: #586451;
-  --gray-90: #3d4a38;
-  --gray-100: #263022;
-  --green-30: #e8ecdf;
-  --green-40: #c6d2b9;
-  --green-50: #8fa588;
-  --green-60: #64805f;
+  --focus: #a38a53;
+  --gray-10: #f6f1e4;
+  --gray-20: #f1e8d6;
+  --gray-30: #e8ddca;
+  --gray-40: #ddcbb0;
+  --gray-50: #c4b394;
+  --gray-60: #a18d71;
+  --gray-70: #84715a;
+  --gray-80: #6b5848;
+  --gray-90: #4d4034;
+  --gray-100: #30261e;
+  --green-30: #e4e3cd;
+  --green-40: #c3c6a5;
+  --green-50: #929e7d;
+  --green-60: #657e60;
   --green-70: #436650;
-  --red-10: #f5e8df;
-  --red-30: #e7c0ad;
-  --red-50: #c47e65;
-  --red-60: #ad513e;
-  --red-80: #763427;
+  --red-10: #f0dfd1;
+  --red-30: #ddb3a0;
+  --red-50: #ba7060;
+  --red-60: #9c2c2c;
+  --red-80: #6d2020;
   --blue-10: #e7eff0;
   --blue-20: #b8cfd0;
   --blue-30: #4c737e;
-  --yellow-10: #f5edda;
-  --yellow-20: #d2b777;
+  --yellow-10: #ede0c5;
+  --yellow-20: #c5a052;
   --orange-20: #c48655;
   --purple-10: #eee8f0;
-  --gold-vip: #997232;
-  --disabled-background: #ecece2;
-  --disabled-border: #dedfd3;
+  --gold-vip: #89631f;
+  --disabled-background: #e3dac8;
+  --disabled-border: #b9aa91;
   --disabled-shadow: transparent;
-  --disabled-foreground: #9a9e91;
-  --overlay: rgba(33, 47, 34, .36);
-  --overlay-soft: rgba(245, 242, 233, .86);
-  --rarity-common: #586451;
+  --disabled-foreground: #968873;
+  --overlay: rgba(48, 38, 30, .4);
+  --overlay-soft: rgba(246, 241, 228, .9);
+  --rarity-common: #6b5848;
   --rarity-uncommon: #436650;
   --rarity-rare: #4c737e;
   --rarity-epic: #7c6882;
@@ -76,117 +82,123 @@ html.dir-mod-mxt {
   --font-lg: 20px;
   --font-xl: 28px;
   --font-body: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
-  --font-display: "STXingkai", "华文行楷", "STKaiti", "华文楷体", "KaiTi", "楷体", "Songti SC", "SimSun", serif;
+  --font-display: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
   --font-mono: "Cascadia Code", Consolas, monospace;
   --motion-fast: 160ms;
   --size-unit: 2px;
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --shadow: 0 6px 24px rgba(49, 65, 40, .055);
-  --tint-green: #e7eddf;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --shadow: 0 4px 14px rgba(60, 40, 20, .12);
+  --tint-green: #e4e3cd;
   --tint-purple: #eee8f0;
-  --tint-gold: #f3ecd9;
-  --tint-red: #f4e7df;
+  --tint-gold: #ede0c5;
+  --tint-red: #f0dfd1;
   --tint-blue: #e7eef0;
-  --edge-green: #dce5d2;
+  --edge-green: #9d9f7c;
   --edge-purple: #e0d6e5;
-  --edge-gold: #eadfbe;
-  --edge-red: #ecd7cb;
+  --edge-gold: #c5a052;
+  --edge-red: #c8957e;
   --edge-blue: #d5e2e5;
-  --edge-hover: #a7b29b;
-  --selection: #d7dfc8;
-  --switch-off: #c4cabb;
-  --tooltip-surface: #34523d;
-  --tooltip-ink: #fffdf5;
+  --edge-hover: #977646;
+  --selection: #e3d4b8;
+  --switch-off: #b9aa91;
+  --tooltip-surface: #54402f;
+  --tooltip-ink: #f6f1e4;
   --shimmer: #ffffff80;
-  --paper-line: rgba(100, 112, 83, .035);
+  --paper-line: rgba(139, 119, 95, .03);
 }
 
 html.dir-mod-mxt[data-theme='dark'] {
   color-scheme: dark;
-  --ink: #d8decd;
-  --ink-muted: #9da997;
-  --ink-dark: #e6e9db;
-  --ink-on-accent: #17251b;
-  --canvas: #171e1a;
-  --surface: #202923;
-  --surface-deep: #2b362d;
-  --surface-soft: #252f27;
-  --edge: #3b483b;
-  --edge-light: #303d32;
-  --green: #a4bf91;
-  --green-hover: #bdd1ad;
-  --green-shadow: #71895f;
+  --ink: #e6dcc8;
+  --ink-muted: #b3a28a;
+  --ink-dark: #f6f1e4;
+  --ink-on-accent: #211e1a;
+  --canvas: #211e1a;
+  --surface: #2b2721;
+  --surface-deep: #383127;
+  --surface-soft: #322c24;
+  --edge: #8a7358;
+  --paper-rim: #4b3e2e;
+  --wood: #433728;
+  --wood-hover: #51412e;
+  --wood-ink: #e8ddca;
+  --gold-trim: #d8b374;
+  --gold-ink: #e1c38c;
+  --edge-light: rgba(207, 185, 147, .25);
+  --green: #a6c29c;
+  --green-hover: #bed3b5;
+  --green-shadow: #78936d;
   --purple: #b6a1c0;
   --purple-hover: #cab6d3;
   --purple-shadow: #897396;
-  --gold: #d3b578;
-  --gold-shadow: #a28655;
-  --red: #dd9780;
-  --red-hover: #eab19c;
-  --red-shadow: #a8715c;
+  --gold: #d8b374;
+  --gold-shadow: #a48650;
+  --red: #ed9c90;
+  --red-hover: #f4b7a9;
+  --red-shadow: #b87769;
   --blue: #9ebfc3;
-  --success: #a4bf91;
-  --warning: #d3b578;
-  --danger: #dd9780;
+  --success: #a6c29c;
+  --warning: #e1c38c;
+  --danger: #ed9c90;
   --info: #9ebfc3;
-  --focus: #a4bf91;
-  --gray-10: #e6e9db;
-  --gray-20: #cdd4c2;
-  --gray-30: #b5bfaa;
-  --gray-40: #9ca88f;
-  --gray-50: #829175;
-  --gray-60: #68795c;
-  --gray-70: #506145;
-  --gray-80: #3b4b34;
-  --gray-90: #293625;
-  --gray-100: #171e1a;
-  --green-30: #303e2d;
-  --green-40: #4e6442;
-  --green-50: #71895f;
-  --green-60: #8ca578;
-  --green-70: #a4bf91;
-  --red-10: #392b25;
-  --red-30: #6b4738;
-  --red-50: #a8715c;
-  --red-60: #dd9780;
-  --red-80: #eab19c;
+  --focus: #d2b77e;
+  --gray-10: #f6f1e4;
+  --gray-20: #e6dcc8;
+  --gray-30: #cfbea4;
+  --gray-40: #b3a28a;
+  --gray-50: #9c896e;
+  --gray-60: #84715a;
+  --gray-70: #6b5848;
+  --gray-80: #504333;
+  --gray-90: #383127;
+  --gray-100: #211e1a;
+  --green-30: #343d2c;
+  --green-40: #526344;
+  --green-50: #78936d;
+  --green-60: #8fa884;
+  --green-70: #a6c29c;
+  --red-10: #412d26;
+  --red-30: #754c3e;
+  --red-50: #b87769;
+  --red-60: #ed9c90;
+  --red-80: #f4b7a9;
   --blue-10: #27383a;
   --blue-20: #567c80;
   --blue-30: #9ebfc3;
-  --yellow-10: #383425;
-  --yellow-20: #b59b63;
+  --yellow-10: #423724;
+  --yellow-20: #b59860;
   --orange-20: #cc9d74;
   --purple-10: #342d3a;
-  --gold-vip: #d3b578;
-  --disabled-background: #29312a;
-  --disabled-border: #364036;
+  --gold-vip: #d8b374;
+  --disabled-background: #322c24;
+  --disabled-border: #5b4c39;
   --disabled-shadow: transparent;
-  --disabled-foreground: #717d6c;
-  --overlay: rgba(4, 10, 6, .65);
-  --overlay-soft: rgba(23, 30, 26, .9);
-  --rarity-common: #c1cbb8;
-  --rarity-uncommon: #a4bf91;
+  --disabled-foreground: #897b65;
+  --overlay: rgba(12, 9, 6, .7);
+  --overlay-soft: rgba(33, 30, 26, .92);
+  --rarity-common: #cfbea4;
+  --rarity-uncommon: #a6c29c;
   --rarity-rare: #9ebfc3;
   --rarity-epic: #b6a1c0;
-  --shadow: 0 6px 24px rgba(0, 0, 0, .14);
-  --tint-green: #303e2d;
+  --shadow: 0 4px 14px rgba(0, 0, 0, .22);
+  --tint-green: #343d2c;
   --tint-purple: #342d3a;
-  --tint-gold: #383425;
-  --tint-red: #392b25;
+  --tint-gold: #423724;
+  --tint-red: #412d26;
   --tint-blue: #27383a;
-  --edge-green: #44543c;
+  --edge-green: #657154;
   --edge-purple: #4d4055;
-  --edge-gold: #554b32;
-  --edge-red: #5c4032;
+  --edge-gold: #8f784e;
+  --edge-red: #916759;
   --edge-blue: #3a5255;
-  --edge-hover: #708267;
-  --selection: #465d3b;
-  --switch-off: #4b5949;
-  --tooltip-surface: #c1d0b2;
-  --tooltip-ink: #17251b;
-  --shimmer: #b3c2a51a;
-  --paper-line: rgba(159, 183, 140, .025);
+  --edge-hover: #b89a6e;
+  --selection: #51412e;
+  --switch-off: #62513c;
+  --tooltip-surface: #e2d6bd;
+  --tooltip-ink: #30261e;
+  --shimmer: #e8ddca1a;
+  --paper-line: rgba(207, 185, 147, .035);
 }
 
 /* Docusaurus keeps its layout; Songyan supplies the document and component palette. */
@@ -207,7 +219,8 @@ html.dir-mod-mxt {
   --ifm-navbar-background-color: var(--canvas);
   --ifm-navbar-link-color: var(--ink);
   --ifm-menu-color: var(--ink-muted);
-  --ifm-menu-color-background-active: var(--tint-green);
+  --ifm-menu-color-active: var(--red);
+  --ifm-menu-color-background-active: var(--selection);
   --ifm-menu-color-background-hover: var(--surface-soft);
   --ifm-toc-border-color: var(--edge);
   --ifm-toc-link-color: var(--ink-muted);
@@ -222,13 +235,20 @@ html.dir-mod-mxt {
   --ifm-pre-background: var(--surface-soft);
   --ifm-card-background-color: var(--surface);
   --ifm-global-radius: var(--radius-sm);
+  --ifm-card-border-radius: var(--radius-md);
+  --ifm-button-border-radius: var(--radius-sm);
+  --ifm-alert-border-radius: var(--radius-sm);
+  --ifm-breadcrumb-border-radius: var(--radius-sm);
+  --ifm-tabs-color: var(--wood-ink);
+  --ifm-tabs-color-active: var(--red);
+  --ifm-tabs-color-active-border: var(--red);
+  --ifm-tabs-border-radius: var(--radius-sm);
   --ifm-table-border-color: var(--edge);
   --ifm-table-stripe-background: var(--surface-soft);
 }
 
 html.dir-mod-mxt body {
-  background-image: radial-gradient(var(--paper-line) .7px, transparent .7px);
-  background-size: 5px 5px;
+  background-image: repeating-linear-gradient(0deg, var(--paper-line) 0 1px, transparent 1px 4px);
 }
 
 html.dir-mod-mxt ::selection {
@@ -239,6 +259,19 @@ html.dir-mod-mxt ::selection {
 html.dir-mod-mxt .theme-doc-sidebar-container {
   background: var(--surface-soft);
   border-color: var(--edge);
+}
+
+html.dir-mod-mxt .navbar {
+  border-bottom: 1px solid var(--edge);
+  box-shadow: inset 0 -3px 0 var(--paper-rim);
+}
+
+html.dir-mod-mxt .menu__link--active:not(.menu__link--sublist) {
+  box-shadow: inset 2px 0 0 var(--red);
+}
+
+html.dir-mod-mxt .table-of-contents__link--active {
+  color: var(--red);
 }
 
 /* footer--dark declares its own variables, so apply the palette on the footer. */
@@ -265,10 +298,98 @@ html.dir-mod-mxt .theme-doc-markdown h1 {
   letter-spacing: .02em;
 }
 
-html.dir-mod-mxt .theme-doc-markdown h2 { font-size: 28px; line-height: 1.5; }
+html.dir-mod-mxt .theme-doc-markdown h2 {
+  padding-bottom: .35em;
+  border-bottom: 1px solid var(--edge-light);
+  font-size: 28px;
+  line-height: 1.5;
+}
 html.dir-mod-mxt .theme-doc-markdown h3 { font-size: 23px; }
 html.dir-mod-mxt .theme-doc-markdown h1 code { font-family: var(--font-mono); font-size: .8em; }
-html.dir-mod-mxt .theme-doc-markdown a:not(.hash-link) { color: var(--green); }
+
+html.dir-mod-mxt :is(.card, .pagination-nav__link) {
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+  background: var(--canvas);
+  background-image: repeating-linear-gradient(0deg, var(--paper-line) 0 1px, transparent 1px 4px);
+  box-shadow: inset 0 0 0 2px var(--paper-rim), inset 0 0 0 3px var(--edge-light);
+}
+
+html.dir-mod-mxt :is(.card, .pagination-nav__link):hover {
+  border-color: var(--edge-hover);
+}
+
+html.dir-mod-mxt .button {
+  border-width: 1px;
+  font-family: var(--font-body);
+}
+
+html.dir-mod-mxt .button--secondary {
+  --ifm-button-background-color: var(--wood);
+  --ifm-button-border-color: var(--edge);
+  --ifm-button-color: var(--wood-ink);
+}
+
+html.dir-mod-mxt .button--secondary:not(.button--outline):hover {
+  background: var(--wood-hover);
+  border-color: var(--edge-hover);
+  box-shadow: inset 0 0 0 1px var(--gold-trim);
+}
+
+html.dir-mod-mxt .button--primary {
+  --ifm-button-background-color: var(--green);
+  --ifm-button-border-color: var(--green-shadow);
+  --ifm-button-color: var(--ink-on-accent);
+}
+
+html.dir-mod-mxt .button--primary:not(.button--outline):hover {
+  background: var(--green-hover);
+  border-color: var(--green-shadow);
+}
+
+html.dir-mod-mxt .button--danger {
+  --ifm-button-background-color: var(--red);
+  --ifm-button-border-color: var(--red-shadow);
+  --ifm-button-color: var(--ink-on-accent);
+}
+
+html.dir-mod-mxt .button--danger:not(.button--outline):hover {
+  background: var(--red-hover);
+  border-color: var(--red-shadow);
+}
+
+html.dir-mod-mxt .button:is(.button--primary, .button--secondary, .button--danger).button--outline {
+  --ifm-button-background-color: transparent;
+  --ifm-button-color: var(--ifm-button-border-color);
+}
+
+html.dir-mod-mxt .button:is(.button--primary, .button--danger).button--outline:is(:hover, :active, .button--active) {
+  --ifm-button-background-color: var(--ifm-button-border-color);
+  --ifm-button-color: var(--ink-on-accent);
+}
+
+html.dir-mod-mxt .button--secondary.button--outline:is(:hover, :active, .button--active) {
+  --ifm-button-background-color: var(--wood-hover);
+  --ifm-button-color: var(--wood-ink);
+}
+
+html.dir-mod-mxt .tabs__item {
+  margin-inline-end: 4px;
+  border: 1px solid var(--edge);
+  border-bottom: 2px solid var(--edge);
+  background: var(--wood);
+  font-family: var(--font-display);
+}
+
+html.dir-mod-mxt .tabs__item:hover {
+  background: var(--wood-hover);
+  box-shadow: inset 0 0 0 1px var(--gold-trim);
+}
+
+html.dir-mod-mxt .tabs__item--active {
+  border-bottom-color: var(--red);
+  background: var(--selection);
+}
 
 html.dir-mod-mxt .cmd-tree ul { list-style: none; margin: 0; padding-left: 1.6em; }
 html.dir-mod-mxt .cmd-tree > ul { padding-left: 0; }
@@ -287,7 +408,7 @@ html.dir-mod-mxt .theme-doc-markdown table {
 html.dir-mod-mxt .theme-doc-markdown th { background: var(--surface-deep); font-weight: 500; }
 html.dir-mod-mxt .theme-doc-markdown :is(th, td) { border-color: var(--edge); }
 html.dir-mod-mxt .theme-doc-markdown tr:nth-child(2n) { background: var(--surface-soft); }
-html.dir-mod-mxt .theme-doc-markdown tr:hover { background: var(--tint-green); }
+html.dir-mod-mxt .theme-doc-markdown tr:hover { background: var(--selection); }
 
 html.dir-mod-mxt .theme-code-block {
   border: 1px solid var(--edge);
@@ -315,11 +436,11 @@ html.dir-mod-mxt .mxt-tool-open a {
   padding: 5px 12px;
   border: 1px solid var(--edge);
   border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--ink);
+  background: var(--wood);
+  color: var(--wood-ink);
   font-size: 12px;
 }
-html.dir-mod-mxt .mxt-tool-open a:hover { border-color: var(--edge-hover); background: var(--surface-soft); color: var(--green); }
+html.dir-mod-mxt .mxt-tool-open a:hover { border-color: var(--edge-hover); background: var(--wood-hover); box-shadow: inset 0 0 0 1px var(--gold-trim); }
 
 /* Standalone editors keep their translated document route and discard the surrounding chrome. */
 html.dir-mod-mxt:has(.mxt-tool--standalone) :is(.navbar, .footer, .theme-doc-breadcrumbs, .theme-doc-footer, .pagination-nav) { display: none; }

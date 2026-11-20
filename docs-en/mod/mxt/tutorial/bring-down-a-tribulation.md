@@ -11,7 +11,7 @@ A tribulation is the price of a breakthrough: a trial consumed beat by beat, whe
 
 This tutorial hangs a lightning tribulation on the example pack's foundation stage.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -68,7 +68,7 @@ duration × difficulty_scale × max(0, 1 + aura_tribulation_modifier)
 
 ## Step 3 — Splitting Into Two Branches {#step-3-—-splitting-into-two-branches}
 
-`mxt:branch` keeps a timeline from having to be a straight line: in the same tick it moves the cursor to the beat named by `if_true` or `if_false` (absolute indices, `0`-based), and with neither written it simply advances one beat. The timeline below first waits with a deadline for the player to stand under open sky (`timeout: 600` ticks, failing the run if they do not), then splits on health — a low-health player is sent by `if_true: 3` straight to the 4th beat, skipping the lighter bolt on the 3rd:
+`mxt:branch` keeps a timeline from having to be a straight line: in the same tick it moves the cursor to the beat named by `if_true` or `if_false` (absolute indices, `0`-based), and with neither written it advances one beat. The timeline below first waits with a deadline for the player to stand under open sky (`timeout: 600` ticks, failing the run if they do not), then splits on health — a low-health player is sent by `if_true: 3` straight to the 4th beat, skipping the lighter bolt on the 3rd:
 
 ```json
 "timeline": [
@@ -85,7 +85,7 @@ The wind-up differs from a wait only in that it consumes no beats and writes no 
 
 ## Step 4 — Striking With Lightning {#step-4-—-striking-with-lightning}
 
-`mxt:spawn_lightning` is an ordinary `EntityAction`: apart from its colour and thickness it **is** a vanilla bolt — damage, fire, lightning rods, copper, thunder, the sky flash, and villager→witch, pig→zombified piglin and charged creeper conversions all behave as usual. It therefore works in any `EntityAction` slot, not just a tribulation.
+`mxt:spawn_lightning` is an ordinary `EntityAction`: apart from its colour and thickness it **is** a vanilla bolt — damage, fire, lightning rods, copper, thunder, the sky flash, and villager→witch, pig→zombified piglin and charged creeper conversions all behave as usual. It therefore works in any `EntityAction` slot, not a tribulation.
 
 | Field | Type | Default | Effect |
 | --- | --- | --- | --- |
@@ -114,7 +114,7 @@ Swapping the second bolt for a gradient makes "this one hurts more" visible at a
 
 ## Step 5 — Success and Failure {#step-5-—-success-and-failure}
 
-- **Success**: once the cursor walks off the end of the timeline, `success_action` runs. The example hands back 50 aura — surviving the trial leaves the pool fuller than before.
+- **Success**: once the cursor walks off the end of the timeline, `success_action` runs. The example returns 50 aura — surviving the trial leaves the pool fuller than before.
 - **Failure**: when a beat decides it cannot continue (its `mxt:idle` state is gone, the beat itself reports failure, or an `mxt:wait_for` `timeout` runs out with `on_timeout: "fail"`), `fail_action` runs. There is **no built-in punishment at all** — no realm loss, no experience taken — everything is what you write in `fail_action`.
 - **Dying is not failing**: the attachment is `copyOnDeath()`, so **death does not clear a tribulation**; it carries on with the respawned entity (a tribulation that keeps striking after death is expected). If it should end with death, arrange that separately, or write the punishment as "dying wastes the attempt".
 - **`/mxt tribulation stop` does not settle either**: it only clears the run, so neither `success_action` nor `fail_action` runs. Worth knowing while testing, so a stopped run is not mistaken for a successful one.
@@ -148,7 +148,7 @@ Then add a gate — `condition` is evaluated **once**, when the run is started, 
 "condition": {"type": "mxt:aura_range", "min": 30, "max": 1000}
 ```
 
-"Thin aura cannot host a tribulation" is thereby a datapack rule rather than a special case in code. When the gate refuses, **the breakthrough still happens** — there is simply no tribulation; requiring one is the job of `realm_stage`'s `breakthrough.conditions`.
+"Thin aura cannot host a tribulation" is thereby a datapack rule rather than a special case in code. When the gate refuses, **the breakthrough still happens** — there is no tribulation; requiring one is the job of `realm_stage`'s `breakthrough.conditions`.
 
 ## Verify {#verify}
 

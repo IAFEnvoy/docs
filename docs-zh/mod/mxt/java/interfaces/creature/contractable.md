@@ -20,4 +20,4 @@ title: Contractable
 
 **解除契约只清契约记录**：要不要连主人一起忘掉由生物自己在 `onContractReleased` 里决定——"解约"与"忘掉谁驯服了它"不是同一件事。两个结束钩子是分开的，谁也不替谁猜。
 
-契约的其余部分不在接口里：契约类型、签订时刻、召回闩只有一份，在生物的 `mxt:contract` 附件上。契约之后"这只灵兽自己怎么做"是另一个接口，见 [ContractOperations](./contract-operations.md)。
+契约的其余部分不在接口里：契约类型、签订时刻、召回闩只有一份，在生物的 `mxt:contract` 附件上。契约之后"这只灵兽自己如何做"是另一个接口，见 [ContractOperations](./contract-operations.md)。

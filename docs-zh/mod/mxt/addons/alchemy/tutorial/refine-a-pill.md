@@ -11,13 +11,13 @@ description: 手搭一座 3×3×3 丹炉，写一条按药性判定的丹方，�
 
 这一页给示例包加一条最小产线：两条药性、三株药材（都绑定已有物品）、一份炉型、一种炉壁材料、一条丹方，以及一枚带丹毒的丹药。
 
-## 你要搭建什么 {#你要搭建什么}
+## 教程目标 {#你要搭建什么}
 
 | 文件 | 用途 |
 | --- | --- |
 | `data/example/mxt/medicinal_property/nourish.json` | 主药药性。 |
 | `data/example/mxt/medicinal_property/calm.json` | 辅药药性。 |
-| `data/example/mxt/quality/common.json` | 炉型规格用的那一档品质；示例包里已经有就沿用。 |
+| `data/example/mxt/quality/common.json` | 炉型规格用的对应档位品质；示例包里已经有就沿用。 |
 | `data/example/mxt/spirit_herb/herb_a.json` | 主药：每件 `nourish` 药力 3，性热。 |
 | `data/example/mxt/spirit_herb/herb_c.json` | 辅药：每件 `calm` 药力 3，性寒。 |
 | `data/example/mxt/spirit_herb/herb_d.json` | 药引：每件调和药力 1，性平。 |
@@ -37,7 +37,7 @@ description: 手搭一座 3×3×3 丹炉，写一条按药性判定的丹方，�
 {}
 ```
 
-第二条照抄一份 `calm.json`。药性定义**一个字段都没有**（给了也读不到）：显示名与描述一律按注册 id 现算，`nourish` 的名字键是 `mxt.medicinal_property.example.nourish`、描述键再加 `.description`，翻译这两个键才有词。
+以相同结构创建 `calm.json`。药性定义没有可配置字段；名称与描述根据注册 ID 生成。`nourish` 的名称键为 `mxt.medicinal_property.example.nourish`，描述键追加 `.description`，分别在语言文件中提供译文。
 
 ## 第 2 步 —— 将已有物品声明为药材 {#第-2-步-——-将已有物品声明为药材}
 
@@ -78,7 +78,7 @@ description: 手搭一座 3×3×3 丹炉，写一条按药性判定的丹方，�
 
 - **角色由放进哪个仓决定，不由定义决定。** 主药只看 `main_effects`，辅药只看 `auxiliary_effects`，药引只看 `catalyst_power`。把主药放进辅药仓，等于它在这一炉里没有任何药力。
 - **`thermal_bias` 是寒热，不是元素。** 负为寒、正为热，取值在 `-1..1`；它和火、水元素没有关系。
-- **`herb_age` 是药力公式里的局部变量。** 它读的是堆上的 `mxt:herb_age` 组件，没有组件时用这条灵植的 `default_age`。年龄抬高的是药力本身，管线不会再乘一次；一年药龄值多少完全由公式决定——这一页的公式把它折成 `3 + herb_age / 50`（药龄 100 时是 5），写成 `3 * (1 + herb_age / 100)` 时一件百年 A 才抵得上两件零龄 A。寒热加权也跟着年龄变，所以要求完全配平的丹方对药龄很敏感。
+- **`herb_age` 是药力公式里的局部变量。** 它读的是物品堆上的 `mxt:herb_age` 组件，没有组件时用这条灵植的 `default_age`。年龄抬高的是药力本身，管线不会再乘一次；一年药龄值多少完全由公式决定——这一页的公式把它折成 `3 + herb_age / 50`（药龄 100 时是 5），写成 `3 * (1 + herb_age / 100)` 时一件百年 A 才抵得上两件零龄 A。寒热加权也跟着年龄变，所以要求完全配平的丹方对药龄很敏感。
 
 想让药材长在地里，就给定义加 `blocks`（哪些方块算这株草）与 `growth`（生长年龄、速率与果实，字段见 [spirit_herb](../../../datapack/json/spirit_herb.md)）。这一页的三株都只入药，所以省略 `growth`。
 
@@ -188,9 +188,9 @@ give @s mxt_alchemy:alchemy_furnace_casing[mxt_alchemy:alchemy_wall_material="ex
 - `balance_tolerance: 0` 要求完全配平，判据是 `Σ(数量 × 每件药力 × 寒热) / Σ(数量 × 每件药力)` 的绝对值不超过容限。这份丹方的 `2 × herb_a + 2 × herb_c + 1 × herb_d`（零龄）正好落在 `0`。
 - 同时匹配上多条丹方时，只保留**唯一支配**其余每一条的那一条：药性键集合相同、每一项都不小于对方、且至少有一项严格更大。玩家不选丹方，没有唯一结果就是配伍冲突，同样不扣料。
 - `target_temperature` 与 `temperature_tolerance` 是炉温窗口。**第一次开炉时设定温度必须落在里面**，所以上面这份丹方要求你把炉温设到 `95..105`。
-- `minimum_aura` 查的是**环境灵气**，不是消耗，也不是热量。键写成本位世界里确实存在的那条灵气；或者让区域用 `alchemy_env_bonus` 顶替这道门槛（那个标记只顶门槛，不供热）。
-- `duration` 会被炼丹修正缩短，开炉时算一次就冻进这一批：**原料侧**取这批材料里最低的那一档品质的 `alchemy_modifier`，**核心侧**取丹炉核心那一档自己的 `alchemy_modifier`（核心没有档时算 `1.0`），`有效时长 = max(1, round(声明时长 ÷ (原料侧 × 核心侧)))`。所以给高炉阶写 `alchemy_modifier: 2`，这座炉子炼什么丹方都更快。
-- 失败物由丹方声明，服务端不会硬塞药渣；不写 `failure_outputs` 就什么都不产出。
+- `minimum_aura` 检查**环境灵气**，不消耗灵气，也不提供热量。键应引用目标世界中存在的灵气；区域规则 `alchemy_env_bonus` 可使该要求直接通过，但不提供热量。
+- `duration` 会被炼丹修正缩短，开炉时算一次就冻进这一批：**原料侧**取这批材料里最低的对应档位品质的 `alchemy_modifier`，**核心侧**取丹炉核心对应档位自己的 `alchemy_modifier`（核心没有档时算 `1.0`），`有效时长 = max(1, round(声明时长 ÷ (原料侧 × 核心侧)))`。所以给高炉阶写 `alchemy_modifier: 2`，这座炉子炼什么丹方都更快。
+- 失败产物由丹方的 `failure_outputs` 声明；省略时不生成失败产物。
 - `guide` 只是可选的示例元数据，丹炉不读也不显示，不想维护就省略。
 
 放材料不会自己开炉。玩家在核心那页看当前配伍是否已匹配，再按「开炉」。
@@ -227,7 +227,7 @@ give @s mxt:pill[mxt:pill={pill:"example:warming_pill"}]
 ```
 
 - 服用次数按**这条绑定**计，不按物品 ID，所以换一件别的物品当载体也绕不过上限。次数与冷却记在身体上，死亡、换维度、重新登录都不清。
-- **身份只由绑定的 `items` 认领产生**：只写效果键、或组件指名了定义而这件物品没有被任何绑定认领时，这一口不计次数、也没有冷却。所以上面那条绑定点名了本体丹药载体 `mxt:pill`。组件的 `pill` 优先于绑定指名的定义，五个效果键再按字段覆盖。
+- **身份只由绑定的 `items` 认领产生**：只写效果键、或组件指名了定义而这件物品没有被任何绑定认领时，本次使用不计次数、也没有冷却。所以上面那条绑定点名了本体丹药载体 `mxt:pill`。组件的 `pill` 优先于绑定指名的定义，五个效果键再按字段覆盖。
 - 丹毒也是每个身体一份的账：`toxicity_gain` 是每次服丹加多少，累计达到 `toxicity_threshold` 才触发 `on_overdose`，`toxicity_after_overdose` 是触发之后剩下的量。阈值是"达到就触发"，不是"禁止再吃"。
 - 排毒用实体行为 `mxt:modify_pill_toxicity` 的负 `add`，它不清服用次数；读丹毒用实体条件 `mxt:pill_toxicity` 或公式变量 `pill_toxicity`。
 - 默认丹毒不会自己退。服务端配置「炼丹 → 每秒丹毒自然消退」设成正数后，已经有丹毒的活跃实体每累计 20 刻退一次，离线不退，也不会给没服过丹的实体建一份空账。
@@ -249,7 +249,7 @@ give @s mxt:pill[mxt:pill={pill:"example:warming_pill"}]
 
 :::warning 这一页不写"炼成的丹药一定正确"
 
-开炉之后那一批的**成败判定**还没有在游戏里逐条对过，所以本页不承诺某条丹方一定炼出什么。上面第 4、5 条列的是你能亲眼看到的东西——结构成型、四页界面打开、批次开始、炉温移动、产物入仓。判定本身对照核心那一页显示的状态与失败原因。
+批次成败仍需在游戏中逐项验证，本教程不保证指定丹方的实际产出。上述第 4、5 步可用于检查结构成型、界面访问、批次启动、炉温变化与产物入仓；结算结果及失败原因以监控页为准。
 
 :::
 
@@ -274,5 +274,5 @@ give @s mxt:pill[mxt:pill={pill:"example:warming_pill"}]
 - [medicinal_property（药性）](../../../datapack/json/medicinal_property.md) 与 [spirit_herb（灵植）](../../../datapack/json/spirit_herb.md) —— 药性、药力、寒热、药龄与种植。
 - [pill（丹药）](../../../datapack/json/pill.md) —— 服用行为、丹毒、阈值与过量后的残留。
 - [pill_binding（丹药绑定）](../../../datapack/json/pill_binding.md) —— 认领物品、服用次数与冷却。
-- [quality（品质）](../../../datapack/json/quality.md) —— `alchemy_modifier` 怎么缩短开炉时长。
-- [炼丹与符笔](../../../player-guide/brush-and-pigment.md) —— 丹炉各部件与丹药载体在游戏里怎么用。
+- [quality（品质）](../../../datapack/json/quality.md) —— `alchemy_modifier` 如何缩短开炉时长。
+- [炼丹与符笔](../../../player-guide/brush-and-pigment.md) —— 丹炉各部件与丹药载体在游戏里如何用。

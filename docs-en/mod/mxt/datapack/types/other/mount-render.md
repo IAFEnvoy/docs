@@ -46,7 +46,7 @@ Draws with a GeckoLib model and animations. **The client must have GeckoLib inst
 | --- | --- | --- |
 | `idle` | position unchanged this tick | Hovering. **Facing does not count** — the driver turning their head is not flying |
 | `moving` | horizontal movement above the threshold | Level flight |
-| `ascending` | upward movement above the threshold | Climbing; **vertical wins over horizontal**, so a climb is no longer `moving` |
+| `ascending` | upward movement above the threshold | Climbing; **vertical takes precedence over horizontal**, so a climb is no longer `moving` |
 | `descending` | downward movement above the threshold | Diving |
 | `empty` | passenger count `0` | Empty (only possible in the instant the sword takes off: an unmanned vehicle clears itself) |
 | `ridden` | passenger count `1` | The driver alone |

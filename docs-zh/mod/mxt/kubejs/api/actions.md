@@ -17,7 +17,7 @@ title: MxtActions：脚本 Action
 
 四种回调都对应数据包中的 `type: "saturn:js"`。回调抛出的异常会被捕获、写入错误日志，当前 Action 终止，但不会令服务器崩溃。
 
-最后一个参数是本次派发所用的公式上下文，因此脚本能读到数据包 Action 能读到的同一份事件载荷。只有事件知道的数值（例如 `damage`）就是这样拿到的：
+最后一个参数是本次派发所用的公式上下文，因此脚本能读到数据包 Action 能读到的同一份事件载荷。只有事件知道的数值（例如 `damage`）就是这样获取的：
 
 ```js
 MxtActions.entity('example:knockback_on_hit', (entity, params, context) => {

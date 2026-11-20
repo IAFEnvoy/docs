@@ -11,7 +11,7 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 
 这篇教程各写一条，再把**持有**与**生效**讲清楚：身体上的状态分两份记录，所有效果都只读生效的那一份。
 
-## 你要搭建什么 {#你要搭建什么}
+## 教程目标 {#你要搭建什么}
 
 | 文件 | 注册表 | 用途 |
 | --- | --- | --- |
@@ -76,7 +76,7 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 | --- | --- | --- |
 | `attribute_modifiers` | `[]` | 原版属性修饰符形状的数组，每项是一个 [`AttributeEntry`](../datapack/types/shared_data_types.md#attributeentry)。 |
 | `granted_abilities` | `[]` | 技能 id 或 `#技能标签` 的数组。 |
-| `holder_condition` | `mxt:always` | 实体条件。**授予前判一次，之后不再复查**：条件后来不成立，已经拿到的体质照样留着。 |
+| `holder_condition` | `mxt:always` | 实体条件。**授予前判一次，之后不再复查**：条件后来不成立，已经获取的体质照样留着。 |
 | `exclusive_tags` | `[]` | 自由标识符数组，不是注册表引用。授予时与**已经持有的体质（包括被关闭的）**的同类标签求交集，非空就拒绝。 |
 | `allow_stacking` | `false` | 为假时同一个体质不能重复授予。 |
 | `quality` | 无 | 一档品质的条目 id，可选，同灵根。 |
@@ -89,7 +89,7 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 
 ## 第 3 步 —— 持有与生效 {#第-3-步-——-持有与生效}
 
-身体上分两份记录：一份是**持有**（已经拿到的），一份是**被关闭**（临时停用的）。这两份被读的地方不一样。
+身体上分两份记录：一份是**持有**（已经获取的），一份是**被关闭**（临时停用的）。这两份被读的地方不一样。
 
 - **所有效果只读「生效」的那一份**：元素、修炼亲和、被动属性、伤害倍率，全部只看生效。
 - **只读「持有」的有**：实体条件 `mxt:has_spirit_root` / `mxt:has_physique`、对应的战利品条件、列表命令，以及脚本里的「有没有 / 列出」。
@@ -100,7 +100,7 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 
 灵根的冲突判定只看**生效中**的灵根，体质的互斥判定看**全部持有**（含被关闭的），而启停那个入口**不复查**互斥。按「关掉 A → 授予 B → 再打开 A」的顺序操作，两条本该因 `conflicting_elements` 互斥的灵根会同时生效：关掉 A 时判定看不到它，B 顺利通过；再打开 A 时没有任何地方再检查一遍。
 
-体质那一侧不吃这套：它连被关闭的体质也一起参与互斥判定。
+体质的互斥判定始终包含已关闭的体质。
 
 :::
 
@@ -117,7 +117,7 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 
 顶层别名 `/spirit_root` 与 `/physique` 可以在服务端配置里关掉，关掉之后 `/mxt` 下那两条照旧可用。
 
-数据包行为：`mxt:grant_spirit_root` / `mxt:remove_spirit_root` 读字段 `spirit_root`，`mxt:grant_physique` / `mxt:remove_physique` 读字段 `physique`。**这几个字段只收具体 id，不收 `#标签`**。授予体质时 `holder_condition` 当场判一次，不满足就拒绝。
+数据包行为：`mxt:grant_spirit_root` / `mxt:remove_spirit_root` 读字段 `spirit_root`，`mxt:grant_physique` / `mxt:remove_physique` 读字段 `physique`。**这几个字段只收具体 id，不收 `#标签`**。授予体质时 `holder_condition` 立即判一次，不满足就拒绝。
 
 脚本侧是 `MxtSpiritRoots` 与 `MxtPhysiques` 两个全局对象，各带 `grant` / `remove` / `setEnabled`；授予与开关会带回 `changed` 与 `failure`，被拒时原因写在 `failure` 里。
 
@@ -125,7 +125,7 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 
 ## 第 5 步 —— 命名与加载 {#第-5-步-——-命名与加载}
 
-定义里**没有 `name` 与 `description` 字段**，给了也读不到。名字与描述一律按注册 id 现算：名字键是 `spirit_root.mxt.<命名空间>.<路径>` 与 `physique.mxt.<命名空间>.<路径>`，描述键再加 `.description`，路径里的 `/` 原样保留。想给它们配词，就把这两个键写进自己的语言文件。
+定义里**没有 `name` 与 `description` 字段**，不读取额外字段。名字与描述一律按注册 id 现算：名字键是 `spirit_root.mxt.<命名空间>.<路径>` 与 `physique.mxt.<命名空间>.<路径>`，描述键再加 `.description`，路径里的 `/` 原样保留。想给它们配词，就把这两个键写进自己的语言文件。
 
 这两张表和别的数据包注册表一样在**世界加载时**读取并校验，`/reload` 不会重读：改完文件要重新进世界，或者重启服务器。解码失败的定义会让世界进不去——不是「少一条就算了」。
 
@@ -146,11 +146,11 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 
 1. 用 `/mxt spirit_root grant @s example:fire_common_root` 授予自己。`list` 会列出它绑定的两种元素。
 2. 用 `/mxt physique grant @s example:sword_bone` 授予体质。身上没有 `example:fire_root` 时会被 `holder_condition` 挡下，理由会报出来。
-3. 关掉刚拿到的灵根，`list` 仍然列出它，但标记为不生效；它的元素、修炼倍率与技能一并停下。
+3. 关掉刚获取的灵根，`list` 仍然列出它，但标记为不生效；它的元素、修炼倍率与技能一并停下。
 4. 移除它，`list` 里就没有了。
 5. `/picker mxt:physique` 拿一件**已经带好组件**的体质物品，右键服下：身上没有 `example:fire_root` 时同样被 `holder_condition` 挡下，物品留在手上并给出理由；满足条件时物品少 1 个、`/mxt physique list` 里多出它。
 
-测试包里备了探针 `/mxt_test identity`，会断言持有 / 生效 / 关闭 / 移除、`quality` 读回它引用的那一档、未知字段被忽略、负倍率被拒。
+测试包里备了探针 `/mxt_test identity`，会断言持有 / 生效 / 关闭 / 移除、`quality` 读回它引用的对应档位、未知字段被忽略、负倍率被拒。
 
 ## 常见错误 {#常见错误}
 
@@ -159,10 +159,10 @@ description: "用 JSON 定义灵根与体质：元素与占比、修炼与亲和
 | 世界进不去，注册表少一条 | `elements` 不是数组、漏写、空数组、写了不存在的元素 id、权重小于等于 `0`、同一个元素写两次——**整份定义解码失败**，而定义坏掉会挡住世界加载。 |
 | 加载期报「必须是有限非负数」 | 数值倍率这类字段的值非法，例如倍率写成负数。 |
 | 体质里的元素字段毫无动静 | 体质只有字段表里那几个键。`element`、`cultivation_multiplier`、`damage_types` 之类写进体质**静默忽略，不报错也几乎不留日志**。字段名写错不会被发现，只会「那一项不生效」。 |
-| 数组里的一条技能或元素莫名其妙不见了 | `granted_abilities` / `conflicting_elements` 这类数组里的坏条目会被丢掉，并记一行 `Ignoring invalid list element`，文件其余部分照常加载；但**写成单个坏 id**（不是数组）会让整份定义失败。 |
+| 数组里的一条技能或元素莫名其妙不见了 | `granted_abilities` / `conflicting_elements` 这类数组里的无效条目会被丢掉，并记一行 `Ignoring invalid list element`，文件其余部分照常加载；但**写成单个坏 id**（不是数组）会让整份定义失败。 |
 | 某条行为解析失败 | 行为里的 `spirit_root` / `physique` 写成了当前包里不存在的 id。定义被删掉之后，命令与脚本**仍然能按身体里记着的引用移除它**，因为身体存的是引用本身。 |
 | `/mxt registries validate` 什么都没报 | 它不校验这两张表（只管境界链、触发器规则、进度链、品质阶梯、法器归属）。 |
-| 文件明明在，游戏里却没有这条定义 | 被 `neoforge:conditions` 挡掉的定义根本不进表，日志里只有一行 DEBUG。 |
+| 文件明明在，游戏里却没有该定义 | 被 `neoforge:conditions` 挡掉的定义根本不进表，日志里只有一行 DEBUG。 |
 | 关掉的灵根「拿不回来」 | 关闭只是停用，它还在身上、还能被移除，也仍然会被只读持有的条件与命令列出。 |
 
 ## 接下来 {#接下来}

@@ -13,7 +13,7 @@ This page is also a sub-tutorial of [Storage and Spirit Vessels](./storage-and-s
 - The **mount** (`mxt:mount`) says what flying looks like, how fast it goes, how many ride it, and what it burns.
 - The **flying skill** (`mxt:flight_control`) is **the press itself**, granted by a standing source such as a technique, and **never written on the artifact** (the reason is in Step 3).
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |

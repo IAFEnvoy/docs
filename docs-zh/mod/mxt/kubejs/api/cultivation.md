@@ -1,13 +1,13 @@
 ---
 title: MxtCultivation：修为与突破
-description: 增加某个资源链的修为进度，或按那条链尝试一次突破。
+description: 增加某个资源链的修为进度，或按该链尝试一次突破。
 ---
 
 # `MxtCultivation`：修为与突破
 
 <span id="mxtcultivation-修为与突破" />
 
-`MxtCultivation` 只管两件事：给某个资源的修为进度加数，以及按那条资源链尝试一次突破。突破走的是与修炼、事件完全相同的一条服务端流程。
+`MxtCultivation` 用于增加指定资源链的修为进度，或尝试沿该链突破。突破与修炼、事件共用同一服务端流程。
 
 ## 方法 {#方法}
 

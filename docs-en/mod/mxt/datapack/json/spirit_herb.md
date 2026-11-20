@@ -7,7 +7,7 @@ description: Marks existing blocks as spirit herbs with medicinal power, thermal
 
 <span id="spirit_herb" />
 
-`spirit_herb` marks some **existing blocks** as spirit herbs, gives them medicinal power and a thermal bias, names their **fruit**, and gives them a growth clock. It registers no block and no item: both the herb and its fruit come from a content pack or another mod. **The definition has no `quality` field**: it carries no item identity, so the stack holds no component naming a definition and there is nothing on it to ask; this herb's tier defaults to the [default_quality](./default_quality.md) registry under the fruit's item id or a `#`-prefixed tag, and a pack that wants the tier to follow age writes `quality_by_age`, which the harvest stamps into the component (see [Age and Quality](#age-and-quality)).
+`spirit_herb` marks some **existing blocks** as spirit herbs, gives them medicinal power and a thermal bias, names their **fruit**, and gives them a growth clock. It registers no block and no item: both the herb and its fruit come from a content pack or another mod. **The definition has no `quality` field**: it carries no item identity, so the stack holds no component naming a definition and there is nothing on it to ask; this herb's tier defaults to the [default_quality](./default_quality.md) registry under the fruit is item id or a `#`-prefixed tag, and a pack that wants the tier to follow age writes `quality_by_age`, which the harvest stamps into the component (see [Age and Quality](#age-and-quality)).
 
 ## File Location {#file-location}
 
@@ -37,7 +37,7 @@ The filename is its ID. For example, `data/example/mxt/spirit_herb/fire_ginseng.
 | --- | --- | --- | --- |
 | `mature_age` | `Integer` | **required** | A positive integer. Once reached the plant can be harvested, and it may also keep growing. |
 | `max_age` | `Integer` | **required** | A positive integer at least `mature_age`. Once reached it stops growing. |
-| `growth_rate` | `NumberProvider` | **required** | Age added per `20` ticks the plant is actually loaded. Non-negative. |
+| `growth_rate` | `NumberProvider` | **required** | Age added per `20` ticks the plant is loaded. Non-negative. |
 | `condition` | `BlockCondition` | `mxt:always` | Light, biome, neighbours, `aura_range` and so on. |
 | `costs` | `Cost[]` | `[]` | Accepts only `mxt:aura` entries, paid from the aura pool of the place the plant stands in. |
 | `drops` | Array of item IDs or `#item tags` | **required**, non-empty | This herb's **fruit**: on a break, only drops matching it are stamped with the age. |
@@ -80,7 +80,7 @@ Everything in this section is behaviour **every block claimed by `blocks` gets**
 
 Age is not stored on the block but in the **chunk attachment** `mxt:herb_chunk`: one row is `position → {age, gameTime}`.
 
-- **The age** is how old the plant has actually grown. It is **stored state**, not something re-derived on each read, so reading it any number of times answers the same thing — Jade reads it every frame.
+- **The age** is how old the plant has grown. It is **stored state**, not something re-derived on each read, so reading it any number of times answers the same thing — Jade reads it every frame.
 - **The gameTime** is the moment everything has been settled up to, meaning "how long the world has been alive". It travels with the save and **only advances while loaded**: chunk unload, server shutdown, `/tick freeze` and single-player pause all leave it alone — which is exactly the semantics "only grows while loaded" asks for, so being offline needs no catch-up logic at all. Reading it, `current gameTime − that number` is the span the plant still owes, and settling a span advances the number by exactly that span, so time is never charged twice and never lost.
 - **A negative number** means "naturally generated and never touched": the rolled age is parked in the age field and the negative number is only the "not settled yet" marker, which the first read turns into a real row.
 - The attachment is **server-side only** (never synced to the client); appearance goes through the block's own blockstate or renderer.
@@ -93,7 +93,7 @@ Placing twice in one spot never grows a second plant: one row is one position. W
 
 ### Settlement every 20 ticks {#settlement-every-20-ticks}
 
-Once every `20` ticks the chunk is **actually loaded**, each row is walked: the definition still exists, `max_age` is not reached, `condition` holds, the growth amount is valid, and then `costs` is paid as one group. A failed payment pauses it — no partial bill is charged and the plant never dies.
+Once every `20` ticks the chunk is **loaded**, each row is walked: the definition still exists, `max_age` is not reached, `condition` holds, the growth amount is valid, and then `costs` is paid as one group. A failed payment pauses it — no partial bill is charged and the plant never dies.
 
 That growth amount is **`growth_rate` evaluated and then multiplied once by `max(0, 1 + spirit_plant_bonus)`**; the pipeline applies it once, so never multiply it again inside the formula. The `herb_age` read while evaluating is the age **before** this settlement. Age caps at `max_age`, and once it is there **even `costs` stops being charged**.
 
@@ -148,5 +148,5 @@ The result of that catch-up is **written into the chunk record**, and the herb i
 
 - Alchemy: the herb's **fruit** is a material for [alchemy recipes](../../addons/alchemy/datapack/alchemy_recipe.md); `main_effects` / `auxiliary_effects` / `catalyst_power` are the power the main, auxiliary and catalyst slots read, and the properties themselves are defined by [medicinal_property](./medicinal_property.md).
 - Matching: `mxt:herb_tag` is an entry type of the item matcher, recognising "is this stack that kind of herb's produce" by `element` or `material`, so it can be written anywhere an `ItemMatcher` is accepted. At least one of the two fields must be given, and every field given must hold on the herb.
-- Quality: a spirit herb definition **declares no `quality` field** — it carries no item identity, so there is no definition-identity component on the stack to ask, and this herb's tier defaults to [default_quality](./default_quality.md) by the fruit's item id or `#`-prefixed tag; a herb that writes `quality_by_age` has its tier stamped into layer 1 at harvest, see [Age and Quality](#age-and-quality) and [Which Tier](./quality.md#resolution).
+- Quality: a spirit herb definition **declares no `quality` field** — it carries no item identity, so there is no definition-identity component on the stack to ask, and this herb's tier defaults to [default_quality](./default_quality.md) by the fruit is item id or `#`-prefixed tag; a herb that writes `quality_by_age` has its tier stamped into layer 1 at harvest, see [Age and Quality](#age-and-quality) and [Which Tier](./quality.md#resolution).
 - Jade: with Jade installed, looking at a herb shows its name, age and whether it is mature.

@@ -7,7 +7,7 @@ description: 给一个数值挂上灵气身份与修炼行为：元素标记、�
 
 <span id="aura" />
 
-[resource](../../../../library/saturn/data/resource.md) 只按实体存一个数：它的边界和显示方式。`aura` 定义给**一个**数值挂上灵气身份与修炼行为——它属于哪个元素、从哪条境界链入门、怎么自然恢复、怎么和修为互相换算、什么时候能被主动消耗。两者是**一对一**关系：同一个数值最多有一条灵气定义，服务器构建缓存时发现重复会直接拒绝。
+[resource](../../../../library/saturn/data/resource.md) 只按实体存一个数：它的边界和显示方式。`aura` 定义给**一个**数值挂上灵气身份与修炼行为——它属于哪个元素、从哪条境界链入门、如何自然恢复、如何和修为互相换算、什么时候能被主动消耗。两者是**一对一**关系：同一个数值最多有一条灵气定义，服务器构建缓存时发现重复会直接拒绝。
 
 ## 文件位置 {#文件位置}
 
@@ -22,7 +22,7 @@ description: 给一个数值挂上灵气身份与修炼行为：元素标记、�
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `resource` | 数值 id | **必填** | 这条灵气描述的那个数值。 |
-| `first_realm` | 境界 id | 无 | 该数值对应境界链的首个境界；只用来确定凡人首次突破的目标境界，凡人阶段的阈值与上限也读这一档自己的 `breakthrough_exp` / `max_experience`。省略则没有境界链，不能修炼。 |
+| `first_realm` | 境界 id | 无 | 该数值对应境界链的首个境界；只用来确定凡人首次突破的目标境界，凡人阶段的阈值与上限也读该档位自己的 `breakthrough_exp` / `max_experience`。省略则没有境界链，不能修炼。 |
 | `start_cultivate_conditions` | `CultivateConditions` | 空对象 | 凡人开始修炼及首次突破前检查的条件，可用于冲突或身份限制。所有带 `first_realm` 的定义均满足后才能开始修炼。 |
 | `cultivation_to_resource` | 对象 | `multiplier=1,max_per_tick=1` | 从修为计数抽取数值回复。 |
 | `resource_to_cultivation` | 对象 | `multiplier=1,max_per_tick=1` | 仅修炼模式下把数值转回修为。 |
@@ -81,7 +81,7 @@ description: 给一个数值挂上灵气身份与修炼行为：元素标记、�
 
 :::info 境界链
 
-链属于这份灵气定义：每个 `realm_stage` 用 `aura` 指回这条定义，链入口由 `first_realm` 给出，所以读境界状态时不必再反查数值。`first_realm` 必须是该数值链上的阶段，服务器构建境界索引时会检查这一点。没有 `first_realm` 的灵气没有链，只剩 `regen` 的自然恢复。
+链属于这份灵气定义：每个 `realm_stage` 用 `aura` 指回该定义，链入口由 `first_realm` 给出，所以读境界状态时不必再反查数值。`first_realm` 必须是该数值链上的阶段，服务器构建境界索引时会检查这一点。没有 `first_realm` 的灵气没有链，只剩 `regen` 的自然恢复。
 
 :::
 

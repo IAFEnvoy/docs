@@ -1,13 +1,13 @@
 ---
 title: MxtSpiritRoots：灵根
-description: 查询、授予、移除与开关灵根；灵根是修炼身份中与元素绑定的那一半。
+description: 查询、授予、移除与启停灵根；灵根定义修炼身份的元素关联。
 ---
 
 # `MxtSpiritRoots`：灵根
 
 <span id="mxtspiritroots-灵根" />
 
-灵根是身体修炼身份的**元素那一半**：持有它就绑定了**一个或多个**元素（`elements` 是列表）、改变这些元素灵气的修炼速度，并缩放亲和其中任一元素的技能。元素无关的那一半是 [MxtPhysiques](./physiques.md)。授予与移除都走权威服务，因此 `conflicting_elements` 冲突判定与"授予了哪些技能"照常处理。
+灵根将持有者与一个或多个元素关联（`elements` 为列表），调整对应灵气的修炼速度，并修正亲和其中任一元素的技能。与元素无关的体质操作见 [MxtPhysiques](./physiques.md)。授予与移除均通过服务端服务处理，包括 `conflicting_elements` 冲突校验和技能授予更新。
 
 ## 方法 {#方法}
 

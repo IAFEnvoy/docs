@@ -26,7 +26,7 @@ description: 模组注册的所有内置方块条件类型，以及每种类型�
 }
 ```
 
-条件通常作为值嵌在其他定义里，比如嵌在 `block_condition` 这样的字段下：
+条件通常作为值嵌在其他定义里，例如嵌在 `block_condition` 这样的字段下：
 
 ```json
 "block_condition": {

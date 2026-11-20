@@ -6,21 +6,21 @@ title: UseItemAuraAccess
 
 <span id="useitemauraaccess" />
 
-让物品**按住右键灌注灵气**的接口，继承 [ItemAuraAccess](./item-aura-access.md)：`HoldBinding` / `HoldService` 负责手势与姿势，`SpiritChargeService` 每 tick 从持有者自己的灵气池取出并写进 `insert`。实现它**不代表**要自己描述形状——灵石就实现了它却把 `pour` 留空，于是走 `item_aura` 定义那条共享读法。它表达的是"这个物品可以被按住灌"，不是"这个物品是特殊的"；不实现它的存储（只用来存东西的通用物品）永远不会被武装成手势。
+该接口继承 [ItemAuraAccess](./item-aura-access.md)，允许物品通过长按右键灌注灵气。`HoldBinding` / `HoldService` 处理手势与姿势，`SpiritChargeService` 每 tick 从持有者灵气池扣除并通过 `insert` 写入。实现可返回自定义 `pour`，或留空以使用 `item_aura` 定义；灵石采用后者。仅实现存储接口的物品不自动获得长按灌注行为。
 
-拆成两个接口是因为"存储"与"被灌"不是一回事：存储能被问在任何地方，被灌只发生在一个人对着自己手里那一堆做手势的时候。三个默认方法对应手势的三个时刻：
+存储接口用于通用存取，灌注接口用于持有者手中物品的长按交互。三个默认方法对应以下阶段：
 
-- **`pour(Provider registries, ItemStack stack)`**（手势开始前、之后每 tick）——这个容器**是什么**：按灵气分列的 `SpiritPour`（每种灵气已存多少、上限多少，**顺序即灌注顺序**），数值按整堆给出、不再乘堆叠。默认返回空 = "我没什么特别的"，于是回落到 `item_aura` 定义那条共享读法（灵石走这条）。只有容量取决于**这一堆上写了什么**的物品（符箓载体）才覆写它。两侧都会问（客户端靠它算手势长度），所以实现只能读传进来的 `Provider`，且同一个 stack 必须答得一样。速率与代价**不在**这里，那是手势的（定义路线按两个速度反向使用，自述存储按 1 单位/tick、1:1）。
-- **`canPourInto(@Nullable LivingEntity holder, ItemStack stack)`**（每 tick，**付灵气之前**）——这一 tick 值不值得灌。手势的顺序是"先扣灵气、再 `insert`、最后 `onCharged`"，所以只要有"插进去也没意义"的情况就会白花灵气；这个方法让物品在付钱前否掉。默认 `true`（只进不出的容器没有二话可说），只有**会因被灌满而自焚发动**的物品覆写它——符箓覆写成 `TalismanService.canFireFrom`，即"这个持有者的冷却窗口还开着吗"。它**不是**"要不要自动发动"那条：那由载体自己的模式决定（`mxt:talisman` 组件的 `mode`，`fire` 灌满即发动、`store` 只积累），跟灌注闸门是两回事。
-- **`onCharged(SpiritSource source, ItemStack stack)`**（一次**真实**移动之后）——"我被灌了"，由物品自己决定是不是满了、要不要动手。默认什么都不做。
+- **`pour(Provider registries, ItemStack stack)`**：在手势开始前及后续每 tick 查询，返回各灵气的存量与容量组成的 `SpiritPour`，列表顺序即灌注顺序。数值按整堆给出，不再乘堆叠数量；空结果回退至 `item_aura`。容量依赖物品堆状态时可覆写。客户端也据此计算手势长度，因此只能使用传入的 `Provider`，相同物品堆应返回一致结果。此方法不定义速率与消耗：定义驱动路线反向使用两个速度，自述存储使用 1 单位/tick、1:1。
+- **`canPourInto(@Nullable LivingEntity holder, ItemStack stack)`**：每 tick 在支付前校验，默认 `true`。实际顺序为扣除灵气、`insert`、`onCharged`；无法接受本次灌注时，应在此返回 `false`，避免无效消耗。符箓通过 `TalismanService.canFireFrom` 检查持有者冷却；自动发动由载体 `mxt:talisman.mode` 单独控制，`fire` 为灌满发动，`store` 为仅储存。
+- **`onCharged(SpiritSource source, ItemStack stack)`**：实际转移灵气后调用，由物品判断是否已满并执行后续行为；默认不执行操作。
 
-**写入者负责汇报**：任何往存储里写入灵气的一方（长按灌注、`AuraAccess` 方块实体等）在**真实写入之后**调用 `onCharged(SpiritSource, ItemStack)`（`simulate` 不算），由物品自己判断"这是不是满了"以及随之而来的行为（符箓在这里发动，并消耗一件本体或按铭刻的耐久扣除）。之所以由写入者汇报而不是让物品在自己的 `add` 里判断，是因为只有写入者知道**这东西在哪、谁付的账**：展示架上的一张符，是被站在别处的人（或一枚灵爆）填满的。`SpiritSource(level, position, actor, consumedByHand)` 同时带着位置与行为者——行为者出账、被记录并为能力作答；位置是这次激发的地点，既以 `block_x` / `block_y` / `block_z` 进公式，也作为**原点**交给位置类行为；`consumedByHand` 说明这次是不是"手上的消耗"（展示架、机器等摆着的存储为 `false`）。也正因为汇报是"选择加入"的：写入方遇到只实现存储的物品时，本就没有什么可汇报的。
+写入方应在真实写入后调用 `onCharged(SpiritSource, ItemStack)`，模拟操作不调用。长按灌注与 `AuraAccess` 方块实体均遵循此约定；仅实现存储的物品无需通知。`SpiritSource(level, position, actor, consumedByHand)` 提供行为者与位置：行为者承担消耗并作为效果主体，位置作为激发原点及公式变量 `block_x` / `block_y` / `block_z` 的来源；`consumedByHand` 标识是否从手中使用，展示架或机器中的存储为 `false`。符箓可在通知中发动，并消耗载体或扣除耐久。
 
-`HoldBinding` 另外提供一对**带持有者**的默认重载（`claims(LivingEntity, Provider, ItemStack)` 与 `holdTicks(LivingEntity, Provider, ItemStack)`）——不关心是谁拿着的声明不用实现它们；[法器](../../../datapack/json/artifact.md)就是靠这一对做到"归别人就不接管这次右键"。
+`HoldBinding` 提供带持有者的默认重载：`claims(LivingEntity, Provider, ItemStack)` 与 `holdTicks(LivingEntity, Provider, ItemStack)`。规则不依赖持有者时无需覆写；[法器](../../../datapack/json/artifact.md)通过这些重载避免接管非主人使用物品的操作。
 
-这一族接口连起来是这样：存取是"能不能被存"，被灌与长按是额外选择加入的手势，实现者只挑自己那一层。
+实现者可分别选择通用存储、灌注通知与长按交互，无需实现未使用的交互层。
 
-灌注使用小数量：自述存储每 tick 最多接收 `1.0`，只缺 `0.25` 时接收并支付 `0.25`；定义路线按 `consume_speed × 堆叠` 执行，不再强制至少一个单位。`SpiritPour.Entry` 的 `stored` / `capacity` 与灌注的 `intake` 都是 `double`，只在百分比和手势 tick 数上取整。数值显示保留两位小数。
+灌注支持小数：自述存储每 tick 最多接收 `1.0`，仅缺 `0.25` 时接收并支付 `0.25`；定义驱动路线按 `consume_speed × 堆叠` 执行，无至少一个单位的限制。`SpiritPour.Entry.stored` / `capacity` 与灌注 `intake` 均为 `double`，仅百分比和手势 tick 数取整；数值显示保留两位小数。
 
 ```mermaid
 classDiagram

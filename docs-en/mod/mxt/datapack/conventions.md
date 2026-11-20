@@ -40,7 +40,7 @@ The mod also ships a few **grouping tags** for its own items and blocks, at the 
 | `#mxt:workstations` | item + block | The blocks a player operates: the exchange station, cheque table, trade station, system station, spirit crafting table, forging table and talisman workstation. |
 | `#mxt:display_stands` | item + block | The six wooden display stands. |
 
-These are **grouping only** - nothing in the mod reads them - so they are there for recipe ingredients, claiming tables and conditions to reference (an ingredient can simply say `"#mxt:coins"`). A few other tags do carry meaning (`#mxt:talisman_paper`, `#mxt:brush_pigment`, `#mxt:back_equipable` / `#mxt:belt_equipable`); what they are for is on their own pages.
+These are **grouping only** - nothing in the mod reads them - so they are there for recipe ingredients, claiming tables and conditions to reference (an ingredient can say `"#mxt:coins"`). A few other tags do carry meaning (`#mxt:talisman_paper`, `#mxt:brush_pigment`, `#mxt:back_equipable` / `#mxt:belt_equipable`); what they are for is on their own pages.
 
 ## Translation Keys {#translation-keys}
 
@@ -50,7 +50,7 @@ The display name of a data-driven definition generates its translation key autom
 
 JSON has **no** `translation_key` field, and the definitions of these 24 registries **store no text at all**; their names and descriptions are always derived from the registered id: `resource`, `aura`, `realm_stage`, `element`, `spirit_root`, `physique`, `ability`, `curse`, `technique`, `progression`, `cultivation`, `artifact`, `medicinal_property`, `spirit_herb`, `alchemy_furnace`, `alchemy_wall_material`, `pill`, `pill_binding`, `formation`, `tribulation`, `secret_realm`, `contract_type`, `talisman`, `quality`. They carry no `name` / `description` field, and writing one is not read; **the only way a pack can give a definition words is to translate the generated key above**. The description key is the name key plus `.description`.
 
-**Only four kinds of definition draw a description key: `quality` (the line under the quality name), `contract_type` (a contract scroll's tooltip), `pill` (the tooltip of an item the pill claims) and `technique` (a manual's tooltip, and the line a read manual prints in chat)** — and only when that key is actually translated: a key the language file does not have prints nothing at all, never the key name itself; every other registry's description key is read by no screen or tooltip.
+**Only four kinds of definition draw a description key: `quality` (the line under the quality name), `contract_type` (a contract scroll's tooltip), `pill` (the tooltip of an item the pill claims) and `technique` (a manual's tooltip, and the line a read manual prints in chat)** — and only when that key is translated: a key the language file does not have prints nothing at all, never the key name itself; every other registry's description key is read by no screen or tooltip.
 
 An untranslated name never puts a key on screen either: **where something has to be shown - a list row, a title, a panel entry, or an argument inside another sentence - the id stands in** (written like `mxt:aura/example.fire`, which still says which entry it is), and **where nothing has to be shown - a tooltip line that only acts as a heading, such as a pill's, a herb's or a furnace's definition name or a talisman type's usage line - the line is left out**.
 
@@ -74,9 +74,9 @@ Translations go in `assets/<namespace>/lang/zh_cn.json` and `en_us.json`, with t
 
 One file is one definition. What you write can end in exactly five ways; know what a mistake looks like before you look at any field.
 
-**A key it does not recognise — dropped silently.** Decoding only reads the keys it knows; an extra key loads as usual, does nothing, and leaves no log line. When a field is renamed or removed no one will point it out for you, so **checking the field table yourself** is the only way to find out while upgrading a pack.
+**Unknown keys are silently ignored.** Decoding reads only declared fields; extra keys have no effect and produce no log entry. When upgrading a pack, compare its fields with the reference tables to identify renamed or removed fields.
 
-**A `type` it does not recognise — the load fails.** `type` is the dispatch key, and an unregistered value does not degrade into "does nothing"; it fails that definition's decode. A module's fields are almost all optional, and a silent degradation would turn a typo into something that stands there quietly doing nothing, so this one is loud.
+**An unknown `type` fails definition loading.** `type` is the dispatch key and must reference a registered type. An invalid value is not replaced with a no-op.
 
 **An empty table, an empty list, an invalid value — refused.** A condition that is always true or always false, a number out of range, a key that must be filled but is not: all of these fail the load.
 

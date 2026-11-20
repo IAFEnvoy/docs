@@ -15,7 +15,7 @@ MiXianTu has three things that all look like a "container", or all hang on an it
 
 This page covers the **spirit vessel** only — it needs no data pack definition at all.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 The spirit vessel is a framework item with no definition file: giving yourself one with a command is enough. The other two each have a definition to write, so go to their two sub-tutorials.
 
@@ -41,7 +41,7 @@ Both maps are **bare maps** — there is no `values` wrapper:
 
 - The key is the ID of a `resource` definition, and the value is the amount (in `mxt:resource_capacity`, the cap).
 - Writing `0` deletes that key (in the cap map, `0` and an absent entry are the same answer: no room).
-- A bad entry logs one line and is then dropped: a misspelt ID does not error, you simply get an empty map.
+- A bad entry logs one line and is then dropped: a misspelt ID does not error, you get an empty map.
 
 Give yourself a vessel that holds 1000 and already carries 25:
 

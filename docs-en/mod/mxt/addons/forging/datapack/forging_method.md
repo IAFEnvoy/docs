@@ -1,6 +1,6 @@
 ---
 title: Forging Method (forging_method)
-description: "A forging method is a single strike: how far it pushes the meter, what it costs, when it may be used, how long it cools down and what sound a successful strike plays."
+description: "A forging method is one forging operation: how far it pushes the meter, what it costs, when it may be used, how long it cools down and what sound a successful strike plays."
 ---
 
 :::info Required addon
@@ -36,7 +36,7 @@ With an item `icon`, the method's name in the list is that item's hover name; on
 
 ## `sound` {#sound}
 
-`sound` is played after the strike **actually happens**, for every player near the table rather than only the one who struck, through the `blocks` volume channel, at volume and pitch `1.0`. A refused strike (not enough resources, condition unmet, cooling down, out of range) makes no sound.
+`sound` is played after the strike **happens**, for every player near the table rather than only the one who struck, through the `blocks` volume channel, at volume and pitch `1.0`. A refused strike (not enough resources, condition unmet, cooling down, out of range) makes no sound.
 
 The field is resolved to a sound event by its ID at load time, so a wrong ID rejects that entry instead of leaving it silent. A method that needs to be **silent** writes `minecraft:intentionally_empty` (the vanilla empty sound).
 

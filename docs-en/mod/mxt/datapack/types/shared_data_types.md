@@ -76,14 +76,19 @@ Prefer a single entry for a target's whole fee. With a balance of 5 and fees of 
 | --- | --- |
 | `saturn:resource` | The payer's own value account. |
 | `mxt:aura` | The value that aura is measured in: out of the payer's own value account when the payer pays; when the ground pays from a **shared aura pool** (an aura entry of a cultivation's `costs`), the amount is first scaled by the pool's allocation for several players cultivating in the same chunk and then charged from the pool all or nothing; when a **block entity's own store** pays (a spirit crafting recipe's `aura`), that aura itself is taken with fractions preserved. |
-| `mxt:item` | Needs a player's inventory. A payer that is not a player (or a formation with no owner) simply **cannot pay** — that is not a broken definition. |
+| `mxt:item` | Needs a player's inventory. A payer that is not a player (or a formation with no owner) **cannot pay** — that is not a broken definition. |
 | `mxt:js` | Needs a player, and runs **last**, after every other channel has finished paying. A script cost is not staged, so the script itself has to stay idempotent about it. |
 
 A missing channel is only ever reported as "cannot pay", never as a broken definition. **An entry that cannot be decoded fails the load of the whole definition** (an unknown `type` and a missing required field both do): the `costs` array does not use the lenient list rule, so there is no "log a warning and drop this entry".
 
 **11** fields take this array: `ability.costs` (**shared by every ability type**, which is why the per-tick fuel of `mxt:mount` and the per-period cost of `mxt:upkeep` are written here too), the `upkeep_costs` of `mxt:channelled`, `realm_stage.costs`, `cultivation.costs` (its aura entries are paid by the ground, every other entry by the cultivator), `formation.activation_costs` and `formation.maintenance_costs`, `forging_method.costs`, `contract_type.costs` (the price of signing a contract, paid by the owner), `talisman.costs` (an `mxt:aura` entry comes out of the carrier's own store, every other entry is charged to the holder), `quality.upgrade_costs`, and the `aura` of a spirit crafting recipe (`mxt:spirit_shaped` / `mxt:spirit_shapeless`). A spirit crafting recipe's `aura` accepts **only `mxt:aura` entries** (any other type is a load error), and it also accepts the `{"<aura id>": NumberProvider}` map form.
 
-**These deliberately are not `Cost`, so do not "fix" them**: `talisman.capacity` is a **multiplier** (a double `≥ 1`) saying how many invocations' worth of aura the carrier holds, rather than what is taken — the aura side of that capacity comes from the aura entries in the same talisman's `costs`; `alchemy`'s `minimum_aura` and `creature_profile.minimum_aura` are requirements that are never consumed. **The pigment drawing spends is the brush's own store** (the `mxt:brush_pigment` component, refilled with the vanilla bundle's click): the payer is that brush rather than the player, so writing it as a `Cost` would mean inventing a payer; instead the store is taken down directly by the length of each stroke. The currency system has nothing to do with this shape: `currency`'s `exchanges[].cost` is an integer price (`1..99`) saying how many currency items one exchange takes, and `quality.value_multiplier` is a value modifier; neither is a `Cost`.
+The following fields do not use `Cost`:
+
+- `talisman.capacity` is a capacity multiplier (double, ≥ 1), specifying how many activations' worth of aura the carrier can store. Aura types come from the aura entries in that talisman's `costs`.
+- Alchemy recipe `minimum_aura` and `creature_profile.minimum_aura` are environmental requirements and consume no aura.
+- Drawing deducts pigment from the brush's `mxt:brush_pigment` component according to stroke length, rather than charging the player's account. See [Brush and Pigment](../../player-guide/brush-and-pigment.md) for refilling.
+- `currency.exchanges[].cost` is the number of currency items required per exchange (integer, `1..99`); `quality.value_multiplier` is a value modifier.
 
 ## `AuraGain` {#auragain}
 

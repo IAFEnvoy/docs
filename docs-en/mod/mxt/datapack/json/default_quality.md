@@ -19,7 +19,7 @@ data/<namespace>/mxt/default_quality/<entry>.json
 
 The entry id is `<namespace>:<path>` — `data/example/mxt/default_quality/common_materials.json` is `example:common_materials`. The mod ships no entry for this table; a content pack uses its own namespace instead of `mxt`.
 
-The fields of the table below go at the top level. There is **no `values` wrapper** and **no "the value is just a tier id" shorthand**: which tier it is goes in the required `quality` field. To override the same item from another pack you sort it out with `priority`, not with a `replace` switch. A **file-level** `neoforge:conditions` works: when it does not hold, the definition never enters the registry at all.
+The fields of the table below go at the top level. There is **no `values` wrapper** and **no "the value is a tier id" shorthand**: which tier it is goes in the required `quality` field. To override the same item from another pack you sort it out with `priority`, not with a `replace` switch. A **file-level** `neoforge:conditions` works: when it does not hold, the definition never enters the registry at all.
 
 Like every other datapack registry it is read **while the world loads**, and `/reload` does not read it again. `/mxt registries list` and `/mxt registries validate` both cover it, and `/picker mxt:default_quality` lists the items these definitions claim.
 

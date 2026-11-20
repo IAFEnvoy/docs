@@ -41,7 +41,7 @@ Anywhere an entity action is accepted, an array is accepted too. The array is sh
 ]
 ```
 
-A key marked **required** in the Default column of the tables below must be written; every other entry is the value used when the key is left out. An optional action field left out defaults to `mxt:no_op`, so a miss such as writing `condition` but forgetting `action` is not reported at load — that entry simply does nothing.
+A key marked **required** in the Default column of the tables below must be written; every other entry is the value used when the key is left out. An optional action field left out defaults to `mxt:no_op`, so a miss such as writing `condition` but forgetting `action` is not reported at load — that entry does nothing.
 
 :::info Field Types Are Shared
 Many fields accept a [number provider](../../../../../library/saturn/types/number.md) instead of a fixed number, and several types reference the shared [data types](../shared_data_types.md). Where a field takes a nested action or condition, that value uses the ids of the matching family.

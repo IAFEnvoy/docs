@@ -9,7 +9,7 @@ description: Every variable a MiXianTu formula can read, which context provides 
 
 A formula variable is a **built-in name** that pulls a number out of the objects the formula is evaluated against. `saturn:formula_variable` is a code registry like the action, condition and number provider families: a data pack cannot add entries or configure existing ones, and there is no JSON file behind it.
 
-Variables are read **on demand**. Nothing is computed when a context is created, so an expression only pays for the names it actually mentions. Values that are not a property of an object — the `damage` of a hit, the coordinates of a broken block, a flag such as `breakthrough` — are not variables; they are explicit values that the caller puts into the context.
+Variables are read **on demand**. Nothing is computed when a context is created, so an expression only pays for the names it mentions. Values that are not a property of an object — the `damage` of a hit, the coordinates of a broken block, a flag such as `breakthrough` — are not variables; they are explicit values that the caller puts into the context.
 
 ## Lookup Order {#lookup-order}
 
@@ -134,7 +134,7 @@ An ability with the `mxt:triggered` type is evaluated when its trigger fires, an
 |---------|-----------------|-------------|
 | `tick` | — | Entity context only |
 | `attack` | `target_is_living`, `target_health` | `target_is_living` is `1` when the attacked entity is a living entity |
-| `hurt` | `damage` | Damage that was actually inflicted on the caster |
+| `hurt` | `damage` | Damage that was inflicted on the caster |
 | `kill` | `target_health` | Health of the killed entity at the moment of death |
 | `death` | `victim_health` | Health of the dying entity, floored at `0` |
 | `block_break`, `block_use` | `block_x`, `block_y`, `block_z` | Coordinates of the block involved |

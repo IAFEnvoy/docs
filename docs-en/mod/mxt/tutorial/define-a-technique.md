@@ -11,7 +11,7 @@ A technique that levels up is three tables put together: a **progression chain**
 
 This page follows [Define an Ability](./add-an-ability.md) and adds that line to the example pack's `example:azure_breath`: the technique can already be learned and already grants abilities, and now it also climbs after you learn it.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -116,7 +116,7 @@ The three new fields each answer one question:
 - The entry level needs no entry of its own. Write one anyway and its `ability` still applies at that level, while its `condition` becomes no gate at all — there is no such thing as promoting *into* the entry level.
 - `ability` is a **minimum**: grants accumulate, so what the second level gave still applies on the third. Above, `example:qi_recovery` moved out of `granted_abilities` and into the second level, turning "recovery comes with learning it" into "recovery comes at level two"; the entry still gives `example:qi_bolt` the moment the technique is learned.
 - Mastery and `condition` are **two independent gates** and both must hold: enough of the value, and the condition satisfied. Write `mxt:always` if the value alone should decide.
-- Both `mastery_resource` and `configuration` **require `default_level`**: naming a value with no entry fails at load time with `mastery_resource needs default_level to name the progression chain it measures`, while a technique with `configuration` and no `mastery_resource` grants its abilities as usual and simply never advances on its own.
+- Both `mastery_resource` and `configuration` **require `default_level`**: naming a value with no entry fails at load time with `mastery_resource needs default_level to name the progression chain it measures`, while a technique with `configuration` and no `mastery_resource` grants its abilities as usual and never advances on its own.
 
 ## Step 4 — Where Mastery Comes From {#step-4-—-where-mastery-comes-from}
 

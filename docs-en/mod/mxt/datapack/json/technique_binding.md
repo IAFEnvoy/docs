@@ -47,7 +47,7 @@ To use an item of your own as a manual, both routes work: write `carrier_item: "
 
 How long a read takes, which pose it plays and which sound it makes come from the [technique definition](./technique.md); a stack that should read differently writes the `mxt:technique_reading` component (same field names as the technique, all optional, overriding that set **field by field**). Which quality ladder this family sits on is not decided here: the ladder's name is written on the `quality` entry itself — on the entry tier — and the runtime carries it along `next` to every tier above it.
 
-**A technique can have no binding at all.** Bindings are matched by technique id, so a technique with no `technique_binding` file simply has no extra condition before learning and the technique book as its carrier. Such a technique is still learned through the stack's component, and how it reads is decided by its own definition (and by that component).
+**A technique can have no binding at all.** Bindings are matched by technique id, so a technique with no `technique_binding` file has no extra condition before learning and the technique book as its carrier. Such a technique is still learned through the stack's component, and how it reads is decided by its own definition (and by that component).
 
 ## Example {#example}
 

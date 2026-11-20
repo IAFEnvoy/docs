@@ -17,11 +17,11 @@ description: 定义哪些方块向所在区块提供灵气，以及每种灵气�
 data/<namespace>/mxt/block_aura/<条目>.json
 ```
 
-条目 id 是 `<namespace>:<路径>`——`data/example/mxt/block_aura/aura_emitters.json` 就是 `example:aura_emitters`。模组自带的条目在 `data/mxt/mxt/block_aura/`；内容包写自己的命名空间，不要塞进 `mxt`。
+条目 id 是 `<namespace>:<路径>`——`data/example/mxt/block_aura/aura_emitters.json` 就是 `example:aura_emitters`。模组自带的条目在 `data/mxt/mxt/block_aura/`；内容包写自己的命名空间，不要写入 `mxt`。
 
-顶层直接写下面字段表里的键。**没有 `values` 包一层**，一份文件只描述一条定义；要在别的包里再加一份贡献，多写一条定义就行，命中同一个方块的定义**都生效**，没有 `replace` 这类开关。文件级 `neoforge:conditions` 是生效的：条件不成立时这条定义根本不进注册表。
+顶层直接写下面字段表里的键。**没有 `values` 包一层**，一份文件只描述一条定义；要在别的包里再加一份贡献，多写一条定义就行，命中同一个方块的定义**都生效**，没有 `replace` 这类开关。文件级 `neoforge:conditions` 是生效的：条件不成立时该定义根本不进注册表。
 
-这张注册表和别的数据包注册表一样在**世界加载时**读取，`/reload` 不会重读。`/mxt registries list` 与 `/mxt registries validate` 都包含它；`/picker mxt:block_aura` 列出这些定义认领的方块。
+该注册表和别的数据包注册表一样在**世界加载时**读取，`/reload` 不会重读。`/mxt registries list` 与 `/mxt registries validate` 都包含它；`/picker mxt:block_aura` 列出这些定义认领的方块。
 
 **用途**：方块提供的灵气。
 
@@ -29,8 +29,8 @@ data/<namespace>/mxt/block_aura/<条目>.json
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `blocks` | 方块条目 | **必填、不能为空** | 这条定义认领哪些方块：单个方块 id、`#方块标签`，或它们的数组。 |
-| `aura` | 灵气 id 到数值的映射 | `{}` | 这条定义让每个被认领的方块提供哪些灵气、各多少。 |
+| `blocks` | 方块条目 | **必填、不能为空** | 该定义认领哪些方块：单个方块 id、`#方块标签`，或它们的数组。 |
+| `aura` | 灵气 id 到数值的映射 | `{}` | 该定义让每个被认领的方块提供哪些灵气、各多少。 |
 
 `aura` 的键是 `mxt:aura` 注册表条目，不是 `saturn:resource`：数值本身只记一个数，灵气才说明这个数算在哪门灵气上。映射里每一项的字段与 [aura_zone](./aura_zone.md) 的 `aura` 条目相同：
 
@@ -41,11 +41,11 @@ data/<namespace>/mxt/block_aura/<条目>.json
 | `regen_per_tick` | Double | `0` | 每 tick 恢复多少。 |
 | `color` | `RGBColor` | `#FFFFFF` | 颜色，只用于环境渲染。 |
 
-`amount` 必须有限且非负，`regen_per_tick` 必须有限，否则这条定义在加载期被拒绝。`aura` 省略或写成空表时这条定义不贡献任何灵气，只是认领了几个方块。
+`amount` 必须有限且非负，`regen_per_tick` 必须有限，否则该定义在加载期被拒绝。`aura` 省略或写成空表时该定义不贡献任何灵气，只是认领了几个方块。
 
-没有「灵气类型」这类字段：一条定义让方块放出哪些灵气就是这个映射的键集，方块没法认领一门它其实不提供的灵气。
+没有「灵气类型」这类字段：一条定义让方块放出哪些灵气就是这个映射的键集，方块没法认领一门它不提供的灵气。
 
-**多条定义命中同一个方块时都生效、相加**（方块灵气本身就是累加量）：这张注册表**没有 `priority` 字段**，不挑一条赢，也没有谁盖过谁。
+**多条定义命中同一个方块时都生效、相加**（方块灵气本身就是累加量）：该注册表**没有 `priority` 字段**，不挑一条赢，也没有谁盖过谁。
 
 ## 示例 {#示例}
 

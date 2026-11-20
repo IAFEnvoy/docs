@@ -7,11 +7,11 @@ description: "The hooks each of the four binding tables offers, when they run, w
 
 <span id="bind-actions-with-kubejs" />
 
-[Create Items and Bind Actions with KubeJS](./create-items-with-kubejs.md) covered how an item gets registered and which table claims it. This page picks up from there and answers one question only: **when does the action inside a hook actually run?**
+[Create Items and Bind Actions with KubeJS](./create-items-with-kubejs.md) covered how an item gets registered and which table claims it. This page picks up from there and answers one question only: **when does the action inside a hook run?**
 
-Each of the four binding tables hangs on a moment of its own, and none of them waits for another: the item table runs after the item is used up, the weapon's three hooks sit on right click, on a hit and on every tick respectively, and the pill's actions pick up after the pill has been eaten (they live on the pill definition, not on a binding). One wrong line raises no error — it simply never executes.
+Each of the four binding tables hangs on a moment of its own, and none of them waits for another: the item table runs after the item is used up, the weapon's three hooks sit on right click, on a hit and on every tick respectively, and the pill's actions pick up after the pill has been eaten (they live on the pill definition, not on a binding). One wrong line raises no error — it never executes.
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 This page keeps using the four items from the main page, and the changes land in the binding files they already have:
 
@@ -38,7 +38,7 @@ Three things to remember first:
 
 - **Leaving a hook out is not "writing nothing" — it writes a no-op action.** A no-op does nothing and reports no error, so "I never wrote it" and "I wrote it but it never fires" look exactly the same in the log.
 - **A single action versus an array of actions**: every hook except `item_binding.actions` accepts both forms; `actions` **only accepts an array**, and a single object there makes that file fail to decode.
-- **A hook written into the wrong table is dropped silently.** When a table does not declare a key, that key is simply unknown and is ignored at load — writing `use_action` in `item_binding`, or `on_consume` in `pill_binding`, neither reports an error nor has any effect.
+- **A hook written into the wrong table is dropped silently.** When a table does not declare a key, that key is unknown and is ignored at load — writing `use_action` in `item_binding`, or `on_consume` in `pill_binding`, neither reports an error nor has any effect.
 
 ## Step 2 — The Generic Binding's Actions {#step-2-—-the-generic-binding-s-actions}
 

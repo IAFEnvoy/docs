@@ -9,7 +9,7 @@ description: Every item data component the mod registers - what it holds, who wr
 
 Every piece of state the mod hangs on an item stack goes through a vanilla **data component** (`DataComponentType`). There is no "mod-specific NBT on the item" anywhere. Core components are registered in one place, `registry.MxtDataComponents`, and each declares both a **persistent codec** and a **network codec** (`persistent(...).networkSynchronized(...)`) - so they all save with the world and all sync to the client. There is no server-only component and no session-only component.
 
-A component is **this stack's own fact**: it was forged, it has a talisman inscribed on it, it holds this much aura. The other half is the **datapack declaration** ("what this kind of item usually is"). Which way they merge is fixed in [Data Loading](./data-loading.md).
+Components store state for a specific item stack, such as forging results, talisman inscriptions or stored aura. Datapack definitions provide the corresponding general rules. See [Data Loading](./data-loading.md) for component precedence.
 
 ## At a Glance {#at-a-glance}
 
@@ -26,7 +26,7 @@ The **Payload** column is the Java shape the codec decodes into, not JSON key na
 
 | Component id | Payload | What it does |
 | --- | --- | --- |
-| `mxt:pill` | `PillComponent` (optional `pill`, `on_consume`, `toxicity_gain`, `toxicity_threshold`, `on_overdose`, `toxicity_after_overdose`) | A stack of pills **declaring its own identity and effect**. The `pill` written here names a pill definition and **wins over** the one the `pill_binding` matched; the five effect keys then override field by field. **Use count and cooldown are not here** - they still belong to the matched binding only. |
+| `mxt:pill` | `PillComponent` (optional `pill`, `on_consume`, `toxicity_gain`, `toxicity_threshold`, `on_overdose`, `toxicity_after_overdose`) | A stack of pills **declaring its own identity and effect**. The `pill` written here names a pill definition and **takes precedence over** the one the `pill_binding` matched; the five effect keys then override field by field. **Use count and cooldown are not here** - they still belong to the matched binding only. |
 
 ### Techniques {#techniques}
 

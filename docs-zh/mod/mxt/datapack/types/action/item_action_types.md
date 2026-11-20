@@ -43,7 +43,7 @@ description: 模组注册的全部内置物品行为类型，以及每种类型�
 行为字段几乎都是可选的，默认值就是 `mxt:no_op`：写了 `condition` 却忘了 `action` 这类漏写在加载期不报错，只是那一项什么都不做。
 
 :::info 物品行为的运行位置
-物品行为需要一个物品堆作为作用对象，因此通常经由已经提供物品堆的那张表到达——例如[实体行为](./entity_action_types.md) `mxt:equipped_item_action`，它同时提供装备槽位。没有物品堆时行为不跑。[物品条件](../condition/item_condition_types.md)是与之配对的条件家族。
+物品行为需要一个物品堆作为作用对象，因此通常经由已经提供物品堆的那张表到达——例如[实体行为](./entity_action_types.md) `mxt:equipped_item_action`，它同时提供装备槽位。没有物品堆时行为不执行。[物品条件](../condition/item_condition_types.md)是与之配对的条件家族。
 :::
 
 :::tip 数据包可视化编辑器

@@ -7,9 +7,9 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 
 <span id="java-公开-api" />
 
-这页列的是**别的模组可以直接调用的入口**。数据包能表达的东西（定义、条件、行为、消耗）不需要 Java；只有当你要在代码里问"这个坐标的灵气是多少""替他执行这个技能""这件物品算不算这条定义"时，才用得上这里的东西。
+本页列出供其他模组调用的运行时入口，包括注册表查询、灵气计算、技能执行与物品定义解析。定义、条件、行为和消耗等可由数据包表达的内容无需使用 Java。
 
-三件事先说清楚：
+使用 API 时应遵循以下约定：
 
 - **这些入口留在各自的模块包里**（`registry`、`util`、`runtime/*`、`data`），只有**要实现**的接口在 `com.iafenvoy.mxt.api`，见[接口](./interfaces/index.md)。
 - **服务端权威**：扣费、修炼、技能、伤害、阵法结算都只在服务端做，客户端只渲染与发请求。哪些入口在客户端会失效，集中在[服务端与客户端的边界](#boundary)。
@@ -17,14 +17,14 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 
 ## 先按"要做什么"找入口 {#pick}
 
-| 你要做的事 | 入口 | 在哪 |
+| 功能 | 入口 | 所属包 |
 | --- | --- | --- |
 | 读一张数据包注册表里的定义 | [`MxtDatapackRegistries`](#mxtdatapackregistries) | `registry` |
 | 把定义翻成显示名 | [`DefinitionText`](#definitiontext) | `util` |
 | 拼一行提示框数值 | [`TooltipText`](#tooltiptext) | `util` |
 | 求一个数据包数值 | [`NumberProvider`](#numberprovider) | `util.formula` |
-| 判断"这件物品算不算这条定义" | [`ItemMatcher`](#itemmatcher) | `util.matcher` |
-| 问一堆物品是哪一档、让自己的定义参与定档 | [`QualityService` / `QualityProvider`](#qualityservice) | `runtime.item` / `api` |
+| 判断"这件物品算不算该定义" | [`ItemMatcher`](#itemmatcher) | `util.matcher` |
+| 查询物品品质、让自己的定义参与定档 | [`QualityService` / `QualityProvider`](#qualityservice) | `runtime.item` / `api` |
 | 问某个坐标有多少灵气 | [`AuraService`](#auraservice) | `runtime.world` |
 | 读写实体身上的一条数值 | [`ResourceService`](#resourceservice) | `runtime.resource` |
 | 加修炼进度、突破、设置境界 | [`CultivationService`](#cultivationservice) | `runtime.cultivation` |
@@ -37,7 +37,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | 算一件物品的货币价值 | [`CurrencyValueService`](#currencyvalueservice) | `runtime.economy` |
 | 添加一种运行期长按用途 | [`ItemUseCycle` / `ItemUseCycles`](#itemusecycles) | `api` / `runtime.hold` |
 
-## 数据定义怎么读 {#definitions}
+## 数据定义读取 {#definitions}
 
 ### `MxtDatapackRegistries` {#mxtdatapackregistries}
 
@@ -54,7 +54,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | `holders(Provider access, key)` | 遍历该表的全部 Holder |
 | `register(NewRegistry event, key, codec)` | 附属在数据包注册事件中登记并同步自己的表，自动纳入 `/mxt registries` 列表 |
 
-**这一层不过滤任何东西**：条目在不在注册表里就是全部答案，而"停用一条定义"是加载期的事（`neoforge:conditions`，见[停用一条定义](../datapack/conventions.md#停用一条定义)），被条件挡掉的条目根本不在表里。所以读了 holder 就能直接动用，没有"读到了一条被关掉的定义"这种状态。
+**该层不过滤任何东西**：条目在不在注册表里就是全部答案，而"停用一条定义"是加载期的事（`neoforge:conditions`，见[停用一条定义](../datapack/conventions.md#停用一条定义)），被条件挡掉的条目根本不在表里。所以读了 holder 可以直接动用，没有"读到了一条被关掉的定义"这种状态。
 
 标签查询：
 
@@ -67,7 +67,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | 方法 | 作用 | 备注 |
 | --- | --- | --- |
 | `holderOrEmpty(key, Identifier id)` | 与 `holder(key, id)` 同义，但**没有服务端时不抛**，给空 | 给同时在客户端跑的读者用（例如 `CurseService.definitionState`） |
-| `registry(key)` | 拿到原版 `Registry<T>` 本体 | 没有运行中的服务端时抛 `IllegalStateException` |
+| `registry(key)` | 获取原版 `Registry<T>` 本体 | 没有运行中的服务端时抛 `IllegalStateException` |
 | `size(key)` | 该表的条目数 | 与 `registry(...)` 同一条服务端断言 |
 | `registries()` | 本类登记过的全部注册表 key | |
 
@@ -84,7 +84,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | 方法 | 作用 | 备注 |
 | --- | --- | --- |
 | `name(Holder<?> holder)` / `name(ResourceKey<?> key)` | 取显示名 | **本体内部推荐入口**：类别由注册表自己答（`key.registry()` 的 path），调用方不传类别串 |
-| `name(Identifier id, String category)` | 手里只有一个裸 id 时 | **硬假定 `mxt` 命名空间**，非 `mxt` 的定义别用这个重载 |
+| `name(Identifier id, String category)` | 仅有条目 ID 时 | 默认使用 `mxt` 注册表命名空间，不适用于其他命名空间的定义 |
 | `description(Holder<?> holder)` / `description(ResourceKey<?> key)` | 取描述 | 键是名字键加 `.description`；**描述只有这一个出口** |
 | `minorStage(Holder<?> holder, int index)` / `minorStage(ResourceKey<?> key, int index)` | 取子境界名 | 键是本境界名字键加 `.minor_stage.<下标>`，下标从 `0` 起 |
 | `derived(Holder<?> holder, String suffix)` / `derived(ResourceKey<?> key, String suffix)` | 名字键再接一个后缀 | `description` 与 `minorStage` 都走它；别的"属于某个定义的文本"也走它 |
@@ -103,7 +103,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | --- | --- | --- |
 | `number(double value)` | 最多两位小数、去掉多余的 0 | 用 `Locale.ROOT`，不受语言环境影响：`3.0` → `3`、`3.50` → `3.5`、`3.456` → `3.46` |
 | `signed(double value)` | 带符号的数值 | 非负一律加 `+`（`0` → `+0`） |
-| `join(List<? extends Component> parts)` / `join(Component... parts)` | 把若干片段拼成**一行** | 片段之间插的是翻译键 `TooltipText.SEPARATOR`（`tooltip.mxt.separator`），不是字面标点 |
+| `join(List<? extends Component> parts)` / `join(Component... parts)` | 把若干片段组合为**一行** | 片段之间插的是翻译键 `TooltipText.SEPARATOR`（`tooltip.mxt.separator`），不是字面标点 |
 
 要点：列表标点各语言不同，**别在别处硬编码「、」或「, 」**——凡是 join 过的行都必须经过这里。
 
@@ -115,7 +115,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | --- | --- | --- |
 | `double evaluate(FormulaContext context)` | 求值 | 实现必须自己用 `assertFinite` 兜住非有限结果 |
 | `MapCodec<? extends NumberProvider> codec()` | 该实现的 `MapCodec` | 新实现要同时在 `saturn:number_provider_type` 里登记，否则带类型的 codec 认不出 |
-| `default boolean assertFinite(double value)` | 校验运行期结果是否有限 | 非有限时报一条含 `using 0` 的诊断并返回 `false`；**它本身不改数值**，调用方负责给兜底值 |
+| `default boolean assertFinite(double value)` | 校验运行期结果是否有限 | 非有限时报一条含 `using 0` 的诊断并返回 `false`；**它本身不改数值**，调用方负责提供默认值 |
 | `NumberProvider.CODEC` | 数据包统一入口 | 按 `double` → 表达式字符串 → `{type:...}` 的顺序尝试解码；编码侧固定写回 `{type:...}` |
 | `NumberProvider.TYPED_CODEC` | 按 `"type"` 分派 | |
 | `NumberProvider.FINITE_DOUBLE_CODEC` | 拒绝非有限 double | 加载期校验用 |
@@ -138,7 +138,7 @@ description: 别的模组可以直接调用的运行时入口：读数据包注�
 | `findAll(...)`（注册表版与流版） | 全部命中 | 按 `priority` **降序**排序 |
 | `ENTRIES_CODEC` | entry 列表的 Codec | 同时认单个对象与数组两种写法 |
 
-`ItemMatcher.Entry` 的成员：`matches(ItemStack)`、`default boolean itemLevel()`、`codec()`，以及两个 codec 常量 `SHORTCUT_CODEC`（简写：裸物品 id → `item`、物品标签 → `tag`）与 `CODEC`（先试简写，再试带 `type` 的对象）。**Entry 不带优先级**：谁赢由定义自己的 `priority` 决定。
+`ItemMatcher.Entry` 的成员：`matches(ItemStack)`、`default boolean itemLevel()`、`codec()`，以及两个 codec 常量 `SHORTCUT_CODEC`（简写：裸物品 id → `item`、物品标签 → `tag`）与 `CODEC`（先试简写，再试带 `type` 的对象）。**Entry 不带优先级**：匹配优先级由定义自己的 `priority` 决定。
 
 Entry 种类（`saturn:item_matcher_entry_type`，默认 `item`）：`item`、`tag`、`wildcard`、`regex`；运行期的模块另外注册了 `spirit_storage`、`herb_tag`、`technique`。
 
@@ -146,7 +146,7 @@ Entry 种类（`saturn:item_matcher_entry_type`，默认 `item`）：`item`、`t
 
 - `find` 的"第一个"是 `priority` **数值最大**的那个定义，不是注册顺序，也不是"匹配得最具体"的那个，与 `aura_zone`、`element_reaction` 同一个方向；`priority` 相同的才取决于传入流的顺序。
 - `priority` 是**认领表自己的字段**（`artifact`、`item`/`weapon`/`pill`/`tool`/`blueprint`/`technique` 六种 binding、`spirit_herb`、`item_aura`、`currency` 与 `default_quality`，默认 `0`，加载期不校验范围），所以"通用定义 + 特地点名定义"共存时由数据包写死谁先；点名的条目**不会**因此更靠前。`ArtifactHold` 直接回读它那件法器的字段；消耗 `mxt:item`、三个物品条件与两个框架内置的长按声明（功法阅读、灌注）没有这个字段，恒为 `DEFAULT_PRIORITY`。
-- **`itemLevel()` 是缓存安全的分界线**：它返回 `true` 表示"命中与否只由物品本身决定"，按物品开缓存的调用方**只能**缓存这类项；会读堆上的组件 / NBT 的项，以及答案来自另一条定义的项（`mxt:herb_tag` 问的是哪条 `spirit_herb` 认领这件物品）必须每个堆都问一次。
+- **`itemLevel()` 是缓存安全的分界线**：它返回 `true` 表示"命中与否只由物品本身决定"，按物品开缓存的调用方**只能**缓存这类项；会读物品堆上的组件 / NBT 的项，以及答案来自另一条定义的项（`mxt:herb_tag` 检查的是哪条 `spirit_herb` 认领这件物品）必须每个堆都问一次。
 - 简写只覆盖 `item` 与 `tag`；其它实现走简写编码会抛 `IllegalArgumentException`。
 
 ## 物品目录与创造栏 {#picker}
@@ -155,11 +155,11 @@ Entry 种类（`saturn:item_matcher_entry_type`，默认 `item`）：`item`、`t
 
 分类就是一张注册表：`/picker <分类 id>` 的分类 id 就是注册表 id，`PickerCatalogue.categories()` 按登记顺序给出全部分类，`PickerCatalogue.category(Identifier)` 按 id 找一个。`minecraft:item` 与 `minecraft:block` 是 Picker 自己的内置分类，本模组不再登记它们；本模组登记的分类与行形状见[物品选择器](./screens.md)。
 
-行怎么来由那张注册表自己的 provider 决定——物品形状的表（`item_aura`、`currency`、`default_quality`、各种 binding…）一行是它认领到的那件物品（`currency` 看 `item`，其余看 `items`），方块形状的表（`block_aura`、`heat_source`）一行是它 `blocks` 认领到的那个方块，行名用条目自己的名字（定义写了 `name` 就读它，否则按 id 推翻译键）。每个类目里的行序就是那张注册表自己的顺序。
+行如何来由该注册表自己的 provider 决定——物品形状的表（`item_aura`、`currency`、`default_quality`、各种 binding…）一行是它认领到的那件物品（`currency` 看 `item`，其余看 `items`），方块形状的表（`block_aura`、`heat_source`）一行是它 `blocks` 认领到的那个方块，行名用条目自己的名字（定义写了 `name` 就读它，否则按 id 推翻译键）。每个类目里的行序就是该注册表自己的顺序。
 
-匹配条目里**只有物品与标签能直接点名物品**，其余条目会拿**每一件已注册物品**试一遍（通配符、正则、整份材料、`mxt:spirit_storage` 这类都能这样出行）；**只有读堆数据的那几种**（`mxt:quality` 的档位、`mxt:technique` 组件、按药性筛的灵草）对裸物品答否，因此不出行。
+匹配条目里**只有物品与标签能直接点名物品**，其余条目会拿**每一件已注册物品**试一遍（通配符、正则、整份材料、`mxt:spirit_storage` 这类都能这样出行）；**只有读堆数据的那几种**（`mxt:quality` 的档位、`mxt:technique` 组件、按药性筛的灵草）对裸物品返回 `false`，因此不出行。
 
-给创造栏用 `PickerContents.stacksOf` / `stacksOfMod`：它们按**原版创造栏自己的规则**（`ItemStackLinkedSet`，同物品同组件算同一件）去掉重复，而且**每一份都是拷贝**。去重不是装饰：`mxt:aura` 的每一行都是同一颗灵石当替身，把行原样塞进创造栏，原版的 `accept` 会当场抛"这个堆已经在栏里了"。行视图（`itemsOf*`）一个定义一行，不去重；原版创造栏的 `accept` 还要求 `count == 1`，本体的行都是 1。每条查询都要求自己传注册表访问器（`HolderLookup.Provider`，`BuildCreativeModeTabContentsEvent.getParameters().holders()` 就是它），所以客户端用客户端已同步的表、服务端用服务端的表，不存在"读到另一侧"的问题。
+创造栏应使用 `PickerContents.stacksOf` 或 `stacksOfMod`。结果按原版 `ItemStackLinkedSet` 规则对相同物品与组件去重，并返回独立副本，避免共享展示物品导致重复插入异常。`itemsOf*` 行视图保留每个定义，不去重。原版创造栏要求 `count == 1`，本体行视图满足此要求。查询必须传入对应侧的 `HolderLookup.Provider`，例如 `BuildCreativeModeTabContentsEvent.getParameters().holders()`，以读取该侧注册表。
 
 ```java
 // 自己的创造栏：让这个模组贡献过的定义（以及它自己的物品）全进来
@@ -174,9 +174,9 @@ public void buildContents(BuildCreativeModeTabContentsEvent event) {
 
 ### `QualityService` 与 `QualityProvider` {#qualityservice}
 
-包 `com.iafenvoy.mxt.runtime.item`（服务类）与 `com.iafenvoy.mxt.api`（接口）。**"这一堆物品是哪一档"只有一个解析顺序**，只在 `QualityService.find` 一处，按**三层**往下取：堆上的 `mxt:quality` 组件 → **这一堆携带的定义**自己声明的档 → 注册表 `mxt:default_quality`。本模组今天有九个定义走第 2 层。字段级写法见[品质](../datapack/json/quality.md)。
+品质查询由 `com.iafenvoy.mxt.runtime.item` 的服务类与 `com.iafenvoy.mxt.api` 的接口提供。`QualityService.find` 按三层解析：物品堆的 `mxt:quality` 组件、所携带定义声明的品质、`mxt:default_quality` 注册表。九类内置定义参与第二层。字段说明见[品质](../datapack/json/quality.md)。
 
-`api/QualityProvider` 是给**定义类型**用的契约：一个定义类型实现它，就是在说"我的物品起步的那一档归我自己报"。
+`api/QualityProvider` 是给**定义类型**用的契约：一个定义类型实现它，就是在说"我的物品起步的对应档位归我自己报"。
 
 ```java
 public interface QualityProvider {
@@ -188,7 +188,7 @@ public interface QualityProvider {
 
 | 重载 | 用在 |
 | --- | --- |
-| `carry(Supplier<? extends DataComponentType<Holder<T>>> type)` | 组件的值**就是**那份定义，直接读 `Holder<T>` |
+| `carry(Supplier<? extends DataComponentType<Holder<T>>> type)` | 组件的值**就是**该定义，直接读 `Holder<T>` |
 | `carry(Supplier<? extends DataComponentType<C>> type, Function<C, Optional<Holder<T>>> extract)` | 组件是个 record，定义包在里面，由 `extract` 取出来 |
 
 `T extends QualityProvider`：给一个没实现这个接口的定义类型登记载体**编译不过**。
@@ -196,28 +196,28 @@ public interface QualityProvider {
 要点：
 
 - **注册顺序只有一条**：本模组自己的载体在 `QualityService` 类加载时的静态块里登记完，附属模组的载体排在后面。一次查询按登记顺序走完整个列表，先给出答案的那一个赢。
-- **这是一份登记，不是"扫一遍堆上碰巧带着的组件"**：两个 provider 同时挂在一堆上时，"谁先被问到"只能由登记顺序说了算——按组件遍历的先后没有任何契约。
-- **载体必须只凭这一堆就答得出**：两个重载**都不给它注册表**，因为"这件物品能不能用"那道闸门（`QualityService.check`）手里只有品质注册表。想按 id 回查别的注册表的写法在这里走不通。
-- **引用失效就当作没有**：载体取出的 holder 没绑定时（当前包把那条定义删了）这一层答空，解析继续往下走，而不是给出一个死档位。
+- **载体按注册顺序查询。** 多个 provider 适用于同一物品堆时，采用首个有效结果，不依赖物品组件的遍历顺序。
+- **载体仅依赖物品堆。** 两个重载均不提供注册表访问器，因此不能在解析时回查其他注册表。
+- **无效引用继续回退。** 载体返回未绑定的 holder 时，该层不提供品质，继续下一层解析。
 - **定义类型只是"被问到"的入口**：真正读的是定义自己的 `defaultQuality()`，所以一个类型实现了接口、又登记了载体之后，它的每一条定义都自动参与第 2 层。
 
 `QualityService` 对外的其余入口：
 
 | 方法 | 作用 | 备注 |
 | --- | --- | --- |
-| `find(Provider access, ItemStack stack)` | 这一堆解析出的档 | 三层顺序的唯一实现；空堆给空 |
-| `set(stack, quality)` / `clear(stack)` | 写 / 摘掉覆盖组件 | `clear` 之后这一堆先退回**它携带的定义**那一层，再看注册表 `mxt:default_quality` |
+| `find(Provider access, ItemStack stack)` | 该物品堆解析出的档 | 三层顺序的唯一实现；空物品堆返回空值 |
+| `set(stack, quality)` / `clear(stack)` | 写 / 移除覆盖组件 | `clear` 之后该物品堆先退回**它携带的定义**该层，再看注册表 `mxt:default_quality` |
 | `hasOverride(stack)` | 堆上**有没有**那个组件 | 与"解析出档没有"是两个问题：没写组件也可能从定义或注册表 `mxt:default_quality` 读到档 |
-| `canUse(user, stack)` / `check(user, stack)` | "能不能用"的闸门 | `check` 给出 `Failure` 枚举；绑定条件、档位自己的 `condition`、丹药次数与冷却都在这里 |
+| `canUse(user, stack)` / `check(user, stack)` | "能不能用"的校验 | `check` 给出 `Failure` 枚举；绑定条件、档位自己的 `condition`、丹药次数与冷却都在这里 |
 | `modifier(...)` | 取品质的三个修正之一 | 是乘数；缺失、非有限或 ≤ 0 一律按 `DEFAULT_MODIFIER`（`1.0`） |
-| `displayName(quality)` | 品质这一档自己的名字，套上它自己的颜色 | **列一个档位时的统一写法**（就是 `coloredName(quality, DefinitionText.name(quality))`）；`/quality get\|set\|upgrade`、灵根 / 体质列表与画符结算都走它 |
-| `coloredName(quality, text)` | 给一段**别的**文本套上这一档的 `color` | 品质没写颜色就原样返回 |
+| `displayName(quality)` | 品质该档位自己的名字，套上它自己的颜色 | **列一个档位时的统一写法**（就是 `coloredName(quality, DefinitionText.name(quality))`）；`/quality get\|set\|upgrade`、灵根 / 体质列表与画符结算都走它 |
+| `coloredName(quality, text)` | 给一段**别的**文本套上该档位的 `color` | 品质没写颜色就原样返回 |
 
-存单堆覆盖用 `set`，别自己往组件里写；被拒绝的使用想给玩家同一句提示，就调 `notifyCannotUse`（它是公开的，好让排在闸门自己的优先级之下、但仍要看这次拒绝的交互也报得出来）。
+使用 `set` 写入单个物品堆的品质覆盖值，不直接修改组件。需要统一的使用拒绝提示时，调用公开方法 `notifyCannotUse`。
 
 ## 灵气与资源 {#aura}
 
-这两件事一起讲，因为最容易混：**灵气（`aura`）是身份，资源（`resource`）是数值**。字段怎么写见 [aura](../datapack/json/aura.md) 与 [resource](../../../library/saturn/data/resource.md)，"某坐标的灵气到底怎么算出来"见[灵气计算](../technical/aura.md)。
+**灵气（`aura`）表示身份，资源（`resource`）表示数值。** 字段说明见 [aura](../datapack/json/aura.md)与 [resource](../../../library/saturn/data/resource.md)，坐标查询算法见[灵气计算](../technical/aura.md)。
 
 ### `AuraService` {#auraservice}
 
@@ -244,11 +244,11 @@ public interface QualityProvider {
 
 - **"坐标最终灵气"与"环境浓度"是两个入口**：前者含区块存量，后者不含。两者的池子都**按 `Holder<Aura>` 分开**，而 `aura` 与 `resource` 一对一，所以**没有"给我某个 `resource` 的池子"这种入口**。
 - **真正能花的账面是区块存量**，只有 `consume` / `change` 能改；`getPositionAura` 给的是合成视图（里面还混着方块贡献）。
-- **一次查询是"本刻快照"**：结果按 `(坐标, 游戏刻)` 记忆、整表在每个 tick 末尾丢弃（`AuraQueryCache`），所以 `consume` / `change` 之后在**同一刻**再查，读到的仍是改动前的值（新激活的阵法同理，下一 tick 才看得到）——要立刻拿到新值，就用这次调用的返回值自己记账。详见[灵气计算](../technical/aura.md)。
-- `supplied` 单独记"这份量里有多少来自脚下的方块发射器"，因为允许花掉脚下地形的消费者（比如抽取环境的阵法）必须先扣掉自己这一份，否则重复计账。
+- **查询结果在同一 tick 内保持一致。** `AuraQueryCache` 按坐标与游戏刻缓存结果，每 tick 结束时失效。因此 `consume`、`change` 或阵法激活后的同刻查询仍可能返回旧值；需要即时结果时，应使用修改操作的返回值。详见[灵气计算](../technical/aura.md)。
+- `supplied` 单独记"这份量里有多少来自脚下的方块发射器"，因为允许消耗脚下地形的消费者（例如抽取环境的阵法）必须先扣掉自己这一份，否则重复计账。
 - **优先级是后者胜**：biome < dimension < 自定义区域 < 阵法覆写。dimension 绑定是"替换"biome，不是被 biome 压过——直接读那句英文注释的顺序容易读反。
 - 阵法覆写只在有区域 holder 且是服务端时发 `AuraZoneEvent.Override`，被取消就保留低优先层；没有 holder 的覆写静默穿透。
-- 客户端两个查询都能调，但 **dimension 标签的匹配可能和服务端不同**（dimension stem 是不同步给客户端的注册表），别把客户端结果当权威。
+- 客户端可调用上述两种查询，但 dimension 标签匹配结果可能与服务端不同，因为 dimension stem 注册表不同步至客户端。应以服务端结果为准。
 
 ### `ResourceService` {#resourceservice}
 
@@ -306,10 +306,10 @@ public interface QualityProvider {
 要点：
 
 - **边界不一致**：只有 `attempt` 挡客户端；`addProgress*` / `setRealm` / `minorStage` 都不检查，在客户端调会真的写附件。
-- 内容自己声明的条件在**扣费之前**评估，所以条件不满足不会白花资源。
+- 内容声明的条件在扣费前评估；条件不满足时不消耗资源。
 - `INVALID_FORMULA` 同时兼任"一切非资源不足的扣费失败"的归一化出口；`failedResource` 只在扣费阶段资源不足时非空。
 - `Failure.DISABLED` 只有脚本桥会产出（`MxtKubeJsApi.tryBreakthrough` 在灵气 id 解析不到时），`attempt` 自己不产出它。
-- `Failure.MAX_PROGRESS` 已于 2026-09-25 **删除**（它是一条走不到的分支）：进度上限不可能成为拒绝突破的理由——`threshold()` 要求某一段的 `max_experience ≥ breakthrough_exp`，所以进度被顶在 `max_experience` 时必然已经满足 `progress ≥ breakthrough_exp`，此时只会因条件、代价或取消而失败。内联的 `Failure` 分支若写了它，编译期就会报错。
+- `Failure.MAX_PROGRESS` 已于 2026-09-25 **删除**（它是一条走不到的分支）：进度上限不可能成为拒绝突破的理由——`threshold()` 要求某一段的 `max_experience ≥ breakthrough_exp`，所以进度被顶在 `max_experience` 时必然已经满足 `progress ≥ breakthrough_exp`，此时只会因条件、代价或取消而失败。内联的 `Failure` 分支若写了它，编译期会报错。
 
 ### `CultivationRanks` {#cultivationranks}
 
@@ -322,7 +322,7 @@ public interface QualityProvider {
 要点：
 
 - 序号**把凡人算进来**，所以凡人不是"首境界"的别名：`0` 与 `1` 是两个不同的数，公式能分辨"还没进任何一个大境界"和"在第一重的开头"。
-- 排名只来自那份共享索引（`DatapackCache`）走出来的链：索引里没有这条链就给 `-1`——链本身没走通（断链、分叉、成环）与索引还没建立（世界尚未加载，或刚退出世界）都是这一种。
+- 排名只来自那份共享索引（`DatapackCache`）走出来的链：索引里没有该链就给 `-1`——链本身没走通（断链、分叉、成环）与索引还没建立（世界尚未加载，或刚退出世界）都是这一种。
 - 凡人那一支**不查索引**：没进过任何大境界是身体自己的事实，与链有没有被索引无关，所以只要这个灵气声明了 `first_realm` 就是 `0`（没声明 `first_realm` 则无处可去，给 `-1`）。
 - 链内比较（`DatapackCache.isRealmAtLeast`）用的是**未经这层偏移**的原始下标，两侧同时比较，所以加不加这个 `1` 结论相同。
 
@@ -349,7 +349,7 @@ public interface QualityProvider {
 | `use(Holder<Ability> ability, Entity actor, AbilityAttachment attachment, ResourceHolderAttachment resources, long gameTime, FormulaContext context)` | 施放一个已授予的技能 | `cast_time > 0` 时只登记截止时间，结果是 `casting = true` |
 | `useCarried(..., @Nullable Vec3 origin)` | 物品自带的技能 | 不要求已授予（物品即许可）；非瞬发技能给 `CARRIED_NOT_INSTANT` |
 | `finishCast(Holder<Ability>, Entity, AbilityAttachment, ResourceHolderAttachment, long gameTime, FormulaContext)` | 引导到点后落地 | 没到点就原样返回引导中的结果 |
-| `gate(ToggleContext context)` | 共用闸门：授予 / 冷却 / 条件 / 消耗 | **不执行效果**；由 `AbilityActivationService.activate` 在 `Togglable#gated` 为真时调用 |
+| `gate(ToggleContext context)` | 共用校验：授予 / 冷却 / 条件 / 消耗 | **不执行效果**；由 `AbilityActivationService.activate` 在 `Togglable#gated` 为真时调用 |
 | `tickChannel(Holder<Ability>, Entity, AbilityAttachment, ResourceHolderAttachment, long gameTime, FormulaContext)` | 引导每 tick 结算 | 只有服务端实体 tick 桥会调；任何失败都停止引导 |
 | `stopChannel(AbilityAttachment)` | 停止引导 | |
 | `cancelCast(Holder<Ability>, AbilityAttachment, long gameTime)` | 中断蓄力 | **不退费** |
@@ -361,8 +361,8 @@ public interface QualityProvider {
 
 - 凡是"按下某个开关"，服务端一律先经 `runtime/ability/AbilityActivationService`——轮盘、命令、KubeJS 与符箓都走它，**别在别处再写一套"按下某个开关"的分派**。实现了 `Togglable` 且 `gated(ctx)` 为真时它才回头调这里的 `gate`。
 - **冷却与消耗全由这条路负责**：`cooldown` 字段自己会写 `mxt:cooldown` 状态，内容不需要再声明一遍冷却。
-- **技能生效时做什么由类型回答**：四个动作字段（`entity_action` / `target_selector` / `target_condition` / `bi_entity_action`）由**会跑动作的类型各自声明并各自执行**，所以这条路走到"该做什么"那一步就是 `AbilityEffect.run(definition.type(), actor, context, origin)`——一个静态入口，内部只判断类型有没有实现 `AbilityEffect` 这个**能力接口**，不是按具体类型分派；四个字段的共享执行在 `ActionCarrier` 上。四个字段各自的时机见[技能类型 · 四个动作字段](../datapack/types/other/ability.md#action-fields-by-type)。
-- **定向施放（`mxt:targeted`）走的也是这条路**：它实现能力接口 `AbilityApplier`（`reach` 挑这次够得着的实体 + `payload` 每个目标上跑的那条技能），运行时在**付款之前**先问一次 `reach`——一个人都没选中＝`NO_TARGET`，载荷类型没有单目标那一半＝`NOT_APPLICABLE`（两个都进上面的 `Failure`）；它自己的价格、冷却与元素亲和照常由这条路收一次。见[定向施放](../../../library/saturn/types/ability.md#saturntargeted)。
+- **技能生效时做什么由类型回答**：四个动作字段（`entity_action` / `target_selector` / `target_condition` / `bi_entity_action`）由**会执行动作的类型各自声明并各自执行**，所以这条路走到"该做什么"那一步就是 `AbilityEffect.run(definition.type(), actor, context, origin)`——一个静态入口，内部只判断类型有没有实现 `AbilityEffect` 这个**能力接口**，不是按具体类型分派；四个字段的共享执行在 `ActionCarrier` 上。四个字段各自的时机见[技能类型 · 四个动作字段](../datapack/types/other/ability.md#action-fields-by-type)。
+- **定向施放（`mxt:targeted`）共用施放管线。** `AbilityApplier.reach` 在付款前选择目标，`payload` 指定对各目标执行的技能。无目标时返回 `NO_TARGET`，载荷不支持单目标应用时返回 `NOT_APPLICABLE`。消耗、冷却与元素亲和仍由统一管线处理一次。见[定向施放](../../../library/saturn/types/ability.md#saturntargeted)。
 - 世界动作永不回滚，所以复合技能先 `prepare` 校验、再统一 `commit`。
 - 这个类**自己不检查客户端**，也从不产生 `Failure.SERVER_ONLY`——客户端那道 `SERVER_ONLY` 是调用方（例如 KubeJS 桥 `MxtKubeJsApi`）自己返回的。直接调 `use` 在客户端会真的动手。
 - 所有结果里的 `amounts` / `costs` 只用于展示与记录；**别拿它当回滚依据**。
@@ -371,7 +371,7 @@ public interface QualityProvider {
 
 ### `DamageCalculationService` {#damagecalculationservice}
 
-包 `com.iafenvoy.mxt.runtime.damage`。**这一击的唯一结算管线**：成形在攻击方（`outgoing`），减免在受击方（`incoming`）。两层为什么必须分开、数据包里怎么写元素，见[伤害系统](../technical/damage.md)。
+包 `com.iafenvoy.mxt.runtime.damage`。**这一击的唯一结算管线**：成形在攻击方（`outgoing`），减免在受击方（`incoming`）。两层为什么必须分开、数据包里如何写元素，见[伤害系统](../technical/damage.md)。
 
 **唯一施放入口**：
 
@@ -444,11 +444,11 @@ public interface QualityProvider {
 | --- | --- | --- |
 | `prevented(ServerLevel level, Action action, @Nullable BlockPos target, @Nullable UUID actorId)` | 这个动作在这个位置 / 这个行为者上是否被拦下 | `true` = 禁止。收的是 **UUID** 而不是玩家或实体：服务端审计在没有在线玩家时也要能跑规则；`actorId == null` 是合法的（爆炸、怪物破坏） |
 | `covers(ProtectionFormationAction ward, Action action)` | 这个护持的哪个开关管这个动作 | 与数据包字段一对一（`block_break` → `BREAK`，等等） |
-| `hasProtection(Formation definition)` | 这份定义里有没有护持模块 | 纯定义查询，不看世界 |
+| `hasProtection(Formation definition)` | 该定义里有没有护持模块 | 纯定义查询，不看世界 |
 | `delegationHandsOver()` | "委托给领地插件"此刻是否真的让位 | 服务端配置「兼容 → 委派需领地保护」关着，或者领地插件确实在保护 |
 | `claimsOnlyRefuses(ServerLevel level, BlockPos controller)` | `claims_only` 模式下这里是否因"没领地"而拒绝 | 没装领地插件时是**失效**（打一条警告）而不是报错——不能因操作员无法满足的原因让阵法放不下去 |
 | `foreignClaimRefuses(ServerLevel level, BlockPos controller, @Nullable UUID actorId)` | 护持要立到别人已认领的地上时是否拒绝 | 需要服务端配置「兼容 → 立阵需许可」开着且装了领地插件，否则直接放行；权限本身去问领地插件，**不复刻它的规则**（第二份实现会漂移） |
-| `warnIfDelegationFallsBack(Identifier id, Formation definition)` | 激活时提醒"声明说委托给领地插件，其实没有领地保护，自家标志位仍然生效" | 每个定义只提醒一次 |
+| `warnIfDelegationFallsBack(Identifier id, Formation definition)` | 激活时提醒"声明说委托给领地插件，没有领地保护，自家标志位仍然生效" | 每个定义只提醒一次 |
 
 `FormationProtection.Action` 是调用方与判定点之间的**唯一词汇表**：`BREAK`、`PLACE`、`INTERACT`、`EXPLOSION`、`MOB_GRIEFING`、`ENTITY_INTERACT`、`ATTACK_ENTITY`、`ITEM_USE`。新增一种动作＝这里加值 + `covers` 加分支 + 数据包标志位，三处必须同改。
 
@@ -489,13 +489,13 @@ public interface QualityProvider {
 | `getJudgeId()` | 裁判 UUID | **永远有值**——数据存在服务端管理器里的好友源（队伍、阵营）因此在玩家离线时也能作答 |
 | `getJudge()` | 裁判实体 | **离线时为空**，这是设计要求而不是错误 |
 | `getCandidate()` | 被判定者 | |
-| `setResult(TriState)` | 写下本监听器的判断 | `TRUE` = 当成我的人；`FALSE` = 不是，**不管名单怎么说**（压过包括玩家自己名单在内的一切来源）；`DEFAULT` = 交回名单 |
+| `setResult(TriState)` | 写下本监听器的判断 | `TRUE` = 当成我的人；`FALSE` = 不是，**不管名单如何说**（压过包括玩家自己名单在内的一切来源）；`DEFAULT` = 交回名单 |
 | `getResult()` / `isAnswered()` | 读当前结论 / 是否已经有人表态 | `FriendService` 只在 `isAnswered()` 为真时采信事件 |
 
 要点：
 
 - **它不是可取消事件**：要否决就 `setResult(FALSE)`。
-- `result` 是**单个可变字段**：后表态的覆盖先表态的，没有聚合、也没有"只问一次"的守卫。想表达"在名单基础上再追加"，就在监听器里自己调 `FriendService.builtin(...)` 再合并。
+- `result` 是**单个可变字段**：后表态的覆盖先表态的，没有聚合、也没有"仅检查一次"的守卫。想表达"在名单基础上再追加"，就在监听器里自己调 `FriendService.builtin(...)` 再合并。
 - 别在监听器里再 post 一次 `Relation`（会绕回 `identify`）。
 
 ## 货币 {#currency}
@@ -510,8 +510,8 @@ public interface QualityProvider {
 | `unitValue(Provider access, ...)`（含带持有者与 `FormulaContext` 的重载） | 显式注册表 / 带持有者版 | **空堆给 `of(0L)`**；只有带 `FormulaContext` 的那个重载把上下文一路传进 `unavailable_when` 判定与品质倍率 |
 | `value(ItemStack stack)` / `value(@Nullable Entity holder, ItemStack stack)` | 整堆价值 = 单价 × 数量 | 单价查不到、或相乘越过 `Long.MAX_VALUE` 一律给 empty，**绝不截断夹取** |
 | `totalValue(Collection<ItemStack> stacks)` | 一堆堆的总价值 | 任一堆不是货币、或累加溢出 → empty |
-| `exchangeOffers(ItemStack input)`（以及注册表版与带持有者版） | 这个输入能换到哪些报价 | 只取**这件物品认领到的（`priority` 最大的）**定义的 `exchanges` 并摊平；赢家不可用时为空，没有服务端也给空列表 |
-| `isExchangeInput(RegistryAccess registryAccess, ItemStack input)` | 这堆能不能放进兑换输入格（**还不看数量够不够**） | 要求认领这件物品的赢家可用且 `exchanges` 非空 |
+| `exchangeOffers(ItemStack input)`（以及注册表版与带持有者版） | 这个输入能换到哪些报价 | 只取**这件物品认领到的（`priority` 最大的）**定义的 `exchanges` 并摊平；选中定义不可用时为空，没有服务端也给空列表 |
+| `isExchangeInput(RegistryAccess registryAccess, ItemStack input)` | 这堆能不能放进兑换输入格（**还不看数量够不够**） | 要求认领这件物品的选中定义可用且 `exchanges` 非空 |
 | `definition(Provider access, ItemStack stack)` | 只按 matcher 找货币定义 | **不判可用性**——别拿 `isPresent()` 当"能用" |
 | `unavailableReason(Provider access, @Nullable Entity holder, ItemStack stack)` | 它为什么不可用 | `holder == null` 时**恒为 empty**（"没有持有者"就问不出原因）；取 `unavailable_when` 里第一条条件为真的条目 |
 
@@ -523,11 +523,11 @@ public interface QualityProvider {
 
 - **`empty` 与 `0L` 是两种结论**：`empty` = 不是货币 / 没有服务端 / 溢出 / 找不到定义；`0L` = 是货币，但空堆或当前不可用；兑换那边"没有报价"表现为**空列表**。
 - **不带持有者的查询会把任何写了 `unavailable_when` 的定义当成不可用**（内部要求那份列表为空）；要按条件判定就传 holder。
-- 品质倍率是"物品货币价值遇见品质"的**唯一**地方：乘的是被定价那一堆自己解出的品质的 `value_multiplier`；乘积小于 1、越过 long 上界或不再有限时**保留声明面额**，而不是夹取。
+- 货币品质倍率仅使用被计价物品解析出的 `value_multiplier`。乘积小于 `1`、超过 `long` 上限或非有限时，保留原声明面值，不执行边界截断。
 
 ## 运行期物品使用 {#itemusecycles}
 
-`com.iafenvoy.mxt.api.ItemUseCycle` 描述一次长按或消费用途。在 NeoForge 游戏事件总线上监听 `ResolveItemUseCycleEvent`，检查 `getHolder()` / `getStack()` 后调用 `claim(cycle)`；第一个认领者生效。内置 Hold 使用 HIGH，丹药兜底使用 NORMAL。
+`com.iafenvoy.mxt.api.ItemUseCycle` 描述一次长按或消费用途。在 NeoForge 游戏事件总线上监听 `ResolveItemUseCycleEvent`，检查 `getHolder()` / `getStack()` 后调用 `claim(cycle)`；第一个认领者生效。内置 Hold 使用 HIGH，丹药回退使用 NORMAL。
 
 | 方法 | 约定 |
 | --- | --- |

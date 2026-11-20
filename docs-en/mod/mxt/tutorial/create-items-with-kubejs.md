@@ -25,7 +25,7 @@ Do not invent `mxt:item` or `mxt:weapon` files out of thin air. Those registries
 
 :::
 
-## What You Are Building {#what-you-are-building}
+## Tutorial Objective {#what-you-are-building}
 
 | File | Purpose |
 | --- | --- |
@@ -101,7 +101,7 @@ The four tables do different jobs and their fields barely overlap. All four are 
 Three rules they share:
 
 - `items` accepts a single ID, an item tag or an array of them, so one definition can cover a whole family of items (tags expand at load time).
-- Every table decides who wins by `priority`, and **only one definition per item per table ever runs** (highest wins, a tie falls back to registry order) — it is not "all of them stacked". Two definitions can both be written correctly and still not both execute.
+- Every table decides which definition takes precedence by `priority`, and **only one definition per item per table ever runs** (highest wins, a tie falls back to registry order) — it is not "all of them stacked". Two definitions can both be written correctly and still not both execute.
 - A single unknown item ID in `items` **fails the data pack load**; an unknown ID written inside an array only logs one line and drops that element, with the rest of the file loading as usual — so a typo inside an array loses that match silently.
 
 When the hooks run, and how conditions are written and ordered, get a page of their own: [Bind Actions with KubeJS](./bind-actions.md).
@@ -252,7 +252,7 @@ A technique is the logic; `technique_binding` only describes **which items are t
 }
 ```
 
-**Whether a stack is a manual is decided by the component on the stack first, and by this table only second.** The `carrier_item` above only asks the mod to generate a carrier for this technique (under `/picker mxt:technique`; **the creative inventory does not generate carriers**); what actually teaches the technique is the `mxt:technique` component on the stack, so a manual is handed out with the item component syntax:
+**Whether a stack is a manual is decided by the component on the stack first, and by this table only second.** The `carrier_item` above only asks the mod to generate a carrier for this technique (under `/picker mxt:technique`; **the creative inventory does not generate carriers**); what teaches the technique is the `mxt:technique` component on the stack, so a manual is handed out with the item component syntax:
 
 ```mcfunction
 give @s kubejs:azure_manual[mxt:technique="example:azure_breath"]

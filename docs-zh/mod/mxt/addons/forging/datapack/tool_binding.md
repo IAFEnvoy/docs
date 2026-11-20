@@ -20,23 +20,23 @@ title: tool_binding（工具绑定）
 data/<namespace>/mxt_forging/tool_binding/<条目>.json
 ```
 
-条目 id 是 `<namespace>:<路径>`——`data/example/mxt_forging/tool_binding/smith_hammer.json` 就是 `example:smith_hammer`。本体不为这张注册表提供条目；内容包写自己的命名空间，不要塞进 `mxt`。
+条目 id 是 `<namespace>:<路径>`——`data/example/mxt_forging/tool_binding/smith_hammer.json` 就是 `example:smith_hammer`。本体不为该注册表提供条目；内容包写自己的命名空间，不要写入 `mxt`。
 
-顶层直接写下面字段表里的键。**没有 `values` 包一层**，一份文件只描述一条定义；要在别的包里盖过同一件物品，靠 `priority` 分先后，没有 `replace` 这类开关。文件级 `neoforge:conditions` 是生效的：条件不成立时这条定义根本不进注册表。
+顶层直接写下面字段表里的键。**没有 `values` 包一层**，一份文件只描述一条定义；要在别的包里盖过同一件物品，靠 `priority` 分先后，没有 `replace` 这类开关。文件级 `neoforge:conditions` 是生效的：条件不成立时该定义根本不进注册表。
 
-这张注册表和别的数据包注册表一样在**世界加载时**读取，`/reload` 不会重读。`/mxt registries list` 与 `/mxt registries validate` 都包含它；`/picker mxt_forging:tool_binding` 列出这些定义认领的物品。
+该注册表和别的数据包注册表一样在**世界加载时**读取，`/reload` 不会重读。`/mxt registries list` 与 `/mxt registries validate` 都包含它；`/picker mxt_forging:tool_binding` 列出这些定义认领的物品。
 
 ## 字段 {#字段}
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
-| `items` | 物品条目 | **必填、不能为空** | 这条定义认领哪些物品：单个物品 id、`#物品标签`，或它们的数组；数组里还可以是带 `type` 的匹配器条目，写法见 [`ItemMatcher`](../../../datapack/types/shared_data_types.md#itemmatcher)。 |
+| `items` | 物品条目 | **必填、不能为空** | 该定义认领哪些物品：单个物品 id、`#物品标签`，或它们的数组；数组里还可以是带 `type` 的匹配器条目，写法见 [`ItemMatcher`](../../../datapack/types/shared_data_types.md#itemmatcher)。 |
 | `methods` | `forging_method` id 数组 | **必填** | 该工具解锁的锻打方式；不能为空，也不能重复。 |
 | `priority` | Int | `0` | 同一件物品被多条定义命中时的先后：数值大者先；**同分回落到注册表顺序**。 |
 
 锻造台右侧三格放入工具后，其解锁的方式才会出现在方法列表中。**可用方法 = 蓝图 `allowed_methods` ∩ 所有已放置工具 `methods` 的并集。** 没有会话（还没选蓝图）或蓝图未声明 `allowed_methods` 时，蓝图一侧不做限制，列表即工具的并集。工具槽在会话进行中**不锁定**，所以中途加一把锤子可以立刻拓宽方法列表。
 
-**一件工具的两条路**：注册表里为那件物品写一条定义，或者那**一堆**自带物品组件 `mxt_forging:forging_methods`（写一个 `forging_method` id 数组，不需要任何定义文件）。两者**取并集**，所以第二把锤子、或临时塞进去的一份手法，只会追加，不会覆盖或删减。工具槽的判定问的就是「这堆能解析出至少一种手法吗」。
+工具手法有两个来源：绑定定义中的手法列表，以及物品组件 `mxt_forging:forging_methods` 中的 `forging_method` ID 数组。两者取并集，组件只追加手法，不覆盖或移除绑定内容。仅通过组件配置时无需定义文件。工具槽要求物品至少解析出一种有效手法。
 
 `data/example/mxt_forging/tool_binding/smith_hammer.json`：
 
@@ -47,7 +47,7 @@ data/<namespace>/mxt_forging/tool_binding/<条目>.json
 }
 ```
 
-不带任何定义文件的临时工具，直接把列表写在堆上：
+不带任何定义文件的临时工具，直接把列表写在物品堆上：
 
 ```mcfunction
 /give @s minecraft:iron_ingot[mxt_forging:forging_methods=["example:heavy_strike","example:light_strike"]]

@@ -1,6 +1,6 @@
 ---
 title: 符箓笔画编辑器
-description: 在符纸自己的画布上画出 mxt_talisman:talisman_drawing 的 pattern.strokes，顺带报出加载期会拒收的问题。
+description: 绘制 pattern.strokes，并检查符形的加载期约束。
 hide_table_of_contents: true
 ---
 
@@ -10,29 +10,29 @@ import MxtToolFrame from '@site/src/components/MxtToolFrame';
 
 <span id="符箓笔画编辑器" />
 
-一张符方的 `pattern.strokes` 就是一串笔画，每一笔是一串点，点都按固定的 `90 × 210` 画布归一化到 `[0,1]²`。这台编辑器画的就是它：棋盘用的正是那个比例、纸 `#FFFE85` 与墨 `#FF0000`（符方类型的两个默认色），所以看起来和画符台上的纸一样。
+`pattern.strokes` 是笔画列表，每笔由点列组成，坐标以固定 `90 × 210` 画布归一化至 `[0,1]²`。编辑器采用相同比例，以及默认纸色 `#FFFE85` 和笔迹色 `#FF0000`，与工作站画布一致。
 
 <div className="mxt-tool-open"><a href="/zh/docs/mod/mxt/addons/talisman/tools/talisman-strokes-full" target="_blank" rel="noopener">在新窗口打开编辑器</a></div>
 
 <MxtToolFrame tool="talisman-strokes" host="mxt-tool-talisman" />
 
-## 怎么画 {#怎么画}
+## 绘制操作 {#怎么画}
 
-- **折线**：点出各个顶点，`Enter`、右键或双击收笔，`Esc` 丢掉这一笔。
-- **手绘**：按住拖着画，松手时按工具条上的 ε 做一次 Ramer-Douglas-Peucker 简化——判分本来就会丢掉这些点，留着只让符方更难读。
-- `Ctrl+Z` / `Ctrl+Y` 撤销重做，列表里可以单删一笔，`Clear` 清空。
-- `Snap to whole pixels` 对齐整格、`Grid` 画格线、`Stroke order` 显示每一笔的起点与序号（就是 `pattern.show_order: true` 让游戏画的那个）。
-- `Load from JSON` 两种都收：单独一份笔画数组，或者整份 `pattern` 块。
-- `Zoom` 只改显示倍数（画布本身仍是 `90 × 210`），`Decimals` 决定写进文件的坐标保留几位小数。
+- **折线**：点击添加顶点，按 `Enter`、右键或双击完成一笔，按 `Esc` 取消当前笔画。
+- **手绘**：按住并拖动绘制，松开后按工具栏中的 ε 进行 Ramer-Douglas-Peucker 简化，减少冗余点。
+- `Ctrl+Z` / `Ctrl+Y` 撤销或重做；列表支持删除单笔，`Clear` 清空画布。
+- `Snap to whole pixels` 将坐标吸附至整数像素；`Grid` 显示网格；`Stroke order` 显示每笔起点与序号，对应游戏中的 `pattern.show_order: true`。
+- `Load from JSON` 接受笔画数组或完整 `pattern` 对象。
+- `Zoom` 仅调整显示倍率，画布仍为 `90 × 210`；`Decimals` 指定导出坐标的小数位数。
 
-## 它在报什么 {#它在报什么}
+## 校验与读数 {#它在报什么}
 
-- **笔画序与墨量**：列表里每一笔的像素长度大约就是它要付的颜料点数——笔按画出来的长度扣，一个像素一点。
-- **加载期的问题**：一笔少于两个点、整份超过 `256` 笔、单笔超过 `4096` 个点、点云完全没有铺开（所有点挤在一处），都是符方加载时会被拒的形状。编辑器先一步报出来，省得等你进游戏才看到定义加载失败。
+- **笔画顺序与颜料**：列表显示单笔像素长度，默认每像素约消耗 1 点颜料。
+- **形状校验**：单笔少于 2 点、超过 `256` 笔、单笔超过 `4096` 点或全部点重合时，定义会被加载器拒绝。编辑器提前报告这些问题。
 
-判分把平移与缩放归一化掉，但**不归一化旋转**——所以这一笔画在哪儿、画多大都不影响得分，画歪了就影响。判分每 `2` 像素重采样一次，并按 `0.5 × tolerance`（默认 `0.06` 时是 `6.3` 像素）简化，比这更细的点留不下来。
+评分会归一化平移与缩放，不归一化旋转。因此整体位置和尺寸不影响得分，方向偏差仍参与评分。重采样步长为 `2` 像素，简化阈值为 `0.5 × tolerance`（默认 `0.06` 时为 `6.3` 像素），更细的点列会被简化。
 
-## 写出来的是什么 {#写出来的是什么}
+## 导出格式 {#写出来的是什么}
 
 ```json
 [
@@ -41,10 +41,10 @@ import MxtToolFrame from '@site/src/components/MxtToolFrame';
 ]
 ```
 
-这一串直接作为 `pattern.strokes` 的值。编辑器只写形状：`pattern.tolerance`、`pattern.guide`、`pattern.show_order` 是符方自己的字段，还有 `talisman`、`result` 与各档完成度，都要你自己写。
+导出的数组可直接作为 `pattern.strokes`。编辑器仅生成形状；`pattern.tolerance`、`pattern.guide`、`pattern.show_order`、`talisman`、`result` 与各档完成度仍需在配方中配置。
 
 ## 接下来 {#接下来}
 
 - [talisman_drawing（符方）](../datapack/talisman_drawing.md) —— 符方的全部字段，含 `pattern` 与各档完成度。
 - [写一张符方](../tutorial/author-a-talisman-drawing.md) —— 从一张符开始的完整流程。
-- [画符判分](../technical/talisman-scoring.md) —— 判分怎么重采样、怎么归一化、怎么算分。
+- [画符判分](../technical/talisman-scoring.md) —— 判分如何重采样、如何归一化、如何算分。

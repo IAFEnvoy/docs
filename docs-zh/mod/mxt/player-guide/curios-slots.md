@@ -70,7 +70,7 @@ Curios 的槽位界面按钮会控制每个槽位的 `getRenders()` 状态以及
 - `assets/<namespace>/mxt/back_render/*.json`：背部槽位。
 - `assets/<namespace>/mxt/belt_render/*.json`：腰部槽位。
 
-每个文件是一条规则。`item` 匹配器命中这堆物品、且 `priority` **最大**的那条规则生效；没有规则命中时，带原版 `minecraft:weapon` 组件的物品回退到 `weapon` 预设，其余物品回退到 `default`。
+每个文件是一条规则。`item` 匹配器命中该物品堆、且 `priority` **最大**的那条规则生效；没有规则命中时，带原版 `minecraft:weapon` 组件的物品回退到 `weapon` 预设，其余物品回退到 `default`。
 
 | 字段 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |

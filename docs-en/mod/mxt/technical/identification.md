@@ -7,7 +7,7 @@ description: A source-level walkthrough of how "does this entity count as mine" 
 
 <span id="foe-identification" />
 
-This page covers the whole thread in one place: **how to use the lists and the commands, and how to write it in a datapack**, plus **why** it is built the way it is in the code.
+This page describes friend identification, including lists, commands, datapack configuration and the decision process.
 
 ## Where the code lives {#where-the-code-lives}
 
@@ -75,7 +75,7 @@ The only difference between the two lists is **whether they are still there at t
 
 The top-level `/friend` alias is controlled by **Server Config → Command Aliases → /friend** and is on by default; `/mxt friend` is always complete. The clickable commands in the help and list output pick their root from the current setting, so the suggestion still runs after the alias is turned off.
 
-**A click fills the chat box rather than running the command** (`ClickEvent.SuggestCommand`): a friend has to be typed by name and the help cannot know it, so a click puts the command and a trailing space into the input box with the cursor where the name belongs. Completion for `/friend remove` only offers names that **can actually be removed right now**, so it never suggests an option that is guaranteed to be refused.
+**A click fills the chat box rather than running the command** (`ClickEvent.SuggestCommand`): a friend has to be typed by name and the help cannot know it, so a click puts the command and a trailing space into the input box with the cursor where the name belongs. Completion for `/friend remove` only offers names that **can be removed right now**, so it never suggests an option that is guaranteed to be refused.
 
 `<player>` resolves through the vanilla profile cache rather than the online player list, so **an offline player can be added and removed too**; it also means selector syntax (`@a`, …) is legal, and the command insists on resolving exactly one player.
 
@@ -237,7 +237,7 @@ The scripted side is `MxtEvents.friendRelation`: `getJudgeId()` is always presen
 | `mxt:friend` (bi-entity condition) | Does the actor count the target as its own? | False (see above) |
 | `/friend` and its subcommands | Reading and writing the lists | — |
 
-Worth keeping apart: **the vanilla-team conditions do not come through here.** `mxt:team` (both the bi-entity and the entity form) and `mxt:relation` read vanilla's `Entity#isAlliedTo` / `getTeam()`, have nothing to do with the friend lists, and cannot be affected by the `Relation` event. On that note, the repository also contains a `SameTeamCondition` class implementing the same semantics that is **never registered**; what actually works is the inline predicate registered under `same_team`. The registered name is the one to rely on.
+Worth keeping apart: **the vanilla-team conditions do not come through here.** `mxt:team` (both the bi-entity and the entity form) and `mxt:relation` read vanilla's `Entity#isAlliedTo` / `getTeam()`, have nothing to do with the friend lists, and cannot be affected by the `Relation` event. On that note, the repository also contains a `SameTeamCondition` class implementing the same semantics that is **never registered**; what works is the inline predicate registered under `same_team`. The registered name is the one to rely on.
 
 ## Costs and limits {#costs-and-limits}
 
