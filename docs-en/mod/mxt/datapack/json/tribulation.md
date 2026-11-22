@@ -19,6 +19,7 @@ A tribulation is: the gate that starts it, the beats of its timeline, the diffic
 | `difficulty_scale` | `NumberProvider` | `1` | Difficulty multiplier, applied to every wait length. |
 | `windup` | `NumberProvider` | `0` | Wind-up before the start: ticks spent idling before the timeline starts being consumed, resolved by exactly the same rule as a wait length and settled the moment the run starts. Players see the seconds left on the action bar while it counts down; `0` means no wind-up. |
 | `darken_sky` | `bool` | `true` | Whether the sky darkens for nearby players while this tribulation runs (the player undergoing it included, out to 160 blocks). |
+| `storm_cloud` | object | omitted | Creates a cloud that follows the entity undergoing the tribulation. Use `{}` for the default appearance. |
 | `success_action` | `EntityAction` | `mxt:no_op` | Success behaviour once the timeline has been walked to the end. |
 | `fail_action` | `EntityAction` | `mxt:no_op` | Failure behaviour when a beat cannot continue. |
 
@@ -34,8 +35,23 @@ When you do not want to wait out a breakthrough in game and just want to run the
 
 While a tribulation runs, the sky darkens for nearby players automatically — the player undergoing it included, at the same strength as a vanilla wither (fog colour and lighting dimmed together, fading in over about 1 second and out over about 4), out to 160 blocks; writing `false` on `darken_sky` turns the sky off for the whole run. During the wind-up, players in that same range also see a countdown on the action bar (`Tribulation in 2.4 s`, one decimal place). Both of these are done by the client itself: the client reads the tribulation attachment that has already been synced, plus the definition that attachment points at, so the server takes no part and no boss bar is needed — writing these two fields is all an author has to do, and the client follows on its own.
 
+### Storm cloud
+
+`storm_cloud` and `darken_sky` can be enabled independently. The storm cloud appears at the start of wind-up and follows the entity horizontally. It fades for about 1.15 seconds after success, failure, or cancellation. The cloud is restored when the tribulation resumes after a login or dimension change.
+
+| `storm_cloud` field | Default | Description |
+| --- | --- | --- |
+| `cloud_color` | `"#FF584D82"` | Cloud colour in `#AARRGGBB` format. |
+| `lightning_color` | `"#FFC2CDFF"` | Arc colour in `#AARRGGBB` format. |
+| `thickness` | `6.0` | Cloud thickness, from 0.25 to 32 blocks. |
+| `radius` | `64.0` | Horizontal radius, from 0.5 to 64 blocks. |
+| `clearance` | `8.0` | Vertical gap between the top of the storm cloud and the bottom of the local vanilla cloud layer, from 0 to 64 blocks. |
+
+The spawn position sets the cloud's altitude. Where the environment has no vanilla cloud layer, the storm cloud is centred 18 blocks above the entity, within the dimension's build height.
+
 ```json
 {
+  "storm_cloud": { "radius": 64, "clearance": 8, "cloud_color": "#FF41345C", "lightning_color": "#FFFFBB55" },
   "timeline": [
     { "type": "mxt:action", "action": { "type": "mxt:spawn_lightning", "damage": 12 } },
     { "type": "mxt:idle", "duration": 40 },

@@ -19,6 +19,7 @@ title: tribulation（天劫）
 | `difficulty_scale` | `NumberProvider` | `1` | 难度倍率，每个等待时长都乘上它。 |
 | `windup` | `NumberProvider` | `0` | 启动前摇：开始消费时间线之前先空转的 tick 数，按与等待时长完全相同的规则结算，在启动那一刻定死。倒计时期间玩家会在 action bar 上看到剩余秒数；`0` 表示没有前摇。 |
 | `darken_sky` | `bool` | `true` | 这场天劫进行期间是否让附近玩家的天空变暗（含渡劫者本人，最远 160 格）。 |
+| `storm_cloud` | 对象 | 省略 | 为渡劫者生成跟随雷云。写 `{}` 使用默认外观。 |
 | `success_action` | `EntityAction` | `mxt:no_op` | 时间线走完后的成功行为。 |
 | `fail_action` | `EntityAction` | `mxt:no_op` | 节拍无法继续时的失败行为。 |
 
@@ -34,8 +35,23 @@ title: tribulation（天劫）
 
 天劫进行期间，附近玩家的天会自动变暗——正在渡劫的那个玩家自己也在内，力度和原版凋零一致（雾色与光照一起压暗，约 1 秒淡入、约 4 秒淡出），最远 160 格；`darken_sky` 写 `false` 就整场不变暗。前摇期间，同一个范围内的玩家还会在 action bar 上看到倒计时（`天劫将至：2.4 秒`，按秒显示一位小数）。这两件事都是客户端自己做的：客户端读的是已经同步过来的天劫附件、以及附件引用的该定义，服务端不参与、也不需要血条，所以作者只要写这两个字段，客户端自然跟着走。
 
+### 雷云
+
+`storm_cloud` 和 `darken_sky` 可以独立启用。雷云从前摇开始时出现，只沿 XZ 平面跟随渡劫者，在成功、失败或中止后约 1.15 秒内淡出。渡劫在另一个维度或重新登录后继续时，当前维度会恢复雷云。
+
+| `storm_cloud` 字段 | 默认 | 说明 |
+| --- | --- | --- |
+| `cloud_color` | `"#FF584D82"` | 云体颜色，格式为 `#AARRGGBB`。 |
+| `lightning_color` | `"#FFC2CDFF"` | 电弧颜色，格式为 `#AARRGGBB`。 |
+| `thickness` | `6.0` | 云体厚度，范围为 0.25 至 32 格。 |
+| `radius` | `64.0` | 水平半径，范围为 0.5 至 64 格。 |
+| `clearance` | `8.0` | 雷云顶缘与当地原版云层底面的垂直间距，范围为 0 至 64 格。 |
+
+高度在生成时确定。环境没有原版云层时，雷云中心位于渡劫者上方 18 格，并限制在维度高度内。
+
 ```json
 {
+  "storm_cloud": { "radius": 64, "clearance": 8, "cloud_color": "#FF41345C", "lightning_color": "#FFFFBB55" },
   "timeline": [
     { "type": "mxt:action", "action": { "type": "mxt:spawn_lightning", "damage": 12 } },
     { "type": "mxt:idle", "duration": 40 },

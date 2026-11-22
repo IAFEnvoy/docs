@@ -230,6 +230,11 @@
         "page": "player-guide/light-beam",
         "zh": "光束粒子",
         "en": "Light Beam Particles"
+      },
+      {
+        "page": "player-guide/storm-cloud",
+        "zh": "雷云",
+        "en": "Storm Cloud"
       }
     ]
   },

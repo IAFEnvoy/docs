@@ -334,6 +334,24 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 非法颜色或长度超过 16 的列表会在**解码期**直接失败，而不是被静默丢弃：渐变里的笔误应当看得见。
 :::
 
+### `mxt:spawn_storm_cloud` {#mxt-spawn-storm-cloud}
+
+在行为发生的位置上方召唤一朵定时消散的雷云。电弧只提供视觉效果。
+
+| 字段 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| `lifetime` | 整数 | **必填** | 持续 1 至 1200 刻，包含成形与消散。 |
+| `offset_y` | 数字 | `16.0` | 相对行为位置的垂直偏移，单位为格。 |
+| `follow` | 布尔值 | `true` | 是否沿 XZ 平面跟随行为的主体。 |
+| `radius` | 数字 | `16.0` | 水平半径，范围为 0.5 至 64 格。 |
+| `thickness` | 数字 | `6.0` | 云体厚度，范围为 0.25 至 32 格。 |
+| `cloud_color` | 字符串 | `"#FF584D82"` | 云体颜色，格式为 `#AARRGGBB`。 |
+| `lightning_color` | 字符串 | `"#FFC2CDFF"` | 电弧颜色，格式为 `#AARRGGBB`。 |
+
+```json
+{ "type": "mxt:spawn_storm_cloud", "lifetime": 240, "radius": 48, "offset_y": 24 }
+```
+
 ### `reincarnation:add_lifespan` {#reincarnation-add-lifespan}
 
 增加目标的剩余寿元与本世累计授予总额。需要安装可选的 Reincarnation 模组。
