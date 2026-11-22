@@ -55,6 +55,7 @@ sidebar_position: 1
 - 页面用 front matter 的 `title` 或正文一级标题提供主标题，避免显示重复主标题；正文分节通常从二级标题开始。
 - 使用 Docusaurus 支持的 `sidebar_position`、`sidebar_label`、`id`、`slug` 等字段。旧页面的 `order`、`group`、`nav` 等历史字段不能作为新页面的排序依据。
 - 已发布的文档 ID、文件路径、slug 和被引用的锚点应保持稳定。确需移动或改名时，检查两种语言及所有引用；翻译标题时注意显式保留需要稳定的锚点。
+- 对外分享文档链接时，优先使用不带 `/en` 或 `/zh` 语言前缀的地址，例如 `https://docs.iafenvoy.com/docs/mod/mxt`。站点会沿用读者已保存的语言偏好；没有偏好时显示语言选择页。仅在明确需要指定语言时使用带前缀的地址；站内文档之间仍优先使用相对 Markdown 链接。
 - 旧 `/docs/…` 网址通过 `plugins/legacy-links.cjs` 显示语言选择页，用户选择后只添加 `/en` 或 `/zh` 前缀，保留后续路径、查询参数和锚点。不要添加逐页猜测映射。静态构建按文档路由生成旧网址入口；任意旧路径的兜底依赖静态托管使用根目录 `404.html`。
 - 语言偏好通过 `src/utils/locale-preference.cjs` 保存到 `localStorage` 的 `docs.preferredLocale`。选择语言或进入显式语言页面都会更新偏好；`src/theme/Root/index.jsx` 负责记录当前路径，语言选择页自身不更新偏好。根目录与旧链接有记忆时直接打开对应语言；`/en/language?choose=1` 可重新选择，存储不可用时保留手动选择。
 - `sidebars.js` 自动生成四类侧边栏。通过 `_category_.json` 设置分类标签、顺序和入口；通过 `src/data/sidebar-labels.json` 本地化目录标签。

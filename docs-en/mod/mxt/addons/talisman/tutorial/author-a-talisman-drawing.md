@@ -3,8 +3,11 @@ title: Write a Drawing Recipe
 description: "Write a drawing recipe: how the shape is traced, what the scoring block governs, what each grade yields, and the two bills — paper and pigment."
 ---
 
+:::warning Addon required
+
 This page requires **Talisman Workstations** (`mxt_talisman`). Shared items and generic rules remain in MiXianTu.
 
+:::
 
 # Write a Drawing Recipe
 

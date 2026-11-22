@@ -3,8 +3,11 @@ title: Forge a Treasure
 description: Build a forge-table production line out of striking methods, tool bindings and a blueprint — the meter, the target range, the finish pattern, the quality ladder and the failure settlement.
 ---
 
+:::warning Addon required
+
 This page requires **Forging Workstations** (`mxt_forging`). Shared items and generic rules remain in MiXianTu.
 
+:::
 
 # Forge a Treasure
 

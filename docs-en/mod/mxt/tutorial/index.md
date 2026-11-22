@@ -115,7 +115,11 @@ data/example/
 | [Flying Mounts](./flying-mount.md) | Mount definitions, flight control, take-off, landing and aura payment. |
 | [Rifts](./rifts.md) | Rift creation, destination dimensions, colour, links and landing points. |
 
+:::warning Workstation tutorials require addons
+
 Workstation tutorials live under [Alchemy Workstations](../addons/alchemy/tutorial/refine-a-pill.md), [Forging Workstations](../addons/forging/tutorial/forge-a-treasure.md) and [Talisman Workstations](../addons/talisman/tutorial/author-a-talisman-drawing.md), and require their respective addons.
+
+:::
 
 ## Conventions {#conventions}
 

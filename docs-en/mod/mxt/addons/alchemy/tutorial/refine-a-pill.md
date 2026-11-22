@@ -3,6 +3,12 @@ title: Refine a Pill
 description: Hand-build a 3x3x3 furnace, write a recipe that settles on the actual medicinal properties, heat it into the target range with a heat block, and wire the result up to a pill and its toxicity.
 ---
 
+:::warning Addon required
+
+This page requires **Alchemy Workstations** (`mxt_alchemy`). Shared items and generic rules remain in MiXianTu.
+
+:::
+
 # Refine a Pill
 
 <span id="refine-a-pill" />

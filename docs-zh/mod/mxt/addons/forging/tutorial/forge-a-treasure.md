@@ -3,8 +3,11 @@ title: 锻造法器
 description: 用锻造手法、工具绑定和一张图纸搭出锻造台的一条生产线：锻打条、目标区间、收尾模式、品质阶梯与失败结算。
 ---
 
+:::warning 需要安装附属
+
 本页需要 **Forging Workstations** 附属（`mxt_forging`）。共享物品与通用规则仍由 MiXianTu 本体提供。
 
+:::
 
 # 锻造法器
 

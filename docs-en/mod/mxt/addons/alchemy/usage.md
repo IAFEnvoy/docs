@@ -2,6 +2,8 @@
 title: Building and Using a Furnace
 ---
 
+Hover over the furnace core, casing, either input bin, or the output bin in your inventory. Hold the Ponder key shown in the tooltip (default `W`) to see how to assemble, heat, and load the furnace.
+
 ## Alchemy and Spirit Herbs {#alchemy-and-spirit-herbs}
 
 A furnace is not one block: it is a fixed 3x3x3 you build by hand. The core carries the furnace spec, the two input stores split main ingredients from auxiliary ingredients and the catalyst, the output store only hands results out, and the other 18 cells are casing (the bottom layer only needs its four corners).

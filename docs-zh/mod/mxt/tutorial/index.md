@@ -115,7 +115,11 @@ data/example/
 | [飞行法器](./flying-mount.md) | 载具定义、飞行控制、起降与灵气支付。 |
 | [裂隙](./rifts.md) | 裂隙创建、目标维度、颜色、连通与落点。 |
 
+:::warning 工作站教程需要对应附属
+
 工作站工艺教程分别收在[炼丹工作站附属](../addons/alchemy/tutorial/refine-a-pill.md)、[锻器工作站附属](../addons/forging/tutorial/forge-a-treasure.md)和[画符工作站附属](../addons/talisman/tutorial/author-a-talisman-drawing.md)目录中，需要对应附属。
+
+:::
 
 ## 约定 {#约定}
 

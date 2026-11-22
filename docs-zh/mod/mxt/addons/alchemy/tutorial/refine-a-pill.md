@@ -3,6 +3,12 @@ title: 炼制丹药
 description: 手搭一座 3×3×3 丹炉，写一条按药性判定的丹方，用供热方块把炉温升到目标区间，并给成品接上丹药与丹毒。
 ---
 
+:::warning 需要安装附属
+
+本页需要 **Alchemy Workstations** 附属（`mxt_alchemy`）。共享物品与通用规则仍由 MiXianTu 本体提供。
+
+:::
+
 # 炼制丹药
 
 <span id="炼制丹药" />

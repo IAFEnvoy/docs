@@ -9,6 +9,8 @@ description: "Server configuration entries, defaults, limits and scope."
 
 This page collects the **server configuration** entries: they are grouped into tabs, and they take effect as soon as they are changed — the server reads the current value every time instead of caching it. **None of them is a command**, and only **Server Config → Tab → Entry** is written here, never a config file path or a raw key.
 
+For client theme settings, see [GUI Appearance](./appearance.md).
+
 For Client Config → World Effects → Scene Depth Enhancement, see [Light Beam](./light-beam.md#scene-depth-enhancement).
 
 MiXianTu owns the settings on this page. Each workstation addon has its own Jupiter configuration entry: [Alchemy Workstations](../addons/alchemy/config.md), [Forging Workstations](../addons/forging/config.md) and [Talisman Workstations](../addons/talisman/config.md). The core's toxicity, herb and shared talisman-item settings also apply without the addons installed.

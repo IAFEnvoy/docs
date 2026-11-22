@@ -3,8 +3,11 @@ title: 编写画符配方
 description: 配置符形、判分参数、品质产物及符纸与颜料要求。
 ---
 
+:::warning 需要安装附属
+
 本页需要 **Talisman Workstations** 附属（`mxt_talisman`）。共享物品与通用规则仍由 MiXianTu 本体提供。
 
+:::
 
 # 编写画符配方
 
