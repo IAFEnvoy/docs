@@ -1,5 +1,6 @@
 ---
 title: information_group（信息分组）
+hide_table_of_contents: true
 ---
 
 # information_group（信息分组）

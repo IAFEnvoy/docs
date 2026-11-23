@@ -1,5 +1,6 @@
 ---
 title: item_binding（物品绑定）
+hide_table_of_contents: true
 ---
 
 # item_binding（物品绑定）

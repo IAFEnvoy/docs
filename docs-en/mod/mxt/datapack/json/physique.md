@@ -1,6 +1,7 @@
 ---
 title: Physique (physique)
 description: Defines a physique that grants vanilla attribute bonuses, abilities and two damage multipliers independently of elements.
+hide_table_of_contents: true
 ---
 
 # Physique (physique)

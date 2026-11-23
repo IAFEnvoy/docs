@@ -1,6 +1,7 @@
 ---
 title: Artifact (artifact)
 description: "An artifact is a set of rules for items that already exist: which items it claims, how much of each aura it stores, and what each of its abilities does."
+hide_table_of_contents: true
 ---
 
 # Artifact (artifact)

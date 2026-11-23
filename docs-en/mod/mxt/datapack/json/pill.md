@@ -1,6 +1,7 @@
 ---
 title: Pill (pill)
 description: "What one pill does: the action it runs, how much toxicity it adds and what an overdose leaves behind. Which items count as that pill, how often they may be taken and how long the cooldown is belong to pill_binding."
+hide_table_of_contents: true
 ---
 
 # Pill (pill)

@@ -1,5 +1,6 @@
 ---
 title: tribulation（天劫）
+hide_table_of_contents: true
 ---
 
 # tribulation（天劫）

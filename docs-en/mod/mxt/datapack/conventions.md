@@ -27,7 +27,7 @@ The mod ships one tag that sits on a **vanilla registry**, so its path looks dif
 data/mxt/tags/damage_type/no_bonus.json
 ```
 
-A damage type listed in `mxt:no_bonus` takes no part in damage bonus settlement: no progression-level or affinity multiplier, no physique multiplier, no `overcomes`/`adapted_to` relation read, and no element buildup either. The number is handed to vanilla as it arrived, and vanilla's own mitigation (armour, enchantments, resistance, absorption, invulnerability frames) still applies. By default it holds two: the void damage `minecraft:out_of_world`, and `mxt:lifespan`, which the mod uses for a lifespan running out; a content pack can append at the same path (`replace: false`) or replace it outright (`replace: true`). See [The damage system](../technical/damage.md).
+A damage type listed in `mxt:no_bonus` takes no part in damage bonus settlement: no progression-level or affinity multiplier, no physique multiplier, no `overcomes`/`adapted_to` relation read, and no element buildup either. The number is handed to vanilla as it arrived, and vanilla's own mitigation (armour, enchantments, resistance, absorption, invulnerability frames) still applies. The default tag includes void damage (`minecraft:out_of_world`), the legacy `mxt:lifespan` type, and the optional [Reincarnation lifespan damage type](../../reincarnation/lifespan.md#expiry). See [The damage system](../technical/damage.md).
 
 ### The Mod's Own Grouping Tags {#the-mod-s-own-grouping-tags}
 

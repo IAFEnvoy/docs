@@ -1,6 +1,7 @@
 ---
 title: Realm Stage (realm_stage)
 description: "Defines one stage of a realm chain: its aura, breakthrough conditions and costs, minor stages, and success or failure actions."
+hide_table_of_contents: true
 ---
 
 # Realm Stage (realm_stage)
@@ -45,7 +46,7 @@ An entry of `passive_modifiers` writes `attribute` and the vanilla modifier's `i
 
 `costs` is **all or nothing** as one array; see [Shared Data Types · `Cost`](../types/shared_data_types.md#cost).
 
-Adjust lifespan by calling Reincarnation's [`reincarnation:add_lifespan`](../types/action/entity_action_types.md#reincarnation-add-lifespan) or [`reincarnation:remove_lifespan`](../types/action/entity_action_types.md#reincarnation-remove-lifespan) in `success_action`. `amount` accepts a non-negative number or formula in ticks; the action type decides whether to grant or spend life. Success actions run after the realm state commits, and never run for a failed breakthrough. Use an array to combine lifespan changes with abilities, effects or other actions in order.
+After the realm state is committed, `success_action` can run [Reincarnation's lifespan actions](../../../reincarnation/datapack.md#actions). Use an array to run a lifespan action alongside other breakthrough rewards.
 
 These fields illustrate optional lifespan integration:
 

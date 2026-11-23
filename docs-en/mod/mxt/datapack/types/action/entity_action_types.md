@@ -354,33 +354,11 @@ Spawns a storm cloud above the action's position for a fixed duration. Its elect
 
 ### `reincarnation:add_lifespan` {#reincarnation-add-lifespan}
 
-Raises both the target's remaining lifespan and the total granted in this life. Requires the optional Reincarnation mod.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `amount` | Number provider | **required** | Non-negative amount to grant, in ticks. |
-
-```json
-{ "type": "reincarnation:add_lifespan", "amount": 2400 }
-```
-
-Constants and formulas are checked when the action runs; a non-finite or negative result does nothing. Valid results are rounded with `Math.round`. An amount of `0` leaves the ledger unchanged and never opens one for an unaccounted target. Non-living targets are ignored.
-
-**Writes still work while the lifespan master switch is off**; that switch controls natural ageing. See [Lifespan](../../../player-guide/lifespan.md).
+See [Reincarnation's entity actions](../../../../reincarnation/datapack.md#actions) for fields and usage.
 
 ### `reincarnation:remove_lifespan` {#reincarnation-remove-lifespan}
 
-Spends the target's remaining lifespan, clamped to `0`, without reducing the total granted in this life. Requires the optional Reincarnation mod.
-
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `amount` | Number provider | **required** | Non-negative amount to spend, in ticks. |
-
-```json
-{ "type": "reincarnation:remove_lifespan", "amount": 1200 }
-```
-
-Validation, rounding, zero amounts and non-living targets follow the same rules as the grant action. Removal also works while the lifespan master switch is off.
+See [Reincarnation's entity actions](../../../../reincarnation/datapack.md#actions) for fields and usage.
 
 ### `mxt:modify_pill_toxicity` {#mxt-modify-pill-toxicity}
 
@@ -401,19 +379,11 @@ Toxicity is normally accumulated by the consumption rules of [pill](../../json/p
 
 ### `reincarnation:unlimited_lifespan` {#reincarnation-unlimited-lifespan}
 
-Closes the ledger until an explicit grant reopens it. No fields.
-
-```json
-{"type":"reincarnation:unlimited_lifespan"}
-```
+See [Reincarnation's entity actions](../../../../reincarnation/datapack.md#actions) for fields and usage.
 
 ### `reincarnation:reincarnate` {#reincarnation-reincarnate}
 
-Queues rebirth. `mode` defaults to configured; new_life archives and replaces a player, reset keeps its entity and life number. Non-player beings always reset in place. `reason` is an optional chat component.
-
-```json
-{"type":"reincarnation:reincarnate","mode":"new_life","reason":{"text":"Rebirth pill"}}
-```
+See [Reincarnation's entity actions](../../../../reincarnation/datapack.md#actions) for fields and usage.
 
 ### `mxt:cultivate` {#mxt-cultivate}
 

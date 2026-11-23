@@ -1,6 +1,7 @@
 ---
 title: spirit_crafting（灵气合成）
 description: 灵气合成配方接受 mxt:spirit_shaped 与 mxt:spirit_shapeless 两种类型，它们除材料外还要消耗灵气，只在灵气工作台中执行。
+hide_table_of_contents: true
 ---
 
 # spirit_crafting（灵气合成）

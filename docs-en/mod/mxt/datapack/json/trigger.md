@@ -1,5 +1,6 @@
 ---
 title: Trigger Rule (trigger)
+hide_table_of_contents: true
 ---
 
 # Trigger Rule (trigger)

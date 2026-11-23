@@ -1,6 +1,7 @@
 ---
 title: progression（进度链）
 description: 定义进度链上的一级：到达该等级所需的熟练度与它授予的伤害倍率。
+hide_table_of_contents: true
 ---
 
 # progression（进度链）

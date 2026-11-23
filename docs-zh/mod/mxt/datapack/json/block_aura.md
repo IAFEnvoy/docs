@@ -1,6 +1,7 @@
 ---
 title: block_aura（方块灵气）
 description: 定义哪些方块向所在区块提供灵气，以及每种灵气的容量、恢复速度与颜色。
+hide_table_of_contents: true
 ---
 
 # block_aura（方块灵气）

@@ -1,6 +1,7 @@
 ---
 title: Spirit Crafting Recipes (spirit_crafting)
 description: "Spirit crafting recipes come in two types, mxt:spirit_shaped and mxt:spirit_shapeless, which spend aura on top of their materials and only run in the Spirit Crafting Table."
+hide_table_of_contents: true
 ---
 
 # Spirit Crafting Recipes (spirit_crafting)

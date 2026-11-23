@@ -1,5 +1,6 @@
 ---
 title: information_row（信息行）
+hide_table_of_contents: true
 ---
 
 # information_row（信息行）

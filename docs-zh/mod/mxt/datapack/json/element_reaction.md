@@ -1,6 +1,7 @@
 ---
 title: element_reaction（元素反应）
 description: 元素反应的附着阈值、消耗量、触发条件与行为。
+hide_table_of_contents: true
 ---
 
 # element_reaction（元素反应）

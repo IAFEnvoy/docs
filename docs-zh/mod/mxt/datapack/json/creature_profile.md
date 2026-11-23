@@ -1,6 +1,7 @@
 ---
 title: creature_profile（生物档案）
 description: 定义挂在生物类型上的档案：属性、灵气门槛、内丹、写入时执行一次的行为与它自己的成长链。
+hide_table_of_contents: true
 ---
 
 # creature_profile（生物档案）
@@ -19,18 +20,20 @@ description: 定义挂在生物类型上的档案：属性、灵气门槛、内�
 | `condition` | `EntityCondition` | `mxt:always` | 实体档案应用条件。 |
 | `inner_core` | 物品堆模板 | 无 | 内丹物品堆模板，生物死亡时按该物品堆掉落。 |
 | `preferred_aura_elements` | 元素 id 或 `#标签` 的数组 | `[]` | 偏好的灵气元素。 |
-| `minimum_aura` | 灵气 id 到数值的映射 | `{}` | 生成或强化所需的各灵气最低值。 |
+| `minimum_aura` | 灵气 ID 到数值的映射 | `{}` | 应用此档案所需的各类环境灵气最低值。 |
 | `default_level` | 进度等级 id | 无 | 该链的入口等级。写了它这只生物才有进度，不写就没有进度。 |
 | `mastery_resource` | 数值 id | 无 | 用哪个数值衡量熟练度。写了它就必须写 `default_level`，否则加载期拒绝。 |
 | `configuration` | 进度等级 id 到条目对象的映射 | `{}` | 每一级给它什么：到达条件（`condition`）、累计授予的能力（`ability`）与进入时执行一次的动作（`action`），条目字段见 [technique](./technique.md) 里的同名表。写了就必须有 `default_level`。 |
 
 `entities` 写单个、写标签或写混合数组都行。
 
+生物进入服务端世界时，按档案 ID 逐条检查匹配其类型的档案，先按路径升序排列，路径相同时再按命名空间排列。采用首个通过条件、灵气要求及智力校验的档案。当前档案未通过时继续检查下一份。已保存档案的生物跳过此流程。
+
 `condition` 可写单个条件或条件数组。它管的是这份档案应不应用，不替代原版刷怪规则。
 
 `inner_core` 写 `{"id": "..."}`（可带 `count`（`1..99`）与 `components`），也可以只写物品 ID。它收的是**模板**而不是已经绑定好的物品堆：数据包注册表早于物品组件绑定解析。
 
-档案只写一次，所以 `spawn_action` 也只跑一次：生物第一次进入服务端世界时随档案一起执行，档案已经在身上的不再执行。它**只收一个行为**，写成数组会在加载时被拒，要连着做几件事请用 `mxt:sequence`。条件或灵气门槛不过时档案不写入，这一条因此也不执行。它是这份档案里唯一会动世界的字段。
+`spawn_action` 在选中的档案写入生物后执行一次。它接收单个行为，多个行为可用 `mxt:sequence` 依次执行。
 
 **灵宠成长就是这份档案声明的一条等级链**（见 [progression](./progression.md)）。写了 `default_level`，这只生物就成为该链的所有者——所有者 id 就是这份档案自己的 id；它落在哪一级记在生物身上，不在档案里。要「只有灵宠能长」，就把等级对应等级的 `condition` 写成实体条件 [`mxt:contract`](../types/condition/entity_condition_types.md)。
 

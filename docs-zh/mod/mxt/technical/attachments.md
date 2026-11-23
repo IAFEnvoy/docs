@@ -33,10 +33,9 @@ description: 附件的宿主、状态字段、持久化、同步与模块边界�
 | --- | --- | --- | --- |
 | `mxt:cultivation` | `cultivation_progress`、`realm_stages`、`cultivation`、`cultivating`、`cultivate_started_at`、`next_cultivate_tick`、`cultivate_cooldowns` | 修为进度与当前境界（按**修炼档案**分键）、正在运行的法门与它的计时、各法门的冷却。进度与境界按档案存，所以"存在哪个档案"就是全部身份，不会再和数值本身重复一遍。 | 存档 + 同步 + 过世 |
 | `mxt:minor_stages` | `minor_stage_records` | 记录实体在每个境界达到过的最高重数，只增不减。突破后即使修为进度归零，已解锁记录仍保留。 | 存档 + 同步 + 过世 |
-| `mxt:lifespan` | `lifespan_remaining`、`lifespan_total` | 寿元台账：还剩多少、这一世最多被给过多少。两个数由**同一个**服务一起写，所以不会出现只更新了一半的账。 | 存档 + 同步 + 过世 |
 | `mxt:spirit_identity` | `spirit_roots`、`physiques`、`disabled_spirit_roots`、`disabled_physiques` | 身上有哪些灵根与体质，以及哪些被**关掉**了。两个 `disabled_*` 集合指的是"仍然持有但被关闭"，所以**持有与生效是两个问题**：归属读 `spiritRoots()`，一切效果读 `activeSpiritRoots()`。 | 存档 + 同步 + 过世 |
 | `mxt:technique` | `learned_techniques`、`technique_levels` | 保存已学功法及其等级。学习状态与等级记录由同一附件维护，遗忘功法时同时移除其等级记录。 | 存档 + 同步 + 过世 |
-| `mxt:soul_stats` | `karma`、`heart_demon`、`strength`、`sense_range` | 四个长期灵魂数值。**目前没有任何东西读它们**——只有转世会写（按"灵魂是否随转世保留"那个开关），所以这是给灵魂系统预留的存储，不是已生效的状态。 | 存档 + 同步 + 过世 |
+| `mxt:soul_stats` | `karma`、`heart_demon`、`strength`、`sense_range` | 灵魂系统预留的四项长期数值。 | 存档 + 同步 + 过世 |
 | `mxt:soul` | `active`、`origin`、`created_at`、`manifestation` | 死亡转换之后保留的**可选灵魂形态**状态。与 `soul_stats` 是两回事：那个装数值，这个装"现在是不是魂体、从哪来"。 | 存档 + 同步 + 过世 |
 | `mxt:creature_spirit` | `profile`、`intelligence`、`inner_core`、`profile_levels` | 灵宠自己的档案状态（它走的是 `creature_profile` 链，不是玩家的修炼链）。层数存在这里而不是共用的附件里，所以**同 id 的档案与功法各自一格、读不到对方**。 | 存档 + 同步 + 过世 |
 | `mxt:resource_holder` | `values`、`audit`、`min_snapshot`、`max_snapshot`、`last_changed_tick` | 服务端权威的资源当前值与**已解析的上下限快照**。快照跟着附件一起同步，所以客户端**不需要**为了画一条资源条而去权威地求值一遍公式。 | 存档 + 同步 + 过世 |
@@ -97,11 +96,8 @@ public boolean checkDirty() {
 
 - **各自有拥有者。** 修为进度属于修炼档案、灵宠层数属于灵宠档案，两者都放"进度"里会让同 id 的档案与功法互相读到。
 - **各自有生命周期。** 死亡时要清哪些，不同模块的答案不一样。
-- **各有各的转世开关。** 见下。
 
-所以 `resource_holder` 被二十多个模块读也**不拆**——它装的就是"这具身体的资源账"这一件事。反过来，过去一份 `spirit_stats` 同时装寿元、层数记录、灵魂数值与功法/灵根/体质，这四个分属四个模块、有四个独立的转世开关，于是拆成了 `lifespan` / `minor_stages` / `soul_stats` / `technique` / `spirit_identity`。
-
-附件按模块拆分后，转世配置仅重置对应模块的状态。`LifeSpanService.reincarnate` 的相关开关为 `resetCultivation`、`clearMinorStages`、`cancelTribulation`、`clearResources`、`keepSpiritRoots`、`keepTechniques`、`keepSoul`，默认分别为开启、开启、开启、关闭、保留、保留、保留。
+寿元由[转生模组的附件](../../reincarnation/lifespan.md)管理。觅仙途各附件在转生时的保留方式见[寿元联动](../player-guide/lifespan.md#reincarnation-数据保留)。
 
 **同属一件事的字段必须留在一起**，即使它被别的模块读：`technique` 把"学过哪些"和"每门几级"放在同一份附件里，因为"遗忘一门功法"与"删掉它的层数"必须是同一次写入——分开就迟早会出现一份没有任何东西能读到的孤儿记录。
 

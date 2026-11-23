@@ -1,5 +1,6 @@
 ---
 title: Information Rows (information_row)
+hide_table_of_contents: true
 ---
 
 # Information Rows (information_row)

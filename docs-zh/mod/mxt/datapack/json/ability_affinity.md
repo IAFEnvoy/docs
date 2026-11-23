@@ -1,6 +1,7 @@
 ---
 title: ability_affinity（技能元素亲和）
 description: mxt:ability_affinity 的字段与判定：哪条技能属于哪些元素、多条灵根匹配时如何合并，以及它在施放门槛与伤害倍率上的作用。
+hide_table_of_contents: true
 ---
 
 # ability_affinity（技能元素亲和）

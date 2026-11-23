@@ -1,5 +1,6 @@
 ---
 title: curse（诅咒）
+hide_table_of_contents: true
 ---
 
 # curse（诅咒）

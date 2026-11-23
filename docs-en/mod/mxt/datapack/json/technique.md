@@ -1,6 +1,7 @@
 ---
 title: Technique (technique)
 description: "Defines a learnable cultivation technique: learning conditions, hold length, the levels of the progression chain it enters, and the passive attributes and abilities it grants."
+hide_table_of_contents: true
 ---
 
 # Technique (technique)

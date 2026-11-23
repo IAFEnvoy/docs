@@ -39,7 +39,7 @@ KubeJS 适合注册具体物品、方块、配方和内容对象；MiXianTu 负�
 
 所有会改动游戏状态的 API 都必须从 `kubejs/server_scripts/` 调用，并进入本体既有的服务端事务和事件流程；客户端脚本只应做只读的事。
 
-寿元脚本由 Reincarnation 提供，使用 [ReincarnationLifespan 与 ReincarnationEvents](./api/lifespan.md)。
+寿元脚本由 Reincarnation 提供，使用 [ReincarnationLifespan 与 ReincarnationEvents](../../reincarnation/kubejs.md)。
 
 ## KubeJS 的适用场景 {#什么时候需要-kubejs}
 

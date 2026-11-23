@@ -1,6 +1,7 @@
 ---
 title: formation_stroke_type（阵法笔画类型）
 description: 阵法图形里两种笔画的字段：mxt:circle 与 mxt:polyline，以及它们共有的颜色与窗口。
+hide_table_of_contents: true
 ---
 
 # formation_stroke_type（阵法笔画类型）

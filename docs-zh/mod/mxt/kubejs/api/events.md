@@ -98,4 +98,4 @@ MxtEvents.cultivationBreak(event => {
 - 战利品生成时的回调用 [MxtLoot](./loot.md)。
 - [KubeJS API 参考](../api-reference.md)。
 
-寿元耗尽与转世使用 Reincarnation 提供的 [ReincarnationEvents](./reincarnation_events.md)。
+寿元耗尽与转世使用 Reincarnation 提供的 [ReincarnationEvents](../../../reincarnation/kubejs.md#events)。

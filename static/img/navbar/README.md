@@ -29,4 +29,8 @@
 
 `evaluate.webp` 来自 Evaluate 项目的 `src/main/resources/logo.png`，于 2026-11-14 等比例缩小为 64 × 64 px；保留透明背景。
 
+`psychic.webp` 使用万物通灵项目根目录的 `logo.webp`，等比例缩小为 64 × 64 px。
+
+`reincarnation.webp` 使用转生项目根目录的 `logo.webp`，等比例缩小为 64 × 64 px。
+
 图片随各原项目保留版权，不因存入本站而改用代码许可证。更新时从来源重新获取，并等比例缩小到最长边 64 px；不要放大已有小图。

@@ -1,6 +1,7 @@
 ---
 title: Secret Realm (secret_realm)
 description: "A secret realm definition is a template: every entry opens an instance dimension from it, and the border, structures, landing points, claiming and entry and exit rules all come from it."
+hide_table_of_contents: true
 ---
 
 # Secret Realm (secret_realm)

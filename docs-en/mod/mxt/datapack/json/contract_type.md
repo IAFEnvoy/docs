@@ -1,6 +1,7 @@
 ---
 title: Contract Type (contract_type)
 description: Defines the two sides conditions, what runs at each moment on the beast side and the owner side, the abilities granted to the owner while the contract lasts, the signing price and the two caps.
+hide_table_of_contents: true
 ---
 
 # Contract Type (contract_type)

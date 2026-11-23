@@ -1,6 +1,7 @@
 ---
 title: element（元素）
 description: 定义元素之间的关系、每条关系值多少伤害、它认领哪些伤害类型，以及它在身上如何积累。
+hide_table_of_contents: true
 ---
 
 # element（元素）
@@ -81,7 +82,7 @@ description: 定义元素之间的关系、每条关系值多少伤害、它认�
 
 这条通道是第二层减免的**唯一**依据：受击方该层只看得到这一击的伤害来源，所以元素必须能从伤害类型读回来。好处是**不碰原版代码可以让环境伤害有属性**——把 `minecraft:lava`、`minecraft:in_fire`、`minecraft:lightning_bolt` 认领给某个元素，泡岩浆、被雷劈、被爆炸波及都会照那个元素结算；`mxt:explode` 用的是 `minecraft:explosion`，认领它可以让爆炸带属性。多个元素认领同一个伤害类型是合法的（相乘），但会在加载时打一条提示。
 
-被列进 `mxt:no_bonus` 标签的伤害类型是例外：那一击不读元素，认领它也不会生效（默认收虚空伤害 `minecraft:out_of_world` 与 `mxt:lifespan` 两条，见[伤害系统](../../technical/damage.md)）。
+`mxt:no_bonus` 中的伤害类型跳过元素判定。即使元素认领了该类型，也不影响此规则。详见[伤害系统](../../technical/damage.md)。
 
 上面说的是**一次攻击**是什么元素。**物品**是什么元素是另一条口径：物品堆上的 `mxt:element` 组件，加上 `weapon_binding` / `item_binding` / `artifact` 里哪个认领了该物品堆、它写没写 `element`（全部取并集），一个都没声明时才回落到物品携带的灵气的 `aura_type`；物品条件 `mxt:item_element` 读的就是它，完整说明见 [weapon_binding](./weapon_binding.md)。
 

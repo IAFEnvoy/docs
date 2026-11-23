@@ -1,5 +1,6 @@
 ---
 title: cultivation (Cultivation Method)
+hide_table_of_contents: true
 ---
 
 # cultivation (Cultivation Method)

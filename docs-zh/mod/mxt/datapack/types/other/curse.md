@@ -1,6 +1,7 @@
 ---
 title: curse_type（诅咒类型）
 description: 诅咒类型族 curse_type 的四种生命周期策略、字段与时长规则。
+hide_table_of_contents: true
 ---
 
 # curse_type（诅咒类型）

@@ -1,6 +1,7 @@
 ---
 title: formation_action_type（阵法功能）
 description: 阵法功能模块 mxt:formation_action_type 的全部内置模块、字段、默认值与判定规则。
+hide_table_of_contents: true
 ---
 
 # formation_action_type（阵法功能）

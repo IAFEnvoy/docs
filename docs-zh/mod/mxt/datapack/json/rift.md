@@ -1,6 +1,7 @@
 ---
 title: rift（裂隙预设）
 description: 裂隙的共享轮廓、外观和秘境门布局格式。
+hide_table_of_contents: true
 ---
 
 # rift（裂隙预设）

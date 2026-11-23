@@ -1,6 +1,7 @@
 ---
 title: secret_realm（秘境）
 description: 秘境定义是一份模板：每次进入都按它开出一份实例维度，边界、结构、落点、认领与进出规则都由它决定。
+hide_table_of_contents: true
 ---
 
 # secret_realm（秘境）

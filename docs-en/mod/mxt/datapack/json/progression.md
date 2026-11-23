@@ -1,6 +1,7 @@
 ---
 title: Progression (progression)
 description: "One level of a progression chain: the mastery it asks for and the damage multiplier it grants."
+hide_table_of_contents: true
 ---
 
 # Progression (progression)

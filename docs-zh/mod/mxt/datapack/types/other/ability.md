@@ -1,6 +1,7 @@
 ---
 title: ability_type（技能类型）
 description: saturn:ability_type 中十四种技能类型的字段与执行时机。
+hide_table_of_contents: true
 ---
 
 # ability_type（技能类型）

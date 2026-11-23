@@ -1,6 +1,7 @@
 ---
 title: spirit_herb（灵植）
 description: 把已有方块声明成灵植：药性药力、寒热与药龄，以及它的果实与生长时钟。
+hide_table_of_contents: true
 ---
 
 # spirit_herb（灵植）

@@ -183,7 +183,8 @@ data/mxt/tags/damage_type/no_bonus.json
   "replace": false,
   "values": [
     "minecraft:out_of_world",
-    "mxt:lifespan"
+    "mxt:lifespan",
+    { "id": "reincarnation:lifespan", "required": false }
   ]
 }
 ```
@@ -193,7 +194,7 @@ A damage type listed there **skips both layers**: no `damage_multiplier`, no `el
 A few things to know:
 
 - **It is decided by damage type, so every source is treated alike**: this mod's actions, another mod's hit and vanilla environmental damage all pass through if their type is in the tag. The three execution points are `deal` (layer one), `DamageEventBridge` (layer two and element buildup) and the damage calculator of `mxt:explode`, all sharing one predicate.
-- **The default holds two: the void, `minecraft:out_of_world`, and `mxt:lifespan`**: the 4 damage per tick for falling out of the world is an execution by position, with no "who is stronger" to speak of, and any scaling or reduction would make being killed by the void depend on a technique or a physique; `mxt:lifespan` is the cause this mod uses for a **non-player creature whose lifespan runs out** (the death message key is `death.attack.mxt.lifespan`), and it is a one-hit kill that should not be swayed by a technique, a physique or an element relation either. A player whose lifespan runs out never takes this damage — a player is turned into a spectator.
+- The default tag includes void damage, the legacy `mxt:lifespan` type, and the optional [Reincarnation lifespan damage type](../../reincarnation/lifespan.md#expiry).
 - **A pack can add to it**: the same tag path with `"replace": false` appends to the defaults, and `"replace": true` replaces them outright (which also takes the void back out).
 - **It changes neither credit nor kill statistics** — it only keeps the hit out of the bonus arithmetic.
 

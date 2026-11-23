@@ -183,7 +183,8 @@ data/mxt/tags/damage_type/no_bonus.json
   "replace": false,
   "values": [
     "minecraft:out_of_world",
-    "mxt:lifespan"
+    "mxt:lifespan",
+    { "id": "reincarnation:lifespan", "required": false }
   ]
 }
 ```
@@ -193,7 +194,7 @@ data/mxt/tags/damage_type/no_bonus.json
 几件要知道的事：
 
 - **按伤害类型判定，对所有来源一视同仁**：本模组的动作、别的模组打过来的伤害、原版环境伤害，只要类型在标签里就直通。三个执行点是 `deal`（第一层）、`DamageEventBridge`（第二层与元素附着）、`mxt:explode` 的伤害计算器，共用同一份判定。
-- **默认收两条：虚空伤害 `minecraft:out_of_world` 与 `mxt:lifespan`**：掉出世界的每 tick 4 点伤害是按位置的处决，没有「谁更强」可言，任何按比例放大或减免的口径都会让「被虚空杀死」变得可被功法或体质左右；`mxt:lifespan` 是本模组给**寿元耗尽的非玩家生物**用的死因（死亡消息键是 `death.attack.mxt.lifespan`），它是一击必杀，同样不该被功法、体质或元素关系左右。玩家寿元耗尽不会走这条伤害——玩家被转为旁观者。
+- 默认标签包含虚空伤害、旧的 `mxt:lifespan` 类型和可选的[转生寿元伤害](../../reincarnation/lifespan.md#expiry)。
 - **内容包可以追加**：同一个标签路径写 `"replace": false` 就是往默认值上加，写 `"replace": true` 则整体替换掉默认值（虚空也就不再直通了）。
 - **它不改归属，也不改击杀统计**，只是让这一击不参与加成。
 

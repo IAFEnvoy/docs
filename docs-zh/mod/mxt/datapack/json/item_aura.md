@@ -1,6 +1,7 @@
 ---
 title: item_aura（物品灵气）
 description: 把已有物品定义为修炼燃料；同一份定义反过来读，就是按住右键往物品里灌注灵气的那份描述。
+hide_table_of_contents: true
 ---
 
 # item_aura（物品灵气）

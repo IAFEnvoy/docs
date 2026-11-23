@@ -1,6 +1,7 @@
 ---
 title: realm_stage（境界阶段）
 description: 定义灵气链上的一档境界：突破阈值、子境界、突破消耗与成功或失败行为。
+hide_table_of_contents: true
 ---
 
 # realm_stage（境界阶段）
@@ -45,7 +46,7 @@ description: 定义灵气链上的一档境界：突破阈值、子境界、突�
 
 `costs` 整份数组**全有或全无**；写法见[共享数据类型 · `Cost`](../types/shared_data_types.md#cost)。
 
-增减寿元通过 `success_action` 调用 Reincarnation 的 [`reincarnation:add_lifespan`](../types/action/entity_action_types.md#reincarnation-add-lifespan) 或 [`reincarnation:remove_lifespan`](../types/action/entity_action_types.md#reincarnation-remove-lifespan)。`amount` 接受非负数值或公式，单位为刻；行为类型决定增寿或减寿。成功行为在境界提交后执行；失败时不执行。需要同时授予能力、效果等行为时，写成数组按顺序执行。
+可在 `success_action` 中使用[转生的寿元行为](../../../reincarnation/datapack.md#actions)。该字段在提交境界后执行，可写成数组，将增寿和其他突破奖励一起配置。
 
 下面是可选寿元联动的字段片段：
 

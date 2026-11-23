@@ -327,26 +327,8 @@ This is the natural way to bind a passive `mxt:modifier` to gear. `slots` takes 
 
 ## Reincarnation Lifespan {#reincarnation-lifespan}
 
-### `reincarnation:lifespan` {#reincarnation-lifespan-1}
+<span id="reincarnation-lifespan-1" />
+<span id="reincarnation-lifespan-state" />
+<span id="reincarnation-generation" />
 
-Compares a finite lifespan. `field` defaults to remaining; total, fraction and spent are also supported. fraction is remaining/total (0 for a zero total); spent is total-remaining. An unlimited ledger returns false.
-
-```json
-{"type":"reincarnation:lifespan","field":"fraction","comparison":"<","compare_to":0.1}
-```
-
-### `reincarnation:lifespan_state` {#reincarnation-lifespan-state}
-
-`state` is required: finite includes zero, unlimited includes unaccounted and closed ledgers, unaccounted means never granted life, and expired means a remainder of zero.
-
-```json
-{"type":"reincarnation:lifespan_state","state":"expired"}
-```
-
-### `reincarnation:generation` {#reincarnation-generation}
-
-Compares a server player's visible life number, starting at 1. Non-players return false.
-
-```json
-{"type":"reincarnation:generation","comparison":">=","compare_to":2}
-```
+See [Reincarnation's entity conditions](../../../../reincarnation/datapack.md#conditions) for the lifespan and life-number predicates.

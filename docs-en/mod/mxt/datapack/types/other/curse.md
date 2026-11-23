@@ -1,6 +1,7 @@
 ---
 title: Curse Types (curse_type)
 description: The four lifecycle policies of the curse_type family, their fields and duration rules.
+hide_table_of_contents: true
 ---
 
 # Curse Types (curse_type)

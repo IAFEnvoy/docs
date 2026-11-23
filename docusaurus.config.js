@@ -133,6 +133,7 @@ const config = {
               { to: '/docs/library/uranus', label: 'Uranus', icon: 'img/navbar/uranus.webp' },
               { to: '/docs/library/neptune', label: 'Neptune', icon: 'img/navbar/neptune.webp' },
               { to: '/docs/library/evaluate', label: 'Evaluate', icon: 'img/navbar/evaluate.webp' },
+              { to: '/docs/library/assistant-core', label: 'Assistant Core' },
             ]
           },
           {
@@ -147,6 +148,8 @@ const config = {
               { to: '/docs/mod/origins', label: 'Origins (NeoForge)', icon: 'img/navbar/origins.webp' },
               { to: '/docs/mod/origins-js', label: 'Origins JS', icon: 'img/navbar/origins-js.webp' },
               { to: '/docs/mod/pendulum', label: 'Pendulum', icon: 'img/navbar/pendulum.webp' },
+              { to: '/docs/mod/psychic', label: 'Psychic', icon: 'img/navbar/psychic.webp' },
+              { to: '/docs/mod/reincarnation/', label: 'Reincarnation', icon: 'img/navbar/reincarnation.webp' },
               { to: '/docs/mod/starting-point-buy', label: 'Starting Point Buy', icon: 'img/navbar/starting-point-buy.webp' },
               { to: '/docs/mod/system', label: 'System', icon: 'img/navbar/system.webp' },
             ]

@@ -1,6 +1,7 @@
 ---
 title: Default Quality (default_quality)
 description: Gives an existing item a fallback quality tier, as the third and last layer of quality resolution.
+hide_table_of_contents: true
 ---
 
 # Default Quality (default_quality)

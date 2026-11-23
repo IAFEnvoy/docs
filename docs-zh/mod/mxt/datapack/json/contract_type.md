@@ -1,6 +1,7 @@
 ---
 title: contract_type（契约类型）
 description: 定义契约的双方条件、灵宠侧与主人侧各自的行为、存续期授予主人的能力、签订代价与两个上限。
+hide_table_of_contents: true
 ---
 
 # contract_type（契约类型）

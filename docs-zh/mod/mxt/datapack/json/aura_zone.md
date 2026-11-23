@@ -1,6 +1,7 @@
 ---
 title: aura_zone（灵气区域）
 description: 定义一份环境灵气模板：每种灵气的库存、匹配的维度与群系、波动、规则、粒子、客户端雾效与 HUD 条。
+hide_table_of_contents: true
 ---
 
 # aura_zone（灵气区域）

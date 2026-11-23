@@ -1,6 +1,7 @@
 ---
 title: Rift Presets (rift)
 description: Shared portal outlines, appearance and realm portal layout format.
+hide_table_of_contents: true
 ---
 
 # Rift Presets (rift)

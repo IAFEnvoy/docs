@@ -1,6 +1,7 @@
 ---
 title: Pill Binding (pill_binding)
 description: "Claims a family of already registered items as one pill, and gives that family its own use cap and cooldown. What a dose does belongs to the pill table."
+hide_table_of_contents: true
 ---
 
 # Pill Binding (pill_binding)

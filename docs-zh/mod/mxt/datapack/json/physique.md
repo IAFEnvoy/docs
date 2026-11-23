@@ -1,6 +1,7 @@
 ---
 title: physique（体质）
 description: 定义一份独立于元素的体质：原版属性、授予的能力与两个伤害倍率。
+hide_table_of_contents: true
 ---
 
 # physique（体质）

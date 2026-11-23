@@ -1,6 +1,7 @@
 ---
 title: Aura Maximum (aura_maximum_type)
 description: The three algorithms of the mxt:aura_maximum_type aura maximum, their fields, the bare number shorthand, and what an omitted max means.
+hide_table_of_contents: true
 ---
 
 # Aura Maximum (aura_maximum_type)

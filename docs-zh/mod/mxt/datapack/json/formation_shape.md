@@ -1,6 +1,7 @@
 ---
 title: formation_shape（阵法图形）
 description: 阵法图形的定义：折线与圆两种笔画、坐标与生长规则、每一笔自己的颜色、疏密与窗口。
+hide_table_of_contents: true
 ---
 
 # formation_shape（阵法图形）

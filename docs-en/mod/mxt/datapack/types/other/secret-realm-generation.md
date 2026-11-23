@@ -1,6 +1,7 @@
 ---
 title: Secret Realm Generations (secret_realm_generation_type)
 description: The five built-in mxt:secret_realm_generation_type entries, their fields, defaults and when they resolve.
+hide_table_of_contents: true
 ---
 
 # Secret Realm Generations (secret_realm_generation_type)

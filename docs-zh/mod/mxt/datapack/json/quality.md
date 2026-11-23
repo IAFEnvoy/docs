@@ -1,6 +1,7 @@
 ---
 title: quality（品质）
 description: 定义一档品质的颜色与三个修正，以及它在品质链上的位置、链名与升级代价。
+hide_table_of_contents: true
 ---
 
 # quality（品质）

@@ -1,5 +1,6 @@
 ---
 title: Curse (curse)
+hide_table_of_contents: true
 ---
 
 # Curse (curse)

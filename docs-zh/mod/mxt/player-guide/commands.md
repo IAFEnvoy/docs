@@ -18,7 +18,7 @@ title: 命令
 - [/formation](./commands/formation.md)
 - [/friend](./commands/friend.md)
 - [/hud](./commands/hud.md)
-- [/lifespan](./commands/lifespan.md)
+- [转生与寿元指令](../../reincarnation/commands.md)
 - [/lightning](./commands/lightning.md)
 - [/physique](./commands/physique.md)
 - [/picker](./commands/picker.md)

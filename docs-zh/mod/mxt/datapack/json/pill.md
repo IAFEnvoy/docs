@@ -1,5 +1,6 @@
 ---
 title: pill（丹药）
+hide_table_of_contents: true
 ---
 
 # pill（丹药）

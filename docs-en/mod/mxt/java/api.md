@@ -328,17 +328,7 @@ Key points:
 
 ### `LifespanApi` {#lifespanservice}
 
-The optional Reincarnation mod provides `com.iafenvoy.reincarnation.api.LifespanApi` for add-ons that need direct integration. Isolate calls in an integration class and load it only when `ModList.get().isLoaded("reincarnation")` is true. MiXianTu itself does not call this API; realm-stage `success_action` data controls breakthrough lifespan changes entirely.
-
-| Method | Effect |
-| --- | --- |
-| `get(Entity)` | Read the ledger without creating it |
-| `set(LivingEntity, long)` / `add(LivingEntity, long)` | Rewrite or adjust finite lifespan |
-| `unlimited(LivingEntity)` | Close the ledger |
-| `requestRebirth(LivingEntity, RebirthMode, Component)` | Queue rebirth; success means accepted |
-| `rebirth(LivingEntity, RebirthMode, Component)` | Execute immediately and return the resulting entity |
-
-Writes require the logical server thread and return Saturn `Result`. `NEW_LIFE` replaces a player; continue with the returned entity. `RESET` clears attachments on the existing entity and restarts its lifespan. Reincarnation owns retention tags, resource policy and cancellation events. See [Lifespan](../player-guide/lifespan.md) and [ReincarnationEvents](../kubejs/api/reincarnation_events.md).
+See the [Reincarnation Java API](../../reincarnation/java.md#api) for lifespan and rebirth methods. MiXianTu's breakthrough grants are configured in [realm stage data](../datapack/json/realm_stage.md).
 
 ### `AbilityService` {#abilityservice}
 

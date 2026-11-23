@@ -1,6 +1,7 @@
 ---
 title: Aura (aura)
 description: "Hangs an aura identity and cultivation behaviour on one stored value: element marker, realm chain entry, regeneration, conversions and the use gate."
+hide_table_of_contents: true
 ---
 
 # Aura (aura)

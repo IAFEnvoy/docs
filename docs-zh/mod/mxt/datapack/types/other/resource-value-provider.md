@@ -1,6 +1,7 @@
 ---
 title: resource_value_provider_type（资源数值来源）
 description: 资源数值来源族 resource_value_provider_type 的八种来源、字段、默认值与边界。
+hide_table_of_contents: true
 ---
 
 # resource_value_provider_type（资源数值来源）

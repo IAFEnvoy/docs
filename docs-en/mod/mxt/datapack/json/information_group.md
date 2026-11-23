@@ -1,5 +1,6 @@
 ---
 title: Information Groups (information_group)
+hide_table_of_contents: true
 ---
 
 # Information Groups (information_group)

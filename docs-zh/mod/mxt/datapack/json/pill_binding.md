@@ -1,5 +1,6 @@
 ---
 title: pill_binding（丹药绑定）
+hide_table_of_contents: true
 ---
 
 # pill_binding（丹药绑定）

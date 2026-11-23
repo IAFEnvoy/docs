@@ -1,6 +1,7 @@
 ---
 title: cultivation（修炼方式）
 description: 定义一次运功法门：法门间的先后、开始与维持条件、每 tick 与每次结算做什么、消耗与收获。
+hide_table_of_contents: true
 ---
 
 # cultivation（修炼方式）

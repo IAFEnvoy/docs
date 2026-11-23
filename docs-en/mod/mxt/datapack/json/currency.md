@@ -1,6 +1,7 @@
 ---
 title: Currency (currency)
 description: Gives a registered item a denomination and a set of one-way exchanges, defined by the mxt:currency registry.
+hide_table_of_contents: true
 ---
 
 # Currency (currency)

@@ -1,6 +1,7 @@
 ---
 title: heat_source（供热方块）
 description: 供热方块的温度、升温速度、放置位置与丹炉温度上限。
+hide_table_of_contents: true
 ---
 
 :::info 本体通用供热

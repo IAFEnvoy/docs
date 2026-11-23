@@ -6,7 +6,7 @@ title: /mxt
 
 <span id="mxt" />
 
-The mod's root command: registries, attachments, profiling, values, cultivation, realms, lifespan, contracts, secret realms, souls, triggers and rifts. Every player-facing group has a page of its own; this one only shows the shape.
+The mod's root command: registries, attachments, profiling, values, cultivation, realms, contracts, secret realms, souls, triggers and rifts. Every player-facing group has a page of its own; this one only shows the shape.
 
 <div className="cmd-tree">
 
@@ -55,10 +55,6 @@ The mod's root command: registries, attachments, profiling, values, cultivation,
   - `... realm ...`
 
     Sets your own linear realm. See [`/realm`](./realm.md).
-
-  - `... lifespan ...`
-
-    Reads and rewrites the lifespan ledger and makes a target be reborn on the spot. See [`/lifespan`](./lifespan.md).
 
   - `... contract ...`
 

@@ -328,17 +328,7 @@ public interface QualityProvider {
 
 ### `LifespanApi` {#lifespanservice}
 
-可选的 Reincarnation 模组提供 `com.iafenvoy.reincarnation.api.LifespanApi`，供附属模组直接集成时使用。调用应隔离在兼容类中，仅当 `ModList.get().isLoaded("reincarnation")` 为真时加载。MiXianTu 本体不调用此 API，突破增减寿元完全由境界阶段的 `success_action` 配置。
-
-| 方法 | 作用 |
-| --- | --- |
-| `get(Entity)` | 只读账本，不创建附件 |
-| `set(LivingEntity, long)` / `add(LivingEntity, long)` | 改写或增减有限寿元 |
-| `unlimited(LivingEntity)` | 关闭账本 |
-| `requestRebirth(LivingEntity, RebirthMode, Component)` | 排队转世，成功仅表示接受 |
-| `rebirth(LivingEntity, RebirthMode, Component)` | 立即执行，返回结果实体 |
-
-写入限定逻辑服务端主线程，返回 Saturn `Result`。`NEW_LIFE` 会替换玩家，应使用返回的新实体继续操作；`RESET` 清理原实体的附件并重开寿元。保留标签、资源策略和取消事件均由 Reincarnation 管理。见[寿元](../player-guide/lifespan.md)和 [ReincarnationEvents](../kubejs/api/reincarnation_events.md)。
+寿元和转生方法见[转生 Java API](../../reincarnation/java.md#api)。觅仙途的突破增寿通过[境界阶段定义](../datapack/json/realm_stage.md)配置。
 
 ### `AbilityService` {#abilityservice}
 

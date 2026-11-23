@@ -1,6 +1,7 @@
 ---
 title: Element (element)
 description: Defines the relations between elements, what each relation is worth in damage, which damage types it claims, and how it accumulates on a body.
+hide_table_of_contents: true
 ---
 
 # Element (element)
@@ -81,7 +82,7 @@ What element a strike **is** is looked up from its damage type rather than infer
 
 This channel is the **only** basis of the second layer's reduction: the defending side only ever sees the damage source of the strike, so the element has to be readable back from the damage type. The payoff is that **environmental damage becomes elemental without touching vanilla code** — claim `minecraft:lava`, `minecraft:in_fire` and `minecraft:lightning_bolt` for an element and taking a lava bath, being struck by lightning or being caught in a blast all settle as that element; `mxt:explode` uses `minecraft:explosion`, so claiming it makes explosions elemental. Several elements claiming the same damage type is legal (they multiply) but warns once at load time.
 
-A damage type listed in the `mxt:no_bonus` tag is the exception: that strike reads no element, and claiming it changes nothing (by default the tag holds the two void entries `minecraft:out_of_world` and `mxt:lifespan`; see [The damage system](../../technical/damage.md)).
+Damage types in `mxt:no_bonus` skip element resolution even when an element claims the type. See [The damage system](../../technical/damage.md#the-pass-through-tag-mxt-no-bonus).
 
 All of the above is about **a strike**. What an **item** is is a second reading: the `mxt:element` component on the stack, plus whichever of `weapon_binding` / `item_binding` / `artifact` claims that stack and whether it wrote an `element` (all of them unioned), and only when none of them declares anything does it fall back to the `aura_type` of the aura the item carries. That is what the item condition `mxt:item_element` reads; the full explanation is on [weapon_binding](./weapon_binding.md).
 

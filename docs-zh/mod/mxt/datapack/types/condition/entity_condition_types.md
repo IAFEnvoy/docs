@@ -327,26 +327,8 @@ description: 模组注册的全部内置实体条件类型，以及每种类型�
 
 ## Reincarnation 寿元 {#reincarnation-寿元}
 
-### `reincarnation:lifespan` {#reincarnation-lifespan}
+<span id="reincarnation-lifespan" />
+<span id="reincarnation-lifespan-state" />
+<span id="reincarnation-generation" />
 
-比较有限寿元。field 默认为 remaining，还可选 total、fraction、spent；fraction 为剩余/总额（总额 0 时按 0），spent 为总额减剩余。无限账本返回 false。
-
-```json
-{"type":"reincarnation:lifespan","field":"fraction","comparison":"<","compare_to":0.1}
-```
-
-### `reincarnation:lifespan_state` {#reincarnation-lifespan-state}
-
-state 必填：finite 包含剩余为 0；unlimited 包含未记账与关闭账本；unaccounted 表示从未记账；expired 表示剩余为 0。
-
-```json
-{"type":"reincarnation:lifespan_state","state":"expired"}
-```
-
-### `reincarnation:generation` {#reincarnation-generation}
-
-比较服务端玩家可见的世代编号，从 1 起；非玩家返回 false。
-
-```json
-{"type":"reincarnation:generation","comparison":">=","compare_to":2}
-```
+寿元与世数判定详见[转生实体条件](../../../../reincarnation/datapack.md#conditions)。

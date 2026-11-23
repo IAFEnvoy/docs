@@ -1,6 +1,7 @@
 ---
 title: Mount Renderers (mount_render_type)
 description: Every built-in mxt:mount_render_type entry, its fields, the GeckoLib resource paths and the seven poses.
+hide_table_of_contents: true
 ---
 
 # Mount Renderers (mount_render_type)

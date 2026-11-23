@@ -1,6 +1,7 @@
 ---
 title: formation_shape
 description: The definition of a formation's figure — the two stroke kinds, the coordinates and growth rules, and the paint, density and window each stroke carries.
+hide_table_of_contents: true
 ---
 
 # formation_shape

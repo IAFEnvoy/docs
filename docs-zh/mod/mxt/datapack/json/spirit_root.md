@@ -1,6 +1,7 @@
 ---
 title: spirit_root（灵根）
 description: 定义一条灵根：绑定的元素与占比、修炼倍率、元素亲和倍率与互斥元素。
+hide_table_of_contents: true
 ---
 
 # spirit_root（灵根）

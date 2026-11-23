@@ -1,6 +1,7 @@
 ---
 title: trigger_type（触发器）
 description: 触发器匹配器 saturn:trigger_type 的全部内置条目、字段、默认值与判定规则。
+hide_table_of_contents: true
 ---
 
 # trigger_type（触发器）

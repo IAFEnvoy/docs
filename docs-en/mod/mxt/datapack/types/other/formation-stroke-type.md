@@ -1,6 +1,7 @@
 ---
 title: Formation Stroke Types (formation_stroke_type)
 description: The fields of the two strokes a formation figure is made of — mxt:circle and mxt:polyline — and the paint and window they share.
+hide_table_of_contents: true
 ---
 
 # Formation Stroke Types (formation_stroke_type)

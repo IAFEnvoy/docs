@@ -1,6 +1,7 @@
 ---
 title: Item Binding (item_binding)
 description: "Claims existing items for the mxt:item_binding datapack registry and hands them an ordered list of actions, a use gate, an optional quality ladder and an element."
+hide_table_of_contents: true
 ---
 
 # Item Binding (item_binding)

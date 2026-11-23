@@ -1,6 +1,7 @@
 ---
 title: mount_render_type（载具渲染器）
 description: mxt:mount_render_type 的内置条目、字段、GeckoLib 资源路径与七个姿态。
+hide_table_of_contents: true
 ---
 
 # mount_render_type（载具渲染器）

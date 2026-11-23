@@ -1,6 +1,7 @@
 ---
 title: Ability Types (ability_type)
 description: The fourteen ability types in saturn:ability_type, which fields each one reads and when it runs.
+hide_table_of_contents: true
 ---
 
 # Ability Types (ability_type)

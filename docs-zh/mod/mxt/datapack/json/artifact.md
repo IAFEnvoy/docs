@@ -1,5 +1,6 @@
 ---
 title: artifact（法器）
+hide_table_of_contents: true
 ---
 
 # artifact（法器）

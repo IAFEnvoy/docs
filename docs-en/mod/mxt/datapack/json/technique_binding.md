@@ -1,6 +1,7 @@
 ---
 title: Technique Binding (technique_binding)
 description: "Which stacks count as a technique's manual, the carrier item the mod generates for it, and the conditions that gate learning. Whether a stack is a manual, and which technique it teaches, follows the stack's mxt:technique component first; only when there is none does a declaration's items decide."
+hide_table_of_contents: true
 ---
 
 # Technique Binding (technique_binding)

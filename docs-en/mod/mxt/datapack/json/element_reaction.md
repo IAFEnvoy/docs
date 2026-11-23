@@ -1,6 +1,7 @@
 ---
 title: Element Reaction (element_reaction)
 description: "The reaction that fires once element attachment has met its demand: how much it asks for, how much it consumes, and the action it runs."
+hide_table_of_contents: true
 ---
 
 # Element Reaction (element_reaction)

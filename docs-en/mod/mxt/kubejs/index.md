@@ -39,7 +39,7 @@ Every object has its own page; the full method tables, the common data rules (nu
 
 Every API that changes game state must be called from `kubejs/server_scripts/`, and it goes through the mod's existing server transactions and event flow; a client script should only read.
 
-Lifespan scripts are provided by Reincarnation through [ReincarnationLifespan and ReincarnationEvents](./api/lifespan.md).
+Lifespan scripts are provided by Reincarnation through [ReincarnationLifespan and ReincarnationEvents](../../reincarnation/kubejs.md).
 
 ## When You Need KubeJS {#when-you-need-kubejs}
 

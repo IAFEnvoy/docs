@@ -1,6 +1,7 @@
 ---
 title: default_quality（默认品质）
 description: 给一件已有物品一个回退的默认品质档，它是品质解析的第三层、也是最后一层。
+hide_table_of_contents: true
 ---
 
 # default_quality（默认品质）

@@ -1,6 +1,7 @@
 ---
 title: Creature Profile (creature_profile)
 description: The profile attached to a creature type, covering attributes, aura requirements, inner core, the action written once and its own growth chain.
+hide_table_of_contents: true
 ---
 
 # Creature Profile (creature_profile)
@@ -19,18 +20,20 @@ A creature profile is attached to a creature type and applied once, when the cre
 | `condition` | `EntityCondition` | `mxt:always` | The condition under which the profile applies. |
 | `inner_core` | Item stack template | none | The inner core stack template; the creature drops exactly this stack on death. |
 | `preferred_aura_elements` | array of element IDs or `#tags` | `[]` | The preferred aura elements. |
-| `minimum_aura` | Map of aura ID to value | `{}` | The minimum value of each aura required to spawn or be strengthened. |
+| `minimum_aura` | Map of aura ID to value | `{}` | The minimum local amount of each aura required to apply this profile. |
 | `default_level` | Progression level ID | none | The entry level of this chain. With it the creature has progression; without it, it has none. |
 | `mastery_resource` | Value ID | none | Which value measures mastery. Writing it requires `default_level`, otherwise the definition is rejected at load time. |
 | `configuration` | Map of progression level ID to an entry object | `{}` | What each level gives it: the condition to reach it (`condition`), the abilities it grants cumulatively (`ability`) and the action it runs once on entering (`action`); the entry fields are the table of the same name on [technique](./technique.md). Writing it requires `default_level`. |
 
 `entities` takes a single entry, a tag, or a mixed array.
 
+When a creature enters the server-side world, profiles matching its type are checked in ascending order by ID path, with the namespace breaking ties. The first profile that passes its condition, aura requirements and intelligence validation is applied. A failed check lets the next profile be considered. Creatures with a saved profile skip this process.
+
 `condition` takes a single condition or an array of conditions. It governs whether this profile applies at all; it does not replace the vanilla spawning rules.
 
 `inner_core` is written as `{"id": "..."}` (with an optional `count` (`1..99`) and `components`), or as a bare item ID. It takes a **template**, not an already bound stack: datapack registries are resolved before item components are bound.
 
-A profile is written only once, so `spawn_action` also runs only once: it runs together with the profile the first time the creature enters the server-side world, and a creature that already carries the profile does not run it again. It takes **one action** - an array is rejected at load time, so use `mxt:sequence` to do several things in a row. When the condition or an aura requirement fails, the profile is not written and this action does not run either. It is the only field in the profile that touches the world.
+`spawn_action` runs once after the selected profile is written to the creature. It takes a single action. Use `mxt:sequence` to run multiple actions in order.
 
 **Creature growth is one progression chain this profile declares** (see [progression](./progression.md)). Write `default_level` and the creature becomes an owner of that chain - the owner id is this profile's own id - and the level it stands on is recorded on the creature, not in the profile. To make **only spirit beasts grow**, write the entity condition [`mxt:contract`](../types/condition/entity_condition_types.md) as that level's `condition`.
 

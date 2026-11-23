@@ -1,6 +1,7 @@
 ---
 title: Medicinal Property (medicinal_property)
 description: A medicinal identity for one medicinal effect, with no reuse of element, aura or resource ids.
+hide_table_of_contents: true
 ---
 
 # Medicinal Property (medicinal_property)

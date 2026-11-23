@@ -354,33 +354,11 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 
 ### `reincarnation:add_lifespan` {#reincarnation-add-lifespan}
 
-增加目标的剩余寿元与本世累计授予总额。需要安装可选的 Reincarnation 模组。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `amount` | 数值提供器 | **必填** | 增加量，单位刻，必须非负。 |
-
-```json
-{ "type": "reincarnation:add_lifespan", "amount": 2400 }
-```
-
-常量和公式均在执行时检查，结果非有限或为负时不操作；有效结果按 `Math.round` 取整。数量为 `0` 时不修改账本，也不为未记账目标开账。非生物目标不操作。
-
-**寿元总开关关闭时仍可写入**；该开关控制自然老化。详见[寿元](../../../player-guide/lifespan.md)。
+字段与用法见[转生实体行为](../../../../reincarnation/datapack.md#actions)。
 
 ### `reincarnation:remove_lifespan` {#reincarnation-remove-lifespan}
 
-扣除目标的剩余寿元，最低到 `0`，不减少本世累计授予总额。需要安装可选的 Reincarnation 模组。
-
-| 字段 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `amount` | 数值提供器 | **必填** | 扣除量，单位刻，必须非负。 |
-
-```json
-{ "type": "reincarnation:remove_lifespan", "amount": 1200 }
-```
-
-数量的校验、取整、零值和非生物目标处理与增寿行为一致。寿元总开关关闭时也可扣除。
+字段与用法见[转生实体行为](../../../../reincarnation/datapack.md#actions)。
 
 ### `mxt:modify_pill_toxicity` {#mxt-modify-pill-toxicity}
 
@@ -401,19 +379,11 @@ description: 模组注册的全部内置实体行为类型，以及每种类型�
 
 ### `reincarnation:unlimited_lifespan` {#reincarnation-unlimited-lifespan}
 
-关闭账本，直到显式授予寿元重新开账。没有字段。
-
-```json
-{"type":"reincarnation:unlimited_lifespan"}
-```
+字段与用法见[转生实体行为](../../../../reincarnation/datapack.md#actions)。
 
 ### `reincarnation:reincarnate` {#reincarnation-reincarnate}
 
-排队转世。mode 默认为 configured，new_life 归档并替换玩家，reset 保持对象和世代；非玩家始终原地重置。reason 是可选聊天组件。
-
-```json
-{"type":"reincarnation:reincarnate","mode":"new_life","reason":{"text":"服用转世丹"}}
-```
+字段与用法见[转生实体行为](../../../../reincarnation/datapack.md#actions)。
 
 ### `mxt:cultivate` {#mxt-cultivate}
 

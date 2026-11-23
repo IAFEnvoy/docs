@@ -1,6 +1,7 @@
 ---
 title: secret_realm_generation_type（秘境生成方式）
 description: mxt:secret_realm_generation_type 的五个内置条目、字段、默认值与解析时机。
+hide_table_of_contents: true
 ---
 
 # secret_realm_generation_type（秘境生成方式）

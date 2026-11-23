@@ -1,5 +1,6 @@
 ---
 title: formation（阵法）
+hide_table_of_contents: true
 ---
 
 # formation（阵法）

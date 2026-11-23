@@ -1,6 +1,7 @@
 ---
 title: Item Aura (item_aura)
 description: Turn an existing item into cultivation fuel; read the same definition the other way round and it is what describes holding right-click to pour aura into that item.
+hide_table_of_contents: true
 ---
 
 # Item Aura (item_aura)

@@ -1,6 +1,7 @@
 ---
 title: resource_bar_context（资源条上下文）
 description: 资源条上下文族 resource_bar_context 的五个 ID、取数来源、默认值与显示名规则。
+hide_table_of_contents: true
 ---
 
 # resource_bar_context（资源条上下文）

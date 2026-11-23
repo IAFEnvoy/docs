@@ -1,5 +1,6 @@
 ---
 title: resource（资源）
+hide_table_of_contents: true
 ---
 
 # resource（资源）

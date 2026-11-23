@@ -1,5 +1,6 @@
 ---
 title: Weapon Binding (weapon_binding)
+hide_table_of_contents: true
 ---
 
 # Weapon Binding (weapon_binding)

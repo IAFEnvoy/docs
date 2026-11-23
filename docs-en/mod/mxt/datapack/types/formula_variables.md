@@ -169,14 +169,7 @@ The names carry the `secret_realm_` prefix because `realm`, `realm_rank` and `le
 
 ### Lifespan Values {#lifespan-values}
 
-A context built from an entity can read that entity's lifespan ledger through two names, both measured in ticks:
-
-| Variable | Description |
-|----------|-------------|
-| `lifespan_remaining` | Ticks of life left before the lifespan runs out |
-| `lifespan_total` | The ceiling this life was granted |
-
-They read the entity the formula is evaluated for (the context's caster, or the player when the context has no caster). A body with **no ledger** reads `NaN` for both, so a condition can tell "never accounted for" from "accounted for and already spent", which reads `0`. How a ledger comes to exist is on [Lifespan](../../player-guide/lifespan.md).
+See [Reincarnation's formula variables](../../../reincarnation/datapack.md#variables) for `lifespan_remaining` and `lifespan_total`.
 
 ### Pill Toxicity and Herb Age {#pill-toxicity-and-herb-age}
 

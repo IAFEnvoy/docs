@@ -1,6 +1,7 @@
 ---
 title: currency（货币）
 description: 给已注册物品一个面值和一组单向兑换，由 mxt:currency 注册表定义。
+hide_table_of_contents: true
 ---
 
 # currency（货币）

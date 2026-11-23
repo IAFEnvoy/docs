@@ -1,6 +1,7 @@
 ---
 title: Formation Actions (formation_action_type)
 description: Every built-in module of mxt:formation_action_type, with its fields, defaults and decision rules.
+hide_table_of_contents: true
 ---
 
 # Formation Actions (formation_action_type)

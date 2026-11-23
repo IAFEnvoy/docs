@@ -1,6 +1,7 @@
 ---
 title: technique（功法）
 description: 定义一门可以学会的功法：学习条件、长按时长、被动属性、授予的能力与进度链。
+hide_table_of_contents: true
 ---
 
 # technique（功法）

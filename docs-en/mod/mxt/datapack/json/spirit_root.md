@@ -1,6 +1,7 @@
 ---
 title: Spirit Root (spirit_root)
 description: "Defines a spirit root: the elements it binds and their shares, the cultivation multiplier, the element affinity multiplier and its conflicting elements."
+hide_table_of_contents: true
 ---
 
 # Spirit Root (spirit_root)

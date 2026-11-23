@@ -37,6 +37,7 @@ Install Alchemy Workstations, Forging Workstations or Talisman Workstations on b
 
 | Mod | Purpose |
 |---|---|
+| [Reincarnation](../reincarnation/index.md) | Optional lifespan and rebirth integration. See [MiXianTu lifespan integration](./player-guide/lifespan.md). |
 | KubeJS | Only needed if you want to register content from scripts. See [KubeJS](./kubejs/index.md) |
 | JEI | Recipe viewer integration: shows Spirit Shaped and Spirit Shapeless crafting and their aura cost |
 | Jade | Block information integration: block aura, the Spirit Crafting Table's aura, the Display Stand's stored spirit power, a spirit herb's age and maturity, and a heat block's maximum furnace temperature and heating rate |
@@ -54,6 +55,6 @@ Nothing under `config/` needs a hand edit, and hand-editing it is not recommende
 | Part | Permission | Tabs |
 |---|---|---|
 | Client Settings | none (this machine only) | Wheel Menu, Resource Bars, Information Panel, Techniques, Rifts, Tooltips |
-| Server Config | **operator** | Curios Slots, Cultivation, Lifespan, Reincarnation, Talisman, Aura, Formations, Command Aliases, Compatibility |
+| Server Config | **operator** | Curios Slots, Cultivation, Talisman, Aura, Formations, Command Aliases, Compatibility |
 
 These docs name a setting as **Server Config → Tab → Entry** or **Client Settings → Tab → Entry**, which is what you look up in the screen.

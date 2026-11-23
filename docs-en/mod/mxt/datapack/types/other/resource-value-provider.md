@@ -1,6 +1,7 @@
 ---
 title: Resource Value Providers (resource_value_provider_type)
 description: The eight sources of the resource_value_provider_type family, their fields, defaults and boundaries.
+hide_table_of_contents: true
 ---
 
 # Resource Value Providers (resource_value_provider_type)

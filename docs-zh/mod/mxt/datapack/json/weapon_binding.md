@@ -1,5 +1,6 @@
 ---
 title: weapon_binding（武器绑定）
+hide_table_of_contents: true
 ---
 
 # weapon_binding（武器绑定）

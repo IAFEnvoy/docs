@@ -1,5 +1,6 @@
 ---
 title: ability（技能）
+hide_table_of_contents: true
 ---
 
 # ability（技能）

@@ -1,6 +1,7 @@
 ---
 title: aura_maximum_type（环境上限）
 description: 灵气上限 mxt:aura_maximum_type 的三种算法、字段、裸数字简写，以及省略 max 时的含义。
+hide_table_of_contents: true
 ---
 
 # aura_maximum_type（环境上限）

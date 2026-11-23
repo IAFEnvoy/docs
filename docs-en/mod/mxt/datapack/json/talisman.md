@@ -1,6 +1,7 @@
 ---
 title: Talisman (talisman)
 description: "Defines one inscribed talisman: the abilities invoking it grants, how much aura its carrier holds, and what one invocation takes."
+hide_table_of_contents: true
 ---
 
 # Talisman (talisman)

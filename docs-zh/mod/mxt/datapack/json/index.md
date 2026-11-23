@@ -1,5 +1,6 @@
 ---
 title: 动态注册表
+hide_table_of_contents: true
 ---
 
 # 动态注册表

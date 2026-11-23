@@ -1,6 +1,7 @@
 ---
 title: Heat Source (heat_source)
 description: The temperature and heating rate of a heat block, which cell it stands in, and how the furnace's temperature ceiling is settled.
+hide_table_of_contents: true
 ---
 
 :::info Shared core heat sources

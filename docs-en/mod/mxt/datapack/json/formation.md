@@ -1,6 +1,7 @@
 ---
 title: Formation (formation)
 description: The structure, radius, upkeep, lifecycle hooks and function modules of one formation.
+hide_table_of_contents: true
 ---
 
 # Formation (formation)

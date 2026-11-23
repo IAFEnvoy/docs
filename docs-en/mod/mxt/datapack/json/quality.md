@@ -1,6 +1,7 @@
 ---
 title: Quality (quality)
 description: One tier of quality — its colour and three modifiers, plus where it sits on the ladder, what names that ladder, and what one step up costs.
+hide_table_of_contents: true
 ---
 
 # Quality (quality)

@@ -1,6 +1,7 @@
 ---
 title: aura（灵气）
 description: 给一个数值挂上灵气身份与修炼行为：元素标记、境界链入口、恢复、换算与可用性门禁。
+hide_table_of_contents: true
 ---
 
 # aura（灵气）

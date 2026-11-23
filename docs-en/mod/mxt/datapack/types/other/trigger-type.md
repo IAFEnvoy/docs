@@ -1,6 +1,7 @@
 ---
 title: Triggers (trigger_type)
 description: Every built-in entry, field, default and decision rule of the saturn:trigger_type trigger matchers.
+hide_table_of_contents: true
 ---
 
 # Triggers (trigger_type)

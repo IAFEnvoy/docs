@@ -1,6 +1,7 @@
 ---
 title: Spirit Herb (spirit_herb)
 description: Marks existing blocks as spirit herbs with medicinal power, thermal bias and age, plus their fruit and growth clock.
+hide_table_of_contents: true
 ---
 
 # Spirit Herb (spirit_herb)

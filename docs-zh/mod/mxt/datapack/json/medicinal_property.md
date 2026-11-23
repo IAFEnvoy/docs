@@ -1,6 +1,7 @@
 ---
 title: medicinal_property（药性）
 description: 药性的身份定义：一种药用效果的身份，不复用元素、灵气或资源的 ID。
+hide_table_of_contents: true
 ---
 
 # medicinal_property（药性）

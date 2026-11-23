@@ -99,4 +99,4 @@ MxtEvents.cultivationBreak(event => {
 - Callbacks while loot is generated: [MxtLoot](./loot.md).
 - [KubeJS API Reference](../api-reference.md).
 
-Lifespan expiry and rebirth use [ReincarnationEvents](./reincarnation_events.md), provided by Reincarnation.
+Lifespan expiry and rebirth use [ReincarnationEvents](../../../reincarnation/kubejs.md#events), provided by Reincarnation.

@@ -1,5 +1,6 @@
 ---
 title: Ability (ability)
+hide_table_of_contents: true
 ---
 
 # Ability (ability)

@@ -1,6 +1,7 @@
 ---
 title: Resource Bar Contexts (resource_bar_context)
 description: The five contexts of the resource_bar_context family, where each one reads from, and how the display name is built.
+hide_table_of_contents: true
 ---
 
 # Resource Bar Contexts (resource_bar_context)

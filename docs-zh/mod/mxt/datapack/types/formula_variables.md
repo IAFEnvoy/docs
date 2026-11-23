@@ -167,14 +167,7 @@ description: 公式变量、提供来源与无效变量处理。
 
 ### 寿元 {#寿元}
 
-从实体建的上下文能用两个名字读那个实体的寿元账本，单位都是 tick：
-
-| 变量 | 说明 |
-| --- | --- |
-| `lifespan_remaining` | 这一世还剩多少 tick |
-| `lifespan_total` | 这一世被给到的上限 |
-
-它们读的是公式的求值对象（上下文里的施法者，没有施法者时读玩家）。身体**没有账本**时两者都读 `NaN`，所以条件能区分「从没记过账」与「记过账、已经耗尽」——后者读 `0`。账本如何来的见[寿元](../../player-guide/lifespan.md)。
+`lifespan_remaining` 和 `lifespan_total` 的用法见[转生公式变量](../../../reincarnation/datapack.md#variables)。
 
 ### 丹毒与药龄 {#丹毒与药龄}
 

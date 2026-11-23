@@ -1,5 +1,6 @@
 ---
 title: trigger（事件规则）
+hide_table_of_contents: true
 ---
 
 # trigger（事件规则）

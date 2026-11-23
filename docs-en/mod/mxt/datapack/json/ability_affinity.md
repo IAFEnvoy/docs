@@ -1,6 +1,7 @@
 ---
 title: ability_affinity
 description: The fields and rules of mxt:ability_affinity - which abilities belong to which elements, how several matching roots combine, and what the entry does to the cast gate and the damage multiplier.
+hide_table_of_contents: true
 ---
 
 # ability_affinity

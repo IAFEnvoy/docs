@@ -1,6 +1,7 @@
 ---
 title: Dynamic Registries
 description: Core and optional addon datapack registries, file locations and purposes, built-in type dispatch, and KubeJS extension types.
+hide_table_of_contents: true
 ---
 
 # Dynamic Registries

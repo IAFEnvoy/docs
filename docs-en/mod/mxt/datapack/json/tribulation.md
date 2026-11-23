@@ -1,5 +1,6 @@
 ---
 title: tribulation (Tribulation)
+hide_table_of_contents: true
 ---
 
 # tribulation (Tribulation)
