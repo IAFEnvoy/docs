@@ -4,7 +4,7 @@ description: 在 Saturn 数据定义中设置存档物品价值，比较单件�
 sidebar_position: 7
 ---
 
-这些类型适用于 Evaluate `1.0-beta.2` 与 Saturn `1.3.1+`。将它们嵌入接受 Saturn [物品动作](../../library/saturn/types/action/item-action.md)、[物品条件](../../library/saturn/types/condition/item-condition.md)或[实体条件](../../library/saturn/types/condition/entity-condition.md)的字段；它们不是新的 Evaluate 独立数据文件。
+这些类型适用于 Evaluate `1.0-beta.2` 与 Saturn `1.3.1+`。将它们嵌入接受 Saturn [物品动作](../saturn/types/action/item-action.md)、[物品条件](../saturn/types/condition/item-condition.md)或[实体条件](../saturn/types/condition/entity-condition.md)的字段；它们不是新的 Evaluate 独立数据文件。
 
 所有类型在服务端执行。持有者位于客户端或没有持有者时，动作不执行，条件返回 `false`。查询遵循 Java API 和提示中的组件匹配与价值优先级，包括当前存档覆盖。
 
@@ -12,7 +12,7 @@ sidebar_position: 7
 
 | 类型 | 字段 | 必填 | 行为 |
 | --- | --- | --- | --- |
-| `evaluate:set_value` | `value`：[数值提供器](../../library/saturn/types/number.md) | 是 | 将有限且非负的数值保存为单件价值。 |
+| `evaluate:set_value` | `value`：[数值提供器](../saturn/types/number.md) | 是 | 将有限且非负的数值保存为单件价值。 |
 | `evaluate:add_value` | `amount`：数值提供器 | 是 | 在当前公开价值上加上带符号的数值，将结果保存为存档价值；未知或免费物品从 `0` 开始。 |
 | `evaluate:reset_value` | 无 | — | 删除精确物品变体的存档价值，恢复数据包定义和推导结果。 |
 
@@ -90,7 +90,7 @@ sidebar_position: 7
 | `comparison` | 比较运算符 | 是 | — | 对累加总值进行比较。 |
 | `compare_to` | 数值 | 是 | — | 目标总价值。 |
 
-未知和免费物品贡献 `0`，空背包总价值为 `0`。玩家选中的快捷栏槽位与主手别名只统计一次。总值溢出时返回 `false`。槽位规则沿用 [Saturn 背包条件](../../library/saturn/types/condition/entity-condition.md#saturninventory)。
+未知和免费物品贡献 `0`，空背包总价值为 `0`。玩家选中的快捷栏槽位与主手别名只统计一次。总值溢出时返回 `false`。槽位规则沿用 [Saturn 背包条件](../saturn/types/condition/entity-condition.md#saturninventory)。
 
 ```json
 {
@@ -102,4 +102,4 @@ sidebar_position: 7
 }
 ```
 
-要从实体动作字段执行物品动作，可用 Saturn 的 `saturn:equipped_item_action` 或已有的其他物品动作承载类型包装，见[实体动作参考](../../library/saturn/types/action/entity-action.md#saturnequipped_item_action)。
+要从实体动作字段执行物品动作，可用 Saturn 的 `saturn:equipped_item_action` 或已有的其他物品动作承载类型包装，见[实体动作参考](../saturn/types/action/entity-action.md#saturnequipped_item_action)。

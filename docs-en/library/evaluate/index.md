@@ -18,13 +18,13 @@ These numbers describe configured acquisition costs. Evaluate does not add a cur
 | Minecraft | `26.1.2` |
 | NeoForge | Developed and verified with `26.1.2.126` |
 | Java | `25` |
-| Required dependency | [Saturn](../../library/saturn/index.md) `1.3.1+` |
+| Required dependency | [Saturn](../saturn/index.md) `1.3.1+` |
 | Optional integration | KubeJS `26.1.2-8.0.8+`, with Rhino and Better Advanced Tooltips |
 | Optional integration | FTB Quests `26.1.2.8+`, with its dependencies |
 
 Install Evaluate and Saturn in the server's `mods/` directory. To display item values in tooltips, also install them on the client. Value calculations run on the server, including in singleplayer.
 
-Saturn supplies item matching. Its general matcher types are documented in [Item matcher](../../library/saturn/types/item-matcher.md); these pages cover Evaluate's value definitions and behavior.
+Saturn supplies item matching. Its general matcher types are documented in [Item matcher](../saturn/types/item-matcher.md); these pages cover Evaluate's value definitions and behavior.
 
 ## First value definition
 

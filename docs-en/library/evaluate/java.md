@@ -98,7 +98,7 @@ This instance contributes an unlocked candidate of `12.5` per experience bottle.
 | `addValue(stack, value)` | Submits an unlocked candidate value per item. |
 | `addConversion(conversion)` | Submits a directed relationship for later solving. |
 
-For matcher construction and matching behavior, use the existing [Saturn reference](../../library/saturn/types/item-matcher.md). Do not retain `EvaluationContext` after evaluation or query an unfinished result graph from within the evaluator.
+For matcher construction and matching behavior, use the existing [Saturn reference](../saturn/types/item-matcher.md). Do not retain `EvaluationContext` after evaluation or query an unfinished result graph from within the evaluator.
 
 ## Depend on other items
 

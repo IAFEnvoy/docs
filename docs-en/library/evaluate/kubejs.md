@@ -35,7 +35,7 @@ EvaluateEvents.values(event => {
 | `event.evaluator(id, callback)` | Registers a JS callback and generates an instance with the same ID and empty parameters. |
 | `event.js(entryId, callbackId, params)` | Generates an `evaluate:js` instance using a registered callback. |
 
-`item` accepts the same selection syntax as [datapack definitions](./datapack.md#item-selection), backed by [Saturn matchers](../../library/saturn/types/item-matcher.md). Values must be finite and nonnegative.
+`item` accepts the same selection syntax as [datapack definitions](./datapack.md#item-selection), backed by [Saturn matchers](../saturn/types/item-matcher.md). Values must be finite and nonnegative.
 
 Repeated `set` calls with the same serialized JSON selector replace the earlier definition. Different selectors compete by priority and resource ID. Generated files follow normal datapack precedence at the same path.
 

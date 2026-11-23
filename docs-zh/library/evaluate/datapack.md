@@ -50,7 +50,7 @@ data/<namespace>/evaluate/value_override/<path>.json
 }
 ```
 
-`item` 直接使用 Saturn 的 `ItemMatcher.ENTRIES_CODEC`，也接受其他模组注册的匹配项。各类匹配器字段请查阅 [Saturn 物品匹配器参考](../../library/saturn/types/item-matcher.md)，Evaluate 不再定义另一套选择器语言。
+`item` 直接使用 Saturn 的 `ItemMatcher.ENTRIES_CODEC`，也接受其他模组注册的匹配项。各类匹配器字段请查阅 [Saturn 物品匹配器参考](../saturn/types/item-matcher.md)，Evaluate 不再定义另一套选择器语言。
 
 显式规则匹配实际查询的 `ItemStack`，组件条件不会变成整个物品类型的共同结果。推导图会收集默认栈，以及配方、计算器和 Ingredient 展示中的代表变体。未收集的变体仍能命中显式规则，但可能缺少对应的推导换算链。
 

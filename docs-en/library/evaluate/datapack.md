@@ -50,7 +50,7 @@ The field name is `item`, including when using an array. Array entries are alter
 }
 ```
 
-`item` uses Saturn's `ItemMatcher.ENTRIES_CODEC`, including matcher types registered by other mods. Refer to [Saturn's item matcher reference](../../library/saturn/types/item-matcher.md) for individual matcher fields; Evaluate does not define a separate selector language.
+`item` uses Saturn's `ItemMatcher.ENTRIES_CODEC`, including matcher types registered by other mods. Refer to [Saturn's item matcher reference](../saturn/types/item-matcher.md) for individual matcher fields; Evaluate does not define a separate selector language.
 
 Explicit rules match the actual queried `ItemStack`, so component conditions do not become a shared value for all variants of an item. For inference, Evaluate collects default stacks and representative variants from recipes, evaluators, and ingredient displays. A variant that was not collected can still match an explicit rule, but may lack an inferred conversion chain.
 

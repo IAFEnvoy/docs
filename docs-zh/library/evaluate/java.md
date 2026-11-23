@@ -98,7 +98,7 @@ types.register(modEventBus);
 | `addValue(stack, value)` | 提交未锁定的单件候选值。 |
 | `addConversion(conversion)` | 提交有向关系，等待统一求解。 |
 
-匹配项构建和行为见已有的 [Saturn 参考](../../library/saturn/types/item-matcher.md)。不要在计算结束后持有 `EvaluationContext`，也不要在计算器内部查询尚未完成的结果图。
+匹配项构建和行为见已有的 [Saturn 参考](../saturn/types/item-matcher.md)。不要在计算结束后持有 `EvaluationContext`，也不要在计算器内部查询尚未完成的结果图。
 
 ## 依赖其他物品
 

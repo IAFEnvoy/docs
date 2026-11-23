@@ -4,7 +4,7 @@ description: Set world-owned item values and compare item or inventory values in
 sidebar_position: 7
 ---
 
-Use these types with Evaluate `1.0-beta.2` and Saturn `1.3.1+`. Embed them in fields accepting Saturn [item actions](../../library/saturn/types/action/item-action.md), [item conditions](../../library/saturn/types/condition/item-condition.md), or [entity conditions](../../library/saturn/types/condition/entity-condition.md). They are nested definitions, not new standalone Evaluate data files.
+Use these types with Evaluate `1.0-beta.2` and Saturn `1.3.1+`. Embed them in fields accepting Saturn [item actions](../saturn/types/action/item-action.md), [item conditions](../saturn/types/condition/item-condition.md), or [entity conditions](../saturn/types/condition/entity-condition.md). They are nested definitions, not new standalone Evaluate data files.
 
 They run on the server. With a client-side holder or no holder, actions do nothing and conditions return `false`. Queries use the same component-aware values as the Java API and tooltips, including current world overrides.
 
@@ -12,7 +12,7 @@ They run on the server. With a client-side holder or no holder, actions do nothi
 
 | Type | Field | Required | Meaning |
 | --- | --- | --- | --- |
-| `evaluate:set_value` | `value`: [Number provider](../../library/saturn/types/number.md) | Yes | Store a finite, nonnegative value per item. |
+| `evaluate:set_value` | `value`: [Number provider](../saturn/types/number.md) | Yes | Store a finite, nonnegative value per item. |
 | `evaluate:add_value` | `amount`: Number provider | Yes | Add a signed amount to the current public value, starting from `0` for an unknown or free item. Store the result as a world value. |
 | `evaluate:reset_value` | None | — | Remove the exact stack variant's world value and restore datapack definitions and inference. |
 
@@ -90,7 +90,7 @@ Combine these types with Saturn's existing `and`, `or`, `not`, and `if_else`. Fo
 | `comparison` | Comparison operator | Yes | — | Compare the accumulated total. |
 | `compare_to` | Number | Yes | — | Target total value. |
 
-Unknown and free items contribute `0`; an empty inventory has a total of `0`. The player's selected hotbar slot and main-hand alias are counted once. If the total overflows, the condition returns `false`. Slot behavior follows [Saturn's inventory condition](../../library/saturn/types/condition/entity-condition.md#saturninventory).
+Unknown and free items contribute `0`; an empty inventory has a total of `0`. The player's selected hotbar slot and main-hand alias are counted once. If the total overflows, the condition returns `false`. Slot behavior follows [Saturn's inventory condition](../saturn/types/condition/entity-condition.md#saturninventory).
 
 ```json
 {
@@ -102,4 +102,4 @@ Unknown and free items contribute `0`; an empty inventory has a total of `0`. Th
 }
 ```
 
-To run one of the item actions from an entity action field, wrap it with Saturn's `saturn:equipped_item_action` or another existing item-action carrier. See the [entity action reference](../../library/saturn/types/action/entity-action.md#saturnequipped_item_action).
+To run one of the item actions from an entity action field, wrap it with Saturn's `saturn:equipped_item_action` or another existing item-action carrier. See the [entity action reference](../saturn/types/action/entity-action.md#saturnequipped_item_action).

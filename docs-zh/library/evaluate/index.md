@@ -18,13 +18,13 @@ Evaluate（模组 ID：`evaluate`）为整合包和其他模组计算**物品的
 | Minecraft | `26.1.2` |
 | NeoForge | 开发与验证版本为 `26.1.2.126` |
 | Java | `25` |
-| 必需依赖 | [Saturn](../../library/saturn/index.md) `1.3.1+` |
+| 必需依赖 | [Saturn](../saturn/index.md) `1.3.1+` |
 | 可选兼容 | KubeJS `26.1.2-8.0.8+`，以及 Rhino、Better Advanced Tooltips |
 | 可选兼容 | FTB Quests `26.1.2.8+` 及其依赖 |
 
 将 Evaluate 和 Saturn 放入服务端的 `mods/` 目录。如果需要在物品提示中显示价值，客户端也要安装。价值统一由服务端计算，单人游戏同样如此。
 
-物品匹配由 Saturn 提供。通用类型请查阅 [物品匹配器](../../library/saturn/types/item-matcher.md)；本节文档只介绍 Evaluate 的价值定义及其行为。
+物品匹配由 Saturn 提供。通用类型请查阅 [物品匹配器](../saturn/types/item-matcher.md)；本节文档只介绍 Evaluate 的价值定义及其行为。
 
 ## 第一个价值定义
 

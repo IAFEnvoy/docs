@@ -35,7 +35,7 @@ EvaluateEvents.values(event => {
 | `event.evaluator(id, callback)` | 注册 JS 回调，并生成同 ID、空参数的实例。 |
 | `event.js(entryId, callbackId, params)` | 使用已注册回调生成 `evaluate:js` 实例。 |
 
-`item` 使用与[数据包定义](./datapack.md#item-selection)相同的选择语法，由 [Saturn 匹配器](../../library/saturn/types/item-matcher.md)处理。价值必须是有限非负数。
+`item` 使用与[数据包定义](./datapack.md#item-selection)相同的选择语法，由 [Saturn 匹配器](../saturn/types/item-matcher.md)处理。价值必须是有限非负数。
 
 对同一序列化 JSON 选择器重复 `set` 会替换之前的定义。不同选择器按优先级和资源 ID 竞争，生成文件遵循同路径的普通数据包覆盖规则。
 
