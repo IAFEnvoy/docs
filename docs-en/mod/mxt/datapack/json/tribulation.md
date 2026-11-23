@@ -37,21 +37,21 @@ While a tribulation runs, the sky darkens for nearby players automatically — t
 
 ### Storm cloud
 
-`storm_cloud` and `darken_sky` can be enabled independently. The storm cloud appears at the start of wind-up and follows the entity horizontally. It fades for about 1.15 seconds after success, failure, or cancellation. The cloud is restored when the tribulation resumes after a login or dimension change.
+`storm_cloud` and `darken_sky` can be enabled independently. The storm cloud appears at the start of wind-up and follows the entity horizontally. Its altitude comes from `y`. It fades for about 1.15 seconds after success, failure, or cancellation. The cloud is restored when the tribulation resumes after a login or dimension change.
 
 | `storm_cloud` field | Default | Description |
 | --- | --- | --- |
 | `cloud_color` | `"#FF584D82"` | Cloud colour in `#AARRGGBB` format. |
 | `lightning_color` | `"#FFC2CDFF"` | Arc colour in `#AARRGGBB` format. |
 | `thickness` | `6.0` | Cloud thickness, from 0.25 to 32 blocks. |
-| `radius` | `64.0` | Horizontal radius, from 0.5 to 64 blocks. |
-| `clearance` | `8.0` | Vertical gap between the top of the storm cloud and the bottom of the local vanilla cloud layer, from 0 to 64 blocks. |
+| `radius` | `64.0` | Horizontal radius, from 0.5 to 256 blocks. |
+| `y` | `160.0` | `NumberProvider` for the world Y coordinate of the cloud centre. Evaluated at start and on every active tick, including wind-up. |
 
-The spawn position sets the cloud's altitude. Where the environment has no vanilla cloud layer, the storm cloud is centred 18 blocks above the entity, within the dimension's build height.
+`y` accepts a fixed number or a formula. For example, `"y": "140 + caster_health"` varies the altitude with the entity's current health. If an evaluated value is outside the entity spawn range, an existing cloud keeps its last valid altitude and a new cloud uses Y=160.
 
 ```json
 {
-  "storm_cloud": { "radius": 64, "clearance": 8, "cloud_color": "#FF41345C", "lightning_color": "#FFFFBB55" },
+  "storm_cloud": { "radius": 64, "y": 160, "cloud_color": "#FF41345C", "lightning_color": "#FFFFBB55" },
   "timeline": [
     { "type": "mxt:action", "action": { "type": "mxt:spawn_lightning", "damage": 12 } },
     { "type": "mxt:idle", "duration": 40 },

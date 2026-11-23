@@ -343,7 +343,7 @@ Spawns a storm cloud above the action's position for a fixed duration. Its elect
 | `lifetime` | integer | **required** | Duration of 1 to 1,200 ticks, including formation and dissipation. |
 | `offset_y` | number | `16.0` | Vertical offset from the action's position, in blocks. |
 | `follow` | boolean | `true` | Whether the cloud follows the acting entity horizontally. |
-| `radius` | number | `16.0` | Horizontal radius, from 0.5 to 64 blocks. |
+| `radius` | number | `16.0` | Horizontal radius, from 0.5 to 256 blocks. |
 | `thickness` | number | `6.0` | Cloud thickness, from 0.25 to 32 blocks. |
 | `cloud_color` | string | `"#FF584D82"` | Cloud colour in `#AARRGGBB` format. |
 | `lightning_color` | string | `"#FFC2CDFF"` | Arc colour in `#AARRGGBB` format. |

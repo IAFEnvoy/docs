@@ -37,21 +37,21 @@ title: tribulation（天劫）
 
 ### 雷云
 
-`storm_cloud` 和 `darken_sky` 可以独立启用。雷云从前摇开始时出现，只沿 XZ 平面跟随渡劫者，在成功、失败或中止后约 1.15 秒内淡出。渡劫在另一个维度或重新登录后继续时，当前维度会恢复雷云。
+`storm_cloud` 和 `darken_sky` 可以独立启用。雷云从前摇开始时出现，沿 XZ 平面跟随渡劫者，高度按 `y` 求值。在成功、失败或中止后，雷云在约 1.15 秒内淡出。渡劫在另一个维度或重新登录后继续时，当前维度会恢复雷云。
 
 | `storm_cloud` 字段 | 默认 | 说明 |
 | --- | --- | --- |
 | `cloud_color` | `"#FF584D82"` | 云体颜色，格式为 `#AARRGGBB`。 |
 | `lightning_color` | `"#FFC2CDFF"` | 电弧颜色，格式为 `#AARRGGBB`。 |
 | `thickness` | `6.0` | 云体厚度，范围为 0.25 至 32 格。 |
-| `radius` | `64.0` | 水平半径，范围为 0.5 至 64 格。 |
-| `clearance` | `8.0` | 雷云顶缘与当地原版云层底面的垂直间距，范围为 0 至 64 格。 |
+| `radius` | `64.0` | 水平半径，范围为 0.5 至 256 格。 |
+| `y` | `160.0` | `NumberProvider`，雷云中心的世界坐标 Y。启动时及运行中的每刻求值，含前摇。 |
 
-高度在生成时确定。环境没有原版云层时，雷云中心位于渡劫者上方 18 格，并限制在维度高度内。
+`y` 可以写固定数字，也可以用公式。例如 `"y": "140 + caster_health"` 会随渡劫者的当前生命值调整高度。求值结果超出实体生成范围时，已有雷云保留上一有效高度，新生成的雷云使用 Y=160。
 
 ```json
 {
-  "storm_cloud": { "radius": 64, "clearance": 8, "cloud_color": "#FF41345C", "lightning_color": "#FFFFBB55" },
+  "storm_cloud": { "radius": 64, "y": 160, "cloud_color": "#FF41345C", "lightning_color": "#FFFFBB55" },
   "timeline": [
     { "type": "mxt:action", "action": { "type": "mxt:spawn_lightning", "damage": 12 } },
     { "type": "mxt:idle", "duration": 40 },

@@ -16,7 +16,7 @@ Clients receive the cloud through vanilla entity tracking. The base horizontal t
 | --- | --- | --- |
 | `cloud_color` | `"#FF584D82"` | Cloud colour in `#AARRGGBB` format. |
 | `lightning_color` | `"#FFC2CDFF"` | Arc colour in `#AARRGGBB` format. |
-| `radius` | `16.0` | Horizontal radius, from 0.5 to 64 blocks. |
+| `radius` | `16.0` | Horizontal radius, from 0.5 to 256 blocks. |
 | `thickness` | `6.0` | Total height of the vertical bounding box, from 0.25 to 32 blocks. |
 | `lifetime` | `160` | Lifetime in ticks, from 1 to 1,200, including formation and dissipation. |
 

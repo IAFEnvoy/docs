@@ -16,7 +16,7 @@ description: 使用 mxt:storm_cloud 预览可独立调色的雷云与电弧。
 | --- | --- | --- |
 | `cloud_color` | `"#FF584D82"` | 云层颜色，格式为 `#AARRGGBB`。 |
 | `lightning_color` | `"#FFC2CDFF"` | 电弧颜色，格式为 `#AARRGGBB`。 |
-| `radius` | `16.0` | 水平半径，范围为 0.5 至 64 格。 |
+| `radius` | `16.0` | 水平半径，范围为 0.5 至 256 格。 |
 | `thickness` | `6.0` | 垂直包围盒的总高度，范围为 0.25 至 32 格。 |
 | `lifetime` | `160` | 寿命，范围为 1 至 1200 刻，含成形和消散。 |
 
