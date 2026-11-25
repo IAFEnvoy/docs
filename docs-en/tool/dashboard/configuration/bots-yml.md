@@ -34,8 +34,8 @@ QQ events always use **WebSocket**. Do not add `webhook_url` or a callback liste
 | --- | --- | --- | --- |
 | `enabled` | bool | `false` | Global switch; at least one platform must be enabled |
 | `notify_new_issues` | bool | `true` | Send new Open issue notifications independently of preprocessing |
-| `notify_reports` | bool | `true` | Send the final report after successful preprocessing |
-| `dashboard_url` | string | `""` | Optional HTTP(S) dashboard address for report session links; no credentials, query or fragment; links still require login |
+| `notify_reports` | bool | `true` | Send a plain-text summary after successful preprocessing, with a body of up to 200 characters excluding the header and link |
+| `dashboard_url` | string | `""` | Optional external HTTP(S) dashboard address for final-report share links that need no login; no credentials, query or fragment |
 | `providers` | object | QQ disabled | Platform configuration; currently supports `qq` |
 | `targets` | array | `[]` | Static recipients; may remain empty while groups bind through the website |
 
@@ -76,6 +76,8 @@ For groups, [website code binding](../features/bot-notifications.md) avoids obta
 The group owner must still allow proactive messages in the bot's **group message settings** in mobile QQ. Configuring or binding a destination does not grant this permission.
 
 ## Applying settings and storage
+
+Report summaries use one extra tool-free call to the default model in `ai.yml`, retaining the problem assessment and recommendations. Each report produces one message per recipient; summary failures produce a short notice. With `dashboard_url` configured, public shares include only the final report text, excluding attachments, tool history and reasoning.
 
 Notifications, bindings and delivery progress live in `data/bot-notifications.json`, separate from YAML settings. Only binding code hashes are stored; bindings and queues survive restarts. QQ credentials remain in the local configuration or process environment.
 

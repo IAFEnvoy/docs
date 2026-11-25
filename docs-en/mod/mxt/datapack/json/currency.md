@@ -155,6 +155,8 @@ The Exchange Station is a stonecutter-style screen: the input slot only accepts 
 
 Both the list and the result are confirmed by the server-side menu; the client only draws the same options from the synchronized registry.
 
+The server rechecks available offers against the current input and player before granting the result. Select an offer again if the list changes. The Cheque Table retains the original cheque when it cannot find exact change within its search budget.
+
 ## Disabling a Definition {#disabling-a-definition}
 
 The condition is written **at the top level of the file** (one file is one definition). When it does not hold, the definition never enters the registry at all:

@@ -67,6 +67,7 @@ Every other type reads **none of it**: `mxt:word` carries a terminal payload of 
 | `mxt:mount` | `speed`, `seats`, `sit`, `render`, `entity_type`, `display`, `width`, `height`, `step_height`, `seat_offsets`, `mount_action`, `trail` |
 | `mxt:flight_control` | `hand`, `speed_multiplier`, `cooldown` |
 | `mxt:storage` | `slots`, `cooldown` |
+| `mxt:shared_storage` | `slots`, `cooldown` |
 | `mxt:word` | `effect`, `requires_operator`, `amount`, `cooldown` |
 
 `cooldown` and `damage_condition` are read by only some types, so they are not in the common field table — but they are still written beside `type` in JSON.
@@ -151,6 +152,19 @@ Failure reasons on a press: not a server-side player = `UNAVAILABLE`, nothing ca
 The contents live in the item component `mxt:storage`, as one record under this ability's own id. Two storage abilities on one carrier keep two separate boxes.
 
 It spends no charge either.
+
+## `mxt:shared_storage` {#mxt-shared-storage}
+
+Shared storage accepts the same `slots` and `cooldown` fields as `mxt:storage`. The same player opens the same inventory through any eligible artifact carrying that shared storage ability. Each player and each ability ID has a separate inventory. The shared inventory is saved with the player and remains accessible through an authorized carrier after changing artifacts or respawning.
+
+`mxt:storage` continues to store contents on each artifact. It opens from a single-item stack and makes the artifact unstackable when its contents are written. Both types use the capacity resolved when the menu opens. If the configured capacity later shrinks, hidden slots retain their contents and can be accessed again when capacity increases.
+
+```json title="data/example/saturn/ability/shared_chest.json"
+{
+  "type": "mxt:shared_storage",
+  "slots": 27
+}
+```
 
 ## `mxt:word` {#mxt-word}
 

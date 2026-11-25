@@ -46,7 +46,7 @@ The local router tries task `commands` and structured arguments before matching 
 
 When local routing cannot resolve an instruction, Psychic can ask a model to choose among the companion's available tasks. Set `PSYCHIC_MODEL_API_KEY` in the environment of the game process hosting the world. For a DeepSeek endpoint, you can also use `DEEPSEEK_API_KEY`. On multiplayer this process runs on the server. In single-player it runs in your local game.
 
-Edit `config/psychic-ai.toml` in the game directory, then restart the process hosting the world.
+Open Psychic's server settings from the Mods menu, or edit the `ai` section of `config/psychic/psychic-server.json` in the game directory. Only server operators can edit a remote server's settings. Changes take effect the next time the server starts. On first use, Psychic imports existing settings from `config/psychic-ai.toml`.
 
 | Setting | Default | Purpose |
 | --- | --- | --- |

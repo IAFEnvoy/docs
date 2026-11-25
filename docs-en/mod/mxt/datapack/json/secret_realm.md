@@ -86,7 +86,7 @@ A random landing is sampled uniformly inside the radius, not "denser the further
 
 The landing point that was picked becomes this instance's **anchor** and is stored in the instance record: later travellers (players or mobs) land near the same spot instead of each rolling their own way to the far end of the secret realm.
 
-Actual entry searches the planned position and offsets up to 4 blocks along each axis before trying to build a dirt platform in empty space. Return travel uses the same fallback. Players usually receive a 3×3 floor; larger entities get a platform sized to their body with a one-block margin. Platforms cannot replace blocks, remove fluids or obstructions, cross world bounds or occupy other entities. When building, foot height rounds upward to an integer and stays at least one block above the minimum world height. If no safe platform can be placed, travel is refused without adding a member or clearing an unfinished travel record. The management commands `check` and `anchor` only inspect; they do not build landing platforms.
+Actual entry searches the planned position and offsets up to 4 blocks along each axis before trying to build a dirt platform in empty space. Return travel uses the same fallback. Players usually receive a 3×3 floor; larger entities get a platform sized to their body with a one-block margin. Platforms preserve existing blocks, fluids, and obstructions. The whole footprint must respect the world border, entity collisions, and vanilla, formation, and FTB claim protections. When building, foot height rounds upward to an integer and stays at least one block above the minimum world height. If no safe platform can be placed, travel is refused without adding a member or clearing an unfinished travel record. The management commands `check` and `anchor` only inspect; they do not build landing platforms.
 
 ## `owned` (optional, default `false`) {#owned-optional-default-false}
 
@@ -104,6 +104,8 @@ The claim matters most **after everybody is gone**:
 | `mxt:existing` | Whatever `owned` says, that dimension is neither unloaded nor deleted; only the member list is cleared. |
 
 `max_instances` counts every instance together (the owner is not exempt): a secret realm with `max_instances: 2` holds at most two at once, a third arrival joins an existing one that is not full, and otherwise it fails. Someone who is already inside does not count towards filling that instance, so they can go back in.
+
+Cleanup is retried if players remain in the dimension or storage cannot be cleared. Entry is unavailable while cleanup is pending.
 
 ## Aura Integration {#aura-integration}
 

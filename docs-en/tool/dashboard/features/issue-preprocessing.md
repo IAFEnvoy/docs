@@ -4,16 +4,24 @@ title: Automatic Issue Preprocessing
 description: Use an authenticated switch to assess new issues against local code and generate solution reports without editing files
 ---
 
-Automatic preprocessing creates an AI session for each new issue, reads its description and local source code, assesses whether the problem exists, and proposes a solution. **It generates a report without changing project code or running builds and tests.**
+Automatic preprocessing clones or synchronizes project sources, then creates an AI session for each new issue, reads its description and source code, assesses whether the problem exists, and proposes a solution. **The AI analysis generates a report without changing code or running builds and tests.** Source synchronization discards local changes as described below.
 
 ## Enable preprocessing
 
 1. Enable the GitHub data source in [config.yml](../configuration/config-yml.md) and configure the repository owner's GitHub token in [auth.yml](../configuration/auth-yml.md).
 2. Configure a working default model in [ai.yml](../configuration/ai-yml.md).
-3. Place the source checkout in a `<repository-name>` subdirectory of one of your `project_paths`. Preprocessing requires an existing checkout; a missing directory produces a failure and **is not cloned automatically**.
+3. Install Git and configure writable `project_paths`. Missing repositories are cloned into a `<repository-name>` subdirectory of the first writable root. Existing checkouts are updated before every analysis.
 4. Log into the website, open **Agent → Settings**, and enable **Automatic issue preprocessing**. Settings appears to the right of **MCP Servers**; the switch defaults to off.
 
 Reading or changing the switch, viewing task status, and retrying tasks all require valid website credentials. The setting takes effect immediately and persists. Turning it off prevents new tasks from starting; a running task finishes.
+
+## Synchronize sources before analysis
+
+New repositories clone the remote default branch. Existing checkouts update the current branch's configured `origin` upstream, or the matching remote branch when no upstream is configured. Detached checkouts use the remote default branch. Private repositories use the owner's GitHub token from `auth.yml`; credentials are not stored in clone URLs or `.git/config`.
+
+**The current policy discards local commits, staged and unstaged changes, and ordinary untracked and Git-ignored files.** The server fetches remote code and verifies the branch before running `reset --hard` and `clean -fdx`, so failed fetches preserve local contents. Do not retain needed local changes in a preprocessing checkout.
+
+A same-named directory that is not a standalone Git checkout, a mismatched `origin`, or a path outside the configured root stops synchronization without overwriting that directory. Synchronization has a five-minute timeout. Clone, fetch, branch verification or cleanup failures fail the task, display a reason beside the issue, and write an `[Issue]` log. Correct the network, permissions or configuration and retry. Analysis does not proceed using stale sources after synchronization fails.
 
 ## Which issues trigger processing
 

@@ -173,7 +173,7 @@ A section with more than 256 distinct states switches to the global palette, who
 
 ## How large is the approximation error {#how-large-is-the-approximation-error}
 
-The only approximation is collapsing emitters beyond 3×3×3 onto the section centre. The repository's error study (`research/15_子区块灵气缓存误差研究.md`) quantifies it for a **single block with contribution 1**:
+The only approximation is collapsing emitters beyond 3×3×3 onto the section centre. The repository's error study (`research/015_子区块灵气缓存误差研究.md`) quantifies it for a **single block with contribution 1**:
 
 ![One-block actual aura value: mean, P95 and the cached value](../assets/images/aura/aura_subchunk_value.png)
 
@@ -217,7 +217,7 @@ sequenceDiagram
 
 ## Performance: where the 140 µs of one query goes {#performance-where-the-140-μs-of-one-query-goes}
 
-`research/17_灵气解析性能与记忆化.md` measured an uncached query in stages (test pack, 5 aura zones):
+`research/017_灵气解析性能与记忆化.md` measured an uncached query in stages (test pack, 5 aura zones):
 
 | Stage | Cost |
 | --- | --- |

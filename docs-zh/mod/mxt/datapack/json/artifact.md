@@ -45,7 +45,8 @@ hide_table_of_contents: true
 
 - 前两条是**各自的注册表条目**：`mxt_test:artifact_guard` 是 `mxt:modifier`（被动），`mxt_test:firebolt` 是 `mxt:active`（按一下）。被动还是主动由**技能自己的 `type`** 决定，法器定义不声明「我授予的是被动还是主动」。
 - 第三条 `mxt_test:bound_mount` 是一条 `mxt:mount`（**声明这件法器是飞行法器，不按键**），第四条是一个**技能标签**，在授予时展开成它列出的那些技能——一包多件法器共用同一组被动时，改标签比逐件改定义省事；同名技能写两遍（直接写 + 经标签）会去重。
-- 这几条技能自己的字段（飞行速度与每 tick 费用、储物格数、维持周期）都在**技能自己那份文件**里：`mxt:mount` 取 `speed` / `seats` / `sit` / 几何与技能的 `costs`，`mxt:storage` 取 `slots`，`mxt:upkeep` 取 `interval` / `on_fail` / `owner_only` 并同样用技能的 `costs`。这些技能**需要一件承载它的物品**：被技能书之类没有物品的来源授予时语法合法，但使用时会被拒绝并报「没有承载物」。
+- 这几条技能自己的字段（飞行速度与每 tick 费用、储物格数、维持周期）都在**技能自己那份文件**里：`mxt:mount` 取 `speed` / `seats` / `sit` / 几何与技能的 `costs`，`mxt:storage` 与 `mxt:shared_storage` 均取 `slots`，`mxt:upkeep` 取 `interval` / `on_fail` / `owner_only` 并同样用技能的 `costs`。这些技能**需要一件承载它的物品**：被技能书之类没有物品的来源授予时语法合法，但使用时会被拒绝并报「没有承载物」。
+- [共享储物](../types/other/ability.md#mxt-shared-storage)按玩家和技能 ID 持久化，同一技能可以通过多件法器访问。
 - 除了定义里的 `abilities`，**一堆具体的物品**还能靠数据组件 `mxt:item_abilities`（`{"abilities": ["example:foo"]}`）自带技能：运行时读的是**定义声明的与组件写的并集**，所以同一份定义认领的两堆物品可以带不一样的技能。组件里只存**技能 id**、不收标签；专用生产者是物品行为 [`mxt:add_ability`](../types/action/item_action_types.md)（通用补丁 `mxt:merge_components` 仍然可用）。
 
 **`mxt:mount` 是"这件法器是飞行法器"的声明，顺带回答它如何画。** 载具**默认**画的是它承载的那件物品的物品模型（展示框那套上下文：原始大小、没有位移的卡片），`render` 可以换成 `mxt:geckolib` 或内容模组注册的渲染器；`display` 可选，不写就用该渲染器自己的默认姿势。字段、默认值与七个姿态见[载具渲染器类型](../types/other/mount-render.md)。座位（脚底高度）不属于 `display`，那是 `mxt:mount` 自己的 `seat_offsets`。

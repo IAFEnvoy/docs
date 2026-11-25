@@ -49,11 +49,15 @@ Binding and proactive-message authorization are separate steps. Receiving a `/bi
 | Notification | Trigger |
 | --- | --- |
 | New issue | A successful GitHub TTL or manual cache-clear refresh finds a new Open issue in an unarchived project; each repository's first fetch after every restart only establishes its baseline |
-| Preprocessing report | Successful preprocessing produces a final report; long reports are split into messages |
+| Preprocessing report | Successful preprocessing triggers one isolated model call for a plain-text summary of up to 200 characters, excluding the header and final link; one message per recipient |
 
-New-issue notifications are independent of the preprocessing switch, but require the GitHub data source and the repository owner's token. Historical issues, pull requests, edits and reopened old issues do not generate new-issue notifications. Reports contain final text only, excluding attachment sources, tool output and reasoning. Dashboard session links still require login; no public share link is created automatically.
+New-issue notifications are independent of the preprocessing switch, but require the GitHub data source and the repository owner's token. Historical issues, pull requests, edits and reopened old issues do not generate new-issue notifications.
 
-`data/bot-notifications.json` stores bindings, code hashes, repository baselines, pending notifications and per-target chunk progress. Failed sends retry with a 10–320 second backoff and resume unfinished chunks after restart. Removed targets or disabled notification types discard their pending messages rather than redirecting them to new recipients.
+The summary uses the default model in `ai.yml` with a single request containing the final report, without chat history or tools. It retains the problem, validity assessment, main cause and recommendation, omitting detailed code paths, reproduction and verification steps. Markdown is removed and the body is limited to 200 characters before sending. All recipients share one generated summary. Generation times out after 60 seconds; failures produce a short completion notice and a log instead of reverting to a long report.
+
+When `dashboard_url` is configured, the message ends with a report link using the existing `/share/<id>` feature. **No login is required to view it.** The share page contains only the final report message, excluding attachments, tool output, intermediate messages and reasoning. The complete conversation remains available after website login. Without the address, the message asks readers to check the website and omits the link.
+
+`data/bot-notifications.json` stores bindings, code hashes, repository baselines, reports awaiting summaries, generated summaries and delivery progress. Failed sends retry with a 10–320 second backoff and reuse persisted summaries and share links after restart. Old queued long reports are converted to a single summary before delivery. Removed targets or disabled notification types discard their pending messages rather than redirecting them to new recipients.
 
 Delivery is at least once: a crash after platform acceptance but before progress is saved can repeat a message. Network conditions and platform quotas can also delay delivery.
 

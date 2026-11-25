@@ -10,7 +10,7 @@ MiXianTu 不为每个玩法预设具体数值，但提供少量通用承载物�
 
 ## 通用物品 {#通用物品}
 
-当前内置内容包括灵石系列、灵铁锭、灵木、朱砂、符纸、符箓、契约卷轴、召回符、御兽铃、令牌、灵石袋、戒指、丹药载体、药渣、杂质、奖励箱和展示架等。具体注册名以 `src/main/java/com/iafenvoy/mxt/registry` 和资源文件为准。
+当前内置内容包括灵石系列、灵铁锭、灵木、朱砂、符纸、符箓、契约卷轴、御兽铃、令牌、灵石袋、戒指、丹药载体、药渣、杂质、奖励箱和展示架等。具体注册名以 `src/main/java/com/iafenvoy/mxt/registry` 和资源文件为准。
 
 ## 灵气物品 {#灵气物品}
 
@@ -30,6 +30,18 @@ MiXianTu 不为每个玩法预设具体数值，但提供少量通用承载物�
 
 :::
 
+### 灵石袋 {#spirit-stone-bag}
+
+灵石袋（`mxt:spirit_stone_bag`）最多可装 1024 颗灵石，可混装不同档位，也可收纳耗尽的灵石。用光标拿着袋子左键点灵石，或拿着灵石左键点袋子，即可存入。将光标移到袋子上并滚动滚轮可选中一组灵石，选中的灵石会显示在袋口。右键可取出一组，物品提示中会显示袋内颗数。
+
+修炼需要补充燃料时，会先从主手或副手的灵石袋取出一组可用灵石，略过耗尽的灵石。袋内没有可用灵石时，再按常规方式从手上或物品栏取用。取出的灵石在耗尽或中断修炼后会归还到物品栏。
+
+### 鉴定镜 {#identification-mirror}
+
+主手持鉴定镜，副手持带有「未鉴定」提示的物品，对空气右键可鉴定一件。副手仅剩一件时，鉴定结果直接放入副手。副手还有余量时，结果放入物品栏。物品栏无法容纳结果时，整堆物品会保留。鉴定免费，镜子可重复使用。
+
+内容包可以配置[未鉴定载体与鉴定结果](../technical/data-components.md#identification)。
+
 ## 空白载体与固定材料 {#空白载体与固定材料}
 
 以下物品同样都是普通 `Item`，没有本体行为；它们的用途由绑定表、物品键注册表、组件、数据包和 KubeJS 决定。方块与已经存在的四阶灵石不在此表重复列出。
@@ -37,9 +49,9 @@ MiXianTu 不为每个玩法预设具体数值，但提供少量通用承载物�
 | 分类 | 物品 |
 | --- | --- |
 | 基础材料 | `mxt:spirit_iron_ingot`、`mxt:spirit_iron_nugget`、`mxt:spirit_wood`、`mxt:spirit_wood_core`、`mxt:cinnabar`、`mxt:alchemy_dregs`、`mxt:impurity` |
-| 空白载体 | `mxt:spirit_ring`、`mxt:spirit_stone_bag` |
+| 占位载体 | 灵戒（`mxt:spirit_ring`），由数据包提供 [`mxt:item_abilities` 技能组件](../technical/data-components.md)后，可按通用物品技能规则使用。 |
 | 身份与记录 | `mxt:wooden_token`、`mxt:stone_token`、`mxt:blank_talisman` |
-| 固定道具 | `mxt:contract_scroll`、`mxt:recall_talisman`、`mxt:beast_taming_bell` |
+| 固定道具 | `mxt:contract_scroll`、`mxt:beast_taming_bell` |
 
 ## 统一功能载体 {#统一功能载体}
 
@@ -58,7 +70,7 @@ MiXianTu 不为每个玩法预设具体数值，但提供少量通用承载物�
 | 功法书 | `mxt:technique` | 保存一份 `technique` 定义，长按后可学习功法。 |
 | 玉简 | `mxt:stored_text` <br /> `mxt:jade_slip_reading` | 存一段文字，长按打印到聊天栏。 |
 | 木/石令牌 | `mxt:token` | 统一承载 `kind`、`value`、`owner`，供秘境和交易等权限系统共用。**在铁砧里给它改名即认主**。 |
-| 鉴定镜 | `mxt:identification` | 统一解析带有鉴定组件的物品；具体待鉴定物品由内容包或其他模组提供。 |
+| 鉴定镜 | `mxt:identification` | 鉴定副手中的一件待鉴定物品。 |
 | 灵根 | `mxt:spirit_root` | 保存一份 `spirit_root` 定义；右键获得这条灵根。 |
 | 体质 | `mxt:physique` | 保存一份 `physique` 定义；右键获得这项体质。 |
 | 符笔 |`mxt:brush_pigment` | 符笔装自己的颜料存量，符笔在物品栏中点击颜料即可添加颜料。（见[符笔与颜料](./brush-and-pigment.md#符笔与颜料)） |

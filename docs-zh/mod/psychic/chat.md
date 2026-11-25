@@ -45,7 +45,7 @@ sidebar_position: 2
 
 当本地路由无法解析时，万物通灵可以使用模型，从当前伙伴可用的 Task 中选择工具。请在运行世界的游戏进程环境中设置 `PSYCHIC_MODEL_API_KEY`。使用 DeepSeek 端点时，也可以设置 `DEEPSEEK_API_KEY`。多人游戏由服务端运行这个流程，单人游戏由本机游戏进程运行。
 
-修改游戏目录下的 `config/psychic-ai.toml`，然后重启运行世界的进程。
+在模组列表打开万物通灵的服务端配置，或编辑游戏目录下 `config/psychic/psychic-server.json` 的 `ai` 分组。远程服务端配置仅管理员可修改。设置在下次服务端启动时生效。首次生成 JSON 时会导入旧 `config/psychic-ai.toml` 的设置。
 
 | 配置项 | 默认值 | 用途 |
 | --- | --- | --- |

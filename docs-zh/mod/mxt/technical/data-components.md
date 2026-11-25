@@ -41,8 +41,8 @@ description: 物品数据组件的字段、读写职责与定义解析优先级�
 
 | 组件 id | 载荷 | 作用 |
 | --- | --- | --- |
-| `mxt:item_aura` | `double remain` | 一件**被消耗过**的物品堆上剩余的灵气，一个数。 |
-| `mxt:spirit_storage` | `Object2DoubleMap<Holder<Aura>>` | 物品堆的灵气存量，按灵气身份保存有限非负 double。存取和容量支持小数，展示保留两位；缺组件的含义由物品决定（灵石满、符箓空），空表表示已耗空。 |
+| `mxt:item_aura` | `{ "per_item": 数值 }` | 普通燃料单件剩余灵气。旧数值表示整堆余额，加载时换算。 |
+| `mxt:spirit_storage` | `amounts`，可选 `per_item` | 按灵气 ID 保存有限非负数值。灵石使用 `per_item: true` 表示单件余额，符箓和法器使用各自的存量口径。缺组件时灵石视为满、符箓视为空。空表表示已耗空。 |
 | `mxt:artifact_state` | `ArtifactStateComponent`（可选 `owner_uuid`、`owner_name`、`nourishment`） | 保存法器归属与温养度。UUID 用于归属校验，名称由认主者写入，仅用于显示。法器身份由物品定义解析，灵气存量由 `mxt:spirit_storage` 保存。 |
 | `mxt:item_abilities` | `ItemAbilitiesComponent`（`abilities`） | 装备或激活期间**额外**授予的技能 id 列表，与定义声明的并集。行为 `mxt:add_ability` 是它的专用生产者（已写过的一条不写第二遍、原有条目一律保留）。 |
 | `mxt:storage` | `DataStorageHolder` | 技能运行期状态的宿主（冷却、充能、开关、计时、锁目标）。一对 `(技能 id, 状态种类)` 地址对应一格，同一种类的第二个值会**替换**而不是并列。值本身是可变的，由内容侧或物品宿主整份写入。 |
@@ -74,7 +74,29 @@ description: 物品数据组件的字段、读写职责与定义解析优先级�
 | `mxt:secret_realm_token` | 可选 `realm`、`preset`、`duration_ticks`、`summoned`、`summoned_dimension` | realm 为秘境定义，preset 为裂隙预设；门的持续时间默认 0（永久），后两项由运行时记录复用的门 UUID 与维度。 |
 | `mxt:reward_box` | `ResourceKey<LootTable>` | 奖励箱开哪张战利品表。存的是 **`ResourceKey` 而不是 `Holder`**：`/reload` 会换掉战利品表实例，握着旧的那份会一直滚重载之前的表。 |
 | `mxt:token` | `TokenComponent`（可选 `kind`、`value`、`owner`） | 秘境令牌与交易令牌共用的**身份与权限**载荷。`owner` 是权限记录，故意不进提示框。 |
-| `mxt:identification` | `IdentificationComponent`（`result`） | 本体提供的未鉴定物品**鉴定后变成哪件物品**的已解析 id。 |
+| `mxt:identification` | `result`、可选 `result_components` | 定义鉴定镜鉴定一件载体时获得的成品。 |
+
+#### 鉴定 {#identification}
+
+给 `mxt:unidentified_item` 或其他载体物品添加 `mxt:identification`。`result` 填写成品的物品 ID。可选的 `result_components` 使用原版组件补丁格式，应用于成品的默认组件。鉴定时会舍弃载体自身的组件。
+
+以下战利品函数会在生成战利品时确定鉴定结果。需要随机奖励时，可在战利品池中为各加权条目分别指定结果。
+
+```json
+{
+  "function": "minecraft:set_components",
+  "components": {
+    "mxt:identification": {
+      "result": "minecraft:iron_sword",
+      "result_components": {
+        "minecraft:damage": 12
+      }
+    }
+  }
+}
+```
+
+提示框显示未鉴定状态及操作提示。读取同步后的物品数据仍可看到鉴定结果。
 
 ### 经济 {#经济}
 

@@ -18,6 +18,7 @@ One `quality` is one tier. What it is called is for the interface to show; `valu
 | `value_multiplier` | `Modifier` | `1` | Currency value modifier. |
 | `forging_modifier` | `Modifier` | `1` | Forging modifier. |
 | `alchemy_modifier` | `Modifier` | `1` | Alchemy modifier. |
+| `tooltip_order` | String array | `["value_multiplier", "forging_modifier", "alchemy_modifier"]` | Display order of the three modifier descriptions in item tooltips. Only these three field names are accepted, once each. |
 | `condition` | `EntityCondition` | `mxt:always` | The condition for using this tier. |
 | `next` | `quality` id | none | The tier above this one, that is the tier one step up targets; omitted on the highest tier. |
 | `upgrade_costs` | `Cost` array | `[]` | What it costs **to reach this tier** (written on the target tier), through the same transaction abilities use: `plan` → `commit`, **the whole group atomically**, so a refused payment moves nothing and writes no tier. |
@@ -44,7 +45,7 @@ A `condition` that does not pass makes the item unusable: use, attack, the main-
 }
 ```
 
-The entry above writes only the three modifiers, and leaves even `forging_modifier`'s `description` out.
+Descriptions listed in `tooltip_order` appear first in the given order. Omitted entries follow in their default order. For example, `"tooltip_order": ["alchemy_modifier"]` places the alchemy description before the value and forging descriptions. An empty array uses the default order. Blank descriptions are skipped.
 
 At settlement, `value_multiplier` multiplies the item's currency denomination by `modifier` and rounds to a whole number, so **what you see is what you pay** (the tooltip shows the settled value too). A `modifier` that is missing, non-finite or ≤ 0 counts as 1; a product that is non-finite, below 1 or beyond `long` falls back to the declared denomination rather than inventing a number the pack never wrote.
 

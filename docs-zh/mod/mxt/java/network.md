@@ -13,8 +13,8 @@ title: 网络协议与服务端权威
 | `WheelActionC2SPayload` | 轮盘选中一项：`(source, kind, id)`——**哪个来源**、哪一类、哪个 id（按下那一刻由客户端从**当时那一格**解析出来）。技能与灵气**共用这一条通道**（法器能力就是技能），服务端先按 `source` 把那个来源重读一遍（主盘读存档布局、从盘读现在的授予账），这一项不在那里就整个请求作废，然后才按 `kind` 分派（技能走 `runtime/ability/AbilityActivationService`，**它是服务端唯一的按压入口**：`mxt:active` 与定向施放 `mxt:targeted` 在那里各转成一次施放，`mxt:flight_control` / `mxt:storage` 各自做自己的事；灵气走 `SpiritBurstService.fireOnce`）。**请求只说"按了这一格"**：该开该关、该打开哪个界面都由服务端问实现。**格子编号不走这条路**：它只用于存储。 |
 | `BackSlotSwapC2SPayload` | 交换主手和背部槽位。 |
 | `ChequeActionC2SPayload` | 支票桌存入/取出。 |
-| `StationTradeC2SPayload` | 交易站结算。 |
-| `PlayerTradeActionC2SPayload` | 已打开的一对一交易里改变请求方自己的状态。 |
+| `StationTradeC2SPayload` | 提交当前交易站报价的修订号。 |
+| `PlayerTradeActionC2SPayload` | 提交玩家交易操作及当前报价修订号。过期报价须重新确认。 |
 | `CultivationToggleC2SPayload` | 请求切换修炼模式。 |
 | `WheelActionC2SPayload` | 轮盘选中一项：`(source, kind, id, enabled)`——**哪个来源**、哪一类、哪个 id，加上一个**可选的**方向。`enabled` 留空＝"按了这一格"（轮盘走的就是这条，方向归服务端）；填了＝**点名一个状态**的直接请求（脚本或界面用，此时这一项按 id 寻址、不重新读来源那一页，但技能自己的校验照过，要求的正是当前状态时什么都不做）。旧的 `FlightToggleC2SPayload` 已并入这个字段。 |
 | `WheelLayoutC2SPayload` | 轮盘配置界面关闭时把**完整的 12 格主盘布局**送回服务端；服务端逐格校验 id 后写进玩家附件。从盘没有对应的包，因为它们不存。 |

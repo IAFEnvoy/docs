@@ -11,7 +11,7 @@ MiXianTu does not preset numbers for any gameplay system, but it does provide a 
 
 ## Generic Items {#generic-items}
 
-The mod currently ships the spirit stone series, spirit iron ingots, spirit wood, cinnabar, talisman paper, talismans, the contract scroll, the recall talisman, the Beast Taming Bell, tokens, the spirit stone bag, rings, pill carriers, alchemy dregs, impurity, the reward box and display stands. The registry names are in `src/main/java/com/iafenvoy/mxt/registry` and the resource files.
+The mod currently ships the spirit stone series, spirit iron ingots, spirit wood, cinnabar, talisman paper, talismans, the contract scroll, the Beast Taming Bell, tokens, the spirit stone bag, rings, pill carriers, alchemy dregs, impurity, the reward box and display stands. The registry names are in `src/main/java/com/iafenvoy/mxt/registry` and the resource files.
 
 ## Item Aura {#item-aura}
 
@@ -31,6 +31,18 @@ A spirit stone is only worth anything while it holds aura.
 
 :::
 
+### Spirit Stone Bag {#spirit-stone-bag}
+
+The Spirit Stone Bag (`mxt:spirit_stone_bag`) holds up to 1024 spirit stones, including mixed tiers and drained stones. Left-click a stone stack with the bag on the cursor, or left-click the bag with stones on the cursor, to insert. Scroll over the bag to select a stack and display it in the bag opening. Right-click to take out a stack. The tooltip shows how many stones are in the bag.
+
+When cultivation needs new fuel, it first takes a usable stack from a bag in either hand and skips drained stacks. If neither held bag can supply fuel, cultivation looks for loose fuel in the hands and inventory. The withdrawn stack goes back to the inventory when it runs out or cultivation is interrupted.
+
+### Identification Mirror {#identification-mirror}
+
+Hold an Identification Mirror in your main hand and an item marked **Unidentified** in your off hand. Right-click the air to reveal one item. If it was the last item in the stack, the result appears in your off hand. Otherwise, the result goes into your inventory. If there is no space for it, the stack stays intact. Identification is free, and the mirror can be reused.
+
+Content packs can set up the [unidentified item carrier and its result](../technical/data-components.md#identification).
+
 ## Blank Carriers and Fixed Materials {#blank-carriers-and-fixed-materials}
 
 These items are ordinary `Item`s as well, with no behaviour of their own; binding tables, item-keyed registries, components, datapacks and KubeJS decide what they do. Blocks and the four spirit stone tiers are not repeated here.
@@ -38,9 +50,9 @@ These items are ordinary `Item`s as well, with no behaviour of their own; bindin
 | Category | Items |
 | --- | --- |
 | Base materials | `mxt:spirit_iron_ingot`, `mxt:spirit_iron_nugget`, `mxt:spirit_wood`, `mxt:spirit_wood_core`, `mxt:cinnabar`, `mxt:alchemy_dregs`, `mxt:impurity` |
-| Blank carriers | `mxt:spirit_ring`, `mxt:spirit_stone_bag` |
+| Placeholder carrier | Spirit Ring (`mxt:spirit_ring`). A data pack can give it abilities through the [`mxt:item_abilities` component](../technical/data-components.md) and the shared item ability rules. |
 | Identity and records | `mxt:wooden_token`, `mxt:stone_token`, `mxt:blank_talisman` |
-| Fixed props | `mxt:contract_scroll`, `mxt:recall_talisman`, `mxt:beast_taming_bell` |
+| Fixed props | `mxt:contract_scroll`, `mxt:beast_taming_bell` |
 
 ## Generic Functional Items {#generic-functional-items}
 
@@ -59,7 +71,7 @@ The items below are backed by a unified server-side implementation shipped with 
 | Technique Book | `mxt:technique` | Stores a `technique` definition; a long hold learns the technique. |
 | Jade Slip | `mxt:stored_text` <br /> `mxt:jade_slip_reading` | Holds one piece of text; a long hold prints it into the chat log. |
 | Wooden / Stone Token | `mxt:token` | Carries `kind`, `value` and `owner` for the secret realm and trade permission systems. **Renaming one in an anvil claims it.** |
-| Identification Mirror | `mxt:identification` | Resolves items that carry an identification component in a unified way; the items to identify come from content packs or other mods. |
+| Identification Mirror | `mxt:identification` | Reveals one marked item from the off hand. |
 | Spirit Root | `mxt:spirit_root` | Stores a `spirit_root` definition; right-click to gain that root. |
 | Physique | `mxt:physique` | Stores a `physique` definition; right-click to gain that physique. |
 | Talisman Brush | `mxt:brush_pigment` | A brush holds a pigment store of its own; click pigment with the brush in the inventory to add pigment (see [Alchemy and the Brush](./brush-and-pigment.md#brushes-and-pigment)). |

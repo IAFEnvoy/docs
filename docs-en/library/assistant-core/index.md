@@ -13,7 +13,9 @@ Assistant Core (`assistant_core`) gives Minecraft mods an agent network protocol
 | Assistant Core | 1.0-beta.1 |
 | Java | 25 |
 
-Put the Assistant Core JAR and the host mod in `mods/` on both the client and server. To build from source, run `./gradlew build` in the Assistant Core checkout, or `gradlew.bat build` on Windows. The JAR is in `build/libs/`. Psychic pins its Assistant Core dependency through a Git submodule.
+If a host mod lists Assistant Core as a separate dependency, place its JAR in `mods/` on both the client and server. Psychic bundles Assistant Core through NeoForge Jar-in-Jar.
+
+To build a standalone Assistant Core JAR from source, run `./gradlew build` in the Assistant Core checkout, or `gradlew.bat build` on Windows. The JAR is in `build/libs/`.
 
 - Connect agent networking, models, AI modes, and speech. [Integration guide](./integration.md)
 - Register a client text annotation processor and try the demo. [Annotation Processor](./annotation-processor.md)

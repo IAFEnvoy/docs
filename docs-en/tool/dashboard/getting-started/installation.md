@@ -45,7 +45,7 @@ curseforge:
 
 See [Configuration Overview](/docs/tool/dashboard/getting-started/configuration) for the full file list.
 
-Follow [Bot notifications and group binding](../features/bot-notifications.md) to enable QQ. Automatic preprocessing is enabled after login under **Agent → Settings**; first prepare the [local checkout and default model](../features/issue-preprocessing.md).
+Follow [Bot notifications and group binding](../features/bot-notifications.md) to enable QQ. Automatic preprocessing is enabled after login under **Agent → Settings**; first configure [Git, project roots and the default model](../features/issue-preprocessing.md). Sources are automatically cloned or forcibly synchronized.
 
 ## Step 3: Build & run
 

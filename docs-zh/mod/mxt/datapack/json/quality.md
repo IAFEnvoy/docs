@@ -18,6 +18,7 @@ hide_table_of_contents: true
 | `value_multiplier` | `Modifier` | `1` | 货币价值修正。 |
 | `forging_modifier` | `Modifier` | `1` | 锻造修正。 |
 | `alchemy_modifier` | `Modifier` | `1` | 炼丹修正。 |
+| `tooltip_order` | 字符串数组 | `["value_multiplier", "forging_modifier", "alchemy_modifier"]` | 物品提示框中三条修正说明的显示顺序。只接受这三个字段名，每个最多出现一次。 |
 | `condition` | `EntityCondition` | `mxt:always` | 使用该品质的条件。 |
 | `next` | `quality` id | 无 | 指向它上面对应档位，也就是升级的目标档；最高一档省略。 |
 | `upgrade_costs` | `Cost` 数组 | `[]` | **升到该档位**要付的代价（写在目标档上），与技能消耗走同一套事务：`plan` → `commit` **整组原子**，无法支付就一步都不动、也不写档。 |
@@ -44,7 +45,7 @@ hide_table_of_contents: true
 }
 ```
 
-上面这份只写了三个修正，`forging_modifier` 连 `description` 都省略了。
+`tooltip_order` 中列出的说明先按给定顺序显示，未列出的说明随后按默认顺序显示。例如，`"tooltip_order": ["alchemy_modifier"]` 会将炼丹说明移到价值和锻造说明之前。空数组使用默认顺序，空白说明会跳过。
 
 `value_multiplier` 结算时按 `modifier` 乘在该物品的货币单位面值上并四舍五入到整数，因此**看得到的就是付得出的**（Tooltip 显示的也是结算值）。`modifier` 缺失、非有限或 ≤0 时按 1 处理；乘积非有限、小于 1、超出 `long` 时退回声明面值，不会凭空造出一个数据包没写过的数。
 

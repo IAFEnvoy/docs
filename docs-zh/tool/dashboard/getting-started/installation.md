@@ -45,7 +45,7 @@ curseforge:
 
 完整文件列表见[配置概览](./configuration)。
 
-启用 QQ 的步骤见 [Bot 通知与群绑定](../features/bot-notifications.md)。自动预处理则在登录后的 **Agent → 设置** 中开启，使用前先准备[本地源码和默认模型](../features/issue-preprocessing.md)。
+启用 QQ 的步骤见 [Bot 通知与群绑定](../features/bot-notifications.md)。自动预处理则在登录后的 **Agent → 设置** 中开启，使用前先配置 [Git、项目目录与默认模型](../features/issue-preprocessing.md)；源码会自动克隆或强制同步。
 
 ## 步骤 3：构建并运行
 

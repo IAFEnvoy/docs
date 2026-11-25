@@ -34,8 +34,8 @@ QQ 事件固定通过 **WebSocket** 接收，无需设置 `webhook_url` 或回�
 | --- | --- | --- | --- |
 | `enabled` | bool | `false` | 总开关；开启后至少启用一个平台 |
 | `notify_new_issues` | bool | `true` | 推送新增 Open Issue，独立于预处理开关 |
-| `notify_reports` | bool | `true` | 推送成功预处理的最终报告 |
-| `dashboard_url` | string | `""` | 可选的看板 HTTP(S) 地址，用于报告会话链接；不能含凭据、查询参数或片段，链接仍需登录 |
+| `notify_reports` | bool | `true` | 推送成功预处理报告的纯文本摘要，正文最多 200 字，不含标题和链接 |
+| `dashboard_url` | string | `""` | 可选的看板外部 HTTP(S) 地址，用于生成无需登录的最终报告分享链接；不能含凭据、查询参数或片段 |
 | `providers` | object | QQ 默认关闭 | 平台配置，目前支持 `qq` |
 | `targets` | array | `[]` | 固定接收目标；可留空，之后通过网站绑定群聊 |
 
@@ -76,6 +76,8 @@ targets:
 群主仍需在手机 QQ 的机器人**群消息设置**中允许主动推送；配置目标或绑定成功不会自动获得该权限。
 
 ## 生效与存储
+
+报告摘要使用 `ai.yml` 默认模型，额外做一次无工具调用，仅保留问题结论与建议。每个报告每个目标只发送一条；摘要失败时发送简短提示。配置 `dashboard_url` 后公开分享仅包含最终报告正文，附件、工具记录和推理不会进入分享页。
 
 通知、绑定和发送进度保存在 `data/bot-notifications.json`，不是 YAML 配置。一次性码仅保存哈希；绑定和队列跨重启保留。QQ 凭证保留在本地配置或进程环境中。
 

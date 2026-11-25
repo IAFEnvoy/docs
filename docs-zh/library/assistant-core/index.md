@@ -13,7 +13,9 @@ Assistant Core（`assistant_core`）为 Minecraft 模组提供智能体网络协
 | Assistant Core | 1.0-beta.1 |
 | Java | 25 |
 
-把 Assistant Core JAR 和宿主模组一起放入客户端和服务端的 `mods/`。从源码构建时，在 Assistant Core 仓库运行 `./gradlew build`，Windows 可用 `gradlew.bat build`。构建产物在 `build/libs/`。以万物通灵为宿主时，使用 Git 子模块固定依赖版本。
+如果宿主模组将 Assistant Core 列为单独的依赖，请把它的 JAR 放入客户端和服务端的 `mods/`。万物通灵通过 NeoForge Jar-in-Jar 内嵌 Assistant Core。
+
+要从源码构建独立的 Assistant Core JAR，在 Assistant Core 仓库运行 `./gradlew build`，Windows 可用 `gradlew.bat build`。构建产物位于 `build/libs/`。
 
 - 接入智能体频道、模型、AI 模式和语音。[集成指南](./integration.md)
 - 注册客户端文本标注处理器并运行演示。[标注处理器](./annotation-processor.md)

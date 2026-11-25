@@ -41,8 +41,8 @@ The **Payload** column is the Java shape the codec decodes into, not JSON key na
 
 | Component id | Payload | What it does |
 | --- | --- | --- |
-| `mxt:item_aura` | `double remain` | The aura left on one **partially consumed** stack, as a single number. |
-| `mxt:spirit_storage` | `Object2DoubleMap<Holder<Aura>>` | Finite non-negative double stock keyed by aura identity. Transfers and capacities retain fractions; presentation uses two decimal places. Missing components are interpreted by the item (full stone, empty talisman); an empty map records a drained store. |
+| `mxt:item_aura` | `{ "per_item": number }` | Remaining aura per ordinary fuel item. A legacy scalar is a stack total and is converted on load. |
+| `mxt:spirit_storage` | `amounts`, optional `per_item` | Finite, non-negative amounts keyed by aura ID. Spirit stones use `per_item: true` for a per-item balance. Talismans and artifacts use their own storage rules. A missing component means a full stone or an empty talisman. An empty map records a drained store. |
 | `mxt:artifact_state` | `ArtifactStateComponent` (optional `owner_uuid`, `owner_name`, `nourishment`) | An artifact's owner and how well it has been fed. The **identity** is the UUID (every ownership question asks it); the name is display only, written once by whoever claimed the stack. Which artifact it is comes from the item's definition and how much aura it holds lives in `mxt:spirit_storage` - neither is repeated here. |
 | `mxt:item_abilities` | `ItemAbilitiesComponent` (`abilities`) | Ability IDs granted **in addition to** the definition's while the stack is equipped or otherwise active, unioned. The `mxt:add_ability` action is its dedicated producer (an entry already present is not written twice, and existing entries are always kept). |
 | `mxt:storage` | `DataStorageHolder` | The host for ability runtime state (cooldown, charges, toggle, timer, target lock). One `(ability id, state kind)` address is exactly one slot, so a second value of a kind already there **replaces** it instead of joining it. Values are mutable and written wholesale by the content side or the item host. |
@@ -74,7 +74,29 @@ The **Payload** column is the Java shape the codec decodes into, not JSON key na
 | `mxt:secret_realm_token` | Optional `realm`, `preset`, `duration_ticks`, `summoned`, `summoned_dimension` | realm selects a realm definition, preset a rift preset; duration defaults to 0 (permanent). The last two are the runtime’s remembered portal UUID and dimension. |
 | `mxt:reward_box` | `ResourceKey<LootTable>` | Which loot table a reward box opens. It stores a **`ResourceKey`, not a `Holder`**: `/reload` swaps loot table instances, so a held one would keep rolling the table from before the reload. |
 | `mxt:token` | `TokenComponent` (optional `kind`, `value`, `owner`) | The **identity and permission** payload shared by realm and trading tokens. `owner` is a permission record and deliberately stays out of the tooltip. |
-| `mxt:identification` | `IdentificationComponent` (`result`) | The resolved item id a framework-provided unidentified item turns into once identified. |
+| `mxt:identification` | `result`, optional `result_components` | Defines what a single marked item becomes when revealed with an Identification Mirror. |
+
+#### Identification {#identification}
+
+Apply `mxt:identification` to `mxt:unidentified_item` or another item used as a carrier. `result` is an item ID. The optional `result_components` uses the vanilla component patch format and applies to the result's default components. The carrier's own components are discarded during identification.
+
+The following loot function seals the result when the loot is generated. To offer random rewards, give each weighted loot entry its own result.
+
+```json
+{
+  "function": "minecraft:set_components",
+  "components": {
+    "mxt:identification": {
+      "result": "minecraft:iron_sword",
+      "result_components": {
+        "minecraft:damage": 12
+      }
+    }
+  }
+}
+```
+
+The tooltip displays the unidentified status and instructions. The result remains readable in the synchronized item data.
 
 ### Economy {#economy}
 

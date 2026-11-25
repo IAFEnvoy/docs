@@ -152,6 +152,19 @@ hide_table_of_contents: true
 
 它同样不扣充能。
 
+## `mxt:shared_storage` {#mxt-shared-storage}
+
+共享储物使用与 `mxt:storage` 相同的 `slots` 和 `cooldown`。同一玩家使用不同法器上的同一个共享储物技能时，打开的是同一份库存。不同玩家及不同技能 ID 各有独立库存。共享库存随玩家存档保存，换法器或死亡重生后仍可通过符合归属要求的载体访问。
+
+`mxt:storage` 仍为每件法器独立保存。打开时须使用单件法器，存入物品后该法器不可堆叠。两种储物界面均以打开时的容量为准。之后数据定义缩小容量，超出的格子会保留，增大容量后可再次访问。
+
+```json title="data/example/saturn/ability/shared_chest.json"
+{
+  "type": "mxt:shared_storage",
+  "slots": 27
+}
+```
+
 ## `mxt:word` {#mxt-word}
 
 终端载荷，自己不执行目标行为。

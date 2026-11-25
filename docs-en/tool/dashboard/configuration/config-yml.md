@@ -87,7 +87,7 @@ List of directories where Agent projects live. When a user picks a project in th
 
 - **Leave empty** to default to the current working directory
 
-[Automatic issue preprocessing](../features/issue-preprocessing.md) only uses existing `<repository-name>` checkouts under these paths. Missing local source causes failure rather than automatic cloning.
+[Automatic issue preprocessing](../features/issue-preprocessing.md) searches these roots for a `<repository-name>` checkout and clones missing repositories into the first writable root. Before every analysis it fetches remote code and forces synchronization, discarding local commits, edits, and ordinary untracked and ignored files. Synchronization failures display an error and stop analysis.
 
 Example:
 ```yaml
